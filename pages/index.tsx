@@ -8,11 +8,11 @@ import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-fou
 const allString = `subscription ALL { links { id type_id from_id to_id value } }`;
 const ALL = gql`${allString}`;
 
-function Item({
+function SubscribeAllItem({
   ml, link,
 }: {
   ml: MinilinksResult<number>;
-  link: MinilinksLink<number>;
+  link: any;
 }) {
   const [mode, setMode] = useState('');
   return <>
@@ -24,6 +24,7 @@ function Item({
       <button disabled={mode == 'from'} onClick={() => setMode('from')}>from ({link?.from ? 1 : 0})</button>
       <button disabled={mode == 'type'} onClick={() => setMode('type')}>type ({link?.type ? 1 : 0})</button>
       <button disabled={mode == 'typed'} onClick={() => setMode('typed')}>typed ({link?.typed?.length})</button>
+      <button disabled={mode == 'value'} onClick={() => setMode('value')}>value</button>
       <button disabled={mode == ''} onClick={() => setMode('')}>x</button>
     </div>
     <div style={{ paddingLeft: 16 }}>
@@ -41,13 +42,13 @@ function Item({
         : mode === 'typed'
         ? link.typed
         : []
-      ).map(l => <Item ml={ml} link={link}/>)}
+      ).map(l => <SubscribeAllItem ml={ml} link={link}/>)}
+      {mode === 'value' && link?.value && <pre><code>{JSON.stringify(link?.value || '', null, 2)}</code></pre>}
     </div>
   </>;
 }
 
-function Content() {
-  const [token, setToken] = useTokenController();
+function SubscribeAll() {
   const q = useSubscription(ALL);
   const minilinks: any = useMinilinksConstruct();
   const ml = useMemo(() => {
@@ -56,7 +57,13 @@ function Content() {
     return ml;
   }, [q.data]);
   return <>
-    {ml.links.map(link => <Item ml={ml} link={link}/>)}
+    {ml.links.map(link => <SubscribeAllItem ml={ml} link={link}/>)}
+  </>;
+}
+
+function Content() {
+  return <>
+    <SubscribeAll/>
   </>;
 }
 
