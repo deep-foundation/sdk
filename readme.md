@@ -1,6 +1,7 @@
 # deep nextjs
 
-- [ ] deep example
+- [x] deep example
+- [x] message/reply model https://runkit.com/ivansglazunov/deep-create-messaging-package
 - [ ] linux deb app solution
 - [ ] window exe app solution
 - [ ] mac app build solution
