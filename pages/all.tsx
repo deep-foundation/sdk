@@ -4,6 +4,7 @@ import { TokenProvider, useTokenController } from '@deep-foundation/deeplinks/im
 import { useQuery, useSubscription, gql } from '@apollo/client';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-foundation/deeplinks/imports/minilinks';
+import { Button, ChakraProvider, Input } from '@chakra-ui/react';
 
 const allString = `subscription ALL { links { id type_id from_id to_id value } }`;
 const ALL = gql`${allString}`;
@@ -68,10 +69,10 @@ function Content() {
   return <>
     <hr/>
     <div>
-      <button onClick={(e) => {
+      <Button onClick={(e) => {
         setGqlUrl(gqlUrlInput);
         setToken(tokenInput);
-      }}>reconnect</button>
+      }}>reconnect</Button>
     </div>
     <div>connected to: {gqlUrl}</div>
     <div>token to: {token}</div>
@@ -94,11 +95,11 @@ function Page() {
     <h1>Deep.Foundation nextjs example - all subscribe</h1>
     <div>
       path to gql <b>without protocol</b>:
-      <input value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)}/>
+      <Input size="xs" value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)} placeholder="3006-deepfoundation-dev-XXXXXXXXXXX.XX-XXXX.gitpod.io/gql"/>
     </div>
     <div>
       token of user link (copy from Deep.Case):
-      <input value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
+      <Input size="xs" value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
     </div>
     <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: gqlUrl, ssl: true, token: token, ws: !!process?.browser }}>
       {[<Content key={token+gqlUrl}/>]}
@@ -108,10 +109,12 @@ function Page() {
 
 export default function Index() {
   return (
-    <LocalStoreProvider>
-      <TokenProvider>
-        <Page/>
-      </TokenProvider>
-    </LocalStoreProvider>
+    <ChakraProvider>
+      <LocalStoreProvider>
+        <TokenProvider>
+          <Page/>
+        </TokenProvider>
+      </LocalStoreProvider>
+    </ChakraProvider>
   );
 }

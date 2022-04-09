@@ -13,7 +13,8 @@ const messagesString = `subscription MESSAGES($where: links_bool_exp) { links(wh
 const MESSAGES = gql`${messagesString}`;
 
 function usePreloaded() {
-  const [preloaded, setPreloaded] = useLocalStore('preloaded', null);
+  const pr = useLocalStore('preloaded', null);
+  const [preloaded, setPreloaded] = pr;
   const deep = useDeep();
   const p = useRef();
   p.current = preloaded;
@@ -22,10 +23,11 @@ function usePreloaded() {
       User: await deep.id('@deep-foundation/core', 'User'),
       Reply: await deep.id('@deep-foundation/messaging', 'Reply'),
       Message: await deep.id('@deep-foundation/messaging', 'Message'),
-      messagingTree: await deep.id(deep.linkId, 'messagingTree'),
+      messagingTree: await deep.id('@deep-foundation/core', 'system', 'admin', 'messagingTree'),
+      setPreloaded,
     });
   })(); }, []);
-  return preloaded;
+  return pr;
 }
 
 function Item({
@@ -34,7 +36,7 @@ function Item({
   ml, link,
 }) {
   const deep = useDeep();
-  const preloaded = usePreloaded();
+  const [preloaded] = usePreloaded();
   const [message, setMessage] = useState('');
   const onReply = () => {
     deep.insert({
@@ -91,14 +93,13 @@ function Messages({
 }: {
   repliesTo: number[];
 }) {
-  const preloaded = usePreloaded();
+  const [preloaded] = usePreloaded();
   const q = useSubscription(MESSAGES, { variables: { where: { _by_item: {
     group_id: { _eq: preloaded.messagingTree }, path_item_id: { _in: repliesTo },
   } } } });
   const minilinks: any = useMinilinksConstruct();
   const ml = useMemo(() => {
     if (q?.data?.links) minilinks.ml.apply(q.data.links);
-    console.log(q, minilinks.ml);
     return minilinks.ml;
   }, [q.data]);
   return <>
@@ -114,7 +115,7 @@ function Messager({
 }: {
   repliesTo: number[];
 }) {
-  const preloaded = usePreloaded();
+  const [preloaded] = usePreloaded();
   return <>
     {!!preloaded && <Messages repliesTo={repliesTo}/>}
   </>;
@@ -126,24 +127,29 @@ function Content() {
   const [linkInput, setLinkInput] = useLinkInput();
   const [gqlUrl, setGqlUrl] = useGqlUrl();
   const [token, setToken] = useTokenController();
+  const [preloaded, setPreloaded] = usePreloaded();
   const deep = useDeep();
   return <>
     <hr/>
     <div>
-      <button onClick={(e) => {
+      <Button onClick={(e) => {
+        setPreloaded();
         setGqlUrl(gqlUrlInput);
         deep.login({ 
           token: tokenInput,
         });
-      }}>reconnect</button>
+      }}>reconnect</Button>
     </div>
     <div>connected to: {gqlUrl}</div>
     <div>token to: {token}</div>
     <hr/>
     <div>
       link for loading messages from it:
-      <input value={linkInput} type="number" onChange={e => setLinkInput(e.target.value)}/>
+      <InputGroup size='xs' width='xs'>
+        <Input value={linkInput} type="number" onChange={e => setLinkInput(e.target.value)}/>
+      </InputGroup>
     </div>
+    <hr/>
     {!!linkInput && <Messager repliesTo={[+linkInput]}/>}
   </>;
 }
@@ -163,11 +169,11 @@ function Page() {
     <h1>Deep.Foundation nextjs example - messager</h1>
     <div>
       path to gql <b>without protocol</b>:
-      <input value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)}/>
+      <Input size="xs" value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)} placeholder="3006-deepfoundation-dev-XXXXXXXXXXX.XX-XXXX.gitpod.io/gql"/>
     </div>
     <div>
       token of user link (copy from Deep.Case):
-      <input value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
+      <Input size="xs" value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
     </div>
     <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: gqlUrl, ssl: true, token: token, ws: !!process?.browser }}>
       {[<Content key={token+gqlUrl}/>]}
