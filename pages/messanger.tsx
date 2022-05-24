@@ -23,6 +23,7 @@ function usePreloaded() {
       User: await deep.id('@deep-foundation/core', 'User'),
       Reply: await deep.id('@deep-foundation/messaging', 'Reply'),
       Message: await deep.id('@deep-foundation/messaging', 'Message'),
+      Author: await deep.id('@deep-foundation/messaging', 'Author'),
       messagingTree: await deep.id('@deep-foundation/core', 'system', 'admin', 'messagingTree'),
       setPreloaded,
     });
@@ -42,10 +43,16 @@ function Item({
     deep.insert({
       type_id: preloaded.Message,
       string: { data: { value: message } },
-      out: { data: {
-        type_id: preloaded.Reply,
-        to_id: link.id,
-      } },
+      out: { data: [
+        {
+          type_id: preloaded.Author,
+          to_id: deep.linkId,
+        },
+        {
+          type_id: preloaded.Reply,
+          to_id: link.id,
+        },
+      ] },
     });
   };
   const reply = (
@@ -133,7 +140,7 @@ function Content() {
     <hr/>
     <div>
       <Button onClick={(e) => {
-        setPreloaded();
+        setPreloaded(null);
         setGqlUrl(gqlUrlInput);
         deep.login({ 
           token: tokenInput,
