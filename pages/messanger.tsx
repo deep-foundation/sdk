@@ -5,8 +5,9 @@ import { TokenProvider, useTokenController } from '@deep-foundation/deeplinks/im
 import { useQuery, useSubscription, gql } from '@apollo/client';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-foundation/deeplinks/imports/minilinks';
-import { useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { DeepClient, parseJwt, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { useDelayedInterval } from "../imports/use-delayed-interval";
+import { generateApolloClient } from "@deep-foundation/hasura/client";
 
 import { Button, ChakraProvider, Input, InputGroup, InputRightElement, Menu, MenuButton, MenuItem, MenuList, Stack } from '@chakra-ui/react';
 import { Box, Text } from "@chakra-ui/react";
@@ -159,9 +160,9 @@ function Item({
 }
 
 function Messages({
-  repliesTo,
+  // repliesTo,
 }: {
-  repliesTo: number[];
+  // repliesTo: number[];
 }) {
   const [preloaded] = usePreloaded();
   // const variables = { where: {
@@ -171,7 +172,9 @@ function Messages({
   //   ],
   // } };
   const variables = { where: {
-     _by_item: { group_id: { _eq: preloaded.messagingTree }, path_item_id: { _in: repliesTo } },
+    //  _by_item: { group_id: { _eq: preloaded.messagingTree }, path_item_id: { _in: repliesTo } },
+     _by_item: { group_id: { _eq: preloaded.messagingTree } },
+     type_id: { _in: [preloaded.User, preloaded.Reply, preloaded.Message, preloaded.Join] },
   } };
   const q = useQuery(LOAD, {
     variables: variables,
@@ -191,80 +194,72 @@ function Messages({
     return minilinks.ml;
   }, [results?.data]);
   return <>
-    {repliesTo.map(id => {
-      const link = ml.byId[id] || null;
+    {ml.links.filter(link => (
+      // (link.type_id === preloaded.Reply && (!link?.to || link?.to?.outByType[preloaded.Reply])) ||
+      // !(link?.outByType[preloaded.Reply])
+      (link.type_id === preloaded.User) ||
+      (link.type_id === preloaded.Reply && (!link.to))
+    )).map(link => {
+      // const link = ml.byId[id] || null;
       return !!link && <Item ml={ml} link={link}/>;
     })}
   </>
 }
 
 function Messager({
-  repliesTo,
 }: {
-  repliesTo: number[];
 }) {
   const [preloaded] = usePreloaded();
   return <>
-    {!!preloaded && <Messages repliesTo={repliesTo}/>}
+    {!!preloaded && <Messages/>}
   </>;
 }
+
+const NEXT_PUBLIC_GQL_PATH = process.env.NEXT_PUBLIC_GQL_PATH || '';
 
 function Content() {
-  const [gqlUrlInput, setGqlUrlInput] = useGqlUrlInput();
-  const [tokenInput, setTokenInput] = useTokenInput();
-  const [linkInput, setLinkInput] = useLinkInput();
-  const [gqlUrl, setGqlUrl] = useGqlUrl();
   const [token, setToken] = useTokenController();
-  const [preloaded, setPreloaded] = usePreloaded();
   const deep = useDeep();
+
   return <>
     <hr/>
-    <div>
-      <Button onClick={(e) => {
-        setPreloaded(null);
-        setGqlUrl(gqlUrlInput);
-        deep.login({ 
-          token: tokenInput,
-        });
-      }}>reconnect</Button>
-    </div>
-    <div>connected to: {gqlUrl}</div>
+    <div>connected to: {NEXT_PUBLIC_GQL_PATH}</div>
     <div>token to: {token}</div>
+    <div>parsed token: {JSON.stringify(parseJwt(token) || {})}</div>
     <hr/>
-    <div>
-      link for loading messages from it:
-      <InputGroup size='xs' width='xs'>
-        <Input value={linkInput} type="number" onChange={e => setLinkInput(e.target.value)}/>
-      </InputGroup>
-    </div>
-    <hr/>
-    {!!linkInput && <Messager repliesTo={[+linkInput]}/>}
+    {!!token && <Messager/>}
   </>;
 }
 
-function useGqlUrlInput() { return useLocalStore('gqlUrlInput', ''); }
-function useTokenInput() { return useLocalStore('tokenInput', ''); }
-function useLinkInput() { return useLocalStore('linkInput', ''); }
-function useGqlUrl() { return useLocalStore('gqlUrl', ''); }
+// function useGqlUrlInput() { return useLocalStore('gqlUrlInput', NEXT_PUBLIC_GQL_PATH); }
+// function useTokenInput() { return useLocalStore('tokenInput', ''); }
+// function useLinkInput() { return useLocalStore('linkInput', ''); }
+// function useGqlUrl() { return useLocalStore('gqlUrl', NEXT_PUBLIC_GQL_PATH); }
 
 function Page() {
-  const [gqlUrlInput, setGqlUrlInput] = useGqlUrlInput();
-  const [tokenInput, setTokenInput] = useTokenInput();
-  const [gqlUrl, setGqlUrl] = useGqlUrl();
   const [token, setToken] = useTokenController();
+
+  useEffect(() => {
+    if (!token) {
+      const tempApolloClient = generateApolloClient({
+        path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
+        ssl: true,
+        // admin token in prealpha deep secret key
+        // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsibGluayJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJsaW5rIiwieC1oYXN1cmEtdXNlci1pZCI6IjI2MiJ9LCJpYXQiOjE2NTYxMzYyMTl9.dmyWwtQu9GLdS7ClSLxcXgQiKxmaG-JPDjQVxRXOpxs',
+      });
+      
+      const unloginedDeep = new DeepClient({ apolloClient: tempApolloClient });
+      unloginedDeep.guest().then(({ token }) => {
+        setToken(token);
+      });
+    }
+  }, []);
+
   return <div>
     <div><a href="/">back</a></div>
     <h1>Deep.Foundation nextjs example - messager</h1>
-    <div>
-      path to gql <b>without protocol</b>:
-      <Input size="xs" value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)} placeholder="3006-deepfoundation-dev-XXXXXXXXXXX.XX-XXXX.gitpod.io/gql"/>
-    </div>
-    <div>
-      token of user link (copy from Deep.Case):
-      <Input size="xs" value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
-    </div>
-    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: gqlUrl, ssl: true, token: token, ws: !!process?.browser }}>
-      {[<Content key={token+gqlUrl}/>]}
+    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: NEXT_PUBLIC_GQL_PATH, ssl: true, token: token, ws: !!process?.browser }}>
+      {!!token && [<Content key={token}/>]}
     </ApolloClientTokenizedProvider>
   </div>;
 };
