@@ -205,6 +205,7 @@ function Messages({
 }
 
 const NEXT_PUBLIC_GQL_PATH = process.env.NEXT_PUBLIC_GQL_PATH || '';
+const GQL_SSL = !~NEXT_PUBLIC_GQL_PATH.indexOf('localhost');
 
 function Content() {
   const [token, setToken] = useTokenController();
@@ -233,8 +234,8 @@ function Page() {
   const guest = useCallback(() => {
     // auth as not logged in user (without token)
     const tempApolloClient = generateApolloClient({
-      path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
-      ssl: true,
+      path: NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
+      ssl: GQL_SSL,
     });
     // create deepclient base on it
     const unloginedDeep = new DeepClient({ apolloClient: tempApolloClient });
@@ -256,7 +257,7 @@ function Page() {
     <div><a href="/">back</a></div>
     <h1>Deep.Foundation nextjs example - messager</h1>
     <Button onClick={guest}>relogin new guest</Button>
-    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: NEXT_PUBLIC_GQL_PATH, ssl: true, token: token, ws: !!process?.browser }}>
+    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: NEXT_PUBLIC_GQL_PATH, ssl: GQL_SSL, token: token, ws: !!process?.browser }}>
     {!!token && [<Content key={token}/>]}
     </ApolloClientTokenizedProvider>
   </div>;
