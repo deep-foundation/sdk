@@ -1,28 +1,30 @@
 import sortBy from 'lodash/sortBy';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 import { TokenProvider, useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { useQuery, useSubscription, gql } from '@apollo/client';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-foundation/deeplinks/imports/minilinks';
-import { DeepClient, parseJwt, useDeep } from '@deep-foundation/deeplinks/imports/client';
-import { useDelayedInterval } from "../imports/use-delayed-interval";
+import { DeepClient, parseJwt, useAuthNode, useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { useDelayedInterval, useDelayRefetch } from "../imports/use-delayed-interval";
 import { generateApolloClient } from "@deep-foundation/hasura/client";
 
-import { Button, ChakraProvider, Input, InputGroup, InputRightElement, Menu, MenuButton, MenuItem, MenuList, Stack } from '@chakra-ui/react';
+import { Button, ChakraProvider, Heading, Input, InputGroup, InputRightElement, Menu, MenuButton, MenuItem, MenuList, Stack } from '@chakra-ui/react';
 import { Box, Text } from "@chakra-ui/react";
 
 const loadString = `query LOAD($where: links_bool_exp) { links(where: $where) { id type_id from_id to_id value } }`;
 const LOAD = gql`${loadString}`;
 
 function usePreloaded() {
+  const [token, setToken] = useTokenController();
   const pr = useLocalStore('preloaded', null);
   const [preloaded, setPreloaded] = pr;
   const deep = useDeep();
-  const p = useRef();
+  const p = useRef<any>();
   p.current = preloaded;
   useEffect(() => { (async () => {
-    if (!p.current) setPreloaded({
+    if (!p.current || p?.current?.token != token) setPreloaded({
+      token,
       User: await deep.id('@deep-foundation/core', 'User'),
       Reply: await deep.id('@deep-foundation/messaging', 'Reply'),
       Join: await deep.id('@deep-foundation/messaging', 'Join'),
@@ -31,7 +33,7 @@ function usePreloaded() {
       messagingTree: await deep.id('@deep-foundation/messaging', 'messagingTree'),
       setPreloaded,
     });
-  })(); }, []);
+  })(); }, [token]);
   return pr;
 }
 
@@ -80,7 +82,7 @@ function Users({ id, ml, preloaded }: { id, ml, preloaded }) {
         </MenuList>
       </Menu>
       {ml.byId[id]?.outByType[preloaded.Join]?.map(join => (
-        <Button colorScheme='grey' variant='outline' size='xs' onClick={() => deep.delete(join.id)}>
+        <Button key={join.id} colorScheme='grey' variant='outline' size='xs' onClick={() => deep.delete(join.id)}>
           {join.to_id} x
         </Button>
       ))}
@@ -134,13 +136,13 @@ function Item({
         {reply}
       </Box>
       <div>{sortBy(link.inByType?.[preloaded.Reply], r => r.id)?.map(link => {
-        return <Item ml={ml} link={link}/>;
+        return <Item key={link.id} ml={ml} link={link}/>;
       })}</div>
     </>}
     {link.type_id === preloaded.Reply && <div style={{ paddingLeft: 16 }}>
       <div style={{ fontSize: 12 }}>reply {link.id} to {link.to_id} with {link.from_id} <Users id={link.id} ml={ml} preloaded={preloaded}/></div>
       <div>{link.inByType?.[preloaded.Reply]?.map(link => {
-        return <Item ml={ml} link={link}/>;
+        return <Item key={link.id} ml={ml} link={link}/>;
       })}</div>
       {!!link.from && <div>
         <Item ml={ml} link={link.from}/>
@@ -153,7 +155,7 @@ function Item({
         {reply}
       </Box>
       <div>{link.inByType?.[preloaded.Reply]?.map(link => {
-        return <Item ml={ml} link={link}/>;
+        return <Item key={link.id} ml={ml} link={link}/>;
       })}</div>
     </div>}
   </>;
@@ -164,7 +166,7 @@ function Messages({
 }: {
   // repliesTo: number[];
 }) {
-  const [preloaded] = usePreloaded();
+  const [preloaded, setPreloaded] = usePreloaded();
   // const variables = { where: {
   //   _or: [
   //     { _by_item: { group_id: { _eq: preloaded.messagingTree }, path_item_id: { _in: repliesTo } } },
@@ -173,46 +175,33 @@ function Messages({
   // } };
   const variables = { where: {
     //  _by_item: { group_id: { _eq: preloaded.messagingTree }, path_item_id: { _in: repliesTo } },
-     _by_item: { group_id: { _eq: preloaded.messagingTree } },
+    //  _by_item: { group_id: { _eq: preloaded.messagingTree } },
      type_id: { _in: [preloaded.User, preloaded.Reply, preloaded.Message, preloaded.Join] },
   } };
   const q = useQuery(LOAD, {
     variables: variables,
   });
-  const useDelayedIntervalRef = useRef<any>();
-  useDelayedIntervalRef.current = variables;
-  const [results, setResults] = useState<any>();
-  useDelayedInterval(() => new Promise((res) => {
-    q.refetch(useDelayedIntervalRef.current.variables).then((r) => {
-      setResults(r);
-      res(undefined);
-    });
-  }));
+  const results = useDelayRefetch(q, variables);
   const minilinks: any = useMinilinksConstruct();
   const ml = useMemo(() => {
-    if (results?.data?.links) minilinks.ml.apply(results.data.links, 'all');
+    minilinks.ml.apply(results?.data?.links || [], 'all');
     return minilinks.ml;
-  }, [results?.data]);
+  }, [results]);
   return <>
-    {ml.links.filter(link => (
-      // (link.type_id === preloaded.Reply && (!link?.to || link?.to?.outByType[preloaded.Reply])) ||
-      // !(link?.outByType[preloaded.Reply])
-      (link.type_id === preloaded.User) ||
-      (link.type_id === preloaded.Reply && (!link.to))
-    )).map(link => {
+    <Heading>Visible users</Heading>
+    {ml.byType[preloaded.User]?.map(link => {
       // const link = ml.byId[id] || null;
-      return !!link && <Item ml={ml} link={link}/>;
+      return !!link && <Item key={link.id} ml={ml} link={link}/>;
+    })}
+    <Heading>Shared replies</Heading>
+    {ml.byType[preloaded.Reply]?.filter((link) => (
+      (!ml?.byType[preloaded.User]?.includes(link.to_id)) &&
+      (!link.to)
+    ))?.map(link => {
+      // const link = ml.byId[id] || null;
+      return !!link && <Item key={link.id} ml={ml} link={link}/>;
     })}
   </>
-}
-
-function Messager({
-}: {
-}) {
-  const [preloaded] = usePreloaded();
-  return <>
-    {!!preloaded && <Messages/>}
-  </>;
 }
 
 const NEXT_PUBLIC_GQL_PATH = process.env.NEXT_PUBLIC_GQL_PATH || '';
@@ -220,6 +209,7 @@ const NEXT_PUBLIC_GQL_PATH = process.env.NEXT_PUBLIC_GQL_PATH || '';
 function Content() {
   const [token, setToken] = useTokenController();
   const deep = useDeep();
+  const [preloaded] = usePreloaded();
 
   return <>
     <hr/>
@@ -227,7 +217,7 @@ function Content() {
     <div>token to: {token}</div>
     <div>parsed token: {JSON.stringify(parseJwt(token) || {})}</div>
     <hr/>
-    {!!token && <Messager/>}
+    {!!deep.token && !!preloaded && [<Messages key={deep.token}/>]}
   </>;
 }
 
@@ -237,29 +227,37 @@ function Content() {
 // function useGqlUrl() { return useLocalStore('gqlUrl', NEXT_PUBLIC_GQL_PATH); }
 
 function Page() {
+  const [linkId, setLinkId] = useAuthNode();
   const [token, setToken] = useTokenController();
+
+  const guest = useCallback(() => {
+    // auth as not logged in user (without token)
+    const tempApolloClient = generateApolloClient({
+      path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
+      ssl: true,
+    });
+    // create deepclient base on it
+    const unloginedDeep = new DeepClient({ apolloClient: tempApolloClient });
+    // request new guest user linkId (without any auth method)
+    unloginedDeep.guest().then(async ({ token, linkId }) => {
+      // apply getten token as recommended
+      setLinkId(linkId);
+      setToken(token);
+    });
+  }, []);
 
   useEffect(() => {
     if (!token) {
-      const tempApolloClient = generateApolloClient({
-        path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
-        ssl: true,
-        // admin token in prealpha deep secret key
-        // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsibGluayJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJsaW5rIiwieC1oYXN1cmEtdXNlci1pZCI6IjI2MiJ9LCJpYXQiOjE2NTYxMzYyMTl9.dmyWwtQu9GLdS7ClSLxcXgQiKxmaG-JPDjQVxRXOpxs',
-      });
-      
-      const unloginedDeep = new DeepClient({ apolloClient: tempApolloClient });
-      unloginedDeep.guest().then(({ token }) => {
-        setToken(token);
-      });
+      guest();
     }
   }, []);
 
   return <div>
     <div><a href="/">back</a></div>
     <h1>Deep.Foundation nextjs example - messager</h1>
+    <Button onClick={guest}>relogin new guest</Button>
     <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: NEXT_PUBLIC_GQL_PATH, ssl: true, token: token, ws: !!process?.browser }}>
-      {!!token && [<Content key={token}/>]}
+    {!!token && [<Content key={token}/>]}
     </ApolloClientTokenizedProvider>
   </div>;
 };
