@@ -1,5 +1,4 @@
 import { DependencyList, useEffect, useRef, useState } from "react";
-import { useInterval } from "usehooks-ts";
 
 export function useDelayedInterval(callback: () => Promise<any>, delay: number = 1000, deps: DependencyList = []) {
   const intervalReadyRef = useRef(true);
