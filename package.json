@@ -9,7 +9,10 @@
     "start": "next start",
     "electron-dev": "(npx cap copy electron && npx cap open electron)",
     "electron-build": "(cd electron && npx cap copy electron && npx electron-packager . --overwrite --icon ./assets/icon)",
-    "package:publish": "npm run build && npm publish --access public"
+    "package:publish": "npm run build && npm publish --access public",
+    "nextron-ci": "npm ci && cd electron && npm ci && cd ..",
+    "nextron-dev": "npm run build && npm run export && npx rimraf electron/app && npm run electron-dev",
+    "nextron-build": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npm run electron-build"
   },
   "license": "ISC",
   "dependencies": {
