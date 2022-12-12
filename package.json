@@ -12,11 +12,14 @@
     "package:publish": "npm run build && npm publish --access public",
     "nextron-ci": "npm ci && cd electron && npm ci && cd ..",
     "nextron-dev": "npm run build && npm run export && npx rimraf electron/app && npm run electron-dev",
-    "nextron-build": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npm run electron-build"
+    "nextron-build": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npm run electron-build",
+    "android-build": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync android"
   },
   "license": "ISC",
   "dependencies": {
+    "@capacitor-community/contacts": "^2.0.0",
     "@capacitor-community/electron": "^4.1.2",
+    "@capacitor/android": "^4.6.1",
     "@capacitor/cli": "^4.0.0",
     "@chakra-ui/react": "^1.8.7",
     "@deep-foundation/deeplinks": "^0.0.70",
