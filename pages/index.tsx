@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Contacts } from "@capacitor-community/contacts";
 import {
   DeepProvider,
@@ -51,6 +51,7 @@ function Content() {
       <button onClick={() => authUser()}>Auth User</button>
       <button onClick={getContact}>Get Contact</button>
       <button onClick={() => addContactDeep()}>add Contact</button>
+      <div style={{height:100, width:100, background:"red"}} />
     </>
   );
 }

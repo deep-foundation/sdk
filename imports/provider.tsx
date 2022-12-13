@@ -23,6 +23,8 @@ export function Provider({
 }: {
   children: JSX.Element;
 }) {
+  console.log("sic3");
+  
   return (
     // <Analitics
     //   yandexMetrikaAccounts={[84726091]}
