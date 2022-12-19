@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Deep.Case</string>
-    <string name="title_activity_main">Deep.Case</string>
-    <string name="package_name">deep.case.app</string>
-    <string name="custom_url_scheme">deep.case.app</string>
+    <string name="app_name">Deep.App</string>
+    <string name="title_activity_main">Deep.App</string>
+    <string name="package_name">deep.app</string>
+    <string name="custom_url_scheme">deep.app</string>
 </resources>

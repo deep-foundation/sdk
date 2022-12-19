@@ -14,6 +14,7 @@ export function ProviderConnected({
 
 export const GRAPHQL_PATH = process.env.NEXT_PUBLIC_GQL_PATH;
 export const GRAPHQL_SSL = !!+process.env.NEXT_PUBLIC_GQL_SSL;
+console.log(GRAPHQL_PATH);
 
 
 
@@ -23,8 +24,6 @@ export function Provider({
 }: {
   children: JSX.Element;
 }) {
-  console.log("sic3");
-  
   return (
     // <Analitics
     //   yandexMetrikaAccounts={[84726091]}

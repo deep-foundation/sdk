@@ -1,4 +1,4 @@
-package deep.case.app;
+package deep.app;
 
 import com.getcapacitor.BridgeActivity;
 
