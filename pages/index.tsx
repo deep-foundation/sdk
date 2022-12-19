@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+import { Camera, CameraResultType } from '@capacitor/camera';
 import {
   DeepProvider,
   useDeep,
@@ -8,6 +9,7 @@ import { Provider } from "../imports/provider";
 
 function Content() {
   const [record, setRecord] = useState({})
+  const [photoUrl, setPhotoUrl] = useState("")
   const deep = useDeep();
 
   const authUser = async () => {
@@ -19,40 +21,55 @@ function Content() {
     console.log(linkId, token, error);
   };
   
-  const isDeviceSupported = async () => {
+  const isAudioRecSupported = async () => {
     const { value }= await VoiceRecorder.canDeviceVoiceRecord();
     if (value) { console.log("can record on this device");
      return value;
     } else {console.log("cant record on this device")}
   }
 
-  const askRecordingPermission = async () => {
-    const canRecord = await isDeviceSupported();
+  const getAudioRecPermissions = async () => {
+    const canRecord = await isAudioRecSupported();
     if (canRecord) {
-      console.log("can record on this device")
       const { value } = await VoiceRecorder.hasAudioRecordingPermission();
       if (!value) {
         VoiceRecorder.requestAudioRecordingPermission().then((res) => console.log(res.value) )
-      } else {console.log("permission already granted")}
-    } else {console.log("cant record on this device")}
+      } else {console.log("already can record")}
+    }
   }
 
-  const startRec = async () => {
+  const startAudioRec = async () => {
     await VoiceRecorder.startRecording();
   }
 
-  const stopRec = async () => {
+  const stopAudioRec = async () => {
     const { value } = await VoiceRecorder.stopRecording();
     setRecord(value);
-    console.log(record);
   }
 
-  const playRec = () => {
-    const audioRef = new Audio(`data:${record["mimeType"]};base64,${record["recordDataBase64"]}`).play();
-    // console.log(audioRef)
-    // audioRef.oncanplaythrough = () => audioRef.play()
-    // audioRef.load()
+  const playAudioRec = () => {
+    new Audio(`data:${record["mimeType"]};base64,${record["recordDataBase64"]}`).play();
   }
+
+  const getCameraPermissions = async () => {
+    const { camera, photos } = await Camera.checkPermissions();
+    if(camera || photos !== "granted") { const { camera, photos } = await Camera.requestPermissions();
+      if(camera && photos === "granted") { console.log("camera allowed"); return true; } 
+    }
+  }
+
+  const takePicture = async () => {
+    const permissions = await getCameraPermissions();
+    if (permissions) {
+      const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+    setPhotoUrl(image.webPath); console.log(photoUrl);
+    
+    } else console.log("no camera allowed")
+  };
 
   const addLink = async (
     containName: string,
@@ -76,16 +93,20 @@ function Content() {
   return (
     <>
       <button style={{height:60, width:140, background:"grey" }} onClick={() => authUser()}>Auth User</button>
-      <button style={{height:60, width:140, background:"grey" }} onClick={() => isDeviceSupported()}>Is Rec Allowed</button>
-      <button style={{height:60, width:140, background:"grey" }} onClick={() => askRecordingPermission()}>Allow Rec</button>
-      <button style={{height:60, width:140, background:"grey" }} onClick={() => startRec()}>Rec</button>
-      <button style={{height:60, width:140, background:"grey" }} onClick={() => stopRec()}>Stop</button>
-      <button style={{height:60, width:140, background:"grey" }} onClick={() => playRec()}>Play</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => isAudioRecSupported()}>Is Rec Allowed</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => getAudioRecPermissions()}>Allow Rec</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => startAudioRec()}>Rec Audio</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => stopAudioRec()}>Stop Rec</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => playAudioRec()}>Play Audio</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => getCameraPermissions()}>Is Camera Allowed</button>
+      <button style={{height:60, width:140, background:"grey" }} onClick={() => takePicture()}>Take Photo</button>
       <audio controls src={`data:${record["mimeType"]};base64,${record["recordDataBase64"]}`} />
+      <img src={photoUrl} />
     </>
   );
 }
 import { ChakraProvider } from "@chakra-ui/react";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 
 export default function Index() {
   return (
