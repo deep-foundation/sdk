@@ -3,7 +3,7 @@ import { PACKAGE_NAME } from './package-name';
 import { Device } from '@capacitor/device';
 
 export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
-	if(deviceLinkId) {
+	if(!deviceLinkId) {
 		throw new Error("deviceLinkId must not be 0")
 	}
 

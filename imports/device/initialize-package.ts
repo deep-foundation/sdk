@@ -249,6 +249,17 @@ export async function initializePackage(deep: DeepClient) {
     } },
   });
 
+  const { data: [{ id: isNotChargingTypeLinkId }] } = await deep.insert({
+    type_id: typeTypeLinkId,
+    from_id: anyTypeLinkId,
+    to_id: anyTypeLinkId,
+    in: { data: {
+      type_id: containTypeLinkId,
+      from_id: packageLinkId,
+      string: { data: { value: 'IsNotCharging' } },
+    } },
+  });
+
   const { data: [{ id: languageCodeTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     from_id: anyTypeLinkId,

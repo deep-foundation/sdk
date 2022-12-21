@@ -3,6 +3,11 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function getLanguageTag(deep: DeepClient, deviceLinkId: number) {
+
+	if(!deviceLinkId) {
+		throw new Error("deviceLinkId must not be 0")
+	}
+
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const languageTagTypeLinkId = await deep.id(PACKAGE_NAME, 'LanguageTag');
   

@@ -1,10 +1,10 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
-import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Stack } from '@chakra-ui/react';
+import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { saveGeneralInfo } from '../imports/device/save-general-info';
 import { initializePackage } from '../imports/device/initialize-package';
 import { PACKAGE_NAME } from '../imports/device/package-name';
@@ -26,21 +26,34 @@ function Page() {
         linkId: await deep.id("deep", "admin")
       });
     }}>Login as admin</Button>
+        <Text>{deviceLinkId}</Text>
     <Button onClick={async () => {
+      console.log({deviceLinkId});
       await initializePackage(deep);
       if(!deviceLinkId) {
         const deviceTypeLinkId = await deep.id(PACKAGE_NAME, "Device");
         const {data: [{id: newDeviceLinkId}]} = await deep.insert({
           type_id: deviceTypeLinkId
         })
+        console.log({newDeviceLinkId});
         setDeviceLinkId(newDeviceLinkId);
       }
+      console.log({deviceLinkId});
+      
     }}>Initialize package</Button>
     
-    <Button onClick={() => {saveGeneralInfo(deep, deviceLinkId)}}>Save general info</Button>
-    <Button onClick={() => {saveBatteryInfo(deep, deviceLinkId)}}>Save battery info</Button>
-    <Button onClick={() => {saveLanguageId(deep, deviceLinkId)}}>Save language id</Button>
-    <Button onClick={() => {saveLanguageTag(deep, deviceLinkId)}}>Save language tag</Button>
+    <Button onClick={useCallback(() => {
+      saveGeneralInfo(deep, deviceLinkId)
+    }, [deep, deviceLinkId])}>Save general info</Button>
+    <Button onClick={useCallback(() => {
+      saveBatteryInfo(deep, deviceLinkId)
+    }, [deep, deviceLinkId])}>Save battery info</Button>
+    <Button onClick={useCallback(() => {
+      saveLanguageId(deep, deviceLinkId)
+    }, [deep, deviceLinkId])}>Save language id</Button>
+    <Button onClick={useCallback(() => {
+      saveLanguageTag(deep, deviceLinkId)
+    }, [deep, deviceLinkId])}>Save language tag</Button>
   </Stack>;
 }
 
