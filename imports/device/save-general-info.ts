@@ -7,20 +7,6 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		throw new Error("deviceLinkId must not be 0")
 	}
 
-	const {data: [{}]} = await deep.select({
-		type: {
-			id: {
-				_eq: await deep.id("@deep-foundation/core", "Contain")
-			}
-		},
-		from_id: deep.linkId,
-		to: {
-			type_id: {
-				_eq: await deep.id("@deep-foundation/core", "SyncTextFile")
-			}
-		}
-	})
-	
 	const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
 	const nameTypeLinkId = await deep.id(PACKAGE_NAME, 'Name');
 	const modelTypeLinkId = await deep.id(PACKAGE_NAME, 'Model');
