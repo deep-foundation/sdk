@@ -14,13 +14,12 @@ export async function getBatteryInfo(deep: DeepClient, deviceLinkId: number) {
   const isNotChargingTypeLinkId = await deep.id(PACKAGE_NAME, 'IsNotCharging');
 
   const {batteryLevel, isCharging} = await Device.getBatteryInfo();
-  console.log(`Battery level: ${batteryLevel}`)
 
 	const {
 		data: [{ id: batteryLevelLinkId }],
 	} = await deep.insert({
 		type_id: batteryLevelTypeLinkId,
-		number: { data: { value: batteryLevel } },
+		number: { data: { value: Math.floor(batteryLevel*100) } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
