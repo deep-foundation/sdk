@@ -18,14 +18,12 @@ function Page() {
 
   async function subscribeToNetworkStatus({ deep, connectionTypes, setConnectionTypes }:
     { deep: DeepClient, connectionTypes: string[], setConnectionTypes: (connectionTypes: string[]) => void }) {
-    console.log("y");
 
     Network.addListener('networkStatusChange', async ({ connectionType }) => {
       console.log(connectionType);
-      if (connectionType === 'none') {
+      if (connectionType === "none") {
         setConnectionTypes([...connectionTypes, connectionType]);
-      } else {
-        console.log("z");
+      } else if (connectionType === "wifi" || "cellular" || "unknown") {
         const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
         const connectionTypeLinkId = await deep.id(PACKAGE_NAME, "ConnectionType")
         console.log(JSON.stringify(connectionTypes));
@@ -41,6 +39,7 @@ function Page() {
             }]
           }
         })))
+        setConnectionTypes([]);
       }
     });
   }
