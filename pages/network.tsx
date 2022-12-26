@@ -21,7 +21,7 @@ function Page() {
       console.log(connectionType);
       if (connectionType === "none") {
         setConnectionTypes([...connectionTypes, connectionType]);
-      } else if (connectionType === "wifi" || "cellular" || "unknown") {
+      } else {
         const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
         const connectionTypeLinkId = await deep.id(PACKAGE_NAME, "ConnectionType");
         const customContainerTypeLinkId = await deep.id(deep.linkId, "Network");

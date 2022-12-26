@@ -13,22 +13,17 @@ function Page() {
   const deep = useDeep();
   const [photos, setPhotos] = useLocalStore("PhotoAlbum", []);
 
-  const photoHandler = async () => {
-    const image = await takePhoto();
-    setPhotos([...photos, image])
-  }
-
   const handlePhoto = async (deep) => {
     const image = await takePhoto();
     if (image) {
       const customContainerTypeLinkId = await deep.id(deep.linkId, "Camera");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
+      const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
 
       setPhotos([...photos, image]);
 
       const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
-        type_id: audioChunkTypeLinkId,
+        type_id: photoTypeLinkId,
         string: { data: { value: photo.base64String } },
         in: {
           data: [{
@@ -58,7 +53,7 @@ function Page() {
       <Button onClick={async () => await getCameraPermission(deep)}>
         <Text>Get Camera Permission</Text>
       </Button>
-      <Button onClick={async () => await photoHandler()}>
+      <Button onClick={async () => await handlePhoto(deep)}>
         <Text>Take Photo</Text>
       </Button>
     </Stack>
