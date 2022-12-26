@@ -4,7 +4,8 @@ export default async function takePhoto() {
   const image = await Camera.getPhoto({
     quality: 90,
     allowEditing: true,
-    resultType: CameraResultType.Uri
+    saveToGallery: true,
+    resultType: CameraResultType.Base64
   });
   return image
 }

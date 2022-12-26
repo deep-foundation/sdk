@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ChakraProvider, Stack } from '@chakra-ui/react';
+import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import {
   DeepProvider,
   useDeep,
@@ -27,6 +27,8 @@ function Content() {
     <>
       <Stack>
         <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>Auth User</Button>
+        <Text>Packages</Text>
+        <Button><Link href="/dev">Dev</Link></Button>
         <Button><Link href="/network">Network</Link></Button>
         <Button><Link href="/audiorec">AudioRec</Link></Button>
         <Button><Link href="/camera">Camera</Link></Button>
