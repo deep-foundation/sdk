@@ -1,9 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./initialize-package";
 
-export const containers = ["Network", "Camera", "AudioRec"];
-
-export default async function createContainers(deep: DeepClient) {
+export default async function createContainers(deep: DeepClient, containers:string[]) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const containerTypeLinkId = await deep.id(PACKAGE_NAME, "Container")
 

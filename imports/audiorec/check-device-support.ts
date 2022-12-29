@@ -10,8 +10,17 @@ export default async function checkDeviceSupport(deep: DeepClient) {
   
 
   const { value: supported } = await VoiceRecorder.canDeviceVoiceRecord();
-
-  const { data: [{ id: deviceSupportLinkId }] } = await deep.insert({
+console.log({
+  type_id: deviceSupportTypelinkId,
+  string: { data: { value: supported ? "true" : "false" } },
+  in: {
+    data: [{
+      type_id: containTypeLinkId,
+      from_id: customContainerTypeLinkId,
+    }]
+  }
+});
+  const { data } = await deep.insert({
     type_id: deviceSupportTypelinkId,
     string: { data: { value: supported ? "true" : "false" } },
     in: {
@@ -21,5 +30,6 @@ export default async function checkDeviceSupport(deep: DeepClient) {
       }]
     }
   })
+  console.log(JSON.stringify(data))
 }
 

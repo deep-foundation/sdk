@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME = "@deep-foundation/audiorec"
 export const PACKAGE_TYPES =
-  ["DeviceSupport", "Permissions", "RecordingStatus", "AudioChunk"]
+  ["DeviceSupport", "Permissions", "Record", "Duration", "StartTime", "EndTime", "AudioChunk", "Format"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")

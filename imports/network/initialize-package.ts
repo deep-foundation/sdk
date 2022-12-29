@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME="@deep-foundation/network"
-export const PACKAGE_TYPES = ["ConnectionType"]
+export const PACKAGE_TYPES = ["Connection", "ConnectionType", "Connected", "Timestamp"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")

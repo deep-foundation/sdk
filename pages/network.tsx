@@ -1,47 +1,79 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Network as CapacitorNetwork } from "@capacitor/network"
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 
-import initializePackage, { PACKAGE_NAME }  from "../imports/network/initialize-package";
+import initializePackage, { PACKAGE_NAME } from "../imports/network/initialize-package";
 import saveNetworkStatus from '../imports/network/save-network-status';
 
 
 
 function Page() {
   const deep = useDeep();
-  const [connectionTypes, setConnectionTypes] = useLocalStore("ConnectionTypes", []);
+  const [connections, setConnections] = useLocalStore("ConnectionTypes", []);
 
-  async function subscribeToNetworkStatus({ deep, connectionTypes, setConnectionTypes }:
-    { deep: DeepClient, connectionTypes: string[], setConnectionTypes: (connectionTypes: string[]) => void }) {
+  useEffect(() => {
+    const uploadConnections = async (connections) => {
+      const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+      const connectionTypeLinkId = await deep.id(PACKAGE_NAME, "Connection");
+      const connectionTypeTypeLinkId = await deep.id(PACKAGE_NAME, "ConnectionType");
+      const connectedTypeLinkId = await deep.id(PACKAGE_NAME, "Connected");
+      const timestampTypeLinkId = await deep.id(PACKAGE_NAME, "Timestamp");
+      const customContainerTypeLinkId = await deep.id(deep.linkId, "Network");
 
-      CapacitorNetwork.addListener('networkStatusChange', async ({ connectionType }) => {
-      console.log(connectionType);
-      if (connectionType === "none") {
-        setConnectionTypes([...connectionTypes, connectionType]);
-      } else {
-        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-        const connectionTypeLinkId = await deep.id(PACKAGE_NAME, "ConnectionType");
-        const customContainerTypeLinkId = await deep.id(deep.linkId, "Network");
-
-        setConnectionTypes([...connectionTypes, connectionType]);
-
-        const { data: [{ id: connectionLinkId }] } = await deep.insert(connectionTypes.map((connectionType) => ({
-          type_id: connectionTypeLinkId,
-          string: { data: { value: connectionType } },
-          in: {
-            data: [{
+      await deep.insert(connections.map((connection) => ({
+        type_id: connectionTypeLinkId,
+        in: {
+          data: [{
+            type_id: containTypeLinkId,
+            from_id: customContainerTypeLinkId,
+          }]
+        },
+        out: {
+          data: [
+            {
               type_id: containTypeLinkId,
-              from_id: customContainerTypeLinkId,
+              to: {
+                data: {
+                  type_id: connectionTypeTypeLinkId,
+                  string: { data: { value: connection.connectionType } },
+                }
+              }
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: connectedTypeLinkId,
+                  boolean: { data: { value: connection.connected } },
+                }
+              }
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: timestampTypeLinkId,
+                  string: { data: { value: new Date().toLocaleDateString() } },
+                }
+              }
             }]
-          }
-        })))
+        }
+      })));
+    }
+    if (connections.length > 0) {
+      uploadConnections(connections);
+      setConnections([]);
+    }
+  }, [connections])
 
-        setConnectionTypes([]);
-      }
-    });
+  async function subscribeToNetworkStatus() {
+    CapacitorNetwork.addListener('networkStatusChange', async (connection) => {
+      console.log({ connection });
+      setConnections([...connections, connection]);
+    })
   }
 
   return <Stack>
@@ -51,10 +83,10 @@ function Page() {
     }}>
       <Text>Login as admin</Text>
     </Button>
-    <Button onClick={async () => { await initializePackage(deep); }}>
+    <Button onClick={async () => { await initializePackage(deep) }}>
       <Text>Initialize package</Text>
     </Button>
-    <Button onClick={async () => { await subscribeToNetworkStatus({ deep, connectionTypes, setConnectionTypes }) }}>
+    <Button onClick={async () => { await subscribeToNetworkStatus() }}>
       <Text>Listen to changes</Text>
     </Button>
     <Button onClick={async () => await saveNetworkStatus(deep)}>
