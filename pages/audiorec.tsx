@@ -19,10 +19,12 @@ function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
   const [audioChunks, setAudioChunks] = useLocalStore("AudioChunks", []);
+  console.log("component top: " + recording);
+  
 
   useEffect(() => {
     const uploadAudioChunks = async (audioChunks) => {
-      console.log({deep});
+      console.log("Uploading");
       const customContainerTypeLinkId = await deep.id(deep.linkId, "AudioRec");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
       const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
@@ -32,91 +34,93 @@ function Page() {
       const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, "EndTime");
       const formatTypeLinkId = await deep.id(PACKAGE_NAME, "Format");
       await deep.insert(audioChunks.map((audioChunk) => ({
-      type_id: recordTypeLinkId,
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: customContainerTypeLinkId,
-        }]
-      },
-      out: {
-        data: [
-          {
+        type_id: recordTypeLinkId,
+        in: {
+          data: [{
             type_id: containTypeLinkId,
-            to : {
-              data : {
-                type_id: audioChunkTypeLinkId,
-                string: { data: { value: audioChunk.record["recordDataBase64"] } },
+            from_id: customContainerTypeLinkId,
+          }]
+        },
+        out: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: audioChunkTypeLinkId,
+                  string: { data: { value: audioChunk.record["recordDataBase64"] } },
+                }
               }
-            }
-          },
-          {
-            type_id: containTypeLinkId,
-            to : {
-              data : {
-                type_id: durationTypeLinkId,
-                string: { data: { value: audioChunk.record["msDuration"].toString() } },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: durationTypeLinkId,
+                  string: { data: { value: audioChunk.record["msDuration"].toString() } },
+                }
               }
-            }
-          },
-          {
-            type_id: containTypeLinkId,
-            to : {
-              data : {
-                type_id: startTimeTypeLinkId,
-                string: { data: { value: audioChunk.startTime } },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: startTimeTypeLinkId,
+                  string: { data: { value: audioChunk.startTime } },
+                }
               }
-            }
-          },
-          {
-            type_id: containTypeLinkId,
-            to : {
-              data : {
-                type_id: endTimeTypeLinkId,
-                string: { data: { value: audioChunk.endTime } },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: endTimeTypeLinkId,
+                  string: { data: { value: audioChunk.endTime } },
+                }
               }
-            }
-          },
-          {
-            type_id: containTypeLinkId,
-            to : {
-              data : {
-                type_id: formatTypeLinkId,
-                string: { data: { value: audioChunk.record["mimeType"] } },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: formatTypeLinkId,
+                  string: { data: { value: audioChunk.record["mimeType"] } },
+                }
               }
-            }
-        }]
-      }
-    })));
-    setAudioChunks([]);
+            }]
+        }
+      })));
+      setAudioChunks([]);
     }
     if (audioChunks.length > 0) uploadAudioChunks(audioChunks);
   }, [audioChunks])
 
-  const startRecording = async (duration) => {
-      await startAudioRec(deep);
-      const startTime = new Date().toLocaleTimeString();
-      await delay(duration);
-      const record = await stopAudioRec(deep);
-      const endTime = new Date().toLocaleTimeString();
-      console.log({record});
-      setAudioChunks([...audioChunks, {record, startTime, endTime}]);
-  }
-
-  const startRecordingCycle = async (duration) => {
-    setRecording(true);
-    console.log(recording)
-    for (;recording;) {
-      console.log(recording);
-      await startAudioRec(deep);
-      const startTime = new Date().toLocaleTimeString();
-      await delay(duration);
-      const record = await stopAudioRec(deep);
-      const endTime = new Date().toLocaleTimeString();
-      console.log({recording});
-      console.log({record});
-      setAudioChunks([...audioChunks, {record, startTime, endTime}]);
+  useEffect(() => {
+    let loop = true;
+    const startRecordingCycle = async (duration) => {
+      for (; recording && loop ;) {
+        console.log("inside cycle loop: " + recording)
+        await startAudioRec(deep);
+        const startTime = new Date().toLocaleDateString();
+        await delay(duration);
+        const record = await stopAudioRec(deep);
+        const endTime = new Date().toLocaleDateString();
+        console.log({ record });
+        setAudioChunks([...audioChunks, { record, startTime, endTime }]);
+      }
     }
+    if (recording) startRecordingCycle(5000);
+    return function stopCycle() { loop = false };
+  }, [recording])
+
+  const startRecording = async (duration) => {
+    await startAudioRec(deep);
+    const startTime = new Date().toLocaleTimeString();
+    await delay(duration);
+    const record = await stopAudioRec(deep);
+    const endTime = new Date().toLocaleTimeString();
+    console.log({ record });
+    setAudioChunks([...audioChunks, { record, startTime, endTime }]);
   }
 
   return <Stack>
@@ -141,10 +145,12 @@ function Page() {
     <Button onClick={async () => await getRecordingStatus(deep)}>
       getRecordingStatus
     </Button>
-    <Button onClick={async () => await startRecordingCycle(5000)}>
+    <Button onClick={() => {
+      setRecording(true); console.log(recording)}}>
       Start Recording Cycle
     </Button>
-    <Button onClick={() => {setRecording(false);console.log(recording);
+    <Button onClick={() => {
+      setRecording(false);  console.log("inside Stop onClick: " +recording);
     }}>
       Stop Recording Cycle
     </Button>
