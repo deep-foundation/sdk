@@ -19,8 +19,8 @@ function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
   const [audioChunks, setAudioChunks] = useLocalStore("AudioChunks", []);
+  const [records, setRecords] = useState([])
   console.log("component top: " + recording);
-  
 
   useEffect(() => {
     const uploadAudioChunks = async (audioChunks) => {
@@ -90,6 +90,7 @@ function Page() {
             }]
         }
       })));
+      console.log("Uploaded");
       setAudioChunks([]);
     }
     if (audioChunks.length > 0) uploadAudioChunks(audioChunks);
@@ -123,48 +124,54 @@ function Page() {
     setAudioChunks([...audioChunks, { record, startTime, endTime }]);
   }
 
+  const fetchRecords = async () => {
+    const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
+    const { data } = await deep.select({
+      type_id: audioChunkTypeLinkId
+    });
+    console.log({data});
+    setRecords(data);
+  }
+
   return <Stack>
-    <Button onClick={async () => {
-      await deep.guest();
-      await deep.login({ linkId: await deep.id("deep", "admin") });
-    }}>
-      Login as admin
-    </Button>
     <Button onClick={async () => await initializePackage(deep)}>
-      Initialize package
+      INITIALIZE PACKAGE
     </Button>
     <Button onClick={async () => await checkDeviceSupport(deep)}>
-      checkDeviceSupport
+      CHECK DEVICE SUPPORT
     </Button>
     <Button onClick={async () => await checkAudioRecPermission(deep)}>
-      checkAudioRecPermission
+      CHECK RECORDING PERMISSION
     </Button>
     <Button onClick={async () => await getAudioRecPermission(deep)}>
-      getAudioRecPermission
+      GET RECORDING PERMISSION
     </Button>
     <Button onClick={async () => await getRecordingStatus(deep)}>
-      getRecordingStatus
+      GET RECORDING STATUS
     </Button>
     <Button onClick={() => {
       setRecording(true); console.log(recording)}}>
-      Start Recording Cycle
+      START RECORDING CYCLE
     </Button>
     <Button onClick={() => {
       setRecording(false);  console.log("inside Stop onClick: " +recording);
     }}>
-      Stop Recording Cycle
+      STOP RECORDING CYCLE
     </Button>
     <Button onClick={async () => await startRecording(5000)}>
-      Record One Chunk
+      RECORD ONE CHUNK
     </Button>
     <Button onClick={async () => await pauseAudioRec(deep)}>
-      Pause
+      PAUSE
     </Button>
     <Button onClick={async () => await resumeAudioRec(deep)}>
-      Resume
+      RESUME
     </Button>
+    <Button  onClick={async () => await fetchRecords()}>
+     LOAD RECORDS
+    </Button>
+    { records?.map((r) => <audio id={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />) }
   </Stack>
-  { audioChunks?.map((r) => <audio id={Math.random().toString()} controls src={`data:${r["mimeType"]};base64,${r["recordDataBase64"]}`} />) }
 }
 
 export default function AudioRec() {
