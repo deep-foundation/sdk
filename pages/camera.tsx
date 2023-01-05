@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
@@ -13,48 +13,44 @@ function Page() {
   const deep = useDeep();
   const [photos, setPhotos] = useLocalStore("PhotoAlbum", []);
 
-  const handlePhoto = async (deep) => {
-    const image = await takePhoto();
-    if (image) {
-      const customContainerTypeLinkId = await deep.id(deep.linkId, "Camera");
+  useEffect(() => {
+    const uploadPhotos = async (photos) => {
+      const cameraLinkId = await deep.id(deep.linkId, "Camera");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
       const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-
-      setPhotos([...photos, image]);
-
       const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
         type_id: photoTypeLinkId,
         string: { data: { value: photo.base64String } },
         in: {
           data: [{
             type_id: containTypeLinkId,
-            from_id: customContainerTypeLinkId,
+            from_id: cameraLinkId,
           }]
         }
       })));
+      setPhotos([]);
     }
-    setPhotos([]);
+    if (photos.length > 0) uploadPhotos(photos);
+  }, [photos])
+
+  const handlePhoto = async (deep) => {
+    const image = await takePhoto();
+      setPhotos([...photos, image])
   }
 
   return <>
     <Stack>
-      <Button onClick={async () => {
-        await deep.guest();
-        await deep.login({ linkId: await deep.id("deep", "admin") });
-      }}>
-        <Text>Login as admin</Text>
-      </Button>
       <Button onClick={async () => { await initializePackage(deep); }}>
-        <Text>Initialize package</Text>
+        <Text>INITIALIZE PACKAGE</Text>
       </Button>
       <Button onClick={async () => await checkCameraPermission(deep)}>
-        <Text>Check Camera Permission</Text>
+        <Text>CHECK PERMISSIONS</Text>
       </Button>
       <Button onClick={async () => await getCameraPermission(deep)}>
-        <Text>Get Camera Permission</Text>
+        <Text>GET PERMISSIONS</Text>
       </Button>
       <Button onClick={async () => await handlePhoto(deep)}>
-        <Text>Take Photo</Text>
+        <Text>TAKE PHOTO</Text>
       </Button>
     </Stack>
     <Stack>

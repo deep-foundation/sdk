@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME = "@deep-foundation/camera"
 export const PACKAGE_TYPES =
-  ["CameraPermission", "PhotoPermission", "Photo"]
+  ["Camera", "CameraPermission", "PhotoPermission", "Photo"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
@@ -39,4 +39,14 @@ export default async function initializePackage(deep: DeepClient) {
       }]
     }
   })))
+  const { data: [{ id: cameraLinkId }] } = await deep.insert({
+    type_id: await deep.id(PACKAGE_NAME, "Camera"),
+    in: {
+      data: [{
+        type_id: containTypeLinkId,
+        from_id: await deep.id("deep", "admin"),
+        string: { data: { value: "Camera" } }
+      }]
+    }
+  })
 }
