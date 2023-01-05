@@ -25,9 +25,13 @@ function Content() {
 
   return (
     <>
-      <Text>HELLO FROM DEEP</Text>
+      <Stack>
+        <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>Auth User</Button>
+        <Text>Packages</Text>
+        <Button><Link href="/audiorecord">AudioRec</Link></Button>
+      </Stack>
     </>
-  )
+  );
 }
 
 export default function Index() {
