@@ -152,7 +152,7 @@ function Page() {
       INITIALIZE PACKAGE
     </Button>
     <Button onClick={async () => await createContainer(deep)}>
-      CREATE AUDIORECORDS LINK 
+      CREATE NEW CONTAINER
     </Button>
     <Button onClick={async () => await checkDeviceSupport(deep)}>
       CHECK DEVICE SUPPORT
