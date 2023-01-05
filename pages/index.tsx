@@ -25,16 +25,9 @@ function Content() {
 
   return (
     <>
-      <Stack>
-        <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>Auth User</Button>
-        <Text>Packages</Text>
-        <Button><Link href="/dev">Dev</Link></Button>
-        <Button><Link href="/network">Network</Link></Button>
-        <Button><Link href="/audiorec">AudioRec</Link></Button>
-        <Button><Link href="/camera">Camera</Link></Button>
-      </Stack>
+      <Text>HELLO FROM DEEP</Text>
     </>
-  );
+  )
 }
 
 export default function Index() {
