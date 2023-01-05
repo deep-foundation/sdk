@@ -21,14 +21,14 @@ function Page() {
       const connectionTypeTypeLinkId = await deep.id(PACKAGE_NAME, "ConnectionType");
       const connectedTypeLinkId = await deep.id(PACKAGE_NAME, "Connected");
       const timestampTypeLinkId = await deep.id(PACKAGE_NAME, "Timestamp");
-      const customContainerTypeLinkId = await deep.id(deep.linkId, "Network");
+      const networkLinkId = await deep.id(deep.linkId, "Network");
 
       await deep.insert(connections.map((connection) => ({
         type_id: connectionTypeLinkId,
         in: {
           data: [{
             type_id: containTypeLinkId,
-            from_id: customContainerTypeLinkId,
+            from_id: networkLinkId,
           }]
         },
         out: {
@@ -47,7 +47,7 @@ function Page() {
               to: {
                 data: {
                   type_id: connectedTypeLinkId,
-                  boolean: { data: { value: connection.connected } },
+                  string: { data: { value: connection.connected ? "connected" : "disconnected" } },
                 }
               }
             },

@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME="@deep-foundation/network"
-export const PACKAGE_TYPES = ["Connection", "ConnectionType", "Connected", "Timestamp"]
+export const PACKAGE_TYPES = ["Network", "Connection", "ConnectionType", "Connected", "Timestamp"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
@@ -38,4 +38,14 @@ export default async function initializePackage(deep: DeepClient) {
       }]
     }
   })))
+  const { data: [{ id: networkLinkId }] } = await deep.insert({
+    type_id: await deep.id(PACKAGE_NAME, "Network"),
+    in: {
+      data: [{
+        type_id: containTypeLinkId,
+        from_id: await deep.id('deep', 'admin'),
+        string: { data: { value: "Network" } }
+      }]
+    }
+  })
 }
