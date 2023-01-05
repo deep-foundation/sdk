@@ -26,7 +26,7 @@ function Page() {
     const uploadAudioChunks = async (audioChunks) => {
       console.log("Uploading");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const audioRecordsTypeLinkId = await deep.id(deep.linkId, "AudioRecords");
+      const audioRecordsLinkId = await deep.id(deep.linkId, "AudioRecordsContainer");
       const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
       const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
       const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");
@@ -38,7 +38,7 @@ function Page() {
         in: {
           data: [{
             type_id: containTypeLinkId,
-            from_id: audioRecordsTypeLinkId,
+            from_id: audioRecordsLinkId,
           }]
         },
         out: {
@@ -136,12 +136,12 @@ function Page() {
   const createContainer = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsTypeLinkId = await deep.id(PACKAGE_NAME, "AudioRecords");
-    await deep.insert({
-      type_id: audioRecordsTypeLinkId,
-      to :{
+    await deep.insert({ type_id: audioRecordsTypeLinkId,
+      string: { data: { value: "Audio Records" } },
+      in :{
         data : {
           type_id: containTypeLinkId,
-          from_id: deep.linkId,
+          from_id: await deep.id("deep", "admin"),
         }
       }
     })
@@ -178,20 +178,14 @@ function Page() {
     <Button onClick={async () => await startRecording(5000)}>
       RECORD ONE CHUNK
     </Button>
-    <Button onClick={async () => await pauseAudioRec(deep)}>
-      PAUSE
-    </Button>
-    <Button onClick={async () => await resumeAudioRec(deep)}>
-      RESUME
-    </Button>
     <Button  onClick={async () => await fetchRecords()}>
      LOAD RECORDS
     </Button>
-    { records?.map((r) => <audio id={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />) }
+    { records?.map((r) => <audio key={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />) }
   </Stack>
 }
 
-export default function AudioRec() {
+export default function Audiorecord() {
   return (
     <ChakraProvider>
       <Provider>
