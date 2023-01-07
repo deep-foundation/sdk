@@ -9,8 +9,6 @@ import Link from "next/link";
 
 
 
-const styles = { height: 60, width: 140, background: "grey" }
-
 function Content() {
   const deep = useDeep();
   const [isauth, setAuth] = useState(false);
@@ -30,7 +28,6 @@ function Content() {
     <>
       <Stack>
         <Button style={{ background: isauth ? "green" : "red" }}>ADMIN</Button>
-        <Text>Packages</Text>
         <Button><Link href="/camera">Camera</Link></Button>
       </Stack>
     </>

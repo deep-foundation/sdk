@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME = "@deep-foundation/camera"
 export const PACKAGE_TYPES =
-  ["Camera", "CameraPermission", "PhotoPermission", "Photo"]
+  ["Camera", "CameraPermission", "PhotoPermission", "Photo", "Base64", "Path", "WebPath", "Exif", "Format", "TimeStamp" ]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")

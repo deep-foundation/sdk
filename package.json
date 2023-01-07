@@ -19,8 +19,8 @@
     "be": "npm run build-electron",
     "aa": "npm run add-android",
     "ba": "npm run build-android",
-    "bbel": "npm run build-browser-extension",
-    "bbem": "npm run build-browser-extension"
+    "bbel": "npm run build-browser-extension-linux",
+    "bbem": "npm run build-browser-extension-mac"
   },
   "license": "ISC",
   "dependencies": {
@@ -28,7 +28,6 @@
     "@capacitor/android": "^4.6.1",
     "@capacitor/camera": "^4.1.4",
     "@capacitor/core": "^4.6.1",
-    "@capacitor/network": "^4.1.0",
     "@chakra-ui/react": "^1.8.7",
     "@deep-foundation/deeplinks": "^0.0.70",
     "@emotion/react": "^11.8.2",
@@ -44,7 +43,6 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^4.6.1",
-    "buffer": "^6.0.3",
-    "capacitor-voice-recorder": "^4.0.0"
+    "buffer": "^6.0.3"
   }
 }
