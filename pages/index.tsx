@@ -26,13 +26,11 @@ function Content() {
   authUser();
   }, [])
 
-  
-
   return (
     <>
       <Stack>
         <Button style={{ background: isauth ? "green" : "red" }}>ADMIN</Button>
-        <Button><Link href="/network">Network</Link></Button>
+        <Button><Link href="/network">NETWORK</Link></Button>
       </Stack>
     </>
   );

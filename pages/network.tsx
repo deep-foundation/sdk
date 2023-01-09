@@ -12,9 +12,34 @@ import saveNetworkStatus from '../imports/network/save-network-status';
 
 function Page() {
   const deep = useDeep();
-  const [connections, setConnections] = useLocalStore("ConnectionTypes", []);
+  const [connections, setConnections] = useLocalStore("Connections", []);
 
   useEffect(() => {
+    const updateNetworkStatus = async (connections) => {
+      const networkLinkId = await deep.id(deep.linkId, "Network");
+      const wifiLinkId = await deep.id(networkLinkId, "Wifi");
+      const cellularLinkId = await deep.id(networkLinkId, "Cellular");
+      const unknownLinkId = await deep.id(networkLinkId, "Unknown");
+      const noneLinkId = await deep.id(networkLinkId, "None");
+
+      for (const connection of connections) {
+        switch (connection.connectionType) {
+          case "wifi": const { data: [{ id: updatedWifiLinkId }] } = await deep.update(
+            wifiLinkId, 
+            { value: connection.connected ? "connected" : "disconnected" },);
+          case "cellular": const { data: [{ id: updatedCellularLinkId }] } = await deep.update(
+            cellularLinkId, 
+            { value: connection.connected ? "connected" : "disconnected" });
+          case "unknown": const { data: [{ id: updatedUnknownLinkId }] } = await deep.update(
+            unknownLinkId, 
+            { value: connection.connected ? "connected" : "disconnected" });
+          case "none": const { data: [{ id: updatedNoneLinkId }] } = await deep.update(
+            noneLinkId, 
+            { value: connection.connected ? "connected" : "disconnected" });
+        }
+      }
+    }
+
     const uploadConnections = async (connections) => {
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
       const connectionTypeLinkId = await deep.id(PACKAGE_NAME, "Connection");
@@ -56,15 +81,16 @@ function Page() {
               to: {
                 data: {
                   type_id: timestampTypeLinkId,
-                  string: { data: { value: new Date().toLocaleDateString() } },
+                  string: { data: { value: new Date() } },
                 }
               }
             }]
         }
       })));
     }
+
     if (connections.length > 0) {
-      uploadConnections(connections);
+      updateNetworkStatus(connections);
       setConnections([]);
     }
   }, [connections])
@@ -77,20 +103,14 @@ function Page() {
   }
 
   return <Stack>
-    <Button onClick={async () => {
-      await deep.guest();
-      await deep.login({ linkId: await deep.id("deep", "admin") });
-    }}>
-      <Text>Login as admin</Text>
-    </Button>
     <Button onClick={async () => { await initializePackage(deep) }}>
-      <Text>Initialize package</Text>
+      <Text>INITIALIZE PACKAGE</Text>
     </Button>
     <Button onClick={async () => { await subscribeToNetworkStatus() }}>
-      <Text>Listen to changes</Text>
+      <Text>LISTEN TO NETWORK CHANGES</Text>
     </Button>
     <Button onClick={async () => await saveNetworkStatus(deep)}>
-      <Text>Save Current Status</Text>
+      <Text>SAVE CURRENT STATUS</Text>
     </Button>
   </Stack>
 }

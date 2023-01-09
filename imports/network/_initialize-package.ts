@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME="@deep-foundation/network"
-export const PACKAGE_TYPES = ["Network", "Wifi", "Cellular", "Unknown", "None"]
+export const PACKAGE_TYPES = ["Network", "Connection", "ConnectionType", "Connected", "Timestamp"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
@@ -28,7 +28,6 @@ export default async function initializePackage(deep: DeepClient) {
       }]
     },
   })
-
   const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     type_id: typeTypeLinkId,
     in: {
@@ -39,56 +38,13 @@ export default async function initializePackage(deep: DeepClient) {
       }]
     }
   })))
-  
   const { data: [{ id: networkLinkId }] } = await deep.insert({
     type_id: await deep.id(PACKAGE_NAME, "Network"),
     in: {
       data: [{
         type_id: containTypeLinkId,
         from_id: await deep.id('deep', 'admin'),
-        string: { data: { value: "Network" } },
-      }]
-    },
-    out: {
-      data: [{
-        type_id: containTypeLinkId,
-        string: { data: { value: "Wifi" } },
-        to: { 
-          data: {
-            type_id: await deep.id(PACKAGE_NAME, "Wifi"),
-            string: { data: { value: "undefined" }}
-          }
-        }
-      },
-      {
-        type_id: containTypeLinkId,
-        string: { data: { value: "Cellular" } },
-        to: { 
-          data: {
-            type_id: await deep.id(PACKAGE_NAME, "Cellular"),
-            string: { data: { value: "undefined" }}
-          }
-        }
-      },
-      {
-        type_id: containTypeLinkId,
-        string: { data: { value: "Unknown" } },
-        to: { 
-          data: {
-            type_id: await deep.id(PACKAGE_NAME, "Unknown"),
-            string: { data: { value: "undefined" }}
-          }
-        }
-      },
-      {
-        type_id: containTypeLinkId,
-        string: { data: { value: "None" } },
-        to: { 
-          data: {
-            type_id: await deep.id(PACKAGE_NAME, "None"),
-            string: { data: { value: "undefined" }}
-          }
-        }
+        string: { data: { value: "Network" } }
       }]
     }
   })
