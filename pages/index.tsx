@@ -1,32 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
 } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import Link from "next/link";
+// import TabCard from "./tab";
 
 
-
-const styles = { height: 60, width: 140, background: "grey" }
-
-function Content() {
+export function Extension() {
   const deep = useDeep();
-  const [isauth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(false);
+  const [tabsUpdate, setTabsUpdate] = useState(false);
+  const [tabs, setTabs] = useLocalStore("Tabs", []);
 
-  const authUser = async () => {
-    await deep.guest();
-    const { linkId, token, error } = await deep.login({
-      linkId: await deep.id("deep", 'admin')
-    })
-    token ? setAuth(true) : setAuth(false)
-  };
+  useEffect(() => {
+    const authUser = async () => {
+      await deep.guest();
+      const { linkId, token, error } = await deep.login({
+        linkId: await deep.id("deep", 'admin')
+      })
+      token ? setAuth(true) : setAuth(false)
+    };
+    authUser();
+  })
+
+  useEffect(() => {
+    if (typeof (window) === "object" && tabsUpdate) {
+      const interval = setInterval(() => {
+        chrome.tabs.query({}, newTabs => {
+          setTabs([...tabs, newTabs]);
+        })
+      }, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [tabsUpdate])
+
+
+  useEffect(() => {
+    console.log({ tabs });
+  }, [tabs])
 
   return (
-    <>
-      <Text>HELLO FROM DEEP</Text>
-    </>
+    <Stack>
+      <Button style={{ background: auth ? "green" : "red" }}>ADMIN</Button>
+      <Button onClick={() => setTabsUpdate(true)}>SUBSCRIBE TO TABS</Button>
+      <Button onClick={() => setTabsUpdate(false)}>UNSUBSCRIBE</Button>
+      {/* {tabs.length > 0 ? <TabCard id={tabs[0].id} stringA={tabs[0].url} stringB={tabs[0].id} /> : null} */}
+    </Stack>
   )
 }
 
@@ -36,7 +58,7 @@ export default function Index() {
       <ChakraProvider>
         <Provider>
           <DeepProvider>
-            <Content />
+            <Extension />
           </DeepProvider>
         </Provider>
       </ChakraProvider>
