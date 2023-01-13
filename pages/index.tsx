@@ -12,27 +12,27 @@ export function Extension() {
   const [tabsUpdate, setTabsUpdate] = useState(false);
   const [tabs, setTabs] = useState([]);
 
-  // useEffect(() => {
-  //   const authUser = async () => {
-  //     await deep.guest();
-  //     const { linkId, token, error } = await deep.login({
-  //       linkId: await deep.id("deep", 'admin')
-  //     })
-  //     token ? setAuth(true) : setAuth(false)
-  //   };
-  //   authUser();
-  // })
+  useEffect(() => {
+    const authUser = async () => {
+      await deep.guest();
+      const { linkId, token, error } = await deep.login({
+        linkId: await deep.id("deep", 'admin')
+      })
+      token ? setAuth(true) : setAuth(false)
+    };
+    authUser();
+  })
 
   useEffect(() => {
-    if (typeof (window) === "object") {
+    if (typeof (window) === "object" && tabsUpdate) {
       const interval = setInterval(() => {
         chrome.tabs.query({}, newTabs => {
           setTabs([...tabs, newTabs]);
         })
       }, 1000)
-      // return () => clearInterval(interval)
+      return () => clearInterval(interval)
     }
-  })
+  }, [tabsUpdate])
 
 
   // useEffect(() => {
@@ -40,13 +40,14 @@ export function Extension() {
   // }, [tabs])
 
   return (
-    // <Stack>
-    //   <Button style={{ background: auth ? "green" : "red" }}>ADMIN</Button>
-    //   <Button onClick={() => setTabsUpdate(true)}>SUBSCRIBE TO TABS</Button>
-    //   <Button onClick={() => setTabsUpdate(false)}>UNSUBSCRIBE</Button>
-     
-    // </Stack>
-    <>{tabs?.map((tab) =>(<TabCard key={tab.id} id={tab.id} stringA={tab.url} stringB={tab.id} />))}</> 
+    <>
+      <Stack>
+        <Button style={{ background: auth ? "green" : "red" }}>ADMIN</Button>
+        <Button onClick={() => setTabsUpdate(true)}>SUBSCRIBE TO TABS</Button>
+        <Button onClick={() => setTabsUpdate(false)}>UNSUBSCRIBE</Button>
+      </Stack>
+      {tabs?.map((tab) => (<TabCard key={tab.id} id={tab.id} stringA={tab.url} stringB={tab.id} />))}
+    </>
   )
 }
 
