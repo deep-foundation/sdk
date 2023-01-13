@@ -23,8 +23,9 @@ module.exports = withNextEnv({
       "https": false,
       "stream": false,
       "crypto": false,
+      bufferutil: false,
+      "utf-8-validate": false
     };
-
     return config;
   },
 });
