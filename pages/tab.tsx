@@ -1,6 +1,6 @@
 import { Button, Stack, StackDivider, Box, Text, Image, Card, CardHeader, CardBody, Heading, Flex } from "@chakra-ui/react";
 
-export default function Tab({ title, url, id, favIconUrl }) {
+export default function Tab({ title, url, id, favIconUrl, type }) {
 
   function createDiv() {
     const injectElement = document.createElement('div'); injectElement.innerHTML = 'XXXXXXXXXXXXXXXXXXXXX'; document.body.appendChild(injectElement);
@@ -39,6 +39,7 @@ export default function Tab({ title, url, id, favIconUrl }) {
             {url}
           </Text>
         </Box>
+        {type === "page" ? null : (
         <Box>
           <Button onClick={() => injectDiv(id)} style={{
             height: "40px",
@@ -49,6 +50,7 @@ export default function Tab({ title, url, id, favIconUrl }) {
             INJECT DIV
           </Button>
         </Box>
+        )}
       </Stack>
     </CardBody>
   </Card>

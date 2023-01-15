@@ -13,7 +13,7 @@ export const delay = (time) => new Promise(res => setTimeout(() => res(null), ti
 export function Extension() {
   const deep = useDeep();
   const [auth, setAuth] = useState(false);
-  const [tabsUpdate, setTabsUpdate] = useState(false);
+  const [tabsSubscription, setTabsSubscription] = useState(false);
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
 
@@ -27,16 +27,16 @@ export function Extension() {
 
   useEffect(() => {
     let update = true;
-    const updateTabs = async () => {
-      for (; typeof (window) === "object" && tabsUpdate && update;) {
+    const updateTabs = async (tabsSubscription) => {
+      for (; typeof (window) === "object" && tabsSubscription && update;) {
         const newTabs = await chrome.tabs.query({});
         setTabs(newTabs);
-        await delay(5000);
+        await delay(1000);
       }
     }
-    if (tabsUpdate) updateTabs();
+    if (tabsSubscription) updateTabs(tabsSubscription);
     return () => { update = false };
-  }, [tabsUpdate])
+  }, [tabsSubscription])
 
   const getHistory = async () => {
     if (typeof (window) === "object") {
@@ -125,12 +125,12 @@ export function Extension() {
       <Stack>
         <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser()}>ADMIN</Button>
         <Button onClick={async () => await initializePackage(deep)} >INITIALIZE PACKAGE</Button>
-        <Button onClick={() => setTabsUpdate(true)}>SUBSCRIBE TO TABS</Button>
-        <Button onClick={() => setTabsUpdate(false)}>UNSUBSCRIBE</Button>
+        <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
+        <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY TO DEEP</Button>
       </Stack>
-      {tabs?.map((tab) => (<Tab key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
-      {history?.map((tab) => (<Tab key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
+      {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
+      {history?.map((page) => (<Tab type="page" key={page.id} id={page.id} favIconUrl={page.favIconUrl} title={page.title} url={page.url} />))}
     </>
   )
 }
