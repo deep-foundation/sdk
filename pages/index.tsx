@@ -17,7 +17,7 @@ export function Extension() {
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
 
-  const authUser = async () => {
+  const authUser = async (deep) => {
     await deep.guest();
     const { linkId, token, error } = await deep.login({
       linkId: await deep.id("deep", 'admin')
@@ -120,14 +120,29 @@ export function Extension() {
     if (history.length > 0) uploadHistory(history);
   }, [history])
 
+  const createBrowserHistoryLink = async (deep) => {
+    const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+    const { data: [{ id: browserHistoryLinkId }] } = await deep.insert({
+      type_id: await deep.id(PACKAGE_NAME, "BrowserHistory"),
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: await deep.id('deep', 'admin'),
+          string: { data: { value: "BrowserHistory" } },
+        }]
+      }
+    })
+  }
+
   return (
     <>
       <Stack>
-        <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser()}>ADMIN</Button>
+        <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser(deep)}>ADMIN</Button>
         <Button onClick={async () => await initializePackage(deep)} >INITIALIZE PACKAGE</Button>
+        <Button onClick={async () => await createBrowserHistoryLink(deep)} >CREATE NEW BROWSERHISTORY LINK</Button>
         <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
         <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
-        <Button onClick={async () => await getHistory()} >UPLOAD HISTORY TO DEEP</Button>
+        <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
       {history?.map((page) => (<Tab type="page" key={page.id} id={page.id} favIconUrl={page.favIconUrl} title={page.title} url={page.url} />))}
