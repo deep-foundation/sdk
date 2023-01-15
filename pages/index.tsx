@@ -3,8 +3,9 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import TabCard from "./tab";
+import Tab from "./tab";
 
+export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
 export function Extension() {
   const deep = useDeep();
@@ -24,20 +25,17 @@ export function Extension() {
   })
 
   useEffect(() => {
-    if (typeof (window) === "object" && tabsUpdate) {
-      const interval = setInterval(() => {
-        chrome.tabs.query({}, newTabs => {
-          setTabs([...tabs, newTabs]);
-        })
-      }, 1000)
-      return () => clearInterval(interval)
+    let update = true;
+    const updateTabs = async () => {
+      for (; typeof (window) === "object" && tabsUpdate && update; ) {
+        const newTabs = await chrome.tabs.query({});
+        setTabs(newTabs);
+        await delay(5000);
+      }
     }
+    if (tabsUpdate) updateTabs();
+    return () => { update = false };
   }, [tabsUpdate])
-
-
-  // useEffect(() => {
-  //   console.log({ tabs });
-  // }, [tabs])
 
   return (
     <>
@@ -46,7 +44,7 @@ export function Extension() {
         <Button onClick={() => setTabsUpdate(true)}>SUBSCRIBE TO TABS</Button>
         <Button onClick={() => setTabsUpdate(false)}>UNSUBSCRIBE</Button>
       </Stack>
-      {tabs?.map((tab) => (<TabCard key={tab.id} id={tab.id} stringA={tab.url} stringB={tab.id} />))}
+      {tabs?.map((tab) => (<Tab key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
     </>
   )
 }
