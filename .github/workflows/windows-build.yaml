@@ -61,11 +61,7 @@ jobs:
       - name: Install electron dependencies
         run: cd electron && npm ci
       - name: pull dl
-        run: cd node_modules/@deep-foundation && rm -r deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../.. && rm -r electron/node_modules/@deep-foundation/deeplinks && cp -r node_modules/@deep-foundation/deeplinks electron/node_modules/@deep-foundation/deeplinks
-      - name: pull hasura
-        run: cd node_modules/@deep-foundation && rm -r hasura && git clone https://github.com/deep-foundation/hasura.git && cd hasura && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../.. && rm -r electron/node_modules/@deep-foundation/hasura && cp -r node_modules/@deep-foundation/hasura electron/node_modules/@deep-foundation/hasura
-      - name: pull store
-        run: cd node_modules/@deep-foundation && rm -r store && git clone https://github.com/deep-foundation/store.git && cd store && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../.. && rm -r electron/node_modules/@deep-foundation/store && cp -r node_modules/@deep-foundation/store electron/node_modules/@deep-foundation/store
+        run: cd node_modules/@deep-foundation && rm -r deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../.. && rm -r electron/node_modules/@deep-foundation/deeplinks
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
