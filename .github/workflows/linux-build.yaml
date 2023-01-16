@@ -1,0 +1,81 @@
+name: Linux Build
+on:
+  push:
+    branches: [ menzorg-windows-mac-buld ]
+  pull_request:
+    branches: [ menzorg-windows-mac-buld ]
+  workflow_dispatch:
+defaults:
+  run:
+    working-directory: ./
+env:
+  USE_HARD_LINKS: false
+  MIGRATIONS_DIR: /tmp/.migrate
+  ASSET_PREFIX: '.'
+  npm_config_yes: true
+  NEXT_PUBLIC_ENGINES: 1
+  MIGRATIONS_ID_TYPE_SQL: bigint
+  MIGRATIONS_ID_TYPE_GQL: bigint
+  MIGRATIONS_HASURA_PATH: localhost:8080
+  MIGRATIONS_HASURA_SSL: 0
+  MIGRATIONS_HASURA_SECRET: myadminsecretkey
+  NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+  NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+  NEXT_PUBLIC_GQL_SSL: 0
+  DEEPLINKS_HASURA_PATH: localhost:8080
+  DEEPLINKS_HASURA_SSL: 0
+  MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+  MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+  DOCKER: 1
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15'
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-linux
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dc dependencies
+        run: npm ci --force
+      - name: Install electron dependencies
+        run: cd electron && npm ci
+      - name: pull dl
+        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks && cp -r node_modules/@deep-foundation/deeplinks electron/node_modules/@deep-foundation/deeplinks
+      - name: pull hasura
+        run: cd node_modules/@deep-foundation && rm -rf hasura && git clone https://github.com/deep-foundation/hasura.git && cd hasura && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/hasura && cp -r node_modules/@deep-foundation/hasura electron/node_modules/@deep-foundation/hasura
+      - name: pull store
+        run: cd node_modules/@deep-foundation && rm -rf store && git clone https://github.com/deep-foundation/store.git && cd store && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/store && cp -r node_modules/@deep-foundation/store electron/node_modules/@deep-foundation/store
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        run: cd electron && npm run electron:pack
+      - name: Create tar.gz file
+        run: |
+          cd electron/dist
+          mv Deep.Case-1.0.0.AppImage Deep.Case.AppImage
+          tar -czvf Deep.Case.tar.gz Deep.Case.AppImage
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Deep.Case-Linux
+          path: |
+            electron/dist/Deep.Case.tar.gz
+            electron/dist/README.txt
