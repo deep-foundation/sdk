@@ -92,7 +92,7 @@ function Page() {
   const [token, setToken] = useTokenController();
   return <div>
     <div><a href="/">back</a></div>
-    <h1>Deep.Foundation nextjs example - all subscribe</h1>
+    <h1>Deep.Foundation sdk example - all subscribe</h1>
     <div>
       path to gql <b>without protocol</b>:
       <Input size="xs" value={gqlUrlInput} onChange={e => setGqlUrlInput(e.target.value)} placeholder="3006-deepfoundation-dev-XXXXXXXXXXX.XX-XXXX.gitpod.io/gql"/>
@@ -101,7 +101,7 @@ function Page() {
       token of user link (copy from Deep.Case):
       <Input size="xs" value={tokenInput} onChange={e => setTokenInput(e.target.value)}/>
     </div>
-    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/nextjs', path: gqlUrl, ssl: true, token: token, ws: !!process?.browser }}>
+    <ApolloClientTokenizedProvider options={{ client: '@deep-foundation/sdk', path: gqlUrl, ssl: true, token: token, ws: !!process?.browser }}>
       {[<Content key={token+gqlUrl}/>]}
     </ApolloClientTokenizedProvider>
   </div>;

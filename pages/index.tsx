@@ -14,7 +14,7 @@ export default function Index() {
         <ChakraProvider>
         <Provider>
           <DeepProvider>
-            <h1>Deep.Foundation nextjs examples</h1>
+            <h1>Deep.Foundation sdk examples</h1>
             <div><Link href="/all">all subscribe</Link></div>
             <div><Link href="/messanger">messanger</Link></div>
             <div><Link href="/device">device</Link></div>
