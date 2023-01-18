@@ -84,8 +84,8 @@ function Page() {
           devicePackageSelectResponse.data.length > 0;
         return isDevicePackageInstalled;
       }
-
-      if (!getIsDevicePackageInstalled()) {
+      
+      if (!await getIsDevicePackageInstalled()) {
         await initializeDevicePackage(deep);
       }
       if (!deviceLinkId) {
