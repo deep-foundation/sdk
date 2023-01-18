@@ -57,14 +57,6 @@ function Page() {
       >
         Save language tag
       </Button>
-      <Button
-        onClick={useCallback(() => {
-          console.log(deep);
-          
-        }, [deep, deviceLinkId])}
-      >
-        Aaaaaaaaaa
-      </Button>
     </Stack>
   );
 }
