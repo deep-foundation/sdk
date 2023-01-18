@@ -36,6 +36,7 @@
     "@deep-foundation/deeplinks": "^0.0.70",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
+    "@google-cloud/speech": "^5.1.1",
     "@octokit/rest": "^19.0.5",
     "az": "^0.2.3",
     "dotenv-load": "^2.0.1",
