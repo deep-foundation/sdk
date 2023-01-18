@@ -36,8 +36,9 @@ function Page() {
 
   useEffect(() => {
     console.log('Login as guest');
-
-    deep.guest();
+    if(deep.linkId === 0) {
+      deep.guest();
+    }
   }, []);
 
   useEffect(() => {
