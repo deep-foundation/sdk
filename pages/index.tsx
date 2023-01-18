@@ -130,6 +130,7 @@ function Page() {
       <div>
         <Link href="/device">device</Link>
       </div>
+      <Link href="/push-notifications">push-notifications</Link>
     </>
   );
 }
