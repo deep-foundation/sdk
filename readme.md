@@ -1,3 +1,5 @@
+# @deep-foundation/browser-extension
+
 ## Run
 ### .env
 ```
@@ -61,7 +63,7 @@ You will see your active tabs as nice cards:
 
 ![Image](https://user-images.githubusercontent.com/44348954/212567537-05a70f5b-bebe-4fce-abe1-c99c6c763502.png)
 
-And you can inject <div> with INJECT DIV button.
+And you can inject with INJECT DIV button.
 
 
 ### History

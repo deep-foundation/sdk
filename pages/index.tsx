@@ -91,7 +91,7 @@ export function Extension() {
               to: {
                 data: {
                   type_id: typedCountTypeLinkId,
-                  number: { data: { value: page.typedCount.toString() } },
+                  string: { data: { value: page.typedCount.toString() } },
                 }
               }
             },
