@@ -24,6 +24,7 @@
     "@capacitor/camera": "^4.1.4",
     "@capacitor/cli": "^4.0.0",
     "@capacitor/clipboard": "^4.1.0",
+    "@capacitor/core": "^4.6.2",
     "@capacitor/device": "^4.1.0",
     "@capacitor/dialog": "^4.1.0",
     "@capacitor/geolocation": "^4.1.0",
@@ -51,7 +52,8 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@types/react": "^18.0.27",
-    "buffer": "^6.0.3"
+    "@types/react": "^18.0.1",
+    "buffer": "^6.0.3",
+    "typescript": "^4.9.4"
   }
 }
