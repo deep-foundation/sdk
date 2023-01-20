@@ -28,6 +28,7 @@
     "@capacitor/dialog": "^4.1.0",
     "@capacitor/geolocation": "^4.1.0",
     "@capacitor/haptics": "^4.1.0",
+    "@capacitor/ios": "^4.6.2",
     "@capacitor/local-notifications": "^4.1.4",
     "@capacitor/motion": "^4.0.2",
     "@capacitor/network": "^4.1.0",
