@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging } from "firebase/messaging/sw";
 import { onBackgroundMessage } from "firebase/messaging/sw";
+import {onFirebaseMessageCallback} from './../imports/push-notifications/onFirebaseMessageCallback';
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
 import dotenv from ('dotenv');
 dotenv.config();
@@ -40,9 +41,11 @@ const admin = await guestDeep.login({
 });
 const deep = new DeepClient({ deep: guestDeep, ...admin });
 
-onBackgroundMessage(messaging, (payload) => {
+onBackgroundMessage(messaging, async (payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  // Customize notification here
+  
+  await onFirebaseMessageCallback({deep, payload});
+
   const notificationTitle = 'Background Message Title';
   const notificationOptions = {
     body: 'Background Message body.',
