@@ -40,6 +40,7 @@
     "@emotion/styled": "^11.8.1",
     "@google-cloud/speech": "^5.1.1",
     "@google-cloud/vision": "^3.1.0",
+    "@ionic/pwa-elements": "^3.1.1",
     "@octokit/rest": "^19.0.5",
     "az": "^0.2.3",
     "dotenv-load": "^2.0.1",
