@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging } from "firebase/messaging/sw";
 import { onBackgroundMessage } from "firebase/messaging/sw";
+import dotenv from ('dotenv');
+dotenv.config();
 
 
 const firebaseConfig = {
