@@ -13,7 +13,7 @@ export default async function saveNetworkStatus(deep: DeepClient) {
 
   switch (connection.connectionType) {
     case "wifi": const { data: [{ id: _wifiLinkId }] } = await deep.insert(
-      { link_id: wifiLinkId, value: connection.connected ? "BRRR" : "disconnected" },
+      { link_id: wifiLinkId, value: connection.connected ? "connected" : "disconnected" },
       { table: "strings" }
     );
       break;
