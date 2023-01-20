@@ -10,8 +10,6 @@ import getAudioRecPermission from '../imports/audiorecord/get-permission';
 import getRecordingStatus from '../imports/audiorecord/get-recording-status';
 import startAudioRec from '../imports/audiorecord/strart-recording';
 import stopAudioRec from '../imports/audiorecord/stop-recording';
-import pauseAudioRec from '../imports/audiorecord/pause-recording';
-import resumeAudioRec from '../imports/audiorecord/resume-recording';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -26,7 +24,7 @@ function Page() {
     const uploadAudioChunks = async (audioChunks) => {
       console.log("Uploading");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const audioRecordsLinkId = await deep.id(deep.linkId, "AudioRecordsContainer");
+      const audioRecordsLinkId = await deep.id(deep.linkId, "AudioRecords");
       const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
       const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
       const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");

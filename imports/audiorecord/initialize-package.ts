@@ -45,7 +45,7 @@ export default async function initializePackage(deep: DeepClient) {
       data: {
         type_id: containTypeLinkId,
         from_id: await deep.id("deep", "admin"),
-        string: { data: { value: "AudioRecordsContainer" } },
+        string: { data: { value: "AudioRecords" } },
       }
     }
   })
