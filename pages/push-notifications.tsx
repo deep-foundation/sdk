@@ -24,6 +24,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { Device } from '@capacitor/device';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { onBackgroundMessage } from "firebase/messaging/sw";
+import { onFirebaseMessageCallback } from '../imports/push-notifications/onFirebaseMessageCallback';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -487,320 +488,228 @@ function Page() {
           !firebaseApplication ||
           !firebaseMessaging
         }
-        onClick={() => {
+        onClick={async () => {
           const listenPushNotifications = async () => {
             console.log({platform});
             
-            if (platform === 'web') {
-              onMessage(firebaseMessaging, (payload) => {
-                const insertPushNotificationToDeep = async () => {
-                  const notificationTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'Notification'
-                  );
-                  const containTypeLinkId = await deep.id(
-                    '@deep-foundation/core',
-                    'Contain'
-                  );
-  
-                  const {
-                    data: [{ id: notificationLinkId }],
-                  } = await deep.insert({
-                    type_id: notificationTypeLinkId,
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: deviceLinkId,
-                      },
-                    },
-                  });
-  
-                  const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'Title');
-                  await deep.insert({
-                    type_id: titleTypeLinkId,
-                    string: {
-                      data: {
-                        value: payload.notification.title,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
-  
-                  const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'Body');
-                  await deep.insert({
-                    type_id: bodyTypeLinkId,
-                    string: {
-                      data: {
-                        value: payload.notification.body,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
-  
-                  const iconUrlTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'IconUrl'
-                  );
-                  await deep.insert({
-                    type_id: iconUrlTypeLinkId,
-                    string: {
-                      data: {
-                        value: payload.notification.icon,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
-  
-                  const imageUrlTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'ImageUrl'
-                  );
-                  await deep.insert({
-                    type_id: imageUrlTypeLinkId,
-                    string: {
-                      data: {
-                        value: payload.notification.image,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
-                }
-                insertPushNotificationToDeep()
+            // if (platform === 'web') {
+              onMessage(firebaseMessaging, async (payload) => {
+                await onFirebaseMessageCallback({deep, deviceLinkId, payload});
               });
-            } else {
-              await PushNotifications.addListener(
-                'pushNotificationReceived',
-                async (notification) => {
-                  const notificationTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'Notification'
-                  );
-                  const containTypeLinkId = await deep.id(
-                    '@deep-foundation/core',
-                    'Contain'
-                  );
-                  const {
-                    data: [{ id: notificationLinkId }],
-                  } = await deep.insert({
-                    type_id: notificationTypeLinkId,
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: deviceLinkId,
-                      },
-                    },
-                  });
+            // } else {
+            //   await PushNotifications.addListener(
+            //     'pushNotificationReceived',
+            //     async (notification) => {
+            //       const notificationTypeLinkId = await deep.id(
+            //         PACKAGE_NAME,
+            //         'Notification'
+            //       );
+            //       const containTypeLinkId = await deep.id(
+            //         '@deep-foundation/core',
+            //         'Contain'
+            //       );
+            //       const {
+            //         data: [{ id: notificationLinkId }],
+            //       } = await deep.insert({
+            //         type_id: notificationTypeLinkId,
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: deviceLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'Title');
-                  await deep.insert({
-                    type_id: titleTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.title,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'Title');
+            //       await deep.insert({
+            //         type_id: titleTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.title,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const subtitleTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'Subtitle'
-                  );
-                  await deep.insert({
-                    type_id: subtitleTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.subtitle,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const subtitleTypeLinkId = await deep.id(
+            //         PACKAGE_NAME,
+            //         'Subtitle'
+            //       );
+            //       await deep.insert({
+            //         type_id: subtitleTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.subtitle,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'Body');
-                  await deep.insert({
-                    type_id: bodyTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.body,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'Body');
+            //       await deep.insert({
+            //         type_id: bodyTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.body,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const idTypeLinkId = await deep.id(PACKAGE_NAME, 'Id');
-                  await deep.insert({
-                    type_id: idTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.id,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const idTypeLinkId = await deep.id(PACKAGE_NAME, 'Id');
+            //       await deep.insert({
+            //         type_id: idTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.id,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const tagTypeLinkId = await deep.id(PACKAGE_NAME, 'Tag');
-                  await deep.insert({
-                    type_id: tagTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.tag,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const tagTypeLinkId = await deep.id(PACKAGE_NAME, 'Tag');
+            //       await deep.insert({
+            //         type_id: tagTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.tag,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const badgeTypeLinkId = await deep.id(PACKAGE_NAME, 'Badge');
-                  await deep.insert({
-                    type_id: badgeTypeLinkId,
-                    number: {
-                      data: {
-                        value: notification.badge,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const badgeTypeLinkId = await deep.id(PACKAGE_NAME, 'Badge');
+            //       await deep.insert({
+            //         type_id: badgeTypeLinkId,
+            //         number: {
+            //           data: {
+            //             value: notification.badge,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const payloadTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'Payload'
-                  );
-                  await deep.insert({
-                    type_id: payloadTypeLinkId,
-                    object: {
-                      data: {
-                        value: notification.data,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const payloadTypeLinkId = await deep.id(
+            //         PACKAGE_NAME,
+            //         'Payload'
+            //       );
+            //       await deep.insert({
+            //         type_id: payloadTypeLinkId,
+            //         object: {
+            //           data: {
+            //             value: notification.data,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const clickActionTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'ClickAction'
-                  );
-                  await deep.insert({
-                    type_id: clickActionTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.click_action,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const clickActionTypeLinkId = await deep.id(
+            //         PACKAGE_NAME,
+            //         'ClickAction'
+            //       );
+            //       await deep.insert({
+            //         type_id: clickActionTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.click_action,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const deepLinkTypeLinkId = await deep.id(
-                    PACKAGE_NAME,
-                    'DeepLink'
-                  );
-                  await deep.insert({
-                    type_id: deepLinkTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.link,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const deepLinkTypeLinkId = await deep.id(
+            //         PACKAGE_NAME,
+            //         'DeepLink'
+            //       );
+            //       await deep.insert({
+            //         type_id: deepLinkTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.link,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  const groupTypeLinkId = await deep.id(PACKAGE_NAME, 'Group');
-                  await deep.insert({
-                    type_id: groupTypeLinkId,
-                    string: {
-                      data: {
-                        value: notification.group,
-                      },
-                    },
-                    in: {
-                      data: {
-                        type_id: containTypeLinkId,
-                        from_id: notificationLinkId,
-                      },
-                    },
-                  });
+            //       const groupTypeLinkId = await deep.id(PACKAGE_NAME, 'Group');
+            //       await deep.insert({
+            //         type_id: groupTypeLinkId,
+            //         string: {
+            //           data: {
+            //             value: notification.group,
+            //           },
+            //         },
+            //         in: {
+            //           data: {
+            //             type_id: containTypeLinkId,
+            //             from_id: notificationLinkId,
+            //           },
+            //         },
+            //       });
 
-                  if (notification.groupSummary) {
-                    const isGroupSummaryTypeLinkId = await deep.id(
-                      PACKAGE_NAME,
-                      'IsGroupSummary'
-                    );
-                    await deep.insert({
-                      type_id: isGroupSummaryTypeLinkId,
-                      in: {
-                        data: {
-                          type_id: containTypeLinkId,
-                          from_id: notificationLinkId,
-                        },
-                      },
-                    });
-                  }
-                }
-              );
-            }
+            //       if (notification.groupSummary) {
+            //         const isGroupSummaryTypeLinkId = await deep.id(
+            //           PACKAGE_NAME,
+            //           'IsGroupSummary'
+            //         );
+            //         await deep.insert({
+            //           type_id: isGroupSummaryTypeLinkId,
+            //           in: {
+            //             data: {
+            //               type_id: containTypeLinkId,
+            //               from_id: notificationLinkId,
+            //             },
+            //           },
+            //         });
+            //       }
+            //     }
+            //   );
+            // }
           };
 
           listenPushNotifications();
