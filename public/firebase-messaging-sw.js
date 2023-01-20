@@ -44,7 +44,7 @@ const deep = new DeepClient({ deep: guestDeep, ...admin });
 onBackgroundMessage(messaging, async (payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   
-  await onFirebaseMessageCallback({deep, payload});
+  await insertPushNotificationToDeep({deep, deviceLinkId, payload})
 
   const notificationTitle = 'Background Message Title';
   const notificationOptions = {

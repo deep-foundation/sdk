@@ -25,6 +25,7 @@ import { Device } from '@capacitor/device';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { onBackgroundMessage } from "firebase/messaging/sw";
 import { onFirebaseMessageCallback } from '../imports/push-notifications/onFirebaseMessageCallback';
+import { insertPushNotificationToDeep } from '../imports/push-notifications/insertPushNotificationToDeep';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -494,7 +495,7 @@ function Page() {
             
             // if (platform === 'web') {
               onMessage(firebaseMessaging, async (payload) => {
-                await onFirebaseMessageCallback({deep, deviceLinkId, payload});
+                await insertPushNotificationToDeep({deep, deviceLinkId, payload});
               });
             // } else {
             //   await PushNotifications.addListener(
