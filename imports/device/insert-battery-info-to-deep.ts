@@ -1,8 +1,8 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
-import { Device } from "@capacitor/device";
+import { BatteryInfo, Device } from "@capacitor/device";
 
-export async function getBatteryInfo(deep: DeepClient, deviceLinkId: number) {
+export async function insertBatteryInfoToDeep({deep, deviceLinkId, deviceBatteryInfo}: {deep: DeepClient, deviceLinkId: number, deviceBatteryInfo: BatteryInfo}) {
 	
   if(!deviceLinkId) {
 		throw new Error("deviceLinkId must not be 0")
@@ -13,13 +13,11 @@ export async function getBatteryInfo(deep: DeepClient, deviceLinkId: number) {
   const isChargingTypeLinkId = await deep.id(PACKAGE_NAME, 'IsCharging');
   const isNotChargingTypeLinkId = await deep.id(PACKAGE_NAME, 'IsNotCharging');
 
-  const {batteryLevel, isCharging} = await Device.getBatteryInfo();
-
 	const {
 		data: [{ id: batteryLevelLinkId }],
 	} = await deep.insert({
 		type_id: batteryLevelTypeLinkId,
-		number: { data: { value: Math.floor(batteryLevel*100) } },
+		number: { data: { value: Math.floor(deviceBatteryInfo.batteryLevel*100) } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -31,7 +29,7 @@ export async function getBatteryInfo(deep: DeepClient, deviceLinkId: number) {
   const {
     data: [{ id: chargingLinkId }],
   } = await deep.insert({
-    type_id: isCharging ? isChargingTypeLinkId : isNotChargingTypeLinkId,
+    type_id: deviceBatteryInfo.isCharging ? isChargingTypeLinkId : isNotChargingTypeLinkId,
     in: {
       data: {
         type_id: containTypeLinkId,

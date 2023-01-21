@@ -1,8 +1,8 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
-import { Device } from '@capacitor/device';
+import { Device, DeviceInfo } from '@capacitor/device';
 
-export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
+export async function insertGeneralInfoToDeep({deep, deviceLinkId, deviceGeneralInfo}: {deep: DeepClient, deviceLinkId: number, deviceGeneralInfo: DeviceInfo}) {
 	if(!deviceLinkId) {
 		throw new Error("deviceLinkId must not be 0")
 	}
@@ -25,12 +25,11 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		'WebViewVersion'
 	);
 
-	const deviceInfo = await Device.getInfo();
 	const {
 		data: [{ id: nameLinkId }],
 	} = await deep.insert({
 		type_id: nameTypeLinkId,
-		string: { data: { value: deviceInfo.name } },
+		string: { data: { value: deviceGeneralInfo.name } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -43,7 +42,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: modelLinkId }],
 	} = await deep.insert({
 		type_id: modelTypeLinkId,
-		string: { data: { value: deviceInfo.model } },
+		string: { data: { value: deviceGeneralInfo.model } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -56,7 +55,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: platformLinkId }],
 	} = await deep.insert({
 		type_id: platformTypeLinkId,
-		string: { data: { value: deviceInfo.platform } },
+		string: { data: { value: deviceGeneralInfo.platform } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -69,7 +68,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: operatingSystemLinkId }],
 	} = await deep.insert({
 		type_id: operatingSystemTypeLinkId,
-		string: { data: { value: deviceInfo.operatingSystem } },
+		string: { data: { value: deviceGeneralInfo.operatingSystem } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -82,7 +81,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: osVersionLinkId }],
 	} = await deep.insert({
 		type_id: osVersionTypeLinkId,
-		string: { data: { value: deviceInfo.osVersion } },
+		string: { data: { value: deviceGeneralInfo.osVersion } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -95,7 +94,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: manufacturerLinkId }],
 	} = await deep.insert({
 		type_id: manufacturerTypeLinkId,
-		string: { data: { value: deviceInfo.manufacturer } },
+		string: { data: { value: deviceGeneralInfo.manufacturer } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -104,7 +103,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		},
 	});
 
-  if(deviceInfo.isVirtual) {
+  if(deviceGeneralInfo.isVirtual) {
     const {
       data: [{ id: isVirtualLinkId }],
     } = await deep.insert({
@@ -122,7 +121,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: memUsedLinkId }],
 	} = await deep.insert({
 		type_id: memUsedTypeLinkId,
-		number: { data: { value: deviceInfo.memUsed } },
+		number: { data: { value: deviceGeneralInfo.memUsed } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -135,7 +134,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: realDiskFreeLinkId }],
 	} = await deep.insert({
 		type_id: realDiskFreeTypeLinkId,
-		number: { data: { value: deviceInfo.realDiskFree } },
+		number: { data: { value: deviceGeneralInfo.realDiskFree } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
@@ -148,7 +147,7 @@ export async function saveGeneralInfo(deep: DeepClient, deviceLinkId: number) {
 		data: [{ id: webViewVersionLinkId }],
 	} = await deep.insert({
 		type_id: webViewVersionTypeLinkId,
-		string: { data: { value: deviceInfo.webViewVersion } },
+		string: { data: { value: deviceGeneralInfo.webViewVersion } },
 		in: {
 			data: {
 				type_id: containTypeLinkId,
