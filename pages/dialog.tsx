@@ -143,7 +143,7 @@ function Content() {
           }
         });
   
-        await Dialog.prompt({
+        return await Dialog.prompt({
           title,
           message,
           okButtonTitle,
@@ -206,7 +206,7 @@ function Content() {
               }
             });
       
-            await Dialog.confirm({
+            return await Dialog.confirm({
                 title,
                 message,
                 okButtonTitle,
