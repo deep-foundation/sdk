@@ -41,7 +41,7 @@ function Content() {
   })
 
   useEffect(() => {
-    async function alertNotExecutedAlert({alertLinkId}: {alertLinkId: number}) {
+    async function executeNotExecutedAlert({alertLinkId}: {alertLinkId: number}) {
       const alertTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");
       const alertMessageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
       const alertButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
@@ -75,7 +75,7 @@ function Content() {
     }
 
     for (const notExecutedAlertLink of notExecutedAlertLinks) {
-      alertNotExecutedAlert({alertLinkId: notExecutedAlertLink.id});
+      executeNotExecutedAlert({alertLinkId: notExecutedAlertLink.id});
     }   
   }, [notExecutedAlertLinks])
 
@@ -93,7 +93,7 @@ function Content() {
     })
   
     useEffect(() => {
-      async function promptNotExecutedPrompt({promptLinkId: promptLinkId}: {promptLinkId: number}) {
+      async function executeNotExecutedPrompt({promptLinkId: promptLinkId}: {promptLinkId: number}) {
         const promptTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptTitle");
         const promptMessageTypeLinkId = await deep.id(PACKAGE_NAME, "PromptMessage");
         const promptOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptOkButtonTitle");
@@ -154,7 +154,7 @@ function Content() {
       }
   
       for (const notExecutedPromptLink of notExecutedPromptLinks) {
-        promptNotExecutedPrompt({promptLinkId: notExecutedPromptLink.id});
+        executeNotExecutedPrompt({promptLinkId: notExecutedPromptLink.id});
       }   
     }, [notExecutedPromptLinks])
 
@@ -172,7 +172,7 @@ function Content() {
         })
       
         useEffect(() => {
-          async function confirmNotExecutedConfirm({confirmLinkId: confirmLinkId}: {confirmLinkId: number}) {
+          async function executeNotExecutedConfirm({confirmLinkId: confirmLinkId}: {confirmLinkId: number}) {
             const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
             const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
             const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
@@ -215,7 +215,7 @@ function Content() {
           }
       
           for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
-            confirmNotExecutedConfirm({confirmLinkId: notExecutedConfirmLink.id});
+            executeNotExecutedConfirm({confirmLinkId: notExecutedConfirmLink.id});
           }   
         }, [notExecutedConfirmLinks])
 
