@@ -18,7 +18,7 @@ import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-batter
 import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
 import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
-import {Dialog} from '@capacitor/dialog'
+import {ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult} from '@capacitor/dialog'
 
 function Content() {
   const deep = useDeep();
@@ -93,7 +93,7 @@ function Content() {
     })
   
     useEffect(() => {
-      async function executeNotExecutedPrompt({promptLinkId: promptLinkId}: {promptLinkId: number}) {
+      async function getPromptOptionsFromDeep({promptLinkId}: {promptLinkId: number}): Promise<PromptOptions> {
         const promptTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptTitle");
         const promptMessageTypeLinkId = await deep.id(PACKAGE_NAME, "PromptMessage");
         const promptOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptOkButtonTitle");
@@ -142,20 +142,28 @@ function Content() {
             from_id: promptLinkId,
           }
         });
-  
-        return await Dialog.prompt({
+
+        return {
           title,
           message,
           okButtonTitle,
           cancelButtonTitle,
           inputPlaceholder,
           inputText
-        })
+        };
       }
-  
-      for (const notExecutedPromptLink of notExecutedPromptLinks) {
-        executeNotExecutedPrompt({promptLinkId: notExecutedPromptLink.id});
-      }   
+
+      async function insertPromptResultToDeep(promptResult: PromptResult) {
+        // TODO
+      }
+
+      new Promise(async () => {
+        for (const notExecutedPromptLink of notExecutedPromptLinks) {
+          const promptOptions = await getPromptOptionsFromDeep({promptLinkId: notExecutedPromptLink.id});
+          const promptResult = await Dialog.prompt(promptOptions);
+          await insertPromptResultToDeep(promptResult);
+        }   
+      })
     }, [notExecutedPromptLinks])
 
         const {data: notExecutedConfirmLinks} = useDeepSubscription({
@@ -172,7 +180,7 @@ function Content() {
         })
       
         useEffect(() => {
-          async function executeNotExecutedConfirm({confirmLinkId: confirmLinkId}: {confirmLinkId: number}) {
+          async function getConfirmOptions({confirmLinkId}: {confirmLinkId: number}): Promise<ConfirmOptions> {
             const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
             const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
             const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
@@ -205,18 +213,29 @@ function Content() {
                 from_id: confirmLinkId,
               }
             });
-      
-            return await Dialog.confirm({
-                title,
-                message,
-                okButtonTitle,
-                cancelButtonTitle,
-            })
+
+            return {
+              title,
+              message,
+              okButtonTitle,
+              cancelButtonTitle
+            }
           }
+
+          async function saveConfirmResult(confirmResult: ConfirmResult) {
+            // TODO
+          }
+
+          new Promise(async () => {
+            for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
+              const confirmOptions = await getConfirmOptions({confirmLinkId: notExecutedConfirmLink.id});
+              const confirmResult = await Dialog.confirm(confirmOptions);
+              await saveConfirmResult(confirmResult);
+            }   
+          })
       
-          for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
-            executeNotExecutedConfirm({confirmLinkId: notExecutedConfirmLink.id});
-          }   
+          
+          
         }, [notExecutedConfirmLinks])
 
   return (
