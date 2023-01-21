@@ -5,6 +5,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
@@ -18,7 +19,7 @@ import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-batter
 import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
 import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
-import { ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult } from '@capacitor/dialog'
+import { AlertOptions, ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult } from '@capacitor/dialog'
 import { getPromptOptionsFromDeep } from '../imports/dialog/getPromptOptionsFromDeep';
 import { insertPromptResultToDeep } from '../imports/dialog/insertPromptResultToDeep';
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
@@ -45,7 +46,7 @@ function Content() {
   })
 
   useEffect(() => {
-    async function executeNotExecutedAlert({ alertLinkId }: { alertLinkId: number }) {
+    async function getAlertOptionsFromDeep({deep, alertLinkId}: {deep: DeepClient, alertLinkId: number}): Promise<AlertOptions> {
       const alertTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");
       const alertMessageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
       const alertButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
@@ -71,16 +72,19 @@ function Content() {
         }
       });
 
-      await Dialog.alert({
+      return {
         title,
         message,
-        buttonTitle,
-      })
+        buttonTitle
+      }
     }
 
-    for (const notExecutedAlertLink of notExecutedAlertLinks) {
-      executeNotExecutedAlert({ alertLinkId: notExecutedAlertLink.id });
-    }
+    new Promise(async () => {
+      for (const notExecutedAlertLink of notExecutedAlertLinks) {
+        const alertOptions = await getAlertOptionsFromDeep({deep, alertLinkId: notExecutedAlertLink.id});
+        await Dialog.alert(alertOptions)
+      }
+    });
   }, [notExecutedAlertLinks])
 
   const { data: notExecutedPromptLinks } = useDeepSubscription({
