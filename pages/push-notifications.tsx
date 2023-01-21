@@ -24,7 +24,6 @@ import { getAnalytics } from 'firebase/analytics';
 import { Device } from '@capacitor/device';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { onBackgroundMessage } from "firebase/messaging/sw";
-import { onFirebaseMessageCallback } from '../imports/push-notifications/onFirebaseMessageCallback';
 import { insertPushNotificationToDeep } from '../imports/push-notifications/insertPushNotificationToDeep';
 
 const firebaseConfig = {
