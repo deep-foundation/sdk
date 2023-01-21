@@ -19,6 +19,10 @@ import { getLanguageId as saveLanguageId } from '../imports/device/save-language
 import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
 import {ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult} from '@capacitor/dialog'
+import { getPromptOptionsFromDeep } from '../imports/dialog/getPromptOptionsFromDeep';
+import { insertPromptResultToDeep } from '../imports/dialog/insertPromptResultToDeep';
+import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
+import { insertConfirmResultToDeep } from '../imports/dialog/insertConfirmResultToDeep';
 
 function Content() {
   const deep = useDeep();
@@ -93,76 +97,12 @@ function Content() {
     })
   
     useEffect(() => {
-      async function getPromptOptionsFromDeep({promptLinkId}: {promptLinkId: number}): Promise<PromptOptions> {
-        const promptTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptTitle");
-        const promptMessageTypeLinkId = await deep.id(PACKAGE_NAME, "PromptMessage");
-        const promptOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptOkButtonTitle");
-        const promptCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptCancelButtonTitle");
-        const promptInputPlaceholderTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputPlaceholder");
-        const promptInputTextTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputText");
-  
-        const {data: [{value: {value: title}}]} = await deep.select({
-          from: {
-            type_id: promptTitleTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-  
-        const {data: [{value: {value: message}}]} = await deep.select({
-          from: {
-            type_id: promptMessageTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-  
-        const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
-          from: {
-            type_id: promptOkButtonTitleTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-
-        const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
-          from: {
-            type_id: promptCancelButtonTitleTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-
-        const {data: [{value: {value: inputPlaceholder}}]} = await deep.select({
-          from: {
-            type_id: promptInputPlaceholderTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-
-        const {data: [{value: {value: inputText}}]} = await deep.select({
-          from: {
-            type_id: promptInputTextTypeLinkId,
-            from_id: promptLinkId,
-          }
-        });
-
-        return {
-          title,
-          message,
-          okButtonTitle,
-          cancelButtonTitle,
-          inputPlaceholder,
-          inputText
-        };
-      }
-
-      async function insertPromptResultToDeep(promptResult: PromptResult) {
-        // TODO
-      }
-
       new Promise(async () => {
         for (const notExecutedPromptLink of notExecutedPromptLinks) {
-          const promptOptions = await getPromptOptionsFromDeep({promptLinkId: notExecutedPromptLink.id});
+          const promptOptions = await getPromptOptionsFromDeep({deep, promptLinkId: notExecutedPromptLink.id});
           const promptResult = await Dialog.prompt(promptOptions);
-          await insertPromptResultToDeep(promptResult);
-        }   
+          await insertPromptResultToDeep({deep, promptResult});
+        }
       })
     }, [notExecutedPromptLinks])
 
@@ -180,57 +120,15 @@ function Content() {
         })
       
         useEffect(() => {
-          async function getConfirmOptions({confirmLinkId}: {confirmLinkId: number}): Promise<ConfirmOptions> {
-            const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
-            const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
-            const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
-            const confirmCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
-      
-            const {data: [{value: {value: title}}]} = await deep.select({
-              from: {
-                type_id: confirmTitleTypeLinkId,
-                from_id: confirmLinkId,
-              }
-            });
-      
-            const {data: [{value: {value: message}}]} = await deep.select({
-              from: {
-                type_id: confirmMessageTypeLinkId,
-                from_id: confirmLinkId,
-              }
-            });
-      
-            const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
-              from: {
-                type_id: confirmOkButtonTitleTypeLinkId,
-                from_id: confirmLinkId,
-              }
-            });
-    
-            const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
-              from: {
-                type_id: confirmCancelButtonTitleTypeLinkId,
-                from_id: confirmLinkId,
-              }
-            });
+          
 
-            return {
-              title,
-              message,
-              okButtonTitle,
-              cancelButtonTitle
-            }
-          }
 
-          async function saveConfirmResult(confirmResult: ConfirmResult) {
-            // TODO
-          }
 
           new Promise(async () => {
             for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
-              const confirmOptions = await getConfirmOptions({confirmLinkId: notExecutedConfirmLink.id});
+              const confirmOptions = await getConfirmOptionsFromDeep({deep, confirmLinkId: notExecutedConfirmLink.id});
               const confirmResult = await Dialog.confirm(confirmOptions);
-              await saveConfirmResult(confirmResult);
+              await insertConfirmResultToDeep({deep, confirmResult});
             }   
           })
       
