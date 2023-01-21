@@ -20,11 +20,11 @@ import { getLanguageId as saveLanguageId } from '../imports/device/save-language
 import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
 import { AlertOptions, ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult } from '@capacitor/dialog'
-import { getPromptOptionsFromDeep } from '../imports/dialog/getPromptOptionsFromDeep';
-import { insertPromptResultToDeep } from '../imports/dialog/insertPromptResultToDeep';
+import { getPromptOptionsFromDeep } from '../imports/dialog/get-prompt-options-from-deep';
+import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result-to-deep';
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
-import { insertConfirmResultToDeep } from '../imports/dialog/insertConfirmResultToDeep';
-import { getAlertOptionsFromDeep } from '../imports/dialog/getAlertOptionsFromDeep';
+import { insertConfirmResultToDeep } from '../imports/dialog/insert-confirm-result-to-deep';
+import { getAlertOptionsFromDeep } from '../imports/dialog/get-alert-options-from-deep';
 
 function Content() {
   const deep = useDeep();
