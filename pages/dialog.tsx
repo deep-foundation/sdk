@@ -76,6 +76,82 @@ function Content() {
     }   
   }, [notExecutedAlertLinks])
 
+    // TODO Make query to subscribe to Prompts which are not executed yet
+    const {data: notExecutedPromptLinks} = useDeepSubscription({
+      type_id: {
+        _id: ["@deep-foundation/dialog", "Prompt"]
+      },
+      _not: {
+        
+      }
+    })
+  
+    useEffect(() => {
+      async function promptNotExecutedPrompts({promptLinkId: promptLinkId}: {promptLinkId: number}) {
+        const promptTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptTitle");
+        const promptMessageTypeLinkId = await deep.id(PACKAGE_NAME, "PromptMessage");
+        const promptOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptOkButtonTitle");
+        const promptCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptCancelButtonTitle");
+        const promptInputPlaceholderTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputPlaceholder");
+        const promptInputTextTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputText");
+  
+        const {data: [{value: {value: title}}]} = await deep.select({
+          from: {
+            type_id: promptTitleTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+  
+        const {data: [{value: {value: message}}]} = await deep.select({
+          from: {
+            type_id: promptMessageTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+  
+        const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
+          from: {
+            type_id: promptOkButtonTitleTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+
+        const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
+          from: {
+            type_id: promptCancelButtonTitleTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+
+        const {data: [{value: {value: inputPlaceholder}}]} = await deep.select({
+          from: {
+            type_id: promptInputPlaceholderTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+
+        const {data: [{value: {value: inputText}}]} = await deep.select({
+          from: {
+            type_id: promptInputTextTypeLinkId,
+            from_id: promptLinkId,
+          }
+        });
+  
+        await Dialog.prompt({
+          title,
+          message,
+          okButtonTitle,
+          cancelButtonTitle,
+          inputPlaceholder,
+          inputText
+        })
+      }
+  
+      for (const notExecutedPromptLink of notExecutedPromptLinks) {
+        promptNotExecutedPrompts({promptLinkId: notExecutedPromptLink.id});
+      }   
+    }, [notExecutedPromptLinks])
+
   return (
     <Stack>
       <Text>{deviceLinkId}</Text>
