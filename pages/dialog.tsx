@@ -28,7 +28,7 @@ import { getAlertOptionsFromDeep } from '../imports/dialog/getAlertOptionsFromDe
 
 function Content() {
   const deep = useDeep();
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+  const [deviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
   );
