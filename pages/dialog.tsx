@@ -106,13 +106,6 @@ function Content() {
   return (
     <Stack>
       <Text>{deviceLinkId}</Text>
-      <Button
-        onClick={async () => {
-
-        }}
-      >
-        Alert
-      </Button>
     </Stack>
   );
 }
