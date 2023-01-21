@@ -152,6 +152,64 @@ function Content() {
       }   
     }, [notExecutedPromptLinks])
 
+        // TODO Make query to subscribe to Confirms which are not executed yet
+        const {data: notExecutedConfirmLinks} = useDeepSubscription({
+          type_id: {
+            _id: ["@deep-foundation/dialog", "Confirm"]
+          },
+          _not: {
+            
+          }
+        })
+      
+        useEffect(() => {
+          async function confirmNotExecutedConfirms({confirmLinkId: confirmLinkId}: {confirmLinkId: number}) {
+            const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
+            const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
+            const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
+            const confirmCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
+      
+            const {data: [{value: {value: title}}]} = await deep.select({
+              from: {
+                type_id: confirmTitleTypeLinkId,
+                from_id: confirmLinkId,
+              }
+            });
+      
+            const {data: [{value: {value: message}}]} = await deep.select({
+              from: {
+                type_id: confirmMessageTypeLinkId,
+                from_id: confirmLinkId,
+              }
+            });
+      
+            const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
+              from: {
+                type_id: confirmOkButtonTitleTypeLinkId,
+                from_id: confirmLinkId,
+              }
+            });
+    
+            const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
+              from: {
+                type_id: confirmCancelButtonTitleTypeLinkId,
+                from_id: confirmLinkId,
+              }
+            });
+      
+            await Dialog.confirm({
+                title,
+                message,
+                okButtonTitle,
+                cancelButtonTitle,
+            })
+          }
+      
+          for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
+            confirmNotExecutedConfirms({confirmLinkId: notExecutedConfirmLink.id});
+          }   
+        }, [notExecutedConfirmLinks])
+
   return (
     <Stack>
       <Text>{deviceLinkId}</Text>
