@@ -27,13 +27,16 @@ function Content() {
     undefined
   );
 
-  // TODO Make query to subscribe to Alerts which are not executed yet
   const {data: notExecutedAlertLinks} = useDeepSubscription({
     type_id: {
-      _id: ["@deep-foundation/dialog", "Alert"]
+      _id: [PACKAGE_NAME, "Alert"]
     },
     _not: {
-      
+      in: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Executed"]
+        }
+      }
     }
   })
 
@@ -76,13 +79,16 @@ function Content() {
     }   
   }, [notExecutedAlertLinks])
 
-    // TODO Make query to subscribe to Prompts which are not executed yet
     const {data: notExecutedPromptLinks} = useDeepSubscription({
       type_id: {
         _id: ["@deep-foundation/dialog", "Prompt"]
       },
       _not: {
-        
+        in: {
+          type_id: {
+            _id: [PACKAGE_NAME, "Executed"]
+          }
+        }
       }
     })
   
@@ -152,13 +158,16 @@ function Content() {
       }   
     }, [notExecutedPromptLinks])
 
-        // TODO Make query to subscribe to Confirms which are not executed yet
         const {data: notExecutedConfirmLinks} = useDeepSubscription({
           type_id: {
             _id: ["@deep-foundation/dialog", "Confirm"]
           },
           _not: {
-            
+            in: {
+              type_id: {
+                _id: [PACKAGE_NAME, "Executed"]
+              }
+            }
           }
         })
       
