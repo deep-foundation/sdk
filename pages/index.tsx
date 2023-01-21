@@ -26,8 +26,6 @@ import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-n
 
 function Page() {
   const deep = useDeep();
-  console.log('rerender');
-  console.log({ deep });
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -35,7 +33,6 @@ function Page() {
   );
 
   useEffect(() => {
-    console.log('Login as guest');
     if(deep.linkId === 0) {
       deep.guest();
     }
@@ -46,7 +43,6 @@ function Page() {
       if (deep.linkId != 0) {
         const adminLinkId = await deep.id('deep', 'admin');
         if (deep.linkId != adminLinkId) {
-          console.log('Login as admin');
 
           await deep.login({
             linkId: adminLinkId,
