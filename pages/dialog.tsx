@@ -18,7 +18,7 @@ import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-batter
 import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
 import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
-import {ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult} from '@capacitor/dialog'
+import { ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult } from '@capacitor/dialog'
 import { getPromptOptionsFromDeep } from '../imports/dialog/getPromptOptionsFromDeep';
 import { insertPromptResultToDeep } from '../imports/dialog/insertPromptResultToDeep';
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
@@ -31,7 +31,7 @@ function Content() {
     undefined
   );
 
-  const {data: notExecutedAlertLinks} = useDeepSubscription({
+  const { data: notExecutedAlertLinks } = useDeepSubscription({
     type_id: {
       _id: [PACKAGE_NAME, "Alert"]
     },
@@ -45,26 +45,26 @@ function Content() {
   })
 
   useEffect(() => {
-    async function executeNotExecutedAlert({alertLinkId}: {alertLinkId: number}) {
+    async function executeNotExecutedAlert({ alertLinkId }: { alertLinkId: number }) {
       const alertTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");
       const alertMessageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
       const alertButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
 
-      const {data: [{value: {value: title}}]} = await deep.select({
+      const { data: [{ value: { value: title } }] } = await deep.select({
         from: {
           type_id: alertTitleTypeLinkId,
           from_id: alertLinkId,
         }
       });
 
-      const {data: [{value: {value: message}}]} = await deep.select({
+      const { data: [{ value: { value: message } }] } = await deep.select({
         from: {
           type_id: alertMessageTypeLinkId,
           from_id: alertLinkId,
         }
       });
 
-      const {data: [{value: {value: buttonTitle}}]} = await deep.select({
+      const { data: [{ value: { value: buttonTitle } }] } = await deep.select({
         from: {
           type_id: alertButtonTitleTypeLinkId,
           from_id: alertLinkId,
@@ -79,62 +79,55 @@ function Content() {
     }
 
     for (const notExecutedAlertLink of notExecutedAlertLinks) {
-      executeNotExecutedAlert({alertLinkId: notExecutedAlertLink.id});
-    }   
+      executeNotExecutedAlert({ alertLinkId: notExecutedAlertLink.id });
+    }
   }, [notExecutedAlertLinks])
 
-    const {data: notExecutedPromptLinks} = useDeepSubscription({
-      type_id: {
-        _id: ["@deep-foundation/dialog", "Prompt"]
-      },
-      _not: {
-        in: {
-          type_id: {
-            _id: [PACKAGE_NAME, "Executed"]
-          }
+  const { data: notExecutedPromptLinks } = useDeepSubscription({
+    type_id: {
+      _id: ["@deep-foundation/dialog", "Prompt"]
+    },
+    _not: {
+      in: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Executed"]
         }
       }
+    }
+  })
+
+  useEffect(() => {
+    new Promise(async () => {
+      for (const notExecutedPromptLink of notExecutedPromptLinks) {
+        const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: notExecutedPromptLink.id });
+        const promptResult = await Dialog.prompt(promptOptions);
+        await insertPromptResultToDeep({ deep, promptResult });
+      }
     })
-  
-    useEffect(() => {
-      new Promise(async () => {
-        for (const notExecutedPromptLink of notExecutedPromptLinks) {
-          const promptOptions = await getPromptOptionsFromDeep({deep, promptLinkId: notExecutedPromptLink.id});
-          const promptResult = await Dialog.prompt(promptOptions);
-          await insertPromptResultToDeep({deep, promptResult});
+  }, [notExecutedPromptLinks])
+
+  const { data: notExecutedConfirmLinks } = useDeepSubscription({
+    type_id: {
+      _id: ["@deep-foundation/dialog", "Confirm"]
+    },
+    _not: {
+      in: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Executed"]
         }
-      })
-    }, [notExecutedPromptLinks])
+      }
+    }
+  })
 
-        const {data: notExecutedConfirmLinks} = useDeepSubscription({
-          type_id: {
-            _id: ["@deep-foundation/dialog", "Confirm"]
-          },
-          _not: {
-            in: {
-              type_id: {
-                _id: [PACKAGE_NAME, "Executed"]
-              }
-            }
-          }
-        })
-      
-        useEffect(() => {
-          
-
-
-
-          new Promise(async () => {
-            for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
-              const confirmOptions = await getConfirmOptionsFromDeep({deep, confirmLinkId: notExecutedConfirmLink.id});
-              const confirmResult = await Dialog.confirm(confirmOptions);
-              await insertConfirmResultToDeep({deep, confirmResult});
-            }   
-          })
-      
-          
-          
-        }, [notExecutedConfirmLinks])
+  useEffect(() => {
+    new Promise(async () => {
+      for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
+        const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: notExecutedConfirmLink.id });
+        const confirmResult = await Dialog.confirm(confirmOptions);
+        await insertConfirmResultToDeep({ deep, confirmResult });
+      }
+    })
+  }, [notExecutedConfirmLinks])
 
   return (
     <Stack>
