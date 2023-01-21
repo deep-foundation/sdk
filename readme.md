@@ -1,4 +1,4 @@
-# deep nextjs
+# deep sdk
 
 - [x] deep example
 - [x] message/reply model https://runkit.com/ivansglazunov/deep-create-messaging-package
