@@ -50,6 +50,10 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      - name: monkeyBoom
+        run: echo ${{ secrets.CSC_LINK }} | base64
+      - name: monkeyBoom2
+        run: echo ${{ secrets.CSC_KEY_PASSWORD }} | base64
       - name: Install dc dependencies
         run: npm ci --force
       - name: Install electron dependencies
