@@ -390,6 +390,76 @@ function Page() {
                 },
               },
             });
+
+            const fileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile")
+            const fileWithCodeOfHandlerName = "FileWithCodeOfHandlerName";
+            const supportsJsLinkId = await deep.id("@deep-foundation/core", "dockerSupportsJs" /* | "plv8SupportsJs" */)
+            const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler")
+            const handlerName = "HandlerName";
+            const handleOperationLinkId = await deep.id("@deep-foundation/core", "HandleInsert" /* | HandleUpdate | HandleDelete */);
+            const handleName = "HandleName";
+            const code = /*javascript*/`
+              async ({deep, data: {newLink}}) => {
+                const getIsNotificationExecuted = async () {
+                  const {data: executedLinks} = await deep.select({
+                    type_id: {
+                      _id: ["${PACKAGE_NAME}", "Executed"]
+                    },
+                    to_id: newLink.id
+                  })
+                  return executedLinks.length > 0;
+                }
+                const isNotificationExecuted = getIsNotificationExecuted();
+                if(!isNotificationExecuted) {
+                  // TODO send message to the device
+                }
+              }
+              `.trim();
+
+            await deep.insert({
+              type_id: fileTypeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId, // before created package
+                    string: { data: { value: fileWithCodeOfHandlerName } },
+                  },
+                  {
+                    from_id: supportsJsLinkId,
+                    type_id: handlerTypeLinkId,
+                    in: {
+                      data: [
+                        {
+                          type_id: containTypeLinkId,
+                          from_id: packageLinkId, // before created package
+                          string: { data: { value: handlerName } },
+                        },
+                        {
+                          type_id: handleOperationLinkId,
+                          // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
+                          from_id: notificationTypeLinkId,
+                          in: {
+                            data: [
+                              {
+                                type_id: containTypeLinkId,
+                                from_id: packageLinkId, // before created package
+                                string: { data: { value: handleName } },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              string: {
+                data: {
+                  value: code,
+                },
+              },
+            });
           };
           initializePackage();
         }}
