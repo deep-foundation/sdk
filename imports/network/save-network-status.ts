@@ -1,15 +1,14 @@
 import { Network } from "@capacitor/network"
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export default async function saveNetworkStatus(deep: DeepClient) {
-  const networkLinkId = await deep.id(deep.linkId, "Network");
+export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId) {
+  const networkLinkId = await deep.id(deviceLinkId, "Network");
   const wifiLinkId = await deep.id(networkLinkId, "Wifi");
   const cellularLinkId = await deep.id(networkLinkId, "Cellular");
   const unknownLinkId = await deep.id(networkLinkId, "Unknown");
   const noneLinkId = await deep.id(networkLinkId, "None");
 
   const connection = await Network.getStatus();
-  console.log({ connection });
 
   switch (connection.connectionType) {
     case "wifi": const { data: [{ id: _wifiLinkId }] } = await deep.insert(

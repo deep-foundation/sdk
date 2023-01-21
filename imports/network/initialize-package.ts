@@ -3,7 +3,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 export const PACKAGE_NAME="@deep-foundation/network"
 export const PACKAGE_TYPES = ["Network", "Wifi", "Cellular", "Unknown", "None"]
 
-export default async function initializePackage(deep: DeepClient) {
+export default async function initializePackage(deep: DeepClient, deviceLinkId) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
@@ -45,7 +45,7 @@ export default async function initializePackage(deep: DeepClient) {
     in: {
       data: [{
         type_id: containTypeLinkId,
-        from_id: await deep.id('deep', 'admin'),
+        from_id: deviceLinkId,
         string: { data: { value: "Network" } },
       }]
     },
@@ -56,7 +56,7 @@ export default async function initializePackage(deep: DeepClient) {
         to: { 
           data: {
             type_id: await deep.id(PACKAGE_NAME, "Wifi"),
-            string: { data: { value: "undefined" }}
+            string: { data: { value: "disconnected" }}
           }
         }
       },
@@ -66,7 +66,7 @@ export default async function initializePackage(deep: DeepClient) {
         to: { 
           data: {
             type_id: await deep.id(PACKAGE_NAME, "Cellular"),
-            string: { data: { value: "undefined" }}
+            string: { data: { value: "disconnected" }}
           }
         }
       },
@@ -76,7 +76,7 @@ export default async function initializePackage(deep: DeepClient) {
         to: { 
           data: {
             type_id: await deep.id(PACKAGE_NAME, "Unknown"),
-            string: { data: { value: "undefined" }}
+            string: { data: { value: "disconnected" }}
           }
         }
       },
@@ -86,7 +86,7 @@ export default async function initializePackage(deep: DeepClient) {
         to: { 
           data: {
             type_id: await deep.id(PACKAGE_NAME, "None"),
-            string: { data: { value: "undefined" }}
+            string: { data: { value: "disconnected" }}
           }
         }
       }]

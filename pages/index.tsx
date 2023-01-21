@@ -21,7 +21,7 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { initializePackage as initializeDevicePackage } from '../imports/device/initialize-package';
+import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
 function Page() {
@@ -83,7 +83,7 @@ function Page() {
       }
       
       if (!await getIsDevicePackageInstalled()) {
-        await initializeDevicePackage(deep);
+        await insertDevicePackageLinksToDeep({deep});
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -125,9 +125,6 @@ function Page() {
       </div>
       <div>
         <Link href="/device">device</Link>
-      </div>
-      <div>
-        <Link href="/network">network</Link>
       </div>
     </>
   );

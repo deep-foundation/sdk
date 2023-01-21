@@ -13,6 +13,7 @@ import saveNetworkStatus from '../imports/network/save-network-status';
 function Page() {
   const deep = useDeep();
   const [connections, setConnections] = useLocalStore("Connections", []);
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
   useEffect(() => {
     const updateNetworkStatus = async (connections) => {
@@ -68,19 +69,19 @@ function Page() {
   }
 
   return <Stack>
-    <Button onClick={async () => { await initializePackage(deep) }}>
+    <Button onClick={async () => { await initializePackage(deep, deviceLinkId) }}>
       <Text>INITIALIZE PACKAGE</Text>
     </Button>
     <Button onClick={async () => { await subscribeToNetworkStatus() }}>
       <Text>LISTEN TO NETWORK CHANGES</Text>
     </Button>
-    <Button onClick={async () => await saveNetworkStatus(deep)}>
+    <Button onClick={async () => await saveNetworkStatus(deep, deviceLinkId)}>
       <Text>SAVE CURRENT STATUS</Text>
     </Button>
   </Stack>
 }
 
-export default function Network() {
+export default function Index() {
   return (
     <ChakraProvider>
       <Provider>
