@@ -1,25 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
+import React, { useEffect } from 'react';
 import {
-  LocalStoreProvider,
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
-  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { saveGeneralInfo } from '../imports/device/save-general-info';
-import { initializePackage } from '../imports/device/initialize-package';
+import { ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/dialog/package-name';
-import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-battery-info';
-import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
-import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
-import { AlertOptions, ConfirmOptions, ConfirmResult, Dialog, PromptOptions, PromptResult } from '@capacitor/dialog'
+import { Dialog } from '@capacitor/dialog'
 import { getPromptOptionsFromDeep } from '../imports/dialog/get-prompt-options-from-deep';
 import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result-to-deep';
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
