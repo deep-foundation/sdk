@@ -8,6 +8,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(Contacts.class);
+        registerPlugin(CallHistory.class);
         super.onCreate(savedInstanceState);
     }
 }
