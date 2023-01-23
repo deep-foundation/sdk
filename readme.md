@@ -1,4 +1,4 @@
-# deep nextjs
+# deep sdk
 
 This is audiorecord deep package mvp. 
 
