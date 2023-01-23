@@ -155,13 +155,13 @@ function Page() {
     <Button onClick={async () => await createContainer(deep)}>
       CREATE NEW CONTAINER
     </Button>
-    <Button onClick={async () => await checkDeviceSupport(deep)}>
+    <Button onClick={async () => await checkDeviceSupport(deep, deviceLinkId)}>
       CHECK DEVICE SUPPORT
     </Button>
-    <Button onClick={async () => await checkAudioRecPermission(deep)}>
+    <Button onClick={async () => await checkAudioRecPermission(deep, deviceLinkId)}>
       CHECK RECORDING PERMISSION
     </Button>
-    <Button onClick={async () => await getAudioRecPermission(deep)}>
+    <Button onClick={async () => await getAudioRecPermission(deep, deviceLinkId)}>
       GET RECORDING PERMISSION
     </Button>
     <Button onClick={async () => await getRecordingStatus(deep)}>
