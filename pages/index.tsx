@@ -24,6 +24,8 @@ import Link from 'next/link';
 import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
+import { createClipboardPackage, createClipboard } from "../imports/packages/clipboard/clipboard";
+
 function Page() {
   const deep = useDeep();
 
@@ -33,7 +35,7 @@ function Page() {
   );
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -53,7 +55,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -62,7 +64,7 @@ function Page() {
         return;
       }
 
-      const getIsDevicePackageInstalled = async() => {
+      const getIsDevicePackageInstalled = async () => {
         const devicePackageSelectResponse = await deep.select({
           type_id: {
             _id: ['@deep-foundation/core', 'Contain'],
@@ -81,9 +83,9 @@ function Page() {
           devicePackageSelectResponse.data.length > 0;
         return isDevicePackageInstalled;
       }
-      
+
       if (!await getIsDevicePackageInstalled()) {
-        await insertDevicePackageLinksToDeep({deep});
+        await insertDevicePackageLinksToDeep({ deep });
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -125,6 +127,13 @@ function Page() {
       </div>
       <div>
         <Link href="/device">device</Link>
+      </div>
+      <div>
+        <hr />
+        <button onClick={() => createClipboardPackage({ deep })}>create clipboard Package</button>
+        <br />
+        <button onClick={() => createClipboard({ deep })}>create All clipboard</button>
+        <hr />
       </div>
     </>
   );
