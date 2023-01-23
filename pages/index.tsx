@@ -130,9 +130,9 @@ function Page() {
       </div>
       <div>
         <hr />
-        <button onClick={() => createClipboardPackage({ deep })}>create clipboard Package</button>
+        <button onClick={() => createClipboardPackage({ deep, deviceLinkId })}>create clipboard Package</button>
         <br />
-        <button onClick={() => createClipboard({ deep })}>create All clipboard</button>
+        <button onClick={() => createClipboard({ deep, deviceLinkId })}>create All clipboard</button>
         <hr />
       </div>
     </>

@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Clipboard } from '@capacitor/clipboard';
 
-export async function createClipboard({ deep }: { deep: DeepClient }) {
+export async function createClipboard({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
     const { type, value } = await Clipboard.read();
     const clipboardType = await deep.id("@deep-foundation/clipboard", "clipboard");
 
@@ -10,12 +10,12 @@ export async function createClipboard({ deep }: { deep: DeepClient }) {
     const contactLink = await ml.createLink({
         containName: "clipboard",
         value: value,
-        contain_from_id: deep.linkId,
+        contain_from_id: deviceLinkId,
         type_id: clipboardType,
     });
 }
 
-export async function createClipboardPackage({ deep }: { deep: DeepClient }) {
+export async function createClipboardPackage({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
     const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
     const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
 
@@ -23,7 +23,7 @@ export async function createClipboardPackage({ deep }: { deep: DeepClient }) {
 
     const clipbloardPackage = await ml.createLink({
         value: "@deep-foundation/clipboard",
-        contain_from_id: deep.linkId,
+        contain_from_id: deviceLinkId,
         type_id: packageTypeLinkId,
     });
 
