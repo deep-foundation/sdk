@@ -129,7 +129,7 @@ function Page() {
       </div>
       <div>
         <hr />
-        <button onClick={() => createAllContacts({ deep })}>create All Contacts</button>
+        <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
         <br />
         <button onClick={() => createContactPackage({ deep })}>create Contact Package</button>
         <hr />
