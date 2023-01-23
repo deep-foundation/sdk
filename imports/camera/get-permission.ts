@@ -2,11 +2,11 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Camera } from "@capacitor/camera"
 import { PACKAGE_NAME } from "./initialize-package";
 
-export default async function getCameraPermission(deep: DeepClient) {
+export default async function getCameraPermission(deep: DeepClient, deviceLinkId) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const cameraPermissionTypelinkId = await deep.id(PACKAGE_NAME, "CameraPermission");
   const photosPermissionTypelinkId = await deep.id(PACKAGE_NAME, "PhotoPermission");
-  const customContainerTypeLinkId = await deep.id(deep.linkId, "Camera");
+  const customContainerTypeLinkId = await deep.id(deviceLinkId, "Camera");
 
   const { camera, photos } = await Camera.requestPermissions();
 

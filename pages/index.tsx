@@ -126,6 +126,9 @@ function Page() {
       <div>
         <Link href="/device">device</Link>
       </div>
+      <div>
+        <Link href="/camera">camera</Link>
+      </div>
     </>
   );
 }

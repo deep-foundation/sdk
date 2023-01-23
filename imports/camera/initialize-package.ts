@@ -4,7 +4,7 @@ export const PACKAGE_NAME = "@deep-foundation/camera"
 export const PACKAGE_TYPES =
   ["Camera", "CameraPermission", "PhotoPermission", "Photo", "Base64", "Path", "WebPath", "Exif", "Format", "TimeStamp" ]
 
-export default async function initializePackage(deep: DeepClient) {
+export default async function initializePackage(deep: DeepClient, deviceLinkId) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
@@ -41,10 +41,11 @@ export default async function initializePackage(deep: DeepClient) {
   })))
   const { data: [{ id: cameraLinkId }] } = await deep.insert({
     type_id: await deep.id(PACKAGE_NAME, "Camera"),
+    string: { data: { value: "Camera" } },
     in: {
       data: [{
         type_id: containTypeLinkId,
-        from_id: await deep.id("deep", "admin"),
+        from_id: deviceLinkId,
         string: { data: { value: "Camera" } }
       }]
     }
