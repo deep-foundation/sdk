@@ -17,14 +17,17 @@ function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
   const [audioChunks, setAudioChunks] = useLocalStore("AudioChunks", []);
-  const [records, setRecords] = useState([])
-  console.log("component top: " + recording);
+  const [records, setRecords] = useState([]);
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+    'deviceLinkId',
+    undefined
+  );
 
   useEffect(() => {
     const uploadAudioChunks = async (audioChunks) => {
       console.log("Uploading");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const audioRecordsLinkId = await deep.id(deep.linkId, "AudioRecords");
+      const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
       const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
       const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
       const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");
@@ -139,14 +142,14 @@ function Page() {
       in :{
         data : {
           type_id: containTypeLinkId,
-          from_id: await deep.id("deep", "admin"),
+          from_id: deviceLinkId
         }
       }
     })
   }
 
   return <Stack>
-    <Button onClick={async () => await initializePackage(deep)}>
+    <Button onClick={async () => await initializePackage(deep, deviceLinkId)}>
       INITIALIZE PACKAGE
     </Button>
     <Button onClick={async () => await createContainer(deep)}>
@@ -183,7 +186,7 @@ function Page() {
   </Stack>
 }
 
-export default function Audiorecord() {
+export default function Index() {
   return (
     <ChakraProvider>
       <Provider>

@@ -4,7 +4,7 @@ export const PACKAGE_NAME = "@deep-foundation/audiorecord"
 export const PACKAGE_TYPES =
   ["DeviceSupport", "Permissions", "AudioRecords", "Record", "Duration", "StartTime", "EndTime", "AudioChunk", "Format"]
 
-export default async function initializePackage(deep: DeepClient) {
+export default async function initializePackage(deep: DeepClient, deviceLinkId) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
@@ -41,10 +41,11 @@ export default async function initializePackage(deep: DeepClient) {
   })))
   const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
     type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
+    string: { data: { value: "AudioRecords" } },
     in: {
       data: {
         type_id: containTypeLinkId,
-        from_id: await deep.id("deep", "admin"),
+        from_id: deviceLinkId,
         string: { data: { value: "AudioRecords" } },
       }
     }

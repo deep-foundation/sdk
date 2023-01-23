@@ -51,6 +51,7 @@
     "@ionic/pwa-elements": "^3.1.1",
     "@octokit/rest": "^19.0.5",
     "az": "^0.2.3",
+    "capacitor-voice-recorder": "^4.0.2",
     "dotenv-load": "^2.0.1",
     "events": "^3.3.0",
     "firebase": "^9.15.0",
