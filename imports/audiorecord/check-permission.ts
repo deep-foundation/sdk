@@ -2,10 +2,10 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { VoiceRecorder } from "capacitor-voice-recorder"
 import { PACKAGE_NAME } from "./initialize-package";
 
-export default async function checkAudioRecPermission(deep: DeepClient) {
+export default async function checkAudioRecPermission(deep: DeepClient, deviceLinkId) {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const permissionsTypelinkId = await deep.id(PACKAGE_NAME, "Permissions");
-    const audioRecordsTypeLinkId = await deep.id(deep.linkId, "AudioRecords");
+    const audioRecordsTypeLinkId = await deep.id(deviceLinkId, "AudioRecords");
 
     const { value: permission } = await VoiceRecorder.hasAudioRecordingPermission();
 
