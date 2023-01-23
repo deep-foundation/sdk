@@ -6,7 +6,7 @@ import {
 } from "@deep-foundation/deeplinks/imports/client";
 import { useState, useEffect } from 'react'
 
-export function useHapticVibrate() {
+export function useHapticVibrate({ deviceLinkId }: { deviceLinkId: any }) {
   const [vibratedType, setVibratedType] = useState(0);
   const [vibrateType, setVibrateType] = useState(0);
 
@@ -33,7 +33,7 @@ export function useHapticVibrate() {
       in: {
         data: {
           type_id: 3,
-          from_id: deep.linkId,
+          from_id: deviceLinkId,
           string: { data: { value: "Vibrated" } },
         },
       },
@@ -41,7 +41,7 @@ export function useHapticVibrate() {
   }
 }
 
-export async function createHapticPackage({ deep }: { deep: DeepClient }) {
+export async function createHapticPackage({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
   const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
 
@@ -49,7 +49,7 @@ export async function createHapticPackage({ deep }: { deep: DeepClient }) {
 
   const hapticPackage = await ml.createLink({
     value: "@deep-foundation/haptics",
-    contain_from_id: deep.linkId,
+    contain_from_id: deviceLinkId,
     type_id: packageTypeLinkId,
   });
 

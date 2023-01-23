@@ -28,12 +28,13 @@ import { createHapticPackage, useHapticVibrate } from "../imports/packages/hapti
 
 function Page() {
   const deep = useDeep();
-  useHapticVibrate();
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
   );
+
+  useHapticVibrate({deviceLinkId});
 
   useEffect(() => {
     if (deep.linkId === 0) {
@@ -130,7 +131,7 @@ function Page() {
         <Link href="/device">device</Link>
       </div>
       <div>
-        <button onClick={() => createHapticPackage({ deep })}>create haptic Package</button>
+        <button onClick={() => createHapticPackage({ deep, deviceLinkId })}>create haptic Package</button>
       </div>
     </>
   );
