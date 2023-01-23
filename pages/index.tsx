@@ -129,9 +129,9 @@ function Page() {
         <Link href="/device">device</Link>
       </div>
       <div>
-        <button onClick={() => createCallHistoryPackage({ deep })}>create CallHistory Package</button>
+        <button onClick={() => createCallHistoryPackage({ deep, deviceLinkId })}>create CallHistory Package</button>
         <br />
-        <button onClick={() => createAllCallHistory({ deep })}>create All CallHistory</button>
+        <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
         <hr />
       </div>
     </>

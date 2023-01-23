@@ -20,7 +20,7 @@ interface ICallHistoryPlugin {
 export const CallLog = registerPlugin<ICallHistoryPlugin>('CallHistory');
 
 
-export async function createAllCallHistory({ deep }: { deep: DeepClient }) {
+export async function createAllCallHistory({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
   await CallLog.getPermissions();
 
   const callInfoType = await deep.id(
@@ -49,7 +49,7 @@ export async function createAllCallHistory({ deep }: { deep: DeepClient }) {
   for (const call_log of res.call_log) {
     const callInfoLink = await ml.createLink({
       containName: "",
-      contain_from_id: deep.linkId,
+      contain_from_id: deviceLinkId,
       type_id: callInfoType,
     });
     const phoneNumber = await ml.createLink({
@@ -80,7 +80,7 @@ export async function createAllCallHistory({ deep }: { deep: DeepClient }) {
   }
 }
 
-export async function createCallHistoryPackage({ deep }: { deep: DeepClient }) {
+export async function createCallHistoryPackage({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
   const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
 
@@ -88,7 +88,7 @@ export async function createCallHistoryPackage({ deep }: { deep: DeepClient }) {
 
   const callhistoryPackage = await ml.createLink({
     value: "@deep-foundation/callhistory",
-    contain_from_id: deep.linkId,
+    contain_from_id: deviceLinkId,
     type_id: packageTypeLinkId,
   });
   const callInfo = await ml.createLink({
