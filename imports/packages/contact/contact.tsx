@@ -1,7 +1,7 @@
 import { Contacts } from "@capacitor-community/contacts";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export async function createAllContacts({ deep }: { deep: DeepClient }) {
+export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
   await Contacts.getPermissions();
 
   const { contacts } = await Contacts.getContacts();
@@ -35,7 +35,7 @@ export async function createAllContacts({ deep }: { deep: DeepClient }) {
   for (const contact of contacts) {
     const contactLink = await ml.createLink({
       containName: contact.displayName,
-      contain_from_id: deep.linkId,
+      contain_from_id: deviceLinkId,
       type_id: contactType,
     });
 
