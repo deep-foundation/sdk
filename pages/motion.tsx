@@ -16,7 +16,7 @@ import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
 import { insertAccelerationDataToDeep } from '../imports/motion/insert-acceleration-data-to-deep';
 import { insertOrientationDataToDeep } from '../imports/motion/insert-orientation-data-to-deep';
-import { insertMotionPackageLinksToDeep } from '../imports/motion/insert-motion-package-links-to-deep';
+import { insertPackageLinksToDeep } from '../imports/motion/insert-package-links-to-deep';
 
 function Content() {
   const deep = useDeep();
@@ -30,7 +30,7 @@ function Content() {
       <Text>{deviceLinkId}</Text>
       <Button
         onClick={async () => {
-          await insertMotionPackageLinksToDeep({deep});
+          await insertPackageLinksToDeep({deep});
         }}
       >
         Initialize package
