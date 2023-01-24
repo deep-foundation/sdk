@@ -15,6 +15,7 @@ import { Provider } from '../imports/provider';
 import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
 import { insertMotionDataToDeep as insertAccelerationDataToDeep } from '../imports/motion/insertMotionDataToDeep';
+import { insertOrientationDataToDeep } from '../imports/motion/insert-orientation-data-to-deep';
 
 function Content() {
   const deep = useDeep();
@@ -22,8 +23,6 @@ function Content() {
     'deviceLinkId',
     undefined
   );
-
-  const [accelHandler, setAccelHandler] = useState<PluginListenerHandle>(undefined);
 
   return (
     <Stack>
@@ -33,7 +32,6 @@ function Content() {
           const accelHandler = await Motion.addListener('accel', event => {
             insertAccelerationDataToDeep({deep, accelData: event, deviceLinkId})
           });
-          setAccelHandler(accelHandler);
         }}
       >
         Subscribe to acceleration data
@@ -43,7 +41,6 @@ function Content() {
           const accelHandler = await Motion.addListener('orientation', event => {
             insertOrientationDataToDeep({deep, orientationData: event, deviceLinkId})
           });
-          setOrientationHandler(accelHandler);
         }}
       >
         Subscribe to orientation data
