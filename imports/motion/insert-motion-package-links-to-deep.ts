@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertPackageLinksToDeep({ deep }: { deep: DeepClient }) {
+export async function insertMotionPackageLinksToDeep({ deep }: { deep: DeepClient }) {
 
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
