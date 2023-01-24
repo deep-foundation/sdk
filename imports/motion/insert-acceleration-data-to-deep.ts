@@ -2,7 +2,7 @@ import { AccelListenerEvent } from "@capacitor/motion";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertMotionDataToDeep({ deep, accelData, deviceLinkId }: { deep: DeepClient, accelData: AccelListenerEvent, deviceLinkId: number }) {
+export async function insertAccelerationDataToDeep({ deep, accelData, deviceLinkId }: { deep: DeepClient, accelData: AccelListenerEvent, deviceLinkId: number }) {
   const accelerationTypeLinkId = await deep.id(PACKAGE_NAME, "Acceleration");
   const accelerationIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, "AccelerationIncludingGravity");
   const accelerationXTypeLinkId = await deep.id(PACKAGE_NAME, "AccelerationX");

@@ -14,7 +14,7 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
-import { insertMotionDataToDeep as insertAccelerationDataToDeep } from '../imports/motion/insertMotionDataToDeep';
+import { insertAccelerationDataToDeep } from '../imports/motion/insert-acceleration-data-to-deep';
 import { insertOrientationDataToDeep } from '../imports/motion/insert-orientation-data-to-deep';
 
 function Content() {
