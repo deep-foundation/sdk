@@ -12,7 +12,7 @@ import {
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
-import { insertDevicePackageLinksToDeep } from '../imports/device/insert-device-package-links-to-deep';
+import { insertPackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME } from '../imports/device/package-name';
 import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
 import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
