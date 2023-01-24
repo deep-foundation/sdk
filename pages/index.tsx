@@ -21,7 +21,7 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
+import { insertDevicePackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-device-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
 function Page() {
