@@ -127,6 +127,3 @@ projects/app/electron/app
 /electron/Deep.Case*
 /electron/node_modules
 /electron/*.provisionprofile
-/extension/next
-/extension/next-assets
-/extension/*.html

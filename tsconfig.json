@@ -1,29 +1,23 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "jsx": "preserve",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es5",
     "lib": [
       "dom",
-      "es6",
-      "es7"
+      "dom.iterable",
+      "esnext"
     ],
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
   "include": [
     "next-env.d.ts",
@@ -31,10 +25,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "electron"
-  ],
-  "typeRoots": [
-    "./node_modules/@types"
+    "node_modules"
   ]
 }
