@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME="@deep-foundation/network"
-export const PACKAGE_TYPES = ["Network", "Wifi", "Cellular", "Unknown", "None"]
+export const PACKAGE_TYPES = ["Wifi", "Cellular", "Unknown", "None"]
 
 export default async function initializePackage(deep: DeepClient, deviceLinkId) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")

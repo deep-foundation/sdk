@@ -122,3 +122,8 @@ projects/app/electron/app
 # deepcase
 /app
 /out
+/electron/build
+/electron/out
+/electron/Deep.Case*
+/electron/node_modules
+/electron/*.provisionprofile
