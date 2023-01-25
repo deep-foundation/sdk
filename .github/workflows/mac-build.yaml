@@ -56,6 +56,7 @@ jobs:
           echo "CSC_LINK (base64) = $(echo ${CSC_LINK} | base64)"
           echo "Copy the above value, and then execute locally:"
           echo "echo PASTE_HERE | base64 -D"
+      - name: npm
         run: npm ci --force
       - name: Install electron dependencies
         run: cd electron && npm ci && ls node_modules | grep @
