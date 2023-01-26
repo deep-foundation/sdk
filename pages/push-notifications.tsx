@@ -410,37 +410,36 @@ function Page() {
             const handleOperationLinkId = await deep.id("@deep-foundation/core", "HandleInsert" /* | HandleUpdate | HandleDelete */);
             const handleName = "HandleName";
             const code = /*javascript*/`
-const axios = require('axios');
-async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
+async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
+  const axios = require('axios');
+
   const notificationLinkId = notifyLink.from_id;
   const deviceLinkId = notifyLink.to_id;
 
-  const getIsPushNotificationNotified = async () => {
-    const { data: isNotifiedLinks } = await deep.select({
-      type_id: {
-        _id: ["@deep-foundation/push-notifications", "IsNotified"]
-      },
-      to_id: notificationLinkId
-    })
-    return isNotifiedLinks.length > 0;
-  }
-  const isPushNotificationNotified = getIsPushNotificationNotified();
-  if (isPushNotificationNotified) {
-    return;
-  }
+  // const getIsPushNotificationNotified = async () => {
+  //   const { data: isNotifiedLinks } = await deep.select({
+  //     type_id: {
+  //       _id: ["@deep-foundation/push-notifications", "IsNotified"]
+  //     },
+  //     to_id: notificationLinkId
+  //   })
+  //   return isNotifiedLinks.length > 0;
+  // }
+  // const isPushNotificationNotified = getIsPushNotificationNotified();
+  // if (isPushNotificationNotified) {
+  //   return;
+  // }
 
   const getDeviceRegistrationToken = async () => {
-    const { deviceRegistrationTokenLinks } = await deep.select({
+    const { data: deviceRegistrationTokenLinks } = await deep.select({
       type_id: {
         _id: ["@deep-foundation/push-notifications", "DeviceRegistrationToken"]
       },
       in: {
-        data: [{
-          type_id: {
-            _id: ["@deep-foundation/core", "Contain"]
-          },
-          from_id: deviceLinkId
-        }]
+        type_id: {
+          _id: ["@deep-foundation/core", "Contain"]
+        },
+        from_id: deviceLinkId
       }
     });
     if (deviceRegistrationTokenLinks.length === 0) {
@@ -452,20 +451,18 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     }
     return deviceRegistrationTokenLink.value.value;
   }
-  const deviceRegistrationToken = getDeviceRegistrationToken();
+  const deviceRegistrationToken = await getDeviceRegistrationToken();
 
   const getWebPushCertificateLink = async () => {
-    const { webPushCertificateLinks } = await deep.select({
+    const { data: webPushCertificateLinks } = await deep.select({
       type_id: {
         _id: ["@deep-foundation/push-notifications", "WebPushCertificate"]
       },
       in: {
-        data: [{
-          type_id: {
-            _id: ["@deep-foundation/core", "Contain"]
-          },
-          from_id: triggeredByLinkId
-        }]
+        type_id: {
+          _id: ["@deep-foundation/core", "Contain"]
+        },
+        from_id: triggeredByLinkId
       }
     });
     if (webPushCertificateLinks.length === 0) {
@@ -477,21 +474,19 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     }
     return webPushCertificateLink;
   }
-  const webPushCertificateLink = getWebPushCertificateLink();
+  const webPushCertificateLink = await getWebPushCertificateLink();
 
   const getPushNotificationData = async () => {
     const getPushNotificationTitle = async () => {
-      const { pushNotificationTitleLinks } = await deep.select({
+      const { data: pushNotificationTitleLinks } = await deep.select({
         type_id: {
           _id: ["@deep-foundation/push-notifications", "PushNotificationTitle"]
         },
         in: {
-          data: [{
-            type_id: {
-              _id: ["@deep-foundation/core", "Contain"]
-            },
-            from_id: notificationLinkId
-          }]
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: notificationLinkId
         }
       });
       if (pushNotificationTitleLinks.length === 0) {
@@ -505,41 +500,15 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     };
 
     const getPushNotificationBody = async () => {
-      const { pushNotificationBodyLinks } = await deep.select({
+      const { data: pushNotificationBodyLinks } = await deep.select({
         type_id: {
           _id: ["@deep-foundation/push-notifications", "PushNotificationBody"]
         },
         in: {
-          data: [{
-            type_id: {
-              _id: ["@deep-foundation/core", "Contain"]
-            },
-            from_id: notificationLinkId
-          }]
-        }
-      });
-      if (pushNotificationBodyLinks.length === 0) {
-        throw new Error("Notification must have contained PushNotificationBody")
-      }
-      const pushNotificationBodyLink = pushNotificationBodyLinks[0];
-      if (!pushNotificationBodyLink.value?.value) {
-        throw new Error("PushNotificationBody must have value")
-      }
-      return pushNotificationBodyLink.value.value;
-    };
-
-    const getPushNotificationBody = async () => {
-      const { pushNotificationBodyLinks } = await deep.select({
-        type_id: {
-          _id: ["@deep-foundation/push-notifications", "PushNotificationBody"]
-        },
-        in: {
-          data: [{
-            type_id: {
-              _id: ["@deep-foundation/core", "Contain"]
-            },
-            from_id: notificationLinkId
-          }]
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: notificationLinkId
         }
       });
       if (pushNotificationBodyLinks.length === 0) {
@@ -554,17 +523,15 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
 
     const getPushNotificationIconUrl = async () => {
-      const { pushNotificationIconUrlLinks } = await deep.select({
+      const { data: pushNotificationIconUrlLinks } = await deep.select({
         type_id: {
           _id: ["@deep-foundation/push-notifications", "PushNotificationIconUrl"]
         },
         in: {
-          data: [{
-            type_id: {
-              _id: ["@deep-foundation/core", "Contain"]
-            },
-            from_id: notificationLinkId
-          }]
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: notificationLinkId
         }
       });
       if (pushNotificationIconUrlLinks.length === 0) {
@@ -579,17 +546,15 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
 
     const getPushNotificationImageUrl = async () => {
-      const { pushNotificationImageUrlLinks } = await deep.select({
+      const { data: pushNotificationImageUrlLinks } = await deep.select({
         type_id: {
           _id: ["@deep-foundation/push-notifications", "PushNotificationImageUrl"]
         },
         in: {
-          data: [{
-            type_id: {
-              _id: ["@deep-foundation/core", "Contain"]
-            },
-            from_id: notificationLinkId
-          }]
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: notificationLinkId
         }
       });
       if (pushNotificationImageUrlLinks.length === 0) {
@@ -605,8 +570,8 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     const pushNotificationData = {
       token: deviceRegistrationToken,
       notification: {
-        title: getPushNotificationTitle(),
-        body: getPushNotificationBodu(),
+        title: await getPushNotificationTitle(),
+        body: await getPushNotificationBody(),
       }
     };
     const iconUrl = getPushNotificationIconUrl();
@@ -619,8 +584,8 @@ async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     }
     return pushNotificationData;
   };
-  const pushNotificationData = getPushNotificationData();
-
+  const pushNotificationData = await getPushNotificationData();
+  console.log({ webPushCertificateLink });
   axios({
     method: 'get',
     url: 'https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send',
