@@ -399,21 +399,227 @@ function Page() {
             const handleOperationLinkId = await deep.id("@deep-foundation/core", "HandleInsert" /* | HandleUpdate | HandleDelete */);
             const handleName = "HandleName";
             const code = /*javascript*/`
-              async ({deep, data: {newLink}}) => {
-                const getIsNotificationExecuted = async () {
-                  const {data: executedLinks} = await deep.select({
-                    type_id: {
-                      _id: ["${PACKAGE_NAME}", "Executed"]
-                    },
-                    to_id: newLink.id
-                  })
-                  return executedLinks.length > 0;
-                }
-                const isNotificationExecuted = getIsNotificationExecuted();
-                if(!isNotificationExecuted) {
-                  // TODO send message to the device
-                }
-              }
+const axios = require('axios');
+async ({ deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
+  const notificationLinkId = notifyLink.from_id;
+  const deviceLinkId = notifyLink.to_id;
+
+  const getIsPushNotificationNotified = async () => {
+    const { data: isNotifiedLinks } = await deep.select({
+      type_id: {
+        _id: ["@deep-foundation/push-notifications", "IsNotified"]
+      },
+      to_id: notificationLinkId
+    })
+    return isNotifiedLinks.length > 0;
+  }
+  const isPushNotificationNotified = getIsPushNotificationNotified();
+  if (isPushNotificationNotified) {
+    return;
+  }
+
+  const getDeviceRegistrationToken = async () => {
+    const { deviceRegistrationTokenLinks } = await deep.select({
+      type_id: {
+        _id: ["@deep-foundation/push-notifications", "DeviceRegistrationToken"]
+      },
+      in: {
+        data: [{
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: deviceLinkId
+        }]
+      }
+    });
+    if (deviceRegistrationTokenLinks.length === 0) {
+      throw new Error("Device must have contained DeviceRegistrationToken to be nofified")
+    }
+    const deviceRegistrationTokenLink = deviceRegistrationTokenLinks[0];
+    if (!deviceRegistrationTokenLink.value?.value) {
+      throw new Error("DeviceRegistrationToken must have value")
+    }
+    return deviceRegistrationTokenLink.value.value;
+  }
+  const deviceRegistrationToken = getDeviceRegistrationToken();
+
+  const getWebPushCertificateLink = async () => {
+    const { webPushCertificateLinks } = await deep.select({
+      type_id: {
+        _id: ["@deep-foundation/push-notifications", "WebPushCertificate"]
+      },
+      in: {
+        data: [{
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"]
+          },
+          from_id: triggeredByLinkId
+        }]
+      }
+    });
+    if (webPushCertificateLinks.length === 0) {
+      throw new Error("User must have contained WebPushCertificate to be able to notify")
+    }
+    const webPushCertificateLink = webPushCertificateLinks[0];
+    if (!webPushCertificateLink.value?.value) {
+      throw new Error("WebPushCertificate must have value")
+    }
+    return webPushCertificateLink;
+  }
+  const webPushCertificateLink = getWebPushCertificateLink();
+
+  const getPushNotificationData = async () => {
+    const getPushNotificationTitle = async () => {
+      const { pushNotificationTitleLinks } = await deep.select({
+        type_id: {
+          _id: ["@deep-foundation/push-notifications", "PushNotificationTitle"]
+        },
+        in: {
+          data: [{
+            type_id: {
+              _id: ["@deep-foundation/core", "Contain"]
+            },
+            from_id: notificationLinkId
+          }]
+        }
+      });
+      if (pushNotificationTitleLinks.length === 0) {
+        throw new Error("Notification must have contained PushNotificationTitle")
+      }
+      const pushNotificationTitleLink = pushNotificationTitleLinks[0];
+      if (!pushNotificationTitleLink.value?.value) {
+        throw new Error("PushNotificationTitle must have value")
+      }
+      return pushNotificationTitleLink.value.value;
+    };
+
+    const getPushNotificationBody = async () => {
+      const { pushNotificationBodyLinks } = await deep.select({
+        type_id: {
+          _id: ["@deep-foundation/push-notifications", "PushNotificationBody"]
+        },
+        in: {
+          data: [{
+            type_id: {
+              _id: ["@deep-foundation/core", "Contain"]
+            },
+            from_id: notificationLinkId
+          }]
+        }
+      });
+      if (pushNotificationBodyLinks.length === 0) {
+        throw new Error("Notification must have contained PushNotificationBody")
+      }
+      const pushNotificationBodyLink = pushNotificationBodyLinks[0];
+      if (!pushNotificationBodyLink.value?.value) {
+        throw new Error("PushNotificationBody must have value")
+      }
+      return pushNotificationBodyLink.value.value;
+    };
+
+    const getPushNotificationBody = async () => {
+      const { pushNotificationBodyLinks } = await deep.select({
+        type_id: {
+          _id: ["@deep-foundation/push-notifications", "PushNotificationBody"]
+        },
+        in: {
+          data: [{
+            type_id: {
+              _id: ["@deep-foundation/core", "Contain"]
+            },
+            from_id: notificationLinkId
+          }]
+        }
+      });
+      if (pushNotificationBodyLinks.length === 0) {
+        throw new Error("Notification must have contained PushNotificationBody")
+      }
+      const pushNotificationBodyLink = pushNotificationBodyLinks[0];
+      if (!pushNotificationBodyLink.value?.value) {
+        throw new Error("PushNotificationBody must have value")
+      }
+      return pushNotificationBodyLink.value.value;
+    };
+
+
+    const getPushNotificationIconUrl = async () => {
+      const { pushNotificationIconUrlLinks } = await deep.select({
+        type_id: {
+          _id: ["@deep-foundation/push-notifications", "PushNotificationIconUrl"]
+        },
+        in: {
+          data: [{
+            type_id: {
+              _id: ["@deep-foundation/core", "Contain"]
+            },
+            from_id: notificationLinkId
+          }]
+        }
+      });
+      if (pushNotificationIconUrlLinks.length === 0) {
+        return undefined;
+      }
+      const pushNotificationIconUrlLink = pushNotificationIconUrlLinks[0];
+      if (!pushNotificationIconUrlLink.value?.value) {
+        throw new Error("PushNotificationIconUrl must have value")
+      }
+      return pushNotificationIconUrlLink.value.value;
+    };
+
+
+    const getPushNotificationImageUrl = async () => {
+      const { pushNotificationImageUrlLinks } = await deep.select({
+        type_id: {
+          _id: ["@deep-foundation/push-notifications", "PushNotificationImageUrl"]
+        },
+        in: {
+          data: [{
+            type_id: {
+              _id: ["@deep-foundation/core", "Contain"]
+            },
+            from_id: notificationLinkId
+          }]
+        }
+      });
+      if (pushNotificationImageUrlLinks.length === 0) {
+        return undefined;
+      }
+      const pushNotificationImageUrlLink = pushNotificationImageUrlLinks[0];
+      if (!pushNotificationImageUrlLink.value?.value) {
+        throw new Error("PushNotificationImageUrl must have value")
+      }
+      return pushNotificationImageUrlLink.value.value;
+    };
+
+    const pushNotificationData = {
+      token: deviceRegistrationToken,
+      notification: {
+        title: getPushNotificationTitle(),
+        body: getPushNotificationBodu(),
+      }
+    };
+    const iconUrl = getPushNotificationIconUrl();
+    if (iconUrl) {
+      pushNotificationData.iconUrl = iconUrl;
+    }
+    const imageUrl = getPushNotificationImageUrl();
+    if (imageUrl) {
+      pushNotificationData.imageUrl = imageUrl;
+    }
+    return pushNotificationData;
+  };
+  const pushNotificationData = getPushNotificationData();
+
+  axios({
+    method: 'get',
+    url: 'https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send',
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + webPushCertificateLink.value.value
+    },
+    data: pushNotificationData
+  })
+}
               `.trim();
 
             await deep.insert({
