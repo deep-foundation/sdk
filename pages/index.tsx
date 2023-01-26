@@ -21,13 +21,11 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { initializePackage as initializeDevicePackage } from '../imports/device/initialize-package';
+import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
 function Page() {
   const deep = useDeep();
-  console.log('rerender');
-  console.log({ deep });
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -35,7 +33,6 @@ function Page() {
   );
 
   useEffect(() => {
-    console.log('Login as guest');
     if(deep.linkId === 0) {
       deep.guest();
     }
@@ -46,7 +43,6 @@ function Page() {
       if (deep.linkId != 0) {
         const adminLinkId = await deep.id('deep', 'admin');
         if (deep.linkId != adminLinkId) {
-          console.log('Login as admin');
 
           await deep.login({
             linkId: adminLinkId,
@@ -87,7 +83,7 @@ function Page() {
       }
       
       if (!await getIsDevicePackageInstalled()) {
-        await initializeDevicePackage(deep);
+        await insertDevicePackageLinksToDeep({deep});
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -117,11 +113,11 @@ function Page() {
   }, [deep]);
 
   return (
-    <>
-      <h1>Deep.Foundation sdk examples</h1>
-      <Text>Authentication Link Id: {deep.linkId}</Text>
-      <Text>Device Link Id: {deviceLinkId}</Text>
-      <div>
+    <div>
+      <h1>Deep.Foundation sdk examples</h1> 
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+       <div>
         <Link href="/all">all subscribe</Link>
       </div>
       <div>
@@ -129,8 +125,8 @@ function Page() {
       </div>
       <div>
         <Link href="/device">device</Link>
-      </div>
-    </>
+      </div> 
+    </div>
   );
 }
 
