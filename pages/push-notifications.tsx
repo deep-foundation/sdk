@@ -11,12 +11,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { saveGeneralInfo } from '../imports/device/save-general-info';
-import { initializePackage } from '../imports/device/initialize-package';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
-import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-battery-info';
-import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
-import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { initializeApp } from 'firebase/app';
