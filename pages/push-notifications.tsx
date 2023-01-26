@@ -620,7 +620,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
                         {
                           type_id: handleOperationLinkId,
                           // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
-                          from_id: notificationTypeLinkId,
+                          from_id: notifyTypeLinkId,
                           in: {
                             data: [
                               {
