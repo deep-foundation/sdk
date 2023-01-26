@@ -101,12 +101,12 @@ function Page() {
 
   return (
     <Stack>
-      <Text>Device link id{deviceLinkId}</Text>
-      <Text>
-        Device registration token link id {deviceRegistrationTokenLinkId}
+      <Text suppressHydrationWarning>Device link id{deviceLinkId ?? " "}</Text>
+      <Text suppressHydrationWarning>
+        Device registration token link id {deviceRegistrationTokenLinkId ?? " "}
       </Text>
-      <Text>Platform: {platform}</Text>
-      <Text>Permissions are {!isPermissionsGranted && 'not'} granted</Text>
+      <Text suppressHydrationWarning>Platform: {platform ?? " "}</Text>
+      <Text suppressHydrationWarning>Permissions are {!isPermissionsGranted && 'not'} granted</Text>
       <Button
         onClick={() => {
           const initializePackage = async () => {
