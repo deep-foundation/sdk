@@ -8,7 +8,7 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/dialog/package-name';
 import { Provider } from '../imports/provider';
 import { Dialog } from '@capacitor/dialog'
@@ -17,6 +17,7 @@ import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
 import { insertConfirmResultToDeep } from '../imports/dialog/insert-confirm-result-to-deep';
 import { getAlertOptionsFromDeep } from '../imports/dialog/get-alert-options-from-deep';
+import { insertPackageLinksToDeep } from '../imports/dialog/insert-package-links-to-deep';
 
 function Content() {
   const deep = useDeep();
@@ -97,7 +98,9 @@ function Content() {
 
   return (
     <Stack>
-      <Text>{deviceLinkId}</Text>
+      <Button onClick={async () => {
+        await insertPackageLinksToDeep({deep});
+      }}>Install package</Button>
     </Stack>
   );
 }
