@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.deepfoundation.deep',
   appName: 'Deep',
-  webDir: 'out',
+  webDir: 'app/server/pages',
   bundledWebRuntime: false
 };
 
