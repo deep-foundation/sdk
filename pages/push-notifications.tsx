@@ -183,6 +183,22 @@ function Page() {
               },
             });
 
+            const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Device");
+            const {
+              data: [{ id: notifyTypeLinkId }],
+            } = await deep.insert({
+              type_id: typeTypeLinkId,
+              from_id: notificationTypeLinkId,
+              to_id: deviceTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                  string: { data: { value: 'Notify' } },
+                },
+              },
+            });
+
             const {
               data: [{ id: deviceRegistrationTokenTypeLinkId }],
             } = await deep.insert({
