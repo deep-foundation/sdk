@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  useLocalStore,
-} from '@deep-foundation/store/local';
+import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
@@ -11,7 +9,7 @@ import {
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/dialog/package-name';
 import { Provider } from '../imports/provider';
-import { Dialog } from '@capacitor/dialog'
+import { Dialog } from '@capacitor/dialog';
 import { getPromptOptionsFromDeep } from '../imports/dialog/get-prompt-options-from-deep';
 import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result-to-deep';
 import { getConfirmOptionsFromDeep } from '../imports/dialog/getConfirmOptionsFromDeep';
@@ -21,86 +19,138 @@ import { insertPackageLinksToDeep } from '../imports/dialog/insert-package-links
 
 function Content() {
   const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
+  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
-  const { data: notExecutedAlertLinks } = useDeepSubscription({
+  const { data: notNotifiedNotifyAlertLinks } = useDeepSubscription({
     type_id: {
-      _id: [PACKAGE_NAME, "Alert"]
+      _id: [PACKAGE_NAME, 'Notify'],
     },
+    from: {
+      type_id: {
+        _id: [PACKAGE_NAME, 'Alert'],
+      },
+    },
+    to_id: deviceLinkId,
     _not: {
-      in: {
+      out: {
         type_id: {
-          _id: [PACKAGE_NAME, "Executed"]
-        }
-      }
-    }
-  })
+          _id: [PACKAGE_NAME, 'Notified'],
+        },
+        to_id: deviceLinkId,
+      },
+    },
+  });
 
   useEffect(() => {
-    
-
     new Promise(async () => {
-      for (const notExecutedAlertLink of notExecutedAlertLinks) {
-        const alertOptions = await getAlertOptionsFromDeep({deep, alertLinkId: notExecutedAlertLink.id});
-        await Dialog.alert(alertOptions)
+      const notifiedTypeLinkid = await deep.id(PACKAGE_NAME, 'Notified');
+      await deep.insert(
+        notNotifiedNotifyAlertLinks.map((notNotifiedNotifyAlertLink) => ({
+          type_id: notifiedTypeLinkid,
+          from_id: notNotifiedNotifyAlertLink.id,
+          to_id: deviceLinkId,
+        }))
+      );
+      for (const notNotifiedNotifyAlertLink of notNotifiedNotifyAlertLinks) {
+        const alertOptions = await getAlertOptionsFromDeep({
+          deep,
+          alertLinkId: notNotifiedNotifyAlertLink.id,
+        });
+        await Dialog.alert(alertOptions);
       }
     });
-  }, [notExecutedAlertLinks])
+  }, [notNotifiedNotifyAlertLinks]);
 
-  const { data: notExecutedPromptLinks } = useDeepSubscription({
+  const { data: notNotifiedNotifyPromptLinks } = useDeepSubscription({
     type_id: {
-      _id: ["@deep-foundation/dialog", "Prompt"]
+      _id: [PACKAGE_NAME, 'Notify'],
     },
+    from: {
+      type_id: {
+        _id: [PACKAGE_NAME, 'Prompt'],
+      },
+    },
+    to_id: deviceLinkId,
     _not: {
-      in: {
+      out: {
         type_id: {
-          _id: [PACKAGE_NAME, "Executed"]
-        }
-      }
-    }
-  })
+          _id: [PACKAGE_NAME, 'Notified'],
+        },
+        to_id: deviceLinkId,
+      },
+    },
+  });
 
   useEffect(() => {
     new Promise(async () => {
-      for (const notExecutedPromptLink of notExecutedPromptLinks) {
-        const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: notExecutedPromptLink.id });
+      for (const notNotifiedNotifyPromptLink of notNotifiedNotifyPromptLinks) {
+        await deep.insert({
+          type_id: await deep.id(PACKAGE_NAME, 'Notified'),
+          from_id: notNotifiedNotifyPromptLink.id,
+          to_id: deviceLinkId,
+        });
+      }
+      for (const notNotifiedNotifyPromptLink of notNotifiedNotifyPromptLinks) {
+        const promptOptions = await getPromptOptionsFromDeep({
+          deep,
+          promptLinkId: notNotifiedNotifyPromptLink.id,
+        });
         const promptResult = await Dialog.prompt(promptOptions);
         await insertPromptResultToDeep({ deep, promptResult });
       }
-    })
-  }, [notExecutedPromptLinks])
+    });
+  }, [notNotifiedNotifyPromptLinks]);
 
-  const { data: notExecutedConfirmLinks } = useDeepSubscription({
+  const { data: notNotifiedNotifyConfirmLinks } = useDeepSubscription({
     type_id: {
-      _id: ["@deep-foundation/dialog", "Confirm"]
+      _id: [PACKAGE_NAME, 'Notify'],
     },
+    from: {
+      type_id: {
+        _id: [PACKAGE_NAME, 'Confirm'],
+      },
+    },
+    to_id: deviceLinkId,
     _not: {
-      in: {
+      out: {
         type_id: {
-          _id: [PACKAGE_NAME, "Executed"]
-        }
-      }
-    }
-  })
+          _id: [PACKAGE_NAME, 'Notified'],
+        },
+        to_id: deviceLinkId,
+      },
+    },
+  });
 
   useEffect(() => {
     new Promise(async () => {
-      for (const notExecutedConfirmLink of notExecutedConfirmLinks) {
-        const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: notExecutedConfirmLink.id });
+      const notifiedTypeLinkid = await deep.id(PACKAGE_NAME, 'Notified');
+      await deep.insert(
+        notNotifiedNotifyConfirmLinks.map((notNotifiedNotifyConfirmLink) => ({
+          type_id: notifiedTypeLinkid,
+          from_id: notNotifiedNotifyConfirmLink.id,
+          to_id: deviceLinkId,
+        }))
+      );
+      for (const notNotifiedNotifyConfirmLink of notNotifiedNotifyConfirmLinks) {
+        const confirmOptions = await getConfirmOptionsFromDeep({
+          deep,
+          confirmLinkId: notNotifiedNotifyConfirmLink.id,
+        });
         const confirmResult = await Dialog.confirm(confirmOptions);
         await insertConfirmResultToDeep({ deep, confirmResult });
       }
-    })
-  }, [notExecutedConfirmLinks])
+    });
+  }, [notNotifiedNotifyConfirmLinks]);
 
   return (
     <Stack>
-      <Button onClick={async () => {
-        await insertPackageLinksToDeep({deep});
-      }}>Install package</Button>
+      <Button
+        onClick={async () => {
+          await insertPackageLinksToDeep({ deep, deviceLinkId });
+        }}
+      >
+        Install package
+      </Button>
     </Stack>
   );
 }
