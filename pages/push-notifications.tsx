@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import {
   LocalStoreProvider,
@@ -10,7 +10,7 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Input, Link, Stack, Text, Divider } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
@@ -18,7 +18,7 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { Device } from '@capacitor/device';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { onBackgroundMessage } from "firebase/messaging/sw";
+import { onBackgroundMessage } from 'firebase/messaging/sw';
 import { insertPushNotificationToDeep } from '../imports/push-notifications/insertPushNotificationToDeep';
 
 const firebaseConfig = {
@@ -99,14 +99,18 @@ function Page() {
     });
   }, [deviceLinkId, deviceRegistrationTokenLinkId, platform]);
 
+  const [webPushCertificate, setWebPushCertificate] = useState<string|undefined>(undefined);  
+
   return (
     <Stack>
-      <Text suppressHydrationWarning>Device link id{deviceLinkId ?? " "}</Text>
+      <Text suppressHydrationWarning>Device link id{deviceLinkId ?? ' '}</Text>
       <Text suppressHydrationWarning>
-        Device registration token link id {deviceRegistrationTokenLinkId ?? " "}
+        Device registration token link id {deviceRegistrationTokenLinkId ?? ' '}
       </Text>
-      <Text suppressHydrationWarning>Platform: {platform ?? " "}</Text>
-      <Text suppressHydrationWarning>Permissions are {!isPermissionsGranted && 'not'} granted</Text>
+      <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
+      <Text suppressHydrationWarning>
+        Permissions are {!isPermissionsGranted && 'not'} granted
+      </Text>
       <Button
         onClick={() => {
           const initializePackage = async () => {
@@ -183,7 +187,10 @@ function Page() {
               },
             });
 
-            const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Device");
+            const deviceTypeLinkId = await deep.id(
+              DEVICE_PACKAGE_NAME,
+              'Device'
+            );
             const {
               data: [{ id: notifyTypeLinkId }],
             } = await deep.insert({
@@ -195,6 +202,25 @@ function Page() {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Notify' } },
+                },
+              },
+            });
+
+            const {
+              data: [{ id: webPushCertificateTypeLinkId }],
+            } = await deep.insert({
+              type_id: typeTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                  string: { data: { value: 'WebPushCertificate' } },
+                },
+              },
+              out: {
+                data: {
+                  type_id: valueTypeLinkId,
+                  to_id: stringTypeLinkId,
                 },
               },
             });
@@ -402,14 +428,26 @@ function Page() {
               },
             });
 
-            const fileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile")
-            const fileWithCodeOfHandlerName = "FileWithCodeOfHandlerName";
-            const supportsJsLinkId = await deep.id("@deep-foundation/core", "dockerSupportsJs" /* | "plv8SupportsJs" */)
-            const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler")
-            const handlerName = "HandlerName";
-            const handleOperationLinkId = await deep.id("@deep-foundation/core", "HandleInsert" /* | HandleUpdate | HandleDelete */);
-            const handleName = "HandleName";
-            const code = /*javascript*/`
+            const fileTypeLinkId = await deep.id(
+              '@deep-foundation/core',
+              'SyncTextFile'
+            );
+            const fileWithCodeOfHandlerName = 'FileWithCodeOfHandlerName';
+            const supportsJsLinkId = await deep.id(
+              '@deep-foundation/core',
+              'dockerSupportsJs' /* | "plv8SupportsJs" */
+            );
+            const handlerTypeLinkId = await deep.id(
+              '@deep-foundation/core',
+              'Handler'
+            );
+            const handlerName = 'HandlerName';
+            const handleOperationLinkId = await deep.id(
+              '@deep-foundation/core',
+              'HandleInsert' /* | HandleUpdate | HandleDelete */
+            );
+            const handleName = 'HandleName';
+            const code = /*javascript*/ `
 async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   const axios = require('axios');
 
