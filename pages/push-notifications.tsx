@@ -680,9 +680,11 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
         onClick={async () => {
           console.log({ platform });
 
-          const insertDeviceRegistrationTokenToDeep = async (
-            deviceRegistrationToken
-          ) => {
+          const insertDeviceRegistrationTokenToDeep = async ({
+            deviceRegistrationToken,
+          }: {
+            deviceRegistrationToken: string;
+          }) => {
             const deviceRegistrationTokenTypeLinkId = await deep.id(
               PACKAGE_NAME,
               'DeviceRegistrationToken'
