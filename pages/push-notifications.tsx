@@ -736,7 +736,9 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
                 'BIScptqotJFzjF7G6efs4_WCrbfVA0In5WaGU-bK62w083TNgfpQoqVKCbjI0ykZLWXbIQLQ1_iEi91u1p4YrH4',
             });
 
-            await insertDeviceRegistrationTokenToDeep(deviceRegistrationToken);
+            await insertDeviceRegistrationTokenToDeep({
+              deviceRegistrationToken,
+            });
           } else {
             await PushNotifications.addListener(
               'registration',
