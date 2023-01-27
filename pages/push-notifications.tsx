@@ -750,6 +750,41 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       >
         Register
       </Button>
+      <Text>WebPushCertificate can be found on <Link>https://console.firebase.google.com/project/PROJECT_NAME/settings/cloudmessaging</Link>. Do not forget to change PROJECT_NAME in URL to your project name</Text>
+      <Input placeholder={"WebPushCertificate"} onChange={(event) => {
+        setWebPushCertificate(event.target.value);
+      }}></Input>
+      <Button isDisabled={!webPushCertificate} onClick={async () => {
+        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+        const webPushCertificateTypeLinkId = await deep.id(PACKAGE_NAME, "WebPushCertificate");
+        console.log({ deviceLinkId });
+
+        await deep.delete({
+          down: {
+            parent: {
+              type_id: containTypeLinkId,
+              from_id: deviceLinkId,
+              to: {
+                type_id: webPushCertificateTypeLinkId,
+              },
+            },
+          },
+        });
+        await deep.insert({
+          type_id: webPushCertificateTypeLinkId,
+          string: {
+            data: {
+              value: webPushCertificate
+            }
+          },
+          in: {
+            data: [{
+              type_id: containTypeLinkId,
+              from_id: deviceLinkId
+            }]
+          }
+        })        
+      }}>Insert WebPushCertificate</Button>
       <Button
         disabled={
           !isPermissionsGranted ||
