@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertPackageLinksToDeep({deep}: {deep: DeepClient}) {
+export async function insertPackageLinksToDeep({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
   const anyTypeLinkId = await deep.id("@deep-foundation/core", "Any");
@@ -272,6 +272,28 @@ export async function insertPackageLinksToDeep({deep}: {deep: DeepClient}) {
       type_id: containTypeLinkId,
       from_id: packageLinkId,
       string: { data: { value: 'ConfirmResultValue' } },
+    } }
+  });
+
+  const { data: [{ id: notifyTypeLinkId }] } = await deep.insert({
+    type_id: typeTypeLinkId,
+    from_id: anyTypeLinkId,
+    to_id: deviceLinkId,
+    in: { data: {
+      type_id: containTypeLinkId,
+      from_id: packageLinkId,
+      string: { data: { value: 'Notify' } },
+    } }
+  });
+
+  const { data: [{ id: notifiedTypeLinkId }] } = await deep.insert({
+    type_id: typeTypeLinkId,
+    from_id: notifyTypeLinkId,
+    to_id: anyTypeLinkId,
+    in: { data: {
+      type_id: containTypeLinkId,
+      from_id: packageLinkId,
+      string: { data: { value: 'Notified' } },
     } }
   });
 }
