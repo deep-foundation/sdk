@@ -693,6 +693,20 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
               '@deep-foundation/core',
               'Contain'
             );
+            console.log({ deviceLinkId });
+
+            await deep.delete({
+              down: {
+                parent: {
+                  type_id: containTypeLinkId,
+                  from_id: deviceLinkId,
+                  to: {
+                    type_id: deviceRegistrationTokenTypeLinkId,
+                  },
+                },
+              },
+            });
+
             const {
               data: [{ id: deviceRegistrationTokenLinkId }],
             } = await deep.insert({
