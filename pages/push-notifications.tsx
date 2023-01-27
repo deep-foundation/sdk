@@ -723,7 +723,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
                 },
               },
             });
-
+            console.log({ deviceRegistrationTokenLinkId });
             setDeviceRegistrationTokenLinkId(deviceRegistrationTokenLinkId);
           };
 
