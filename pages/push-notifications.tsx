@@ -795,12 +795,16 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
         }
         onClick={async () => {
           const listenPushNotifications = async () => {
-            console.log({platform});
-            
+            console.log({ platform });
+
             // if (platform === 'web') {
-              onMessage(firebaseMessaging, async (payload) => {
-                await insertPushNotificationToDeep({deep, deviceLinkId, payload});
+            onMessage(firebaseMessaging, async (payload) => {
+              await insertPushNotificationToDeep({
+                deep,
+                deviceLinkId,
+                payload,
               });
+            });
             // } else {
             //   await PushNotifications.addListener(
             //     'pushNotificationReceived',
