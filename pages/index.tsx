@@ -7,6 +7,8 @@ import { Provider } from "../imports/provider";
 import initializePackage from "../imports/browser-extension/initialize-package";
 import { PACKAGE_NAME } from "../imports/browser-extension/initialize-package";
 import Tab from "./tab";
+import Link from "next/link";
+import { useRouter } from 'next/router'
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -16,6 +18,7 @@ export function Extension() {
   const [tabsSubscription, setTabsSubscription] = useState(false);
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
+  const router = useRouter();
 
   const authUser = async (deep) => {
     await deep.guest();
@@ -143,6 +146,7 @@ export function Extension() {
         <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
         <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
+        <Button onClick={() => router.push('/test')}>TEST PAGE</Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
       {history?.map((page) => (<Tab type="page" key={page.id} id={page.id} favIconUrl={page.favIconUrl} title={page.title} url={page.url} />))}
