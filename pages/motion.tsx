@@ -25,33 +25,67 @@ function Content() {
     undefined
   );
 
+  const {data: motionPackageLinksContainedInDevice,loading: isMotionPackageLinksContainedInDeviceLoading} = useDeepSubscription({
+    type_id: {
+      _id: ["@deep-foundation/core", "Contain"]
+    },
+    to: {
+      type_id: {
+        _id: ["@deep-foundation/core", "Package"]
+      },
+      string: {
+        value: "@deep-foundation/motion"
+      }
+    }
+  });
+
+  const [accelHandler, setAccelHandler] = useState<PluginListenerHandle>(undefined);
+  const [orientationHandler, setOrientationHandler] = useState<PluginListenerHandle>(undefined);
+
   return (
     <Stack>
-      <Text>{deviceLinkId}</Text>
-      <Button
+      <Button isDisabled={!isMotionPackageLinksContainedInDeviceLoading && motionPackageLinksContainedInDevice.length > 0}
         onClick={async () => {
           await insertPackageLinksToDeep({deep});
         }}
       >
         Initialize package
       </Button>
-      <Button
+      <Button isDisabled={Boolean(accelHandler)}
         onClick={async () => {
           const accelHandler = await Motion.addListener('accel', event => {
             insertAccelerationDataToDeep({deep, accelData: event, deviceLinkId})
           });
+          setAccelHandler(accelHandler);
         }}
       >
         Subscribe to acceleration data
       </Button>
-      <Button
+      <Button isDisabled={!accelHandler}
         onClick={async () => {
-          const accelHandler = await Motion.addListener('orientation', event => {
+          accelHandler.remove();
+          setAccelHandler(undefined);
+        }}
+      >
+        Unsubscribe from acceleration data
+      </Button>
+      <Button isDisabled={Boolean(orientationHandler)}
+        onClick={async () => {
+          const orientationHandler = await Motion.addListener('orientation', event => {
             insertOrientationDataToDeep({deep, orientationData: event, deviceLinkId})
           });
+          setOrientationHandler(orientationHandler);
         }}
       >
         Subscribe to orientation data
+      </Button>
+      <Button isDisabled={!orientationHandler}
+        onClick={async () => {
+          orientationHandler.remove();
+          setOrientationHandler(undefined);
+        }}
+      >
+        Unsubscribe from orientation data
       </Button>
       <Button
         onClick={async () => {
