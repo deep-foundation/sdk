@@ -7,6 +7,7 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 
 import initializePackage, { PACKAGE_NAME as NETWORK_PACKAGE_NAME } from "../imports/network/initialize-package";
 import saveNetworkStatus from '../imports/network/save-network-status';
+import updateNetworkStatus from '../imports/network/update-network-status';
 
 
 
@@ -16,13 +17,11 @@ function Page() {
   const [deviceLinkId, setDeviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
   useEffect(() => {
-    const updateNetworkStatus = async (connections) => {
-      for (const connection of connections) {
-        await saveNetworkStatus(deep, deviceLinkId, connection)
-      }
+    const useNetwork = async (connections) => {
+      await updateNetworkStatus(deep, deviceLinkId, connections)
     }
     if (connections.length > 0) {
-      updateNetworkStatus(connections);
+      useNetwork(connections);
       setConnections([]);
     }
   }, [connections])
