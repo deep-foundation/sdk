@@ -21,7 +21,6 @@
     "ios-open": "npx cap open ios",
     "ios-run": "npx cap run ios"
   },
-  "license": "ISC",
   "dependencies": {
     "@capacitor-community/contacts": "^2.0.0",
     "@capacitor-community/electron": "^4.1.2",
