@@ -29,7 +29,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
       }]
     },
   })
-  const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
+  const { data: [{ id: pacakgeTypesLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     type_id: typeTypeLinkId,
     in: {
       data: [{

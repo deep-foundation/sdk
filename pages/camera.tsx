@@ -9,11 +9,13 @@ import checkCameraPermission from '../imports/camera/check-permission';
 import getCameraPermission from '../imports/camera/get-permission';
 import takePhoto from '../imports/camera/take-photo';
 import pickImages from '../imports/camera/pick-images';
+import uploadPhotos from '../imports/camera/upload-photos';
+import uploadGallery from '../imports/camera/upload-gallery';
 
 function Page() {
   const deep = useDeep();
   const [photos, setPhotos] = useLocalStore("PhotoAlbum", []);
-  const [pickedImages, setPickedImages] = useLocalStore("Gallery", []);
+  const [galleryImages, setGalleryImages] = useLocalStore("Gallery", []);
   const [images, setImages] = useLocalStore("Images", []);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -21,132 +23,20 @@ function Page() {
   );
 
   useEffect(() => {
-    const uploadPhotos = async (photos) => {
-      const cameraLinkId = await deep.id(deviceLinkId, "Camera");
-      const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-      const base64TypeLinkId = await deep.id(PACKAGE_NAME, "Base64");
-      const webPathTypeLinkId = await deep.id(PACKAGE_NAME, "WebPath");
-      const exifTypeLinkId = await deep.id(PACKAGE_NAME, "Exif");
-      const formatTypeLinkId = await deep.id(PACKAGE_NAME, "Format");
-      const timestampTypeLinkId = await deep.id(PACKAGE_NAME, "TimeStamp");
-      const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
-        type_id: photoTypeLinkId,
-        in: {
-          data: [{
-            type_id: containTypeLinkId,
-            from_id: cameraLinkId,
-          }]
-        },
-        out: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: base64TypeLinkId,
-                  string: { data: { value: photo.base64String } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: webPathTypeLinkId,
-                  string: { data: { value: photo.webPath ? photo.webPath : "none" } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: formatTypeLinkId,
-                  string: { data: { value: photo.format } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: exifTypeLinkId,
-                  string: { data: { value: photo.exif ? photo.exif : "none" } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: timestampTypeLinkId,
-                  string: { data: { value: new Date() } },
-                }
-              }
-            }]
-        }
-      })));
+    const useCamera = async () => {
+      await uploadPhotos(deep, deviceLinkId, photos);
       setPhotos([]);
     }
-    if (photos.length > 0) uploadPhotos(photos);
+    if (photos.length > 0) useCamera();
   }, [photos])
 
   useEffect(() => {
-    const uploadPickedImages = async (pickedImages) => {
-      console.log(pickedImages);
-      
-      const cameraLinkId = await deep.id(deviceLinkId, "Camera");
-      const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-      const base64TypeLinkId = await deep.id(PACKAGE_NAME, "Base64");
-      const webPathTypeLinkId = await deep.id(PACKAGE_NAME, "WebPath");
-      const exifTypeLinkId = await deep.id(PACKAGE_NAME, "Exif");
-      const formatTypeLinkId = await deep.id(PACKAGE_NAME, "Format");
-      const timestampTypeLinkId = await deep.id(PACKAGE_NAME, "TimeStamp");
-      const { data: [{ id: photoLinkId }] } = await deep.insert(pickedImages.map((images) => ({
-        type_id: photoTypeLinkId,
-        in: {
-          data: [{
-            type_id: containTypeLinkId,
-            from_id: cameraLinkId,
-          }]
-        },
-        out: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: webPathTypeLinkId,
-                  string: { data: { value: images.photos[0].webPath} },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: formatTypeLinkId,
-                  string: { data: { value: images.photos[0].format } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: timestampTypeLinkId,
-                  string: { data: { value: new Date().toDateString() } },
-                }
-              }
-            }]
-        }
-      })));
-      setPickedImages([]);
+    const useGallery = async () => {
+      await uploadGallery(deep, deviceLinkId, galleryImages)
+      setGalleryImages([]);
     }
-    if (pickedImages.length > 0) uploadPickedImages(pickedImages);
-  }, [pickedImages])
+    if (galleryImages.length > 0) useGallery();
+  }, [galleryImages])
 
   const handleCamera = async () => {
     const image = await takePhoto();
@@ -155,7 +45,7 @@ function Page() {
 
   const handleGallery = async () => {
     const images = await pickImages();
-    setPickedImages([...pickedImages, images])
+    setGalleryImages([...galleryImages, images])
   }
 
   const fetchPhotos = async (deep) => {
