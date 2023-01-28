@@ -28,7 +28,7 @@ env:
   MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
   DOCKER: 1
 jobs:
-  build:
+  windows-build:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2

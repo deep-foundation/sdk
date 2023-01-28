@@ -28,7 +28,7 @@ env:
   MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
   DOCKER: 1
 jobs:
-  build:
+  linux-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

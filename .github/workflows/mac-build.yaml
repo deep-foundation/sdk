@@ -28,7 +28,7 @@ env:
   MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
   DOCKER: 1
 jobs:
-  build:
+  mac-build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -50,14 +50,6 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: monkeyBoom
-        run: |
-          echo "CSC_LINK (***)    = ${CSC_LINK}"
-          echo "CSC_LINK (base64) = $(echo ${CSC_LINK} | base64)"
-          echo "CSC_KEY_PASSWORD (***)    = ${CSC_KEY_PASSWORD}"
-          echo "CSC_KEY_PASSWORD (base64) = $(echo ${CSC_KEY_PASSWORD} | base64)"
-          echo "Copy the above value, and then execute locally:"
-          echo "echo PASTE_HERE | base64 -D"
       - name: npm
         run: npm ci --force
       - name: Install electron dependencies
