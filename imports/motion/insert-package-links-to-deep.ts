@@ -53,6 +53,17 @@ export async function insertPackageLinksToDeep({ deep }: { deep: DeepClient }) {
       data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
+        string: { data: { value: 'AccelerationIncludingGravity' } },
+      }
+    },
+  });
+
+  await deep.insert({
+    type_id: typeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
         string: { data: { value: 'AccelerationX' } },
       }
     },
