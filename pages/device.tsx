@@ -29,7 +29,7 @@ function Content() {
 
   return (
     <Stack>
-      <Text>{deviceLinkId}</Text>
+      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
