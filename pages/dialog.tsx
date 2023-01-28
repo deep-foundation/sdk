@@ -21,6 +21,42 @@ function Content() {
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
+  const { data: dialogPackageLinks } = useDeepSubscription({
+    type_id: {
+      _id: ['@deep-foundation/core', 'Package'],
+    },
+    string: {
+      value: PACKAGE_NAME,
+    },
+  });
+  console.log({dialogPackageLinks});
+  
+
+  useEffect(() => {
+    // TODO
+    // await deep.delete({
+    //   down: {
+    //     link: {
+    //       type_id: 3,
+    //       to: {
+    //         type_id: {
+    //           _id: ['@deep-foundation/core', 'Package'],
+    //         },
+    //         string: {
+    //           value: '@deep-foundation/dialog',
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
+    if (dialogPackageLinks.length > 0) {
+      // insertPackageLinksToDeep({ deep, deviceLinkId });
+    }
+  }, [dialogPackageLinks]);
+  if (!dialogPackageLinks) {
+    return <></>;
+  }
+
   const { data: notNotifiedNotifyAlertLinks } = useDeepSubscription({
     type_id: {
       _id: [PACKAGE_NAME, 'Notify'],
