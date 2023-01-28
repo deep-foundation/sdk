@@ -41,7 +41,6 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
   })))
   const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
     type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
-    string: { data: { value: "AudioRecords" } },
     in: {
       data: {
         type_id: containTypeLinkId,
@@ -51,5 +50,4 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
     }
   })
   console.log("audiorecord package installed");
-  
 }
