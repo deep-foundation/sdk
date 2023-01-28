@@ -113,11 +113,11 @@ function Page() {
   }, [deep]);
 
   return (
-    <>
-      <h1>Deep.Foundation sdk examples</h1>
-      <Text>Authentication Link Id: {deep.linkId}</Text>
-      <Text>Device Link Id: {deviceLinkId}</Text>
-      <div>
+    <div>
+      <h1>Deep.Foundation sdk examples</h1> 
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+       <div>
         <Link href="/all">all subscribe</Link>
       </div>
       <div>
@@ -129,7 +129,7 @@ function Page() {
       <div>
         <Link href="/motion">motion</Link>
       </div>
-    </>
+    </div>
   );
 }
 
