@@ -8,7 +8,6 @@
     "start": "next start",
     "build": "rm -rf app && next build",
     "export": "rm -rf out && next export",
-    "start": "next start",
     "electron-dev": "(npx cap copy electron && npx cap open electron)",
     "electron-build": "(cd electron && npx cap copy electron && npx electron-packager . --overwrite --icon ./assets/icon)",
     "package:publish": "npm run build && npm publish --access public",
