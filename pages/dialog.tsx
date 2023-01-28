@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
@@ -21,43 +21,47 @@ function Content() {
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
-  const { data: dialogPackageLinks } = useDeepSubscription({
+  const {
+    data: dialogPackageLinksContainedInUser,
+    loading: isDialogPackageLinksContainedInUserQueryLoading,
+  } = useDeepSubscription({
     type_id: {
-      _id: ['@deep-foundation/core', 'Package'],
+      _id: ['@deep-foundation/core', 'Contain'],
     },
-    string: {
-      value: PACKAGE_NAME,
+    from_id: deep.linkId,
+    to: {
+      type_id: {
+        _id: ['@deep-foundation/core', 'Package'],
+      },
+      string: {
+        value: PACKAGE_NAME,
+      },
     },
-  });
-  console.log({dialogPackageLinks});
+  }); 
+  
+  
+  const [isDialogPackageInstalled, setIsDialogPackageInstalled] =
+  useState(false);  
   
 
-  useEffect(() => {
-    // TODO
-    // await deep.delete({
-    //   down: {
-    //     link: {
-    //       type_id: 3,
-    //       to: {
-    //         type_id: {
-    //           _id: ['@deep-foundation/core', 'Package'],
-    //         },
-    //         string: {
-    //           value: '@deep-foundation/dialog',
-    //         },
-    //       },
-    //     },
-    //   },
-    // });
-    if (dialogPackageLinks.length > 0) {
-      // insertPackageLinksToDeep({ deep, deviceLinkId });
-    }
-  }, [dialogPackageLinks]);
-  if (!dialogPackageLinks) {
-    return <></>;
+useEffect(() => {
+  console.log({dialogPackageLinksContainedInUser, isDialogPackageLinksContainedInUserQueryLoading});
+  if (isDialogPackageLinksContainedInUserQueryLoading) {
+    return;
   }
+  const isDialogPackageInstalled =
+  dialogPackageLinksContainedInUser.length > 0;
 
-  const { data: notNotifiedNotifyAlertLinks } = useDeepSubscription({
+  setIsDialogPackageInstalled(isDialogPackageInstalled);
+
+  if (!isDialogPackageInstalled) {
+    console.log('Install!');
+
+    insertPackageLinksToDeep({deep});
+  }
+}, [dialogPackageLinksContainedInUser]);
+
+  const { data: notNotifiedNotifyAlertLinks ,} = useDeepSubscription({
     type_id: {
       _id: [PACKAGE_NAME, 'Notify'],
     },
