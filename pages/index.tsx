@@ -33,7 +33,7 @@ function Page() {
   );
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -53,7 +53,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -62,7 +62,7 @@ function Page() {
         return;
       }
 
-      const getIsDevicePackageInstalled = async() => {
+      const getIsDevicePackageInstalled = async () => {
         const devicePackageSelectResponse = await deep.select({
           type_id: {
             _id: ['@deep-foundation/core', 'Contain'],
@@ -81,9 +81,9 @@ function Page() {
           devicePackageSelectResponse.data.length > 0;
         return isDevicePackageInstalled;
       }
-      
+
       if (!await getIsDevicePackageInstalled()) {
-        await insertDevicePackageLinksToDeep({deep});
+        await insertDevicePackageLinksToDeep({ deep });
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -113,10 +113,10 @@ function Page() {
   }, [deep]);
 
   return (
-    <>
+    <div>
       <h1>Deep.Foundation sdk examples</h1>
-      <Text>Authentication Link Id: {deep.linkId}</Text>
-      <Text>Device Link Id: {deviceLinkId}</Text>
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
       <div>
         <Link href="/all">all subscribe</Link>
       </div>
@@ -129,7 +129,7 @@ function Page() {
       <div>
         <Link href="/network">network</Link>
       </div>
-    </>
+    </div>
   );
 }
 
