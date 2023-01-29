@@ -219,7 +219,7 @@ jobs:
           path: |
             electron/dist/Deep.Case.zip
             electron/dist/README.txt
-  - release:
+  release:
     needs: [linux-build, mac-build, windows-build]
     name: Create Release
     runs-on: ubuntu-latest
