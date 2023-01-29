@@ -73,9 +73,7 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: Deep.Case-Linux
-            path: |
-              electron/dist/Deep.Case.tar.gz
-              electron/dist/README.txt
+            path: electron/dist/*
   - mac-build:
       name: mac-build
       env:
@@ -144,9 +142,7 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: Deep.Case-macOS
-            path: |
-              electron/dist/mac/Deep.Case.app.zip
-              electron/dist/mac/README.txt
+            path: electron/dist/mac/*
   - windows-build:
       name: windows-build
       env:
@@ -216,9 +212,7 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: Deep.Case-Windows
-            path: |
-              electron/dist/Deep.Case.zip
-              electron/dist/README.txt
+            path: electron/dist/*
     - release:
       needs: [linux-build, mac-build, windows-build]
       name: Create Release
