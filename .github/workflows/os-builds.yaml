@@ -240,3 +240,15 @@ jobs:
             - Second Change
           draft: false
           prerelease: false
+      - uses: actions/download-artifact@v3
+        with:
+          name: SDK-Windows
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/SDK.zip
+          asset_name: SDK.zip
+          asset_content_type: application/zip
