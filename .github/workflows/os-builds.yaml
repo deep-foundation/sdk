@@ -220,7 +220,8 @@ jobs:
   #           electron/dist/SDK.zip
   #           electron/dist/README.txt
   release:
-    needs: [linux-build, mac-build, windows-build]
+    # needs: [linux-build, mac-build, windows-build]
+    needs: [linux-build]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
