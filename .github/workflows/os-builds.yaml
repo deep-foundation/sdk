@@ -1,4 +1,4 @@
-name: OS Builds
+name: OS Builds on version
 on:
   push:
     tags:
