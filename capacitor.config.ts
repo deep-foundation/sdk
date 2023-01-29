@@ -1,13 +1,10 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'deep.app',
-  appName: 'Deep.App',
-  webDir: 'out',
-  bundledWebRuntime: false,
-  // server: {
-  //   allowNavigation: [ "192.168.31.99:3006" ]
-  // }
+  appId: 'com.deepfoundation.deep',
+  appName: 'Deep',
+  webDir: 'app/server/pages',
+  bundledWebRuntime: false
 };
 
 export default config;
