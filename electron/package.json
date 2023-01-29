@@ -1,5 +1,5 @@
 {
-  "name": "Deep.Case",
+  "name": "SDK",
   "version": "1.0.0",
   "description": "An Amazing Capacitor App",
   "author": {
@@ -20,8 +20,8 @@
     "electron:pack": "npm run build && node patch-electron-builder.js && electron-builder --publish never -c ./electron-builder.config.json",
     "electron:pack-demo": "npm run build  && node patch-electron-builder.js && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.json",
     "electron:sign": "npm run electron:sign-prod && npm run electron:sign-dev",
-    "electron:sign-prod": "electron-osx-sign dist/mas/Deep.Case.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=distribution --provisioning-profile=developer-id-deepcase.provisionprofile",
-    "electron:sign-dev": "electron-osx-sign dist/mas-dev/Deep.Case.app --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=development --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --provisioning-profile=./deepcasedevelopment.provisionprofile",
+    "electron:sign-prod": "electron-osx-sign dist/mas/SDK.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=distribution --provisioning-profile=developer-id-deepcase.provisionprofile",
+    "electron:sign-dev": "electron-osx-sign dist/mas-dev/SDK.app --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=development --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --provisioning-profile=./deepcasedevelopment.provisionprofile",
     "electron:notarize": "node notarize.js",
     "electron:make": "npm run build && electron-builder build -c ./electron-builder.config.json -p always"
   },

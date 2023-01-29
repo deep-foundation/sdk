@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'deep.case.app',
-  appName: 'Deep.Case',
+  appId: 'sdk.app',
+  appName: 'SDK',
   webDir: 'app',
   bundledWebRuntime: false,
   server: {

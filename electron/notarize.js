@@ -1,6 +1,6 @@
 const { notarize } = require('electron-notarize');
 
-const appBundleId = 'deep.case.app';
+const appBundleId = 'sdk.app';
 
 exports.default = async function packageTask (context) {
   const { electronPlatformName, appOutDir } = context;
