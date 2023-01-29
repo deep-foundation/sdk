@@ -1,3 +1,24 @@
+# How to run
+
+## Web
+```
+npm run build &&
+npm run start
+```
+
+## Android
+```
+npm run android-build &&
+npm run android-run
+```
+
+## IOS
+```
+npm run ios-build &&
+npm run ios-run
+```
+
+
 # deep sdk
 
 - [x] deep example
