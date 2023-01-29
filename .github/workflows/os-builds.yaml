@@ -9,7 +9,7 @@ defaults:
   run:
     working-directory: ./
 jobs:
-  - linux-build:
+  linux-build:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -75,7 +75,7 @@ jobs:
           path: |
             electron/dist/Deep.Case.tar.gz
             electron/dist/README.txt
-  - mac-build:
+  mac-build:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -145,7 +145,7 @@ jobs:
           path: |
             electron/dist/mac/Deep.Case.app.zip
             electron/dist/mac/README.txt
-  - windows-build:
+  windows-build:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: .migrate
