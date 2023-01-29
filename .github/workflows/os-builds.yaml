@@ -64,17 +64,17 @@ jobs:
       - name: Create tar.gz file
         run: |
           cd electron/dist
-          mv Deep.Case-1.0.0.AppImage Deep.Case.AppImage
-          tar -czvf Deep.Case.tar.gz Deep.Case.AppImage
+          mv SDK-1.0.0.AppImage SDK.AppImage
+          tar -czvf SDK.tar.gz SDK.AppImage
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Deep.Case-Linux
+          name: SDK-Linux
           path: |
-            electron/dist/Deep.Case.tar.gz
+            electron/dist/SDK.tar.gz
             electron/dist/README.txt
   mac-build:
     name: mac-build
@@ -136,16 +136,16 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist/mac
-          ditto -c -k --keepParent Deep.Case.app Deep.Case.app.zip
+          ditto -c -k --keepParent SDK.app SDK.app.zip
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/mac/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Deep.Case-macOS
+          name: SDK-macOS
           path: |
-            electron/dist/mac/Deep.Case.app.zip
+            electron/dist/mac/SDK.app.zip
             electron/dist/mac/README.txt
   windows-build:
     name: windows-build
@@ -208,16 +208,16 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist
-          tar.exe -a -c -f Deep.Case.zip "Deep.Case-setup.exe"
+          tar.exe -a -c -f SDK.zip "SDK-setup.exe"
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Deep.Case-Windows
+          name: SDK-Windows
           path: |
-            electron/dist/Deep.Case.zip
+            electron/dist/SDK.zip
             electron/dist/README.txt
   release:
     needs: [linux-build, mac-build, windows-build]
