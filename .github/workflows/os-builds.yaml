@@ -244,7 +244,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: SDK-Linux
-          path: electron/dist/SDK.tar.gz
+          path: electron/dist
       - name: upload linux artifact
         uses: actions/upload-release-asset@v1
         env:
