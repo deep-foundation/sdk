@@ -1,9 +1,11 @@
 name: OS Builds
 on:
   push:
-    branches: [ menzorg-windows-mac-buld ]
+    tags:
+      - 'v*'
   pull_request:
-    branches: [ menzorg-windows-mac-buld ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 defaults:
   run:
@@ -72,7 +74,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: SDK-Linux
+          name: Linux-SDK
           path: |
             electron/dist/SDK.tar.gz
             electron/dist/README.txt
@@ -143,7 +145,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: SDK-mac
+          name: Mac-SDK
           path: |
             electron/dist/mac/SDK.app.zip
             electron/dist/mac/README.txt
@@ -215,7 +217,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: SDK-Windows
+          name: Windows-SDK
           path: |
             electron/dist/SDK.zip
             electron/dist/README.txt
@@ -242,15 +244,15 @@ jobs:
           prerelease: false
       - uses: actions/download-artifact@v3
         with:
-          name: SDK-Linux
+          name: Linux-SDK
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
-          name: SDK-Windows
+          name: Windows-SDK
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
-          name: SDK-Mac
+          name: Mac-SDK
           path: electron/dist
       - name: upload linux artifact
         uses: actions/upload-release-asset@v1
