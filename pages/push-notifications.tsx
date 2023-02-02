@@ -9,17 +9,13 @@ import {
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
-
 import { Button, ChakraProvider, Input, Link, Stack, Text, Divider } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Device } from '@capacitor/device';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { onBackgroundMessage } from 'firebase/messaging/sw';
-import { insertPushNotificationToDeep } from '../imports/push-notifications/insertPushNotificationToDeep';
+import { getMessaging, getToken, Messaging, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -50,14 +46,16 @@ function Page() {
 
   const [platform, setPlatform] = useState(undefined);
 
-  const [firebaseApplication, setFirebaseApplication] = useState(undefined);
-  const [firebaseMessaging, setFirebaseMessaging] = useState(undefined);
+  const [firebaseApplication, setFirebaseApplication] = useState<FirebaseApp>(undefined);
+  const [firebaseMessaging, setFirebaseMessaging] = useState<Messaging>(undefined);
 
   useEffect(() => {
     const firebaseApplication = initializeApp(firebaseConfig);
+    window["firebaseApplication"] = firebaseApplication;
     setFirebaseApplication(firebaseApplication);
 
     const firebaseMessaging = getMessaging(firebaseApplication);
+    window["firebaseMessaging"] = firebaseMessaging;
     setFirebaseMessaging(firebaseMessaging);
   }, []);
 
@@ -780,7 +778,9 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
           } else {
             await PushNotifications.addListener(
               'registration',
-              insertDeviceRegistrationTokenToDeep
+              async ({value: deviceRegistrationToken}) => {
+                insertDeviceRegistrationTokenToDeep({deviceRegistrationToken})
+              }
             );
             PushNotifications.register();
           }
@@ -837,11 +837,13 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
             // if (platform === 'web') {
             onMessage(firebaseMessaging, async (payload) => {
-              await insertPushNotificationToDeep({
-                deep,
-                deviceLinkId,
-                payload,
-              });
+              console.log({payload});
+              
+              // await insertPushNotificationToDeep({
+              //   deep,
+              //   deviceLinkId,
+              //   payload,
+              // });
             });
             // } else {
             //   await PushNotifications.addListener(
