@@ -12,7 +12,7 @@ export async function insertPackageToDeep({deep}: {deep: DeepClient}) {
   const valueTypeLinkId = await deep.id("@deep-foundation/core", "Value");
   const stringTypeLinkId = await deep.id("@deep-foundation/core", "String");
   const numberTypeLinkId = await deep.id("@deep-foundation/core", "Number");
-  const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Number");
+  const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Device");
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
