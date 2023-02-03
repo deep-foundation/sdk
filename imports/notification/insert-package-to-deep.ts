@@ -182,6 +182,18 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
         data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
+          string: { data: { value: 'Notify' } },
+        }
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
           string: { data: { value: 'Notified' } },
         }
       },
