@@ -5,12 +5,12 @@ import { getAlertOptionsFromDeep } from './get-alert-options-from-deep';
 
 export async function alert({
   deep,
-  notNotifiedLinks,
+  links: links,
 }: {
   deep: DeepClient;
-  notNotifiedLinks: Link<number>[];
+  links: Link<number>[];
 }): Promise<void> {
-  for (const notNotifiedNotifyAlertLink of notNotifiedLinks) {
+  for (const notNotifiedNotifyAlertLink of links) {
     const alertOptions = await getAlertOptionsFromDeep({
       deep,
       alertLinkId: notNotifiedNotifyAlertLink.id,
