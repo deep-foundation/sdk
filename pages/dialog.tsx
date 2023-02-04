@@ -20,7 +20,7 @@ import { insertPackageToDeep } from '../imports/dialog/insert-package-to-deep';
 import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
 import { useSubscriptionToNotNotifiedLinks } from '../imports/notification/use-subscription-to-not-notified-links';
 import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
-import { insertNotifiedLinks } from '../imports/dialog/insert-notified-links';
+import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
 import { usePackageInstalling } from '../imports/use-package-installing';
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
 import { insertAlertToDeep } from '../imports/dialog/insert-alert-to-deep';
