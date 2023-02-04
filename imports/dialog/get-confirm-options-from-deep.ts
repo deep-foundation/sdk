@@ -9,28 +9,28 @@ export async function getConfirmOptionsFromDeep({deep, confirmLinkId}: {deep: De
   const confirmCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
 
   const {data: [{value: {value: title}}]} = await deep.select({
-    from: {
+    in: {
       type_id: confirmTitleTypeLinkId,
       from_id: confirmLinkId,
     }
   });
 
   const {data: [{value: {value: message}}]} = await deep.select({
-    from: {
+    in: {
       type_id: confirmMessageTypeLinkId,
       from_id: confirmLinkId,
     }
   });
 
   const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
-    from: {
+    in: {
       type_id: confirmOkButtonTitleTypeLinkId,
       from_id: confirmLinkId,
     }
   });
 
   const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
-    from: {
+    in: {
       type_id: confirmCancelButtonTitleTypeLinkId,
       from_id: confirmLinkId,
     }

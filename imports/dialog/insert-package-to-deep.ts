@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "./../device/package-name";
-import { PACKAGE_NAME as NOTIFICATION_PACKAGE_TYPE } from "./../device/notification";
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "./../notification/package-name";
 
 export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
 
@@ -11,8 +11,8 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
   const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join");
   const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Device");
-  const baseNotifyTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_TYPE, "Notify");
-  const baseNotifiedTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_TYPE, "Notified");
+  const baseNotifyTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, "Notify");
+  const baseNotifiedTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, "Notified");
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
@@ -89,8 +89,6 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
     },
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
       in: {
         data: [
           {
@@ -175,7 +173,7 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
               data: {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
-                string: { data: { value: 'InputPlaceholder' } },
+                string: { data: { value: 'PromptInputPlaceholder' } },
               }
             }
           },
@@ -207,11 +205,34 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
     {
       type_id: typeTypeLinkId,
       in: {
-        data: {
+        data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
           string: { data: { value: 'Confirm' } },
-        }
+          
+        },
+        {
+          type_id: typeTypeLinkId,
+          from_id: deviceTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'ConfirmIsConfirmed' } },
+            }
+          }
+        },
+        {
+          type_id: typeTypeLinkId,
+          from_id: deviceTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'ConfirmIsNotConfirmed' } },
+            }
+          }
+        }]
       },
       out: {
         data: [

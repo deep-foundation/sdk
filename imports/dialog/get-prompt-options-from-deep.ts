@@ -11,42 +11,42 @@ export async function getPromptOptionsFromDeep({deep, promptLinkId}: {deep: Deep
   const promptInputTextTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputText");
 
   const {data: [{value: {value: title}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptTitleTypeLinkId,
       from_id: promptLinkId,
     }
   });
 
   const {data: [{value: {value: message}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptMessageTypeLinkId,
       from_id: promptLinkId,
     }
   });
 
   const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptOkButtonTitleTypeLinkId,
       from_id: promptLinkId,
     }
   });
 
   const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptCancelButtonTitleTypeLinkId,
       from_id: promptLinkId,
     }
   });
 
   const {data: [{value: {value: inputPlaceholder}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptInputPlaceholderTypeLinkId,
       from_id: promptLinkId,
     }
   });
 
   const {data: [{value: {value: inputText}}]} = await deep.select({
-    from: {
+    in: {
       type_id: promptInputTextTypeLinkId,
       from_id: promptLinkId,
     }

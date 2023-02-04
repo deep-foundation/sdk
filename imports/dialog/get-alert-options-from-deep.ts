@@ -7,22 +7,34 @@ export async function getAlertOptionsFromDeep({ deep, alertLinkId }: { deep: Dee
   const alertMessageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
   const alertButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
 
+  console.log({
+    in: {
+      type_id: alertTitleTypeLinkId,
+      from_id: alertLinkId,
+    }
+  }, await deep.select({
+    in: {
+      type_id: alertTitleTypeLinkId,
+      from_id: alertLinkId,
+    }
+  }));
+  
   const { data: [{ value: { value: title } }] } = await deep.select({
-    from: {
+    in: {
       type_id: alertTitleTypeLinkId,
       from_id: alertLinkId,
     }
   });
 
   const { data: [{ value: { value: message } }] } = await deep.select({
-    from: {
+    in: {
       type_id: alertMessageTypeLinkId,
       from_id: alertLinkId,
     }
   });
 
-  const { data: [{ value: { value: buttonTitle } }] } = await deep.select({
-    from: {
+  const buttonTitleSelectResponse = await deep.select({
+    in: {
       type_id: alertButtonTitleTypeLinkId,
       from_id: alertLinkId,
     }
@@ -31,6 +43,6 @@ export async function getAlertOptionsFromDeep({ deep, alertLinkId }: { deep: Dee
   return {
     title,
     message,
-    buttonTitle
+    buttonTitle: buttonTitleSelectResponse.data[0]?.value?.value
   }
 }

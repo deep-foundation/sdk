@@ -23,6 +23,11 @@ import {
 import Link from 'next/link';
 import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { insertPackageToDeep as insertDialogPackageToDeep } from '../imports/dialog/insert-package-to-deep';
+import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
+import { PACKAGE_NAME as DIALOG_PACKAGE_NAME } from '../imports/dialog/package-name';
+import { isPackageInstalled } from '../imports/getIsPackageInstalled';
 
 function Page() {
   const deep = useDeep();
@@ -61,28 +66,8 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-
-      const getIsDevicePackageInstalled = async() => {
-        const devicePackageSelectResponse = await deep.select({
-          type_id: {
-            _id: ['@deep-foundation/core', 'Contain'],
-          },
-          from_id: deep.linkId,
-          to: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Package'],
-            },
-            string: {
-              value: DEVICE_PACKAGE_NAME,
-            },
-          },
-        });
-        const isDevicePackageInstalled =
-          devicePackageSelectResponse.data.length > 0;
-        return isDevicePackageInstalled;
-      }
       
-      if (!await getIsDevicePackageInstalled()) {
+      if (!await isPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageLinksToDeep({deep});
       }
       if (!deviceLinkId) {
@@ -108,6 +93,14 @@ function Page() {
           setDeviceLinkId(newDeviceLinkId);
         };
         initializeDeviceLink();
+      }
+
+      if (!await isPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
+        await insertNotificationPackageToDeep({ deep });
+      }
+
+      if (!await isPackageInstalled({deep, packageName: DIALOG_PACKAGE_NAME})) {
+        await insertDialogPackageToDeep({ deep });
       }
     });
   }, [deep]);

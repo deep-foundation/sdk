@@ -12,21 +12,23 @@ export function useSubscriptionToNotNotifiedLinks({
   deviceLinkId: number;
 }): { notNotifiedLinks: Link<number>[] } {
   const [notNotifiedLinks, setNotNotifiedLinks] = useState<Link<number>[]>([]);
-
+   
   const { data, loading } = useDeepSubscription({
-    type_id: {
-      _id: [PACKAGE_NAME, 'Notify'],
-    },
-    from: query,
-    to_id: deviceLinkId,
-    _not: {
-      out: {
-        type_id: {
-          _id: [PACKAGE_NAME, 'Notified'],
-        },
-        to_id: deviceLinkId,
+    ...query,
+    out: {
+      type_id: {
+        _id: [PACKAGE_NAME, 'Notify'],
       },
-    },
+      to_id: deviceLinkId,
+      _not: {
+        out: {
+          type_id: {
+            _id: [PACKAGE_NAME, 'Notified'],
+          },
+          to_id: deviceLinkId,
+        },
+      },
+    }
   });
 
   useEffect(() => {
