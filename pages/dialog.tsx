@@ -18,8 +18,8 @@ import { insertConfirmResultToDeep } from '../imports/dialog/insert-confirm-resu
 import { getAlertOptionsFromDeep } from '../imports/dialog/get-alert-options-from-deep';
 import { insertPackageToDeep } from '../imports/dialog/insert-package-to-deep';
 import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
-import { useSubscriptionToNotNotifiedLinks } from '../imports/dialog/use-subscription-to-not-notified-links';
-import { useNotNotifiedLinksHandling } from '../imports/dialog/use-not-notified-links-handling';
+import { useSubscriptionToNotNotifiedLinks } from '../imports/notification/use-subscription-to-not-notified-links';
+import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
 import { insertNotifiedLinks } from '../imports/dialog/insert-notified-links';
 import { usePackageInstalling } from '../imports/use-package-installing';
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
