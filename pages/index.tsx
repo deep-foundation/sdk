@@ -27,7 +27,7 @@ import { insertPackageToDeep as insertDialogPackageToDeep } from '../imports/dia
 import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { PACKAGE_NAME as DIALOG_PACKAGE_NAME } from '../imports/dialog/package-name';
-import { isPackageInstalled } from '../imports/getIsPackageInstalled';
+import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
 function Page() {
   const deep = useDeep();
@@ -67,7 +67,7 @@ function Page() {
         return;
       }
       
-      if (!await isPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
+      if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageLinksToDeep({deep});
       }
       if (!deviceLinkId) {
