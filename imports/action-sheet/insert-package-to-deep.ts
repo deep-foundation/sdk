@@ -2,7 +2,7 @@ import { ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
 
-export async function installPackage({ deep }: { deep: DeepClient }) {
+export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
   const typeTypeLinkId = await deep.id('@deep-foundation/core', 'Type');
   const anyTypeLinkId = await deep.id('@deep-foundation/core', 'Any');
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
