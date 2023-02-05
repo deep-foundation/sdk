@@ -73,6 +73,17 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
               },
             },
           },
+          {
+            type_id: typeTypeLinkId,
+            to_id: anyTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'ActionSheetResultIndex' } },
+              },
+            },
+          },
         ],
       },
     },
