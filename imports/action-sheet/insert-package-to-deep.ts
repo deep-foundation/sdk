@@ -122,5 +122,35 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
         ],
       },
     },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'CancelOptionStyle' } },
+        },
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'DefaultOptionStyle' } },
+        },
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'DestructiveOptionStyle' } },
+        },
+      },
+    }
   ]);
 }

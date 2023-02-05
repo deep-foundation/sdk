@@ -17,6 +17,8 @@ export async function insertActionSheetToDeep({
   actionSheetData: ShowActionsOptions;
   containInLinkId: number
 }) {
+  console.log({actionSheetData});
+  
   const syncTextFileTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'SyncTextFile'
@@ -34,7 +36,7 @@ export async function insertActionSheetToDeep({
   const optionTypeLinkId = await deep.id(PACKAGE_NAME, 'Option');
   const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionTitle');
   const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionStyle');
-  const optionStyleTypeLinkIds = getOptionStyleTypeLinkIds({ deep });
+  const optionStyleTypeLinkIds = await getOptionStyleTypeLinkIds({ deep });
 
   await deep.insert([
     {
@@ -140,11 +142,9 @@ export async function insertActionSheetToDeep({
                             }
                           },
                           to_id:
-                            optionStyleTypeLinkIds[
-                            await getOptionStyleName({
+                            await deep.id(PACKAGE_NAME, `${await getOptionStyleName({
                               style: option.style,
-                            })
-                            ],
+                            })}OptionStyle`),
                         }
                         ]
                       }

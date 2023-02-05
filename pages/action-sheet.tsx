@@ -13,6 +13,8 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
 
+const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title",  style: ActionSheetButtonStyle.Default}
+
 function Content() {
   const deep = useDeep();
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
@@ -50,9 +52,9 @@ function Content() {
   //   },
   // });
 
-  const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>();
-  const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>();
-  const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>();
+  const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
+  const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
+  const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>([defaultOption, defaultOption, defaultOption]);
   // const [actionSheetOptionInputsCount, dispatchActionSheetOptionInputsCount] = useReducer((state, action) => {
   //   if (action.type === "++") {
   //     return ++state;
@@ -63,18 +65,17 @@ function Content() {
 
   return (
     <Stack>
-      <Input defaultValue={"Action Sheet Title"} onChange={async (event) => {
+      <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>
-      <Input defaultValue={"Action Sheet Message"} onChange={async (event) => {
+      <Input value={actionSheetMessage} onChange={async (event) => {
         setActionSheetMessage(event.target.value)
       }}></Input>
       <Button onClick={async () => {
         // dispatchActionSheetOptionInputsCount("++")
         setActionSheetOptions((oldActionSheets) => {
-          const newActionSheet = { title: "" };
-          const newActionSheets = oldActionSheets ? [...oldActionSheets, newActionSheet] : [newActionSheet];
-          return newActionSheets
+          const newOptions = oldActionSheets ? [...oldActionSheets, defaultOption] : [defaultOption];
+          return newOptions
         })
       }}>++ Action Sheet Option</Button>
       <Button isDisabled={!actionSheetOptions} onClick={async () => {
@@ -88,7 +89,7 @@ function Content() {
       {
         actionSheetOptions && actionSheetOptions.map((actionSheetOption, i) => (
           <Box key={i}>
-            <Input defaultValue={"Action Sheet Option Title" + i} onChange={async (event) => {
+            <Input value={actionSheetOption.title} onChange={async (event) => {
               setActionSheetOptions((oldActionSheets) => {
                 const newActionSheets = [...oldActionSheets];
                 const newActionSheet = actionSheetOption;
@@ -97,7 +98,7 @@ function Content() {
                 return newActionSheets;
               })
             }}></Input>
-            <RadioGroup defaultValue={ActionSheetButtonStyle.Default} onChange={async (value) => {
+            <RadioGroup value={actionSheetOption.style} onChange={async (value) => {
               setActionSheetOptions((oldActionSheets) => {
                 const newActionSheets = [...oldActionSheets];
                 const newActionSheet = actionSheetOption;
