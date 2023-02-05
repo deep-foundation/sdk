@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/nofitication`
+export const PACKAGE_NAME=`@deep-foundation/notification`
