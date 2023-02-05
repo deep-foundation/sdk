@@ -1,0 +1,283 @@
+name: OS Builds on version
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+defaults:
+  run:
+    working-directory: ./
+jobs:
+  linux-build:
+    name: linux-build
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: /tmp/.migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: localhost:8080
+      MIGRATIONS_HASURA_SSL: 0
+      MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      NEXT_PUBLIC_GQL_SSL: 0
+      DEEPLINKS_HASURA_PATH: localhost:8080
+      DEEPLINKS_HASURA_SSL: 0
+      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15'
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-linux
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dc dependencies
+        run: npm ci --force
+      - name: Install electron dependencies
+        run: cd electron && npm ci
+      - name: pull dl
+        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        run: cd electron && npm run electron:pack
+      - name: Create tar.gz file
+        run: |
+          cd electron/dist
+          mv SDK-1.0.0.AppImage SDK.AppImage
+          tar -czvf SDK.tar.gz SDK.AppImage
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Linux-SDK
+          path: |
+            electron/dist/SDK.tar.gz
+            electron/dist/README.txt
+  mac-build:
+    name: mac-build
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: /tmp/.migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: localhost:8080
+      MIGRATIONS_HASURA_SSL: 0
+      MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      NEXT_PUBLIC_GQL_SSL: 0
+      DEEPLINKS_HASURA_PATH: localhost:8080
+      DEEPLINKS_HASURA_SSL: 0
+      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15'
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-mac
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: npm
+        run: npm ci --force
+      - name: Install electron dependencies
+        run: cd electron && npm ci && ls node_modules | grep @
+      - name: pull dl
+        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+        run: cd electron && npm run electron:pack
+      - name: Create zip file
+        run: |
+          cd electron/dist/mac
+          ditto -c -k --keepParent SDK.app SDK.app.zip
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/mac/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Mac-SDK
+          path: |
+            electron/dist/mac/SDK.app.zip
+            electron/dist/mac/README.txt
+  windows-build:
+    name: windows-build
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: .migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: localhost:8080
+      MIGRATIONS_HASURA_SSL: 0
+      MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      NEXT_PUBLIC_GQL_SSL: 0
+      DEEPLINKS_HASURA_PATH: localhost:8080
+      DEEPLINKS_HASURA_SSL: 0
+      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15'
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-windows
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: install node tools
+        run: npm install --global --production windows-build-tools@4.0.0
+      - name: install node-gyp
+        run: npm install --global node-gyp@latest
+      - name: Set node config to use python2.7
+        run: npm config set python python2.7
+      - name: Install dc dependencies
+        run: npm ci --force
+      - name: Install electron dependencies
+        run: cd electron && npm ci
+      - name: pull dl
+        run: cd node_modules/@deep-foundation && rm -r deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../..
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        run: cd electron && npm run electron:pack
+      - name: Create zip file
+        run: |
+          cd electron/dist
+          tar.exe -a -c -f SDK.zip "SDK-setup.exe"
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Windows-SDK
+          path: |
+            electron/dist/SDK.zip
+            electron/dist/README.txt
+  release:
+    needs: [linux-build, mac-build, windows-build]
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@main
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.package-version.outputs.current-version}}
+          release_name: Release ${{ steps.package-version.outputs.current-version}}
+          body: ${{ steps.package-version.outputs.current-version}}
+          draft: false
+          prerelease: false
+      - uses: actions/download-artifact@v3
+        with:
+          name: Linux-SDK
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: Windows-SDK
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: Mac-SDK
+          path: electron/dist
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/SDK.tar.gz
+          asset_name: linux-SDK.tar.gz
+          asset_content_type: application/gzip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/SDK.zip
+          asset_name: windows-SDK.zip
+          asset_content_type: application/zip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/SDK.app.zip
+          asset_name: mac-SDK.zip
+          asset_content_type: application/zip

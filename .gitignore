@@ -127,3 +127,9 @@ projects/app/electron/app
 /electron/Deep.Case*
 /electron/node_modules
 /electron/*.provisionprofile
+
+# browser extention
+
+/extension/next
+/*.crx
+/*.pem
