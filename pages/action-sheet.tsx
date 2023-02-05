@@ -1,29 +1,16 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
+import React, { useEffect, useState } from 'react';
 import {
-  LocalStoreProvider,
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
-import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
-import { insertPackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
-import { PACKAGE_NAME } from '../imports/device/package-name';
-import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
-import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
-import { insertLanguageTagToDeep } from '../imports/device/insert-language-tag-to-deep';
+import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-import { Device } from '@capacitor/device';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle } from '@capacitor/action-sheet';
-import { insertPackageToDeep } from '../imports/action-sheet/insert-package-to-deep';
-import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
-import { getOptionStyleName } from '../imports/action-sheet/get-option-style-name';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
 
 function Content() {
