@@ -22,7 +22,9 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
+import { insertPackageToDeep as insertActionSheetPackageToDeep } from '../imports/action-sheet/insert-package-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { PACKAGE_NAME as ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
 function Page() {
@@ -66,6 +68,11 @@ function Page() {
       if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageToDeep({ deep });
       }
+
+      if (!await getIsPackageInstalled({deep, packageName: ACTION_SHEET_PACKAGE_NAME})) {
+        await insertActionSheetPackageToDeep({ deep });
+      }
+
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
