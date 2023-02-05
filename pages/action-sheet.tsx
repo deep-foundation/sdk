@@ -12,8 +12,12 @@ import { Provider } from '../imports/provider';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
+import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
+import { getActionSheetDataFromDeep } from '../imports/action-sheet/get-action-sheet-data-from-deep';
+import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
+import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-action-sheet-result-to-deep';
 
-const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title",  style: ActionSheetButtonStyle.Default}
+const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title", style: ActionSheetButtonStyle.Default }
 
 function Content() {
   const deep = useDeep();
@@ -28,29 +32,30 @@ function Content() {
   }, []);
 
 
-  // useNotNotifiedLinksHandling({
-  //   deep,
-  //   deviceLinkId,
-  //   query: {
-  //     type: { in: { string: { value: { _eq: "ActionSheet" } } } }
-  //   },
-  //   callback: async ({ notNotifiedLinks }) => {     
-  //     for (const actionSheetLink of notNotifiedLinks) {
-  //       const actionSheetOptions = await getActionSheetOptionsFromDeep({ deep, actionSheetLinkId: actionSheetLink.id });
-  //       await ActionSheet.showActions(actionSheetOptions);
-  //     }
-  //     const { data: notifyLinks } = await deep.select({
-  //       type: { in: { string: { value: { _eq: "Notify" } } } },
-  //       from_id: {
-  //         _in: notNotifiedLinks.map(link => link.id),
-  //       },
-  //       _not: {
-  //         out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
-  //       }
-  //     })
-  //     await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
-  //   },
-  // });
+  useNotNotifiedLinksHandling({
+    deep,
+    deviceLinkId,
+    query: {
+      type: { in: { string: { value: { _eq: "ActionSheet" } } } }
+    },
+    callback: async ({ notNotifiedLinks }) => {
+      for (const actionSheetLink of notNotifiedLinks) {
+        const actionSheetOptions = await getActionSheetDataFromDeep({ deep, actionSheetLinkId: actionSheetLink.id });
+        const actionSheetResult = await ActionSheet.showActions(actionSheetOptions);
+        await insertActionSheetResultToDeep({ deep, actionSheetLinkId: actionSheetLink.id, actionSheetResult })
+      }
+      const { data: notifyLinks } = await deep.select({
+        type: { in: { string: { value: { _eq: "Notify" } } } },
+        from_id: {
+          _in: notNotifiedLinks.map(link => link.id),
+        },
+        _not: {
+          out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+        }
+      })
+      await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+    },
+  });
 
   const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
   const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");

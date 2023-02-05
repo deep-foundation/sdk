@@ -23,8 +23,10 @@ import {
 import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
 import { insertPackageToDeep as insertActionSheetPackageToDeep } from '../imports/action-sheet/insert-package-to-deep';
+import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { PACKAGE_NAME as ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
 function Page() {
@@ -67,6 +69,10 @@ function Page() {
       
       if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageToDeep({ deep });
+      }
+
+      if (!await getIsPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
+        await insertNotificationPackageToDeep({ deep });
       }
 
       if (!await getIsPackageInstalled({deep, packageName: ACTION_SHEET_PACKAGE_NAME})) {
