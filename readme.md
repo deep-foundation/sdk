@@ -1,5 +1,10 @@
 # How to run
 
+## Prerequisitions
+```
+npm-install
+```
+
 ## Web
 ```
 npm run build &&
