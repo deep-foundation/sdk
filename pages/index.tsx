@@ -68,7 +68,7 @@ function Page() {
       }
       
       if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
-        await insertDevicePackageLinksToDeep({deep});
+        await insertDevicePackageToDeep({deep});
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -95,11 +95,11 @@ function Page() {
         initializeDeviceLink();
       }
 
-      if (!await isPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
+      if (!await getIsPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
         await insertNotificationPackageToDeep({ deep });
       }
 
-      if (!await isPackageInstalled({deep, packageName: DIALOG_PACKAGE_NAME})) {
+      if (!await getIsPackageInstalled({deep, packageName: DIALOG_PACKAGE_NAME})) {
         await insertDialogPackageToDeep({ deep });
       }
     });
