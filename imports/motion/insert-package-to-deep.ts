@@ -1,5 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
+import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "./../device/package-name";
 
 export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
 
@@ -36,155 +37,229 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
   });
 
 
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Acceleration' } },
+  await deep.insert([
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Acceleration' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'AccelerationIncludingGravity' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationX' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'AccelerationX' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationY' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'AccelerationY' } },
-      }
-    },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'AccelerationZ' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationZ' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'RotationRate' } },
-      }
-    },
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'RotationRateAlpha' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationXIncludingGravity' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'RotationRateBeta' } },
-      }
-    },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'RotationRateGamma' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationYIncludingGravity' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Interval' } },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'AccelerationZIncludingGravity' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
     },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Orientation' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
       }
-    }
-  });
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'RotationRateAlpha' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'RotationRateBeta' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'RotationRateGamma' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Interval' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'SubscribeToAcceleration' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'SubscribeToOrientation' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },]);
 }
