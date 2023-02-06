@@ -2,6 +2,7 @@
   "name": "@deep-foundation/sdk",
   "version": "0.0.0",
   "description": "",
+  "license": "Unlicense",
   "scripts": {
     "dev": "next dev",
     "build": "rm -rf app && next build",
@@ -20,7 +21,6 @@
     "ios-open": "npx cap open ios",
     "ios-run": "npx cap run ios"
   },
-  "license": "ISC",
   "dependencies": {
     "@capacitor-community/contacts": "^2.0.0",
     "@capacitor-community/electron": "^4.1.2",
