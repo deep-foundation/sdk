@@ -71,12 +71,12 @@ function Page() {
         await insertDevicePackageToDeep({ deep });
       }
 
-      if (!await getIsPackageInstalled({deep, packageName: PUSH_NOTIFICATION_PACKAGE_NAME})) {
-        await insertPushNotificationPackageToDeep({ deep });
-      }
-
       if (!await getIsPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
         await insertNotificationPackageLinksToDeep({deep});
+      }
+
+      if (!await getIsPackageInstalled({deep, packageName: PUSH_NOTIFICATION_PACKAGE_NAME})) {
+        await insertPushNotificationPackageToDeep({ deep });
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
