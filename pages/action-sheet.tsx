@@ -5,6 +5,7 @@ import {
 import {
   DeepProvider,
   useDeep,
+  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
 import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
@@ -16,6 +17,7 @@ import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-not
 import { getActionSheetDataFromDeep } from '../imports/action-sheet/get-action-sheet-data-from-deep';
 import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
 import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-action-sheet-result-to-deep';
+import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
 
 const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title", style: ActionSheetButtonStyle.Default }
 
@@ -31,33 +33,57 @@ function Content() {
     self["ActionSheetButtonStyle"] = ActionSheetButtonStyle;
   }, []);
 
-
-  useNotNotifiedLinksHandling({
-    deep,
-    deviceLinkId,
-    query: {
-      type: { in: { string: { value: { _eq: "ActionSheet" } } } }
-    },
-    callback: async ({ notNotifiedLinks }) => {
-      for (const actionSheetLink of notNotifiedLinks) {
-        const actionSheetOptions = await getActionSheetDataFromDeep({ deep, actionSheetLinkId: actionSheetLink.id });
-        const actionSheetResult = await ActionSheet.showActions(actionSheetOptions);
-        await insertActionSheetResultToDeep({ deep, actionSheetLinkId: actionSheetLink.id, actionSheetResult })
-      }
-      const { data: notifyLinks } = await deep.select({
-        type: { in: { string: { value: { _eq: "Notify" } } } },
-        from_id: {
-          _in: notNotifiedLinks.map(link => link.id),
+  {
+    const { data: notNotifiedActionSheetLinks, loading, error } = useDeepSubscription({
+      type_id: {
+        _id: [PACKAGE_NAME, "ActionSheet"]
+      },
+      out: {
+        type_id: {
+          _id: [PACKAGE_NAME, 'Notify'],
         },
+        to_id: deviceLinkId,
         _not: {
-          out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
-        }
-      })
-      await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
-    },
-  });
+          out: {
+            type_id: {
+              _id: [PACKAGE_NAME, 'Notified'],
+            },
+            to_id: deviceLinkId,
+          },
+        },
+      }
+    });
 
-  const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
+    useEffect(() => {
+      new Promise(async () => {
+
+        for (const actionSheetLink of notNotifiedActionSheetLinks) {
+          const actionSheetOptions = await getActionSheetDataFromDeep({ deep, actionSheetLinkId: actionSheetLink.id });
+          const actionSheetResult = await ActionSheet.showActions(actionSheetOptions);
+          const { data: [notifyLink] } = await deep.select({
+            type_id: {
+              _id: [PACKAGE_NAME, "Notify"]
+            },
+            from_id: actionSheetLink.id
+          })
+          await insertActionSheetResultToDeep({ deep, notifyLinkId: notifyLink.id, actionSheetResult })
+        }
+        const { data: notifyLinks } = await deep.select({
+          type: { in: { string: { value: { _eq: "Notify" } } } },
+          from_id: {
+            _in: notNotifiedActionSheetLinks.map(link => link.id),
+          },
+          _not: {
+            out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+          }
+        })
+        await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+
+      })
+    }, [notNotifiedActionSheetLinks, loading, error])
+  }
+
+   const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
   const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
   const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>([defaultOption, defaultOption, defaultOption]);
   // const [actionSheetOptionInputsCount, dispatchActionSheetOptionInputsCount] = useReducer((state, action) => {

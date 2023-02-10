@@ -1,6 +1,7 @@
 import { ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from './../notification/package-name';
 
 export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
   const typeTypeLinkId = await deep.id('@deep-foundation/core', 'Type');
@@ -11,6 +12,8 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
   const valueTypeLinkId = await deep.id('@deep-foundation/core', 'Value');
   const stringTypeLinkId = await deep.id('@deep-foundation/core', 'String');
   const numberTypeLinkId = await deep.id('@deep-foundation/core', 'Number');
+  const baseNotifyTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, 'Notify');
+  const baseNotifiedTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, 'Notified');
 
   const {
     data: [{ id: packageLinkId }],
@@ -73,17 +76,7 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
               },
             },
           },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'ActionSheetResultIndex' } },
-              },
-            },
-          },
+          
         ],
       },
     },
@@ -162,6 +155,36 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
           string: { data: { value: 'DestructiveOptionStyle' } },
         },
       },
-    }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'ActionSheetResultIndex' } },
+        },
+      },
+    },
+    {
+      type_id: baseNotifyTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Notify' } },
+        },
+      },
+    },
+    {
+      type_id: baseNotifiedTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Notified' } },
+        },
+      },
+    },
   ]);
 }
