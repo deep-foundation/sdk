@@ -69,21 +69,41 @@ function Content() {
           await insertActionSheetResultToDeep({ deep, notifyLinkId: notifyLink.id, actionSheetResult })
         }
         const { data: notifyLinks } = await deep.select({
-          type: { in: { string: { value: { _eq: "Notify" } } } },
+          type_id: {
+            _id: [PACKAGE_NAME, "Notify"]
+          },
           from_id: {
             _in: notNotifiedActionSheetLinks.map(link => link.id),
           },
           _not: {
-            out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+            out: { type_id: {
+              _id: [PACKAGE_NAME, "Notified"]
+            } }
           }
         })
-        await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+
+        const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, "Notified")
+        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
+        await deep.insert(
+          notifyLinks.map((notifyLink) => ({
+            type_id: notifiedTypeLinkId,
+            from_id: notifyLink.id,
+            to_id: deviceLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: deep.linkId
+                },
+              ]
+            }
+          })))
 
       })
     }, [notNotifiedActionSheetLinks, loading, error])
   }
 
-   const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
+  const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
   const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
   const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>([defaultOption, defaultOption, defaultOption]);
   // const [actionSheetOptionInputsCount, dispatchActionSheetOptionInputsCount] = useReducer((state, action) => {

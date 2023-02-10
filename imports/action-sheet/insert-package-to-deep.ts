@@ -165,9 +165,17 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
           string: { data: { value: 'ActionSheetResultIndex' } },
         },
       },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
     },
     {
-      type_id: baseNotifyTypeLinkId,
+      type_id: typeTypeLinkId, // baseNotifyTypeLinkId
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
       in: {
         data: {
           type_id: containTypeLinkId,
@@ -177,7 +185,9 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
       },
     },
     {
-      type_id: baseNotifiedTypeLinkId,
+      type_id: typeTypeLinkId, // baseNotifiedTypeLinkId
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
       in: {
         data: {
           type_id: containTypeLinkId,
