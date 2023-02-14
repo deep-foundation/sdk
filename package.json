@@ -12,7 +12,7 @@
     "build-browser-extension-mac": "npm run build && npm run export && cp -rf out/_next out/next && sed -i '' -e 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rm -rf out && rm -rf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
     "open-android": "npx cap open android",
     "build-browser-extension-linux": "npm run build && npm run export && cp -rf out/_next out/next && sed -i 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rm -rf out && rsync -va --delete-after public/next-assets extension/",
-    "build-android": "npm run build && npm run export && npx cap sync android",
+    "build-android": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync android",
     "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron",
     "dev-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npx cap open electron",
     "add-android": "npm run build && npm run export && rm -rf ./android && npx cap add android",
