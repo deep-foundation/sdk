@@ -154,7 +154,7 @@ export function Extension() {
   )
 }
 
-export default function Index() {
+export default function ExtensionPage() {
   return (
     <>
       <ChakraProvider>
