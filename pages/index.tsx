@@ -14,7 +14,7 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -24,9 +24,12 @@ import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+import { useRouter } from 'next/router'
 
 function Page() {
   const deep = useDeep();
+  const router = useRouter();
+  
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -108,7 +111,7 @@ function Page() {
         <Link href="/device">device</Link>
       </div>
       <div>
-        <Link href="/browser-extension">browser-extension</Link>
+        <Button onClick={() => router.push('/browser-extension"')}>browser-extension</Button>
       </div>
     </div>
   );
