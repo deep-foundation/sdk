@@ -146,7 +146,6 @@ export function Extension() {
         <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
         <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
-        <Button onClick={() => router.push('/test')}>TEST PAGE</Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
       {history?.map((page) => (<Tab type="page" key={page.id} id={page.id} favIconUrl={page.favIconUrl} title={page.title} url={page.url} />))}

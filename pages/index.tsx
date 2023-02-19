@@ -111,7 +111,7 @@ function Page() {
         <Link href="/device">device</Link>
       </div>
       <div>
-        <Button onClick={() => router.push('/browser-extension"')}>browser-extension</Button>
+        <Link replace href="/browser-extension">browser-extension</Link>
       </div>
     </div>
   );
