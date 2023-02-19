@@ -3,7 +3,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 export const PACKAGE_NAME="@deep-foundation/browser-extension"
 export const PACKAGE_TYPES = ["BrowserHistory", "Page", "LastVisitTime", "TypedCount", "Url", "VisitCount", "Title"]
 
-export default async function initializePackage(deep: DeepClient) {
+export default async function initializePackage(deep: DeepClient, deviceLinkId) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
@@ -45,7 +45,7 @@ export default async function initializePackage(deep: DeepClient) {
     in: {
       data: [{
         type_id: containTypeLinkId,
-        from_id: await deep.id('deep', 'admin'),
+        from_id: deviceLinkId,
         string: { data: { value: "BrowserHistory" } },
       }]
     }

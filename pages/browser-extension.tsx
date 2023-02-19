@@ -18,7 +18,10 @@ export function Extension() {
   const [tabsSubscription, setTabsSubscription] = useState(false);
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
-  const router = useRouter();
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+    'deviceLinkId',
+    undefined
+  );
 
   const authUser = async (deep) => {
     await deep.guest();
@@ -130,7 +133,7 @@ export function Extension() {
       in: {
         data: [{
           type_id: containTypeLinkId,
-          from_id: await deep.id('deep', 'admin'),
+          from_id: deviceLinkId,
           string: { data: { value: "BrowserHistory" } },
         }]
       }
@@ -141,7 +144,7 @@ export function Extension() {
     <>
       <Stack>
         <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser(deep)}>ADMIN</Button>
-        <Button onClick={async () => await initializePackage(deep)} >INITIALIZE PACKAGE</Button>
+        <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
         <Button onClick={async () => await createBrowserHistoryLink(deep)} >CREATE NEW BROWSERHISTORY LINK</Button>
         <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
         <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
