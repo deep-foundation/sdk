@@ -56,7 +56,7 @@ export function Extension() {
       await deep.guest();
       await deep.login({linkId: await deep.id("deep", 'admin')});
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const browserHistoryTypeLinkId = await deep.id(deep.linkId, "BrowserHistory");
+      const browserHistoryLinkId = await deep.id(deviceLinkId, "BrowserHistory");
       const pageTypeLinkId = await deep.id(PACKAGE_NAME, "Page");
       const urlTypeLinkId = await deep.id(PACKAGE_NAME, "Url");
       const titleTypeLinkId = await deep.id(PACKAGE_NAME, "Title");
@@ -69,7 +69,7 @@ export function Extension() {
         in: {
           data: [{
             type_id: containTypeLinkId,
-            from_id: browserHistoryTypeLinkId,
+            from_id: browserHistoryLinkId,
           }]
         },
         out: {
