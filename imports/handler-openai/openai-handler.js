@@ -2,8 +2,9 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
 
 async function insertOpenAiHandler(){
-    const deep = new DeepClient({ deep: guestDeep, ...admin });
     export const PACKAGE_NAME = `@deep-foundation/openai`
+    const deep = new DeepClient({ deep: guestDeep, ...admin });
+    const dotenv = require('dotenv');
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
     const userLinkId=await deep.id('@deep-foundation/core', "User")
@@ -73,7 +74,7 @@ async function insertOpenAiHandler(){
 
     const { data: [{ id: openAiApiKeyTypeLinkId }] } = await deep.insert({
         type_id: openAiApiKeyLinkId,
-        string: { data: { value: "api key" } },
+        string: { data: { value: process.env.OPENAI_API_KEY } },
         in: {
             data: {
                 type_id: containTypeLinkId,
