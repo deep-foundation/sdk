@@ -1,7 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
-const dotenv = require('dotenv');
-
+require('dotenv').config();
 async function insertOpenAiHandler(){
     const deep = new DeepClient({ deep: guestDeep, ...admin });
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
@@ -9,10 +8,8 @@ async function insertOpenAiHandler(){
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
     const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile")
     const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain")
-    const fileWithCodeOfHandlerName = "FileWithCodeOfHandlerName";
     const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */)
     const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler")
-    const handlerName = "HandlerName";
     const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
     const handleName = "HandleName";
     const packageLinkId = await deep.id('@deep-foundation/core', "Package");
