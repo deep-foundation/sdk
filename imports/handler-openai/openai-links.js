@@ -23,4 +23,21 @@ async function insertOpenAILinks(deep){
                 },
             }
     });
+
+    const { data: [{ id: openAiApiKeyLinkId, }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        to_id: anyTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageTypeLinkId,
+                string: {data: { value: "openAiApiKeyLinkId"}}
+            },
+        }
+    });
+
+    const { data: [{ id: openAiApiKeyTypeLinkId }] } = await deep.insert({
+        string: { data: { value: "api key" } }
+    });
 }
