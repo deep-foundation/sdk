@@ -5,13 +5,19 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep}) => {
     const {data: [{value: {value}}]} = await deep.select({
         id: openAiRequestLink.to_id
     })
-    const {data: [{value: {apiKey}}]} = await deep.select({
+    const {data: [apiKeyLink]} = await deep.select({
         type_id: openAiApiKeyTypeLinkId,
         in: {
             type_id: containTypeLinkId,
             from_id: triggeredByLinkId
         }
     })
+    if(!apiKeyLink){
+      throw new Exception(`A link with type ##${openAiApiKeyTypeLinkId} is not found`)
+    }
+    if(!apiKeyLink.value?.value){
+      throw new Exception(`##${apiKeyLink.id} must have a value`)
+    }
 
     const configuration = new Configuration({
         apiKey: apiKey,
