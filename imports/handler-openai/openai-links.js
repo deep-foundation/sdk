@@ -43,7 +43,7 @@ async function insertOpenAILinks(deep){
         in: {
             data: {
                 type_id: containTypeLinkId,
-                from_id: packageTypeLinkId,
+                from_id: userTypeLinkId,
             },
         }
     });
