@@ -3,21 +3,21 @@ import * as fs from "fs";
 
 async function insertOpenAiHandler(){
     const deep = new DeepClient({ deep: guestDeep, ...admin });
-    export const PACKAGE_NAME = `@deep-foundation/deep-openai`
-    const anyTypeLinkId = await deep.id(PACKAGE_NAME, "Any");
-    const userTypeLinkId=await deep.id(PACKAGE_NAME, "User")
-    const userLinkId=await deep.id(PACKAGE_NAME, "User")
-    const typeTypeLinkId = await deep.id(PACKAGE_NAME, "Type");
-    const syncTextFileTypeLinkId = await deep.id(PACKAGE_NAME, "SyncTextFile")
-    const containTypeLinkId = await deep.id(PACKAGE_NAME, "Contain")
+    export const PACKAGE_NAME = `@deep-foundation/openai`
+    const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
+    const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
+    const userLinkId=await deep.id('@deep-foundation/core', "User")
+    const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
+    const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile")
+    const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain")
     const fileWithCodeOfHandlerName = "FileWithCodeOfHandlerName";
-    const supportsJsLinkId = await deep.id(PACKAGE_NAME, "dockerSupportsJs" /* | "plv8SupportsJs" */)
-    const handlerTypeLinkId = await deep.id(PACKAGE_NAME, "Handler")
+    const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */)
+    const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler")
     const handlerName = "HandlerName";
-    const handleOperationLinkId = await deep.id(PACKAGE_NAME, "HandleInsert" /* | HandleUpdate | HandleDelete */);
+    const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
     const handleName = "HandleName";
     const triggerTypeLinkId=(PACKAGE_NAME, "openAiRequestTypeLinkId")
-    const packageLinkId = await deep.id(PACKAGE_NAME, "Package");
+    const packageLinkId = await deep.id('@deep-foundation/core', "Package");
 
     const installPackage = async () => {
         const apolloClient = generateApolloClient({
