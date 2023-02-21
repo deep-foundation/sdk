@@ -38,6 +38,13 @@ async function insertOpenAILinks(deep){
     });
 
     const { data: [{ id: openAiApiKeyTypeLinkId }] } = await deep.insert({
-        string: { data: { value: "api key" } }
+        type_id: openAiApiKeyLinkId,
+        string: { data: { value: "api key" } },
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageTypeLinkId,
+            },
+        }
     });
 }
