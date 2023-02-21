@@ -1,6 +1,5 @@
-async ({data: {newLink:openAiRequestLink},deep}) => {
+async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep}) => {
     const {Configuration, OpenAIApi} = require("openai")
-    const { DeepClient } = require('@deep-foundation/deeplinks/imports/client');
     const containTypeLinkId = await deep.id("@deep-foundation/deep-openai", "Contain")
 
     const {data: [{value: {value}}]} = await deep.select({
