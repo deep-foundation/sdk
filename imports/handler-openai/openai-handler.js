@@ -1,8 +1,12 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
+import {PACKAGE_NAME} from "./openai-links";
 
 async function insertOpenAiHandler(deep){
     export const PACKAGE_NAME = `@deep-foundation/deep-openai`
+    const anyTypeLinkId = await deep.id(PACKAGE_NAME, "Any");
+    const userTypeLinkId=await deep.id(PACKAGE_NAME, "User")
+    const typeTypeLinkId = await deep.id(PACKAGE_NAME, "Type");
     const fileTypeLinkId = await deep.id(PACKAGE_NAME, "SyncTextFile")
     const containTypeLinkId = await deep.id(PACKAGE_NAME, "Contain")
     const fileWithCodeOfHandlerName = "FileWithCodeOfHandlerName";
@@ -14,28 +18,46 @@ async function insertOpenAiHandler(deep){
     const triggerTypeLinkId=(PACKAGE_NAME, "openAiRequestLink")
     const packageLinkId = await deep.id(PACKAGE_NAME, "Package");
 
-    const value = fs.readFileSync('packages/nextjs/imports/handler-openai/value-handler.js', {encoding: 'utf-8'});
-    const code =
-        async () => {
-            const {Configuration, OpenAIApi} = require("openai");
+    const code = fs.readFileSync('packages/sdk/imports/handler-openai/value-handler.js', {encoding: 'utf-8'});
 
-            const configuration = new Configuration({
-                apiKey: process.env.OPENAI_API_KEY,
-            });
-            const openai = new OpenAIApi(configuration);
+    const { data: [{id:userInputLinkId}] } = await deep.insert({
+        string: { data: { value: "user input" } }
+    })
 
-            const response = await openai.createCompletion({
-                model: "text-davinci-003",
-                prompt: value,
-                temperature: 0.9,
-                max_tokens: 150,
-                top_p: 1,
-                frequency_penalty: 0,
-                presence_penalty: 0.6,
-                stop: [" Human:", " AI:"],
-            });
-            return response;
-        };
+    const { data: [{id:openTypeLinkId}] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        to_id: anyTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: {data: { value: "openTypeLinkId"}}
+            },
+        }
+    });
+
+    const { data: [{ id: openAiApiKeyLinkId, }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: {data: { value: "openAiApiKeyLinkId"}}
+            },
+        }
+    });
+
+    const { data: [{ id: openAiApiKeyTypeLinkId }] } = await deep.insert({
+        type_id: openAiApiKeyLinkId,
+        string: { data: { value: "api key" } },
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+            },
+        }
+    });
 
     await deep.insert({
         type_id: fileTypeLinkId,
