@@ -21,7 +21,14 @@ async function insertOpenAiHandler(deep){
     const code = fs.readFileSync('packages/sdk/imports/handler-openai/value-handler.js', {encoding: 'utf-8'});
 
     const { data: [{id:userInputLinkId}] } = await deep.insert({
-        string: { data: { value: "user input" } }
+        type_id:fileTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: "user input" } }
+            },
+        }
     })
 
     const { data: [{id:openTypeLinkId}] } = await deep.insert({
@@ -32,7 +39,7 @@ async function insertOpenAiHandler(deep){
             data: {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
-                string: {data: { value: "openTypeLinkId"}}
+                string: {data: { value: "OpenTypeLinkId"}}
             },
         }
     });
@@ -43,7 +50,7 @@ async function insertOpenAiHandler(deep){
             data: {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
-                string: {data: { value: "openAiApiKeyLinkId"}}
+                string: {data: { value: "OpenAiApiKeyLinkId"}}
             },
         }
     });
