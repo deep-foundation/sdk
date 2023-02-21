@@ -85,7 +85,7 @@ async function insertOpenAiHandler(){
                 {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId, // before created package
-                    string: {data: {value: fileWithCodeOfHandlerName}},
+                    string: {data: {value: "OpenAiRequestHandlerCode"}},
                 },
                 {
                     from_id: supportsJsLinkId,
@@ -95,7 +95,7 @@ async function insertOpenAiHandler(){
                             {
                                 type_id: containTypeLinkId,
                                 from_id: packageLinkId, // before created package
-                                string: {data: {value: handlerName}},
+                                string: {data: {value: "OpenAiRequestHandler"}},
                             },
                             {
                                 type_id: handleOperationLinkId,
