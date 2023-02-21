@@ -3,7 +3,6 @@ import * as fs from "fs";
 const dotenv = require('dotenv');
 
 async function insertOpenAiHandler(){
-    export const PACKAGE_NAME = `@deep-foundation/openai`
     const deep = new DeepClient({ deep: guestDeep, ...admin });
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
@@ -16,7 +15,6 @@ async function insertOpenAiHandler(){
     const handlerName = "HandlerName";
     const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
     const handleName = "HandleName";
-    const triggerTypeLinkId=(PACKAGE_NAME, "openAiRequestTypeLinkId")
     const packageLinkId = await deep.id('@deep-foundation/core', "Package");
 
     const installPackage = async () => {
@@ -33,8 +31,6 @@ async function insertOpenAiHandler(){
         const admin = await guestDeep.login({
             linkId: await guestDeep.id('deep', 'admin'),
         });
-
-    const code = fs.readFileSync('packages/sdk/imports/handler-openai/value-handler.js', {encoding: 'utf-8'});
 
     const { data: [{id:userInputLinkId}] } = await deep.insert({
         type_id:syncTextFileTypeLinkId,
@@ -72,7 +68,7 @@ async function insertOpenAiHandler(){
     });
 
     const { data: [{ id: openAiApiKeyLinkId }] } = await deep.insert({
-        type_id: openAiApiKeyLinkId,
+        type_id: openAiApiKeyTypeLinkId,
         string: { data: { value: process.env.OPENAI_API_KEY } },
         in: {
             data: {
@@ -104,7 +100,7 @@ async function insertOpenAiHandler(){
                             {
                                 type_id: handleOperationLinkId,
                                 // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
-                                from_id: triggerTypeLinkId,
+                                from_id: openAiRequestTypeLinkId,
                                 in: {
                                     data: [
                                         {
@@ -122,7 +118,7 @@ async function insertOpenAiHandler(){
         },
         string: {
             data: {
-                value: code,
+                value: fs.readFileSync('packages/sdk/imports/openai/requestHandler.js', {encoding: 'utf-8'}),
             },
         },
     });
