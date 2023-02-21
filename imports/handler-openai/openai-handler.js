@@ -1,13 +1,12 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
+const dotenv = require('dotenv');
 
 async function insertOpenAiHandler(){
     export const PACKAGE_NAME = `@deep-foundation/openai`
     const deep = new DeepClient({ deep: guestDeep, ...admin });
-    const dotenv = require('dotenv');
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
-    const userLinkId=await deep.id('@deep-foundation/core', "User")
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
     const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile")
     const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain")
@@ -43,7 +42,7 @@ async function insertOpenAiHandler(){
         in: {
             data: {
                 type_id: containTypeLinkId,
-                from_id: userLinkId,
+                from_id: deep.linkId,
             },
         }
     })
@@ -61,7 +60,7 @@ async function insertOpenAiHandler(){
         }
     });
 
-    const { data: [{ id: openAiApiKeyLinkId, }] } = await deep.insert({
+    const { data: [{ id: openAiApiKeyTypeLinkId, }] } = await deep.insert({
         type_id: typeTypeLinkId,
         in: {
             data: {
@@ -72,13 +71,13 @@ async function insertOpenAiHandler(){
         }
     });
 
-    const { data: [{ id: openAiApiKeyTypeLinkId }] } = await deep.insert({
+    const { data: [{ id: openAiApiKeyLinkId }] } = await deep.insert({
         type_id: openAiApiKeyLinkId,
         string: { data: { value: process.env.OPENAI_API_KEY } },
         in: {
             data: {
                 type_id: containTypeLinkId,
-                from_id: userLinkId,
+                from_id: deep.linkId,
             },
         }
     });
