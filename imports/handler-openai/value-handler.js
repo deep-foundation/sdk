@@ -3,7 +3,7 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep}) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
 
     const {data: [{value: {value}}]} = await deep.select({
-        id: openAiRequestLink.to_id
+        id: openAiRequestLink
     })
     const {data: [{value: {apiKey}}]} = await deep.select({
         type_id: openAiApiKeyTypeLinkId,
