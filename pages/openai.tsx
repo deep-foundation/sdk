@@ -25,7 +25,7 @@ function Content() {
       <Button
         onClick={async () => {
           await deep.insert({
-            type_id: await deep.id(PACKAGE_NAME, "OpenAiRequest"),
+            type_id: await deep.id(PACKAGE_NAME, "OpenAiApiKey"),
             string: { data: { value: process.env.OPENAI_API_KEY } },
             in: {
                 data: {
