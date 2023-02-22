@@ -1,34 +1,28 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
 require('dotenv').config();
-async function installOpenAiPackage({deep}: {deep: DeepClient}){
+
+async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
-    const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
+    const userTypeLinkId = await deep.id('@deep-foundation/core', "User");
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
-    const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile")
-    const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain")
-    const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */)
-    const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler")
+    const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile");
+    const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
+    const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */);
+    const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler");
     const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
     const packageLinkId = await deep.id('@deep-foundation/core', "Package");
-
-        const unloginedDeep = new DeepClient({ apolloClient });
-        const guest = await unloginedDeep.guest();
-        const guestDeep = new DeepClient({ deep: unloginedDeep, ...guest });
-        const admin = await guestDeep.login({
-            linkId: await guestDeep.id('deep', 'admin'),
-        });
-
-    const { data: [{id:userInputLinkId}] } = await deep.insert({
-        type_id:syncTextFileTypeLinkId,
-        string: { data: { value: "user input" } },
-        in: {
-            data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId,
-            },
-        }
-    })
+  
+    const { data: [{ id: userInputLinkId }] } = await deep.insert({
+      type_id: syncTextFileTypeLinkId,
+      string: { data: { value: "user input" } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId,
+        },
+      },
+    });
 
     const { data: [{id:openAiRequestTypeLinkId}] } = await deep.insert({
         type_id: typeTypeLinkId,
