@@ -6,7 +6,10 @@ async function installOpenAiPackage(deep: DeepClient){
   // if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
   //   await insertOpenAiHandler();
   // }
-  
+
+  if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
+    await insertDevicePackageToDeep({ deep });
+  }
   if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
     await insertDevicePackageToDeep({ deep });
   }
