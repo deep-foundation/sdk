@@ -22,6 +22,8 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
+import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
+import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
