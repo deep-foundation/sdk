@@ -90,7 +90,7 @@ async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
                     string: {data: {value: "OpenAiRequestHandlerCode"}},
                 },
                 {
-                    from_id: supportsJsLinkId,
+                    from_id: suppodockerSupportsJsLinkIdtsJsLinkId,
                     type_id: handlerTypeLinkId,
                     in: {
                         data: [
