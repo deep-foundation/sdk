@@ -1,5 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
+import {PACKAGE_NAME} from "./package-name";
 require('dotenv').config();
 
 async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
