@@ -3,7 +3,7 @@ import * as fs from "fs";
 import {PACKAGE_NAME} from "./package-name";
 require('dotenv').config();
 
-export async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
+export async function installPackage ({ deep }: { deep: DeepClient }) {
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId = await deep.id('@deep-foundation/core', "User");
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
