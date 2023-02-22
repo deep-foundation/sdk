@@ -100,7 +100,7 @@ async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
                                 string: {data: {value: "OpenAiRequestHandler"}},
                             },
                             {
-                                type_id: handleOperationLinkId,
+                                type_id: handleInsertLinkId,
                                 // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
                                 from_id: openAiRequestTypeLinkId,
                                 in: {
