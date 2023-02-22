@@ -11,7 +11,7 @@ async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
     const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */);
     const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler");
     const handleInsertLinkId = await deep.id('@deep-foundation/core', "HandleInsert");
-    const packageLinkId = await deep.id('@deep-foundation/core', "Package");
+    const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package");
   
     const { data: [{ id: userInputLinkId }] } = await deep.insert({
       type_id: syncTextFileTypeLinkId,
