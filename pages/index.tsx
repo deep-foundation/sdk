@@ -66,7 +66,7 @@ function Page() {
       }
       
       if (!await getIsPackageInstalled({deep, packageName: OPENAI_PACKAGE_NAME})) {
-        await insertDevicePackageToDeep({ deep });
+        await insertOpenAiPackageToDeep({ deep });
       }
       if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageToDeep({ deep });
