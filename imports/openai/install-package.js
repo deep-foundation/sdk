@@ -12,14 +12,6 @@ async function installOpenAiPackage({deep}: {deep: DeepClient}){
     const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
     const packageLinkId = await deep.id('@deep-foundation/core', "Package");
 
-    const installPackage = async () => {
-        const apolloClient = generateApolloClient({
-            path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
-            ssl: !!~process.env.NEXT_PUBLIC_GQL_PATH.indexOf('localhost')
-                ? false
-                : true,
-        });
-    }
         const unloginedDeep = new DeepClient({ apolloClient });
         const guest = await unloginedDeep.guest();
         const guestDeep = new DeepClient({ deep: unloginedDeep, ...guest });
