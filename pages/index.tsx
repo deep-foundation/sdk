@@ -22,7 +22,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
-import { insertPackageToDeep as insertOpenAiPackageToDeep } from '../imports/openai/insert-package-to-deep';
+import { installOpenAiPackage as insertOpenAiPackageToDeep } from '../imports/openai/install-package';
 import { PACKAGE_NAME as OPENAI_PACKAGE_NAME } from '../imports/openai/package-name';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
@@ -68,6 +68,7 @@ function Page() {
       if (!await getIsPackageInstalled({deep, packageName: OPENAI_PACKAGE_NAME})) {
         await insertOpenAiPackageToDeep({ deep });
       }
+
       if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
         await insertDevicePackageToDeep({ deep });
       }
