@@ -10,7 +10,7 @@ async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
     const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
     const supportsJsLinkId = await deep.id('@deep-foundation/core', "dockerSupportsJs" /* | "plv8SupportsJs" */);
     const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler");
-    const handleOperationLinkId = await deep.id('@deep-foundation/core', "HandleInsert" /* | HandleUpdate | HandleDelete */);
+    const handleInsertLinkId = await deep.id('@deep-foundation/core', "HandleInsert");
     const packageLinkId = await deep.id('@deep-foundation/core', "Package");
   
     const { data: [{ id: userInputLinkId }] } = await deep.insert({
