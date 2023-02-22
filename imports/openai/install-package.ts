@@ -12,6 +12,26 @@ async function installOpenAiPackage({ deep }: { deep: DeepClient }) {
     const handlerTypeLinkId = await deep.id('@deep-foundation/core', "Handler");
     const handleInsertLinkId = await deep.id('@deep-foundation/core', "HandleInsert");
     const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package");
+    const { data: [{ id: packageLinkId }] } = await deep.insert({
+    type_id: packageTypeLinkId,
+    string: { data: { value: PACKAGE_NAME } },
+    in: { data: [
+      {
+        type_id: containTypeLinkId,
+        from_id: deep.linkId
+      },
+    ] },
+    out: { data: [
+      {
+        type_id: joinTypeLinkId,
+        to_id: await deep.id('deep', 'users', 'packages'),
+      },
+      {
+        type_id: joinTypeLinkId,
+        to_id: await deep.id('deep', 'admin'),
+      },
+    ] },
+  });
   
     const { data: [{ id: userInputLinkId }] } = await deep.insert({
       type_id: syncTextFileTypeLinkId,
