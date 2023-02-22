@@ -2,7 +2,6 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import * as fs from "fs";
 require('dotenv').config();
 async function insertOpenAiHandler(){
-    const deep = new DeepClient({ deep: guestDeep, ...admin });
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId=await deep.id('@deep-foundation/core', "User")
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
