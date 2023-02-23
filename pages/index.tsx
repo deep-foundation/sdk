@@ -112,7 +112,10 @@ function Page() {
       </div>
       <div>
         <Link href="/device">device</Link>
-      </div> 
+      </div>
+      <div>
+        <Link href="/openai">openai</Link>
+      </div>  
     </div>
   );
 }
