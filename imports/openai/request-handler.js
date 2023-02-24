@@ -1,6 +1,5 @@
 async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     const {Configuration, OpenAIApi} = require("openai")
-    const CircularJSON = require('circular-json');
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
     const openAiApiKeyTypeLinkId = await deep.id(`@deep-foundation/openai`, "OpenAiApiKey")
    //add this for fix 
