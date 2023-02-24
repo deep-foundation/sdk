@@ -40,16 +40,16 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    const response = CircularJSON.stringify(await openai.createCompletion({
+    const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: value,
+        prompt: openAiPrompt,
         temperature: 0.9,
         max_tokens: 150,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0.6,
         stop: [" Human:", " AI:"],
-    }));
-   
+    });
+
     return response;
 }
