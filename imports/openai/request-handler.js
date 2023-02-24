@@ -14,9 +14,13 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     //         },
     //     }
     // });
-    const {data: [{value: {value}}]} = await deep.select({
+    const {data: [linkWithStringValue]} = await deep.select({
         id: openAiRequestLink.to_id
     })
+    if(!linkWithStringValue.value?.value){
+        throw new Error(`##${linkWithStringValue.id} must have a value`)
+    }
+    const openAiPrompt = linkWithStringValue.value.value
     const {data: [apiKeyLink]} = await deep.select({
         type_id: openAiApiKeyTypeLinkId,
         in: {
