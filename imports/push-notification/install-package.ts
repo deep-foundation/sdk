@@ -5,6 +5,7 @@ import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "../notification/packa
 import * as fs from 'fs';
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { execSync } from "child_process";
+import * as path from 'path';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -74,6 +75,7 @@ async function installPackage() {
     })
     if(packageLinkId) {
       console.info("Package is already installed");
+      return;
     }
   }
 
@@ -85,8 +87,8 @@ async function installPackage() {
       }
     }
   })
-  if(devicePackageLinkId) {
-    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8'})
+  if(!devicePackageLinkId) {
+    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
     // throw new Error(`${DEVICE_PACKAGE_NAME} package is not installed`)
   }
 
@@ -98,8 +100,8 @@ async function installPackage() {
       }
     }
   })
-  if(notificationPackageLinkId) {
-    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8'})
+  if(!notificationPackageLinkId) {
+    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
     // throw new Error(`${NOTIFICATION_PACKAGE_NAME} package is not installed`)
   }
 
@@ -366,7 +368,7 @@ async function installPackage() {
     'HandleInsert' /* | HandleUpdate | HandleDelete */
   );
   const handleName = 'HandleName';
-  const code = fs.readFileSync('./notifyInsertHandler.js', {encoding: 'utf-8'});
+  const code = fs.readFileSync(path.join(__dirname,'notifyInsertHandler.js'), {encoding: 'utf-8'});
 
   await deep.insert({
     type_id: fileTypeLinkId,
