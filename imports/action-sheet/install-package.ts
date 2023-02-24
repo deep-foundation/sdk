@@ -3,6 +3,8 @@ import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../notification/package-name';
 import { generateApolloClient } from "@deep-foundation/hasura/client";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 async function installPackage() {
 
