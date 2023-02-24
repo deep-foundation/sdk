@@ -1,9 +1,15 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import * as fs from "fs";
+import fs from 'fs';
+import {
+    DeepProvider,
+    useDeep,
+    useDeepSubscription,
+  } from '@deep-foundation/deeplinks/imports/client';
 import {PACKAGE_NAME} from "./package-name";
 require('dotenv').config();
+export async function installPackage () {
+    const deep = useDeep();
 
-export async function installPackage ({ deep }: { deep: DeepClient }) {
     const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
     const userTypeLinkId = await deep.id('@deep-foundation/core', "User");
     const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
@@ -14,26 +20,27 @@ export async function installPackage ({ deep }: { deep: DeepClient }) {
     const handleInsertLinkId = await deep.id('@deep-foundation/core', "HandleInsert");
     const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package");
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
+
     const { data: [{ id: packageLinkId }] } = await deep.insert({
-    type_id: packageTypeLinkId,
-    string: { data: { value: PACKAGE_NAME } },
-    in: { data: [
-      {
-        type_id: containTypeLinkId,
-        from_id: deep.linkId
-      },
-    ] },
-    out: { data: [
-      {
-        type_id: joinTypeLinkId,
-        to_id: await deep.id('deep', 'users', 'packages'),
-      },
-      {
-        type_id: joinTypeLinkId,
-        to_id: await deep.id('deep', 'admin'),
-      },
-    ] },
-  });
+        type_id: packageTypeLinkId,
+        string: { data: { value: PACKAGE_NAME } },
+        in: { data: [
+        {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+        },
+        ] },
+        out: { data: [
+        {
+            type_id: joinTypeLinkId,
+            to_id: await deep.id('deep', 'users', 'packages'),
+        },
+        {
+            type_id: joinTypeLinkId,
+            to_id: await deep.id('deep', 'admin'),
+        },
+        ] },
+    });
   
     const { data: [{ id: userInputLinkId }] } = await deep.insert({
       type_id: syncTextFileTypeLinkId,
@@ -126,3 +133,5 @@ export async function installPackage ({ deep }: { deep: DeepClient }) {
         },
     });
 }
+
+installPackage();
