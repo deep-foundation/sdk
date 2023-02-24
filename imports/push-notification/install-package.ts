@@ -366,7 +366,7 @@ async function installPackage() {
     'HandleInsert' /* | HandleUpdate | HandleDelete */
   );
   const handleName = 'HandleName';
-  const code = fs.readFileSync('/workspace/dev/packages/sdk/imports/push-notification/notifyInsertHandler.js', {encoding: 'utf-8'});
+  const code = fs.readFileSync('./notifyInsertHandler.js', {encoding: 'utf-8'});
 
   await deep.insert({
     type_id: fileTypeLinkId,
