@@ -4,6 +4,7 @@ import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "../device/package-name";
 import * as fs from 'fs';
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import * as dotenv from 'dotenv';
+dotenv.config();
 
 async function installPackage() {
   const apolloClient = generateApolloClient({
