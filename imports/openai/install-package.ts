@@ -121,7 +121,7 @@ export async function installPackage ({ deep }: { deep: DeepClient }) {
         },
         string: {
             data: {
-                value: fs.readFileSync('packages/sdk/imports/openai/request-handler.js', {encoding: 'utf-8'}),
+                value: fs.readFileSync('/workspace/dev/packages/sdk/imports/openai/request-handler.js', {encoding: 'utf-8'}),
             },
         },
     });
