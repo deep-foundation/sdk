@@ -69,9 +69,6 @@ function Page() {
         await insertDevicePackageToDeep({ deep });
       }
 
-      if (!await getIsPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
-        await insertNotificationPackageLinksToDeep({deep});
-      }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
