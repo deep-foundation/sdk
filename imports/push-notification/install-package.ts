@@ -1,8 +1,10 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "../device/package-name";
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "../notification/package-name";
 import * as fs from 'fs';
 import { generateApolloClient } from '@deep-foundation/hasura/client';
+import { execSync } from "child_process";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -59,7 +61,48 @@ async function installPackage() {
   const anyTypeLinkId = await deep.id(
     "@deep-foundation/core",
     "Any"
-  )
+  );
+
+  {
+    const {data: [packageLinkId]} = await deep.select({
+      type_id: packageTypeLinkId,
+      string: {
+        value: {
+          _eq: PACKAGE_NAME
+        }
+      }
+    })
+    if(packageLinkId) {
+      console.info("Package is already installed");
+    }
+  }
+
+  const {data: [devicePackageLinkId]} = await deep.select({
+    type_id: packageTypeLinkId,
+    string: {
+      value: {
+        _eq: DEVICE_PACKAGE_NAME
+      }
+    }
+  })
+  if(devicePackageLinkId) {
+    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8'})
+    // throw new Error(`${DEVICE_PACKAGE_NAME} package is not installed`)
+  }
+
+  const {data: [notificationPackageLinkId]} = await deep.select({
+    type_id: packageTypeLinkId,
+    string: {
+      value: {
+        _eq: NOTIFICATION_PACKAGE_NAME
+      }
+    }
+  })
+  if(notificationPackageLinkId) {
+    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8'})
+    // throw new Error(`${NOTIFICATION_PACKAGE_NAME} package is not installed`)
+  }
+
   const deviceTypeLinkId = await deep.id(
     DEVICE_PACKAGE_NAME,
     'Device'
