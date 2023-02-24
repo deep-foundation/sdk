@@ -145,7 +145,7 @@ export async function insertActionSheetToDeep({
                               }
                             },
                             to_id:
-                              optionStyleTypeLinkIds[option.style]
+                              optionStyleTypeLinkIds.get(option.style)
                           }
                         ] : [])
                         ]
