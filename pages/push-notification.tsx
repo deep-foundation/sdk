@@ -409,7 +409,7 @@ function Page() {
 
             onDeviceRegistration({value: deviceRegistrationToken})
           } else {
-            PushNotifications.removeAllListeners();
+            await PushNotifications.removeAllListeners();
             await PushNotifications.addListener(
               'registration',
               onDeviceRegistration
