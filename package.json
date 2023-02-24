@@ -58,7 +58,6 @@
     "events": "^3.3.0",
     "firebase": "^9.15.0",
     "framer-motion": "^6.2.8",
-    "fs": "0.0.1-security",
     "next": "^13.1.5",
     "next-env": "^1.1.1",
     "react": "^18.2.0",
