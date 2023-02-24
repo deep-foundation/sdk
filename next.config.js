@@ -1,7 +1,5 @@
 const nextEnv = require('next-env');
 const dotenvLoad = require('dotenv-load');
-const {InjectManifest} = require('workbox-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
 dotenvLoad();
  
 const withNextEnv = nextEnv();
