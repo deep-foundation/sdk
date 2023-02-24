@@ -75,9 +75,6 @@ function Page() {
         await insertNotificationPackageToDeep({ deep });
       }
 
-      // if (!await getIsPackageInstalled({deep, packageName: ACTION_SHEET_PACKAGE_NAME})) {
-      //   await insertActionSheetPackageToDeep({ deep });
-      // }
 
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
