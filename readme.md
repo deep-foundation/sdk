@@ -11,8 +11,8 @@ And do not forget to change NEXT_PUBLIC_GQL_PATH to your graphql address
 
 ## Package installation
 ```
-package-name="device"; # Replace to any package name
-npx ts-node ./imports./${package-name}/install-package.ts
+package_name="device" # Replace to any package name
+npx ts-node "./imports/${package_name}/install-package.ts"
 ```
 
 ## Web
