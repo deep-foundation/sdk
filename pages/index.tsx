@@ -23,9 +23,6 @@ import {
 import Link from 'next/link';
 import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
-import { insertPackageToDeep as insertPushNotificationPackageToDeep } from '../imports/push-notification/insert-package-to-deep';
-import { PACKAGE_NAME as PUSH_NOTIFICATION_PACKAGE_NAME } from '../imports/push-notification/package-name';
-import { insertPackageToDeep as insertNotificationPackageLinksToDeep } from '../imports/notification/insert-package-to-deep';
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
@@ -71,13 +68,6 @@ function Page() {
         await insertDevicePackageToDeep({ deep });
       }
 
-      if (!await getIsPackageInstalled({deep, packageName: NOTIFICATION_PACKAGE_NAME})) {
-        await insertNotificationPackageLinksToDeep({deep});
-      }
-
-      if (!await getIsPackageInstalled({deep, packageName: PUSH_NOTIFICATION_PACKAGE_NAME})) {
-        await insertPushNotificationPackageToDeep({ deep });
-      }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
