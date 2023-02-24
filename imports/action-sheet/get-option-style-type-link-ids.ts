@@ -7,19 +7,19 @@ export async function getOptionStyleTypeLinkIds({
   deep,
 }: {
   deep: DeepClient;
-}): Promise<Record<string, number>> {
+}): Promise<Record<ActionSheetButtonStyle, number>> {
   const optionStyleTypeLinkIds = {
-    [await getOptionStyleName({ style: ActionSheetButtonStyle.Cancel })]:
+    [ActionSheetButtonStyle.Cancel]:
       await deep.id(
         PACKAGE_NAME,
         `${await getOptionStyleName({ style: ActionSheetButtonStyle.Cancel })}OptionStyle`
       ),
-    [await getOptionStyleName({ style: ActionSheetButtonStyle.Default })]:
+    [ActionSheetButtonStyle.Default]:
       await deep.id(
         PACKAGE_NAME,
         `${await getOptionStyleName({ style: ActionSheetButtonStyle.Default })}OptionStyle`
       ),
-    [await getOptionStyleName({ style: ActionSheetButtonStyle.Destructive })]:
+    [ActionSheetButtonStyle.Destructive]:
       await deep.id(
         PACKAGE_NAME,
         `${await getOptionStyleName({

@@ -17,8 +17,8 @@ export async function insertActionSheetToDeep({
   actionSheetData: ShowActionsOptions;
   containInLinkId: number
 }) {
-  console.log({actionSheetData});
-  
+  console.log({ actionSheetData });
+
   const syncTextFileTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'SyncTextFile'
@@ -37,6 +37,8 @@ export async function insertActionSheetToDeep({
   const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionTitle');
   const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionStyle');
   const optionStyleTypeLinkIds = await getOptionStyleTypeLinkIds({ deep });
+  console.log(optionStyleTypeLinkIds);
+
 
   await deep.insert([
     {
@@ -133,19 +135,19 @@ export async function insertActionSheetToDeep({
                             },
                           },
                         },
-                        {
-                          type_id: optionStyleTypeLinkId,
-                          in: {
-                            data: {
-                              type_id: containTypeLinkId,
-                              from_id: containInLinkId
-                            }
-                          },
-                          to_id:
-                            await deep.id(PACKAGE_NAME, `${await getOptionStyleName({
-                              style: option.style,
-                            })}OptionStyle`),
-                        }
+                        ...(option.style ? [
+                          {
+                            type_id: optionStyleTypeLinkId,
+                            in: {
+                              data: {
+                                type_id: containTypeLinkId,
+                                from_id: containInLinkId
+                              }
+                            },
+                            to_id:
+                              optionStyleTypeLinkIds[option.style]
+                          }
+                        ] : [])
                         ]
                       }
                     },

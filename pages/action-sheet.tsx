@@ -8,10 +8,10 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack, Textarea } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
-import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle, ShowActionsOptions } from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
 import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
 import { getActionSheetDataFromDeep } from '../imports/action-sheet/get-action-sheet-data-from-deep';
@@ -20,6 +20,22 @@ import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-ac
 import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
 
 const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title", style: ActionSheetButtonStyle.Default }
+const defaultActionSheet: ShowActionsOptions = {
+  title: 'Title',
+  message: 'Message',
+  options: [
+    {
+      title: 'OptionTitle1',
+    },
+    {
+      title: 'OptionTitle2',
+    },
+    {
+      title: 'OptionTitle3',
+      style: ActionSheetButtonStyle.Destructive,
+    },
+  ],
+}
 
 function Content() {
   const deep = useDeep();
@@ -103,9 +119,15 @@ function Content() {
     }, [notNotifiedActionSheetLinks, loading, error])
   }
 
-  const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
-  const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
-  const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>([defaultOption, defaultOption, defaultOption]);
+
+  const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(JSON.stringify(
+    defaultActionSheet
+    ,null, 2
+   ));
+
+  // const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
+  // const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
+  // const [actionSheetOptions, setActionSheetOptions] = useState<ActionSheetButton[] | undefined>([defaultOption, defaultOption, defaultOption]);
   // const [actionSheetOptionInputsCount, dispatchActionSheetOptionInputsCount] = useReducer((state, action) => {
   //   if (action.type === "++") {
   //     return ++state;
@@ -116,21 +138,19 @@ function Content() {
 
   return (
     <Stack>
-      <Input value={actionSheetTitle} onChange={async (event) => {
+      {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>
       <Input value={actionSheetMessage} onChange={async (event) => {
         setActionSheetMessage(event.target.value)
       }}></Input>
       <Button onClick={async () => {
-        // dispatchActionSheetOptionInputsCount("++")
         setActionSheetOptions((oldActionSheets) => {
           const newOptions = oldActionSheets ? [...oldActionSheets, defaultOption] : [defaultOption];
           return newOptions
         })
       }}>++ Action Sheet Option</Button>
       <Button isDisabled={!actionSheetOptions} onClick={async () => {
-        // dispatchActionSheetOptionInputsCount("--")
         setActionSheetOptions((oldActionSheets) => {
           const newActionSheets = [...oldActionSheets]
           newActionSheets.pop();
@@ -175,6 +195,10 @@ function Content() {
             options: actionSheetOptions
           }
         })
+      }}>Insert Action Sheet</Button> */}
+      <Textarea value={actionSheetToInsert} rows={30}/>
+      <Button onClick={async () => {
+        insertActionSheetToDeep({deep,containInLinkId: deep.linkId, actionSheetData: JSON.parse(actionSheetToInsert)})
       }}>Insert Action Sheet</Button>
     </Stack>
   );
