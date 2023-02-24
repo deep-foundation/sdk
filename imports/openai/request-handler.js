@@ -31,6 +31,12 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     if(!apiKeyLink.value?.value){
         throw new Error(`##${apiKeyLink.id} must have a value`)
     }
+    if(!value){
+        throw new Error(`A link with type ##${value} is not found`)
+    }
+    if(!value.value?.value){
+        throw new Error(`##${value.id} must have a value`)
+    }
     const apiKey = apiKeyLink.value.value
     const configuration = new Configuration({
         apiKey: apiKey,
