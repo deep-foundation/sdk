@@ -41,7 +41,7 @@ function Content() {
     query: {
       type: { in: { string: { value: { _eq: "Alert" } } } }
     },
-    callback: async ({ notNotifiedLinks }) => {     
+    callback: async ({ notNotifiedLinks }) => {
       for (const alertLink of notNotifiedLinks) {
         const alertOptions = await getAlertOptionsFromDeep({ deep, alertLinkId: alertLink.id });
         await Dialog.alert(alertOptions);
@@ -65,11 +65,11 @@ function Content() {
     query: {
       type: { in: { string: { value: { _eq: "Prompt" } } } }
     },
-    callback: async ({ notNotifiedLinks }) => {     
+    callback: async ({ notNotifiedLinks }) => {
       for (const promptLink of notNotifiedLinks) {
         const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: promptLink.id });
         const promptResult = await Dialog.prompt(promptOptions);
-        await insertPromptResultToDeep({deep, deviceLinkId, promptLinkId: promptLink.id, promptResult});
+        await insertPromptResultToDeep({ deep, deviceLinkId, promptLinkId: promptLink.id, promptResult });
       }
       const { data: notifyLinks } = await deep.select({
         type: { in: { string: { value: { _eq: "Notify" } } } },
@@ -90,11 +90,11 @@ function Content() {
     query: {
       type: { in: { string: { value: { _eq: "Confirm" } } } }
     },
-    callback: async ({ notNotifiedLinks }) => {     
+    callback: async ({ notNotifiedLinks }) => {
       for (const confirmLink of notNotifiedLinks) {
         const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: confirmLink.id });
         const confirmResult = await Dialog.confirm(confirmOptions);
-        await insertConfirmResultToDeep({deep, deviceLinkId, confirmLinkId: confirmLink.id, confirmResult});
+        await insertConfirmResultToDeep({ deep, deviceLinkId, confirmLinkId: confirmLink.id, confirmResult });
       }
       const { data: notifyLinks } = await deep.select({
         type: { in: { string: { value: { _eq: "Notify" } } } },
@@ -133,9 +133,9 @@ function Content() {
   //   },
   // });
 
-  const [alertTitle, setAlertTitle] = useState<undefined | string>(undefined);
-  const [alertMessage, setAlertMessage] = useState<undefined | string>(undefined);
-  const [alertButtonTitle, setAlertButtonTitle] = useState<undefined | string>(undefined);
+  const [alertTitle, setAlertTitle] = useState<string>("AlertTitle");
+  const [alertMessage, setAlertMessage] = useState<string>("AlertMessage");
+  const [alertButtonTitle, setAlertButtonTitle] = useState<string>("AlertButtonTitle");
 
   // useNotNotifiedLinksHandling({
   //   deep,
@@ -161,12 +161,12 @@ function Content() {
   //   },
   // });
 
-  const [promptTitle, setPromptTitle] = useState<undefined | string>(undefined);
-  const [promptMessage, setPromptMessage] = useState<undefined | string>(undefined);
-  const [promptOkButtonTitle, setPromptOkButtonTitle] = useState<undefined | string>(undefined);
-  const [promptCancelButtonTitle, setPromptCancelButtonTitle] = useState<undefined | string>(undefined);
-  const [promptInputPlaceholder, setPromptInputPlaceholder] = useState<undefined | string>(undefined);
-  const [promptInputText, setPromptInputText] = useState<undefined | string>(undefined);
+  const [promptTitle, setPromptTitle] = useState<string>("PromptTitle");
+  const [promptMessage, setPromptMessage] = useState<string>("PromptrMessage");
+  const [promptOkButtonTitle, setPromptOkButtonTitle] = useState<string>("PromptOkButtonTitle");
+  const [promptCancelButtonTitle, setPromptCancelButtonTitle] = useState<string>("PromptCancelButtonTitle");
+  const [promptInputPlaceholder, setPromptInputPlaceholder] = useState<string>("PromptInputPlaceholder");
+  const [promptInputText, setPromptInputText] = useState<string>("PromptInputText");
 
   // useNotNotifiedLinksHandling({
   //   deep,
@@ -196,10 +196,10 @@ function Content() {
   //   },
   // });
 
-  const [confirmTitle, setConfirmTitle] = useState<undefined | string>(undefined);
-  const [confirmMessage, setConfirmMessage] = useState<undefined | string>(undefined);
-  const [confirmOkButtonTitle, setConfirmOkButtonTitle] = useState<undefined | string>(undefined);
-  const [confirmCancelButtonTitle, setConfirmCancelButtonTitle] = useState<undefined | string>(undefined);
+  const [confirmTitle, setConfirmTitle] = useState<string>("ConfirmTitle");
+  const [confirmMessage, setConfirmMessage] = useState<string>("ConfirmMessage");
+  const [confirmOkButtonTitle, setConfirmOkButtonTitle] = useState<string>("ConfirmOkButtonTitle");
+  const [confirmCancelButtonTitle, setConfirmCancelButtonTitle] = useState<string>("ConfirmCancelButtonTitle");
 
   // useNotNotifiedLinksHandling({
   //   deep,
@@ -229,13 +229,13 @@ function Content() {
   return (
     <Stack>
       <Text>Device package</Text>
-      <Input placeholder='Alert Title' onChange={(event) => {
+      <Input value={alertTitle} placeholder='Alert Title' onChange={(event) => {
         setAlertTitle(event.target.value);
       }} />
-      <Input placeholder='Alert Message' onChange={(event) => {
+      <Input value={alertMessage} placeholder='Alert Message' onChange={(event) => {
         setAlertMessage(event.target.value);
       }} />
-      <Input placeholder='Alert Button Title' onChange={(event) => {
+      <Input value={alertButtonTitle} placeholder='Alert Button Title' onChange={(event) => {
         setAlertButtonTitle(event.target.value);
       }} />
       <Button onClick={async () => {
@@ -249,27 +249,27 @@ function Content() {
       }}>
         Insert Alert
       </Button>
-      <Input placeholder='Prompt Title' onChange={(event) => {
+      <Input value={promptTitle} placeholder='Prompt Title' onChange={(event) => {
         setPromptTitle(event.target.value);
       }} />
-      <Input placeholder='Prompt Message' onChange={(event) => {
+      <Input value={promptMessage} placeholder='Prompt Message' onChange={(event) => {
         setPromptMessage(event.target.value);
       }} />
-      <Input placeholder='Prompt Ok Button Title' onChange={(event) => {
+      <Input value={promptOkButtonTitle} placeholder='Prompt Ok Button Title' onChange={(event) => {
         setPromptOkButtonTitle(event.target.value);
       }} />
-            <Input placeholder='Prompt Cancel Button Title' onChange={(event) => {
+      <Input value={promptCancelButtonTitle} placeholder='Prompt Cancel Button Title' onChange={(event) => {
         setPromptCancelButtonTitle(event.target.value);
       }} />
-                  <Input placeholder='Prompt Input Placeholder' onChange={(event) => {
+      <Input value={promptInputPlaceholder} placeholder='Prompt Input Placeholder' onChange={(event) => {
         setPromptInputPlaceholder(event.target.value);
       }} />
-                        <Input placeholder='Prompt Input Text' onChange={(event) => {
+      <Input value={promptInputText} placeholder='Prompt Input Text' onChange={(event) => {
         setPromptInputText(event.target.value);
       }} />
       <Button onClick={async () => {
         await insertPromptToDeep({
-          deep, 
+          deep,
           promptOptions: {
             title: promptTitle,
             message: promptMessage,
@@ -282,16 +282,16 @@ function Content() {
       }}>
         Insert Prompt
       </Button>
-      <Input placeholder='Confirm Title' onChange={(event) => {
+      <Input value={confirmTitle} placeholder='Confirm Title' onChange={(event) => {
         setConfirmTitle(event.target.value);
       }} />
-      <Input placeholder='Confirm Message' onChange={(event) => {
+      <Input value={confirmMessage} placeholder='Confirm Message' onChange={(event) => {
         setConfirmMessage(event.target.value);
       }} />
-      <Input placeholder='Confirm Ok Button Title' onChange={(event) => {
+      <Input value={confirmOkButtonTitle} placeholder='Confirm Ok Button Title' onChange={(event) => {
         setConfirmOkButtonTitle(event.target.value);
       }} />
-            <Input placeholder='Confirm Cancel Button Title' onChange={(event) => {
+      <Input value={confirmCancelButtonTitle} placeholder='Confirm Cancel Button Title' onChange={(event) => {
         setConfirmCancelButtonTitle(event.target.value);
       }} />
       <Button onClick={async () => {
