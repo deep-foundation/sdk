@@ -1,6 +1,6 @@
 import { AlertOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "../notification/package-name";
+import { PACKAGE_NAME } from "./package-name";
 
 export async function getAlertOptionsFromDeep({ deep, alertLinkId }: { deep: DeepClient, alertLinkId: number }): Promise<AlertOptions> {
   const alertTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");

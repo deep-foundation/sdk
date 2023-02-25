@@ -159,28 +159,6 @@ async function installPackage() {
             from_id: packageLinkId,
             string: { data: { value: 'Prompt' } },
           },
-          {
-            type_id: typeTypeLinkId,
-            from_id: deviceTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'PromptIsCancelled' } },
-              }
-            }
-          },
-          {
-            type_id: typeTypeLinkId,
-            from_id: deviceTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'PromptIsNotCancelled' } },
-              }
-            }
-          }
         ]
       },
       out: {
@@ -251,17 +229,6 @@ async function installPackage() {
               }
             },
           },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'PromptResultValue' } },
-              }
-            },
-          }
         ]
       }
     },
@@ -274,28 +241,7 @@ async function installPackage() {
           string: { data: { value: 'Confirm' } },
           
         },
-        {
-          type_id: typeTypeLinkId,
-          from_id: deviceTypeLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'ConfirmIsConfirmed' } },
-            }
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          from_id: deviceTypeLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'ConfirmIsNotConfirmed' } },
-            }
-          }
-        }]
+        ]
       },
       out: {
         data: [
@@ -343,17 +289,6 @@ async function installPackage() {
               }
             }
           },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'ConfirmResultValue' } },
-              }
-            }
-          }
         ]
       }
     },
@@ -367,6 +302,61 @@ async function installPackage() {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'Notify' } },
+          },
+          {
+            type_id: typeTypeLinkId,
+            from_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'PromptValue' } },
+              }
+            },
+          },
+          {
+            type_id: typeTypeLinkId,
+            from_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'PromptIsCancelled' } },
+              }
+            },
+          },
+          {
+            type_id: typeTypeLinkId,
+            from_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'PromptIsNotCancelled' } },
+              }
+            },
+          },
+          {
+            type_id: typeTypeLinkId,
+            from_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'ConfirmIsConfirmed' } },
+              }
+            }
+          },
+          {
+            type_id: typeTypeLinkId,
+            from_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'ConfirmIsNotConfirmed' } },
+              }
+            }
           }
         ]
       },

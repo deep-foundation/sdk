@@ -34,80 +34,245 @@ function Content() {
     self["Dialog"] = Dialog;
   }, [])
 
+  {
+    const notifyAlertLinksBeingProcessed = useRef<Link<number>[]>([]);
 
-  useNotNotifiedLinksHandling({
-    deep,
-    deviceLinkId,
-    query: {
-      type: { in: { string: { value: { _eq: "Alert" } } } }
-    },
-    callback: async ({ notNotifiedLinks }) => {
-      for (const alertLink of notNotifiedLinks) {
-        const alertOptions = await getAlertOptionsFromDeep({ deep, alertLinkId: alertLink.id });
-        await Dialog.alert(alertOptions);
-      }
-      const { data: notifyLinks } = await deep.select({
-        type: { in: { string: { value: { _eq: "Notify" } } } },
-        from_id: {
-          _in: notNotifiedLinks.map(link => link.id),
-        },
-        _not: {
-          out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+    const {data: notifyAlertLinks, loading, error} = useDeepSubscription({
+      type_id: {
+        _id: [PACKAGE_NAME, "Notify"]
+      },
+      _not: {
+        out: {
+          type_id: {
+            _id: [PACKAGE_NAME, "Notified"]
+          }
         }
-      })
-      await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
-    },
-  });
+      },
+      from: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Alert"]
+        },
+      }
+    });
 
-  useNotNotifiedLinksHandling({
-    deep,
-    deviceLinkId,
-    query: {
-      type: { in: { string: { value: { _eq: "Prompt" } } } }
-    },
-    callback: async ({ notNotifiedLinks }) => {
-      for (const promptLink of notNotifiedLinks) {
-        const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: promptLink.id });
-        const promptResult = await Dialog.prompt(promptOptions);
-        await insertPromptResultToDeep({ deep, deviceLinkId, promptLinkId: promptLink.id, promptResult });
+    useEffect(() => {
+      if(loading) {
+        return;
       }
-      const { data: notifyLinks } = await deep.select({
-        type: { in: { string: { value: { _eq: "Notify" } } } },
-        from_id: {
-          _in: notNotifiedLinks.map(link => link.id),
-        },
-        _not: {
-          out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+      new Promise(async () => {
+        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+        const notProcessedNotifyAlertLinks = notifyAlertLinks.filter(link => !notifyAlertLinksBeingProcessed.current.includes(link));
+        notifyAlertLinksBeingProcessed.current = [...notifyAlertLinksBeingProcessed.current, ...notProcessedNotifyAlertLinks]
+        for (const notifyAlertLink of notProcessedNotifyAlertLinks) {
+          const alertOptions = await getAlertOptionsFromDeep({ deep, alertLinkId: notifyAlertLink.from_id });
+          await Dialog.alert(alertOptions);
+          await deep.insert({
+            type_id: await deep.id(PACKAGE_NAME, "Notified"),
+            from_id: notifyAlertLink.id,
+            to_id: deviceLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: deep.linkId
+              }
+            }
+          });
         }
+        const processedNotifyAlertLinks = notProcessedNotifyAlertLinks;
+        notifyAlertLinksBeingProcessed.current = notifyAlertLinksBeingProcessed.current.filter(link => !processedNotifyAlertLinks.includes(link))
       })
-      await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
-    },
-  });
+    }, [
+      notifyAlertLinks, loading, error
+    ])
+  }
 
-  useNotNotifiedLinksHandling({
-    deep,
-    deviceLinkId,
-    query: {
-      type: { in: { string: { value: { _eq: "Confirm" } } } }
-    },
-    callback: async ({ notNotifiedLinks }) => {
-      for (const confirmLink of notNotifiedLinks) {
-        const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: confirmLink.id });
-        const confirmResult = await Dialog.confirm(confirmOptions);
-        await insertConfirmResultToDeep({ deep, deviceLinkId, confirmLinkId: confirmLink.id, confirmResult });
-      }
-      const { data: notifyLinks } = await deep.select({
-        type: { in: { string: { value: { _eq: "Notify" } } } },
-        from_id: {
-          _in: notNotifiedLinks.map(link => link.id),
-        },
-        _not: {
-          out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+  {
+    const notifyPromptLinksBeingProcessed = useRef<Link<number>[]>([]);
+
+    const {data: notifyPromptLinks, loading, error} = useDeepSubscription({
+      type_id: {
+        _id: [PACKAGE_NAME, "Notify"]
+      },
+      _not: {
+        out: {
+          type_id: {
+            _id: [PACKAGE_NAME, "Notified"]
+          }
         }
+      },
+      from: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Prompt"]
+        },
+      }
+    });
+
+    useEffect(() => {
+      if(loading) {
+        return;
+      }
+      new Promise(async () => {
+        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+        const notProcessedNotifyPromptLinks = notifyPromptLinks.filter(link => !notifyPromptLinksBeingProcessed.current.includes(link));
+        notifyPromptLinksBeingProcessed.current = [...notifyPromptLinksBeingProcessed.current, ...notProcessedNotifyPromptLinks]
+        for (const notifyPromptLink of notProcessedNotifyPromptLinks) {
+          const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: notifyPromptLink.from_id });
+          const promptResult = await Dialog.prompt(promptOptions);
+          await insertPromptResultToDeep({
+            deep,
+            deviceLinkId,
+            notifyLinkId: notifyPromptLink.id,
+            promptResult
+          })
+          await deep.insert({
+            type_id: await deep.id(PACKAGE_NAME, "Notified"),
+            from_id: notifyPromptLink.id,
+            to_id: deviceLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: deep.linkId
+              }
+            }
+          });
+        }
+        const processedNotifyPromptLinks = notProcessedNotifyPromptLinks;
+        notifyPromptLinksBeingProcessed.current = notifyPromptLinksBeingProcessed.current.filter(link => !processedNotifyPromptLinks.includes(link))
       })
-      await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
-    },
-  });
+    }, [
+      notifyPromptLinks, loading, error
+    ])
+  }
+
+  {
+    const notifyConfirmLinksBeingProcessed = useRef<Link<number>[]>([]);
+
+    const {data: notifyConfirmLinks, loading, error} = useDeepSubscription({
+      type_id: {
+        _id: [PACKAGE_NAME, "Notify"]
+      },
+      _not: {
+        out: {
+          type_id: {
+            _id: [PACKAGE_NAME, "Notified"]
+          }
+        }
+      },
+      from: {
+        type_id: {
+          _id: [PACKAGE_NAME, "Confirm"]
+        },
+      }
+    });
+
+    useEffect(() => {
+      if(loading) {
+        return;
+      }
+      new Promise(async () => {
+        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+        const notProcessedNotifyConfirmLinks = notifyConfirmLinks.filter(link => !notifyConfirmLinksBeingProcessed.current.includes(link));
+        notifyConfirmLinksBeingProcessed.current = [...notifyConfirmLinksBeingProcessed.current, ...notProcessedNotifyConfirmLinks]
+        for (const notifyConfirmLink of notProcessedNotifyConfirmLinks) {
+          const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: notifyConfirmLink.from_id });
+          const confirmResult = await Dialog.confirm(confirmOptions);
+          await insertConfirmResultToDeep({
+            deep,
+            deviceLinkId,
+            notifyLinkId: notifyConfirmLink.id,
+            confirmResult
+          })
+          await deep.insert({
+            type_id: await deep.id(PACKAGE_NAME, "Notified"),
+            from_id: notifyConfirmLink.id,
+            to_id: deviceLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: deep.linkId
+              }
+            }
+          });
+        }
+        const processedNotifyConfirmLinks = notProcessedNotifyConfirmLinks;
+        notifyConfirmLinksBeingProcessed.current = notifyConfirmLinksBeingProcessed.current.filter(link => !processedNotifyConfirmLinks.includes(link))
+      })
+    }, [
+      notifyConfirmLinks, loading, error
+    ])
+  }
+
+
+  // useNotNotifiedLinksHandling({
+  //   deep,
+  //   deviceLinkId,
+  //   query: {
+  //     type: { in: { string: { value: { _eq: "Alert" } } } }
+  //   },
+  //   callback: async ({ notNotifiedLinks }) => {
+  //     for (const alertLink of notNotifiedLinks) {
+
+  //     }
+  //     const { data: notifyLinks } = await deep.select({
+  //       type: { in: { string: { value: { _eq: "Notify" } } } },
+  //       from_id: {
+  //         _in: notNotifiedLinks.map(link => link.id),
+  //       },
+  //       _not: {
+  //         out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+  //       }
+  //     })
+  //     await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+  //   },
+  // });
+
+  // useNotNotifiedLinksHandling({
+  //   deep,
+  //   deviceLinkId,
+  //   query: {
+  //     type: { in: { string: { value: { _eq: "Prompt" } } } }
+  //   },
+  //   callback: async ({ notNotifiedLinks }) => {
+  //     for (const promptLink of notNotifiedLinks) {
+
+  //     }
+  //     const { data: notifyLinks } = await deep.select({
+  //       type: { in: { string: { value: { _eq: "Notify" } } } },
+  //       from_id: {
+  //         _in: notNotifiedLinks.map(link => link.id),
+  //       },
+  //       _not: {
+  //         out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+  //       }
+  //     })
+  //     await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+  //   },
+  // });
+
+  // useNotNotifiedLinksHandling({
+  //   deep,
+  //   deviceLinkId,
+  //   query: {
+  //     type: { in: { string: { value: { _eq: "Confirm" } } } }
+  //   },
+  //   callback: async ({ notNotifiedLinks }) => {
+  //     for (const confirmLink of notNotifiedLinks) {
+  //       const confirmOptions = await getConfirmOptionsFromDeep({ deep, confirmLinkId: confirmLink.id });
+  //       const confirmResult = await Dialog.confirm(confirmOptions);
+  //       await insertConfirmResultToDeep({ deep, deviceLinkId, confirmLinkId: confirmLink.id, confirmResult });
+  //     }
+  //     const { data: notifyLinks } = await deep.select({
+  //       type: { in: { string: { value: { _eq: "Notify" } } } },
+  //       from_id: {
+  //         _in: notNotifiedLinks.map(link => link.id),
+  //       },
+  //       _not: {
+  //         out: { type: { in: { string: { value: { _eq: "Notified" } } } } }
+  //       }
+  //     })
+  //     await insertNotifiedLinks({ deep, deviceLinkId, notifyLinkIds: notifyLinks.map(link => link.id) });
+  //   },
+  // });
 
   // useNotNotifiedLinksHandling({
   //   deep,
