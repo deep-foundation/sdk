@@ -433,7 +433,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
 {
   `
 await deep.insert({
-    type_id: await deep.id("@deep-foundation/${PACKAGE_NAME}", "Notify"),
+    type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
     from_id: pushNotificationLinkId, 
     to_id: deviceLinkId, 
     in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
