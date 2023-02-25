@@ -6,7 +6,7 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Input, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Code, Input, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/dialog/package-name';
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { Provider } from '../imports/provider';
@@ -471,6 +471,21 @@ function Content() {
       }}>
         Insert Confirm
       </Button>
+      <Text >
+        Insert notify link from dialog to device link. You must get dialog showed on this page and then result must be saved in deep (Note that Alert does not have result)
+      </Text>
+      <Code display={"block"} whiteSpace={"pre"}>
+{
+  `
+await deep.insert({
+    type_id: await deep.id("@deep-foundation/dialog", "Notify"),
+    from_id: dialogLinkId, // Alert/Prompt/Confirm link id
+    to_id: deviceLinkId, 
+    in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
+})
+  `
+}
+      </Code>
     </Stack>
   );
 }
