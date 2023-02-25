@@ -18,6 +18,7 @@ import {
   Text,
   Divider,
   Textarea,
+  Code,
 } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -31,6 +32,7 @@ import {
   onMessage,
 } from 'firebase/messaging';
 import { insertOrUpdateDeviceRegistrationToken } from '../imports/push-notification/insert-or-update-device-registration-token';
+import { PACKAGE_NAME } from '../imports/push-notification/package-name';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -41,8 +43,6 @@ const firebaseConfig = {
   appId: '1:430972811028:web:7c43130f8166c437c03401',
   measurementId: 'G-NJ1R8HDWLK',
 };
-
-const PACKAGE_NAME = '@deep-foundation/push-notifications';
 
 function Page() {
   const deep = useDeep();
@@ -110,6 +110,14 @@ function Page() {
       <Text suppressHydrationWarning>
         Permissions are {!isPermissionsGranted && 'not'} granted
       </Text>
+      <Code display={"block"} whiteSpace={"pre"}>
+        {
+`
+package_name="push-notification" 
+npx ts-node "./imports/\${package_name}/install-package.ts"
+`
+        }
+      </Code>
       <Button
         isDisabled={!platform}
         onClick={() => {
@@ -420,7 +428,19 @@ function Page() {
       >
         Register
       </Button>
-      <Text>After using these buttons insert a link with type Notify (from this package) from pushNotification to device.</Text>
+      <Text>After using these buttons insert a link with type Notify from PushNotification to device. You should get a notification after that.</Text>
+      <Code display={"block"} whiteSpace={"pre"}>
+{
+  `
+await deep.insert({
+    type_id: await deep.id("@deep-foundation/${PACKAGE_NAME}", "Notify"),
+    from_id: pushNotificationLinkId, 
+    to_id: deviceLinkId, 
+    in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
+})
+  `
+}
+      </Code>
     </Stack>
   );
 }
