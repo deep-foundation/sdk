@@ -8,7 +8,7 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Box, Button, ChakraProvider, Input, Radio, RadioGroup, Stack, Textarea } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider, Code, Input, Radio, RadioGroup, Stack, Text, Textarea } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle, ShowActionsOptions } from '@capacitor/action-sheet';
@@ -138,6 +138,14 @@ function Content() {
 
   return (
     <Stack>
+        <Code display={"block"} whiteSpace={"pre"}>
+        {
+`
+package_name="action-sheet" 
+npx ts-node "./imports/\${package_name}/install-package.ts"
+`
+        }
+      </Code>
       {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>
@@ -200,6 +208,21 @@ function Content() {
       <Button onClick={async () => {
         insertActionSheetToDeep({deep,containInLinkId: deep.linkId, actionSheetData: JSON.parse(actionSheetToInsert)})
       }}>Insert Action Sheet</Button>
+      <Text>
+        Insert Notify link from ActionSheet to Device. You should see action-sheet on your page after that and result will be saved to deep.
+      </Text>
+            <Code display={"block"} whiteSpace={"pre"}>
+{
+  `
+await deep.insert({
+    type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
+    from_id: actionSheetLinkId, 
+    to_id: deviceLinkId, 
+    in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
+})
+  `
+}
+      </Code>
     </Stack>
   );
 }
