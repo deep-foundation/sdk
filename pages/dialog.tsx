@@ -397,7 +397,7 @@ function Content() {
       <Text>
         Insert this package by using:
       </Text>
-      <Code>
+      <Code display={"block"} whiteSpace={"pre"}>
         {
 `
 package_name="dialog" 
