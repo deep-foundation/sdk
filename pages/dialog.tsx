@@ -16,8 +16,6 @@ import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result
 import { getConfirmOptionsFromDeep } from '../imports/dialog/get-confirm-options-from-deep';
 import { insertConfirmResultToDeep } from '../imports/dialog/insert-confirm-result-to-deep';
 import { getAlertOptionsFromDeep } from '../imports/dialog/get-alert-options-from-deep';
-import { insertPackageToDeep } from '../imports/dialog/insert-package-to-deep';
-import { insertPackageToDeep as insertNotificationPackageToDeep } from '../imports/notification/insert-package-to-deep';
 import { useSubscriptionToNotNotifiedLinks } from '../imports/notification/use-subscription-to-not-notified-links';
 import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
 import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
