@@ -1,25 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import {
-  useLocalStore,
-} from '@deep-foundation/store/local';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Box, Button, ChakraProvider, Code, Input, Radio, RadioGroup, Stack, Text, Textarea } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  ChakraProvider,
+  Code,
+  Input,
+  Radio,
+  RadioGroup,
+  Stack,
+  Text,
+  Textarea,
+} from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
-import { ActionSheet, ActionSheetButton, ActionSheetButtonStyle, ShowActionsOptions } from '@capacitor/action-sheet';
+import {
+  ActionSheet,
+  ActionSheetButton,
+  ActionSheetButtonStyle,
+  ShowActionsOptions,
+} from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
 import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
 import { getActionSheetDataFromDeep } from '../imports/action-sheet/get-action-sheet-data-from-deep';
 import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
 import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-action-sheet-result-to-deep';
 import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
+import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
 
-const defaultOption: ActionSheetButton = { title: "Action Sheet Option Title", style: ActionSheetButtonStyle.Default }
+const defaultOption: ActionSheetButton = {
+  title: 'Action Sheet Option Title',
+  style: ActionSheetButtonStyle.Default,
+};
 const defaultActionSheet: ShowActionsOptions = {
   title: 'Title',
   message: 'Message',
@@ -35,7 +53,7 @@ const defaultActionSheet: ShowActionsOptions = {
       style: ActionSheetButtonStyle.Destructive,
     },
   ],
-}
+};
 
 function Content() {
   const deep = useDeep();
@@ -45,85 +63,90 @@ function Content() {
   );
   useEffect(() => {
     defineCustomElements(window);
-    self["ActionSheet"] = ActionSheet;
-    self["ActionSheetButtonStyle"] = ActionSheetButtonStyle;
+    self['ActionSheet'] = ActionSheet;
+    self['ActionSheetButtonStyle'] = ActionSheetButtonStyle;
   }, []);
 
   {
-    const { data: notNotifiedActionSheetLinks, loading, error } = useDeepSubscription({
+    const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
+
+    const {
+      data: notifyLinks,
+      loading,
+      error,
+    } = useDeepSubscription({
       type_id: {
-        _id: [PACKAGE_NAME, "ActionSheet"]
+        _id: [PACKAGE_NAME, 'Notify'],
       },
-      out: {
-        type_id: {
-          _id: [PACKAGE_NAME, 'Notify'],
-        },
-        to_id: deviceLinkId,
-        _not: {
-          out: {
-            type_id: {
-              _id: [PACKAGE_NAME, 'Notified'],
-            },
-            to_id: deviceLinkId,
+      _not: {
+        out: {
+          type_id: {
+            _id: [PACKAGE_NAME, 'Notified'],
           },
+          to_id: deviceLinkId,
         },
-      }
+      },
+      from: {
+        type_id: {
+          _id: [PACKAGE_NAME, 'ActionSheet'],
+        },
+      },
+      to_id: deviceLinkId,
     });
 
     useEffect(() => {
       new Promise(async () => {
+        const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, 'Notified');
+        const containTypeLinkId = await deep.id(
+          '@deep-foundation/core',
+          'Contain'
+        );
 
-        for (const actionSheetLink of notNotifiedActionSheetLinks) {
-          const actionSheetOptions = await getActionSheetDataFromDeep({ deep, actionSheetLinkId: actionSheetLink.id });
-          const actionSheetResult = await ActionSheet.showActions(actionSheetOptions);
-          const { data: [notifyLink] } = await deep.select({
-            type_id: {
-              _id: [PACKAGE_NAME, "Notify"]
-            },
-            from_id: actionSheetLink.id
-          })
-          await insertActionSheetResultToDeep({ deep, notifyLinkId: notifyLink.id, actionSheetResult })
-        }
-        const { data: notifyLinks } = await deep.select({
-          type_id: {
-            _id: [PACKAGE_NAME, "Notify"]
-          },
-          from_id: {
-            _in: notNotifiedActionSheetLinks.map(link => link.id),
-          },
-          _not: {
-            out: { type_id: {
-              _id: [PACKAGE_NAME, "Notified"]
-            } }
-          }
-        })
-
-        const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, "Notified")
-        const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
-        await deep.insert(
-          notifyLinks.map((notifyLink) => ({
-            type_id: notifiedTypeLinkId,
+        const notProcessedNotifyConfirmLinks = notifyLinks.filter(
+          (link) => !notifyLinksBeingProcessed.current.includes(link)
+        );
+        notifyLinksBeingProcessed.current = [
+          ...notifyLinksBeingProcessed.current,
+          ...notProcessedNotifyConfirmLinks,
+        ];
+        for (const notifyLink of notifyLinks) {
+          const actionSheetOptions = await getActionSheetDataFromDeep({
+            deep,
+            actionSheetLinkId: notifyLink.from_id,
+          });
+          const actionSheetResult = await ActionSheet.showActions(
+            actionSheetOptions
+          );
+          await insertActionSheetResultToDeep({
+            deep,
+            deviceLinkId,
+            notifyLinkId: notifyLink.id,
+            actionSheetResult,
+          });
+          await deep.insert({
+            type_id: await deep.id(PACKAGE_NAME, "Notified"),
             from_id: notifyLink.id,
             to_id: deviceLinkId,
             in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: deep.linkId
-                },
-              ]
+              data: {
+                type_id: containTypeLinkId,
+                from_id: deep.linkId
+              }
             }
-          })))
-
-      })
-    }, [notNotifiedActionSheetLinks, loading, error])
+          });
+        }
+        const processedNotifyConfirmLinks = notProcessedNotifyConfirmLinks;
+        notifyLinksBeingProcessed.current =
+          notifyLinksBeingProcessed.current.filter(
+            (link) => !processedNotifyConfirmLinks.includes(link)
+          );
+      });
+    }, [notifyLinks, loading, error]);
   }
 
-
-  const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(JSON.stringify(
-    defaultActionSheet
-    ,null, 2
-   ));
+  const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(
+    JSON.stringify(defaultActionSheet, null, 2)
+  );
 
   // const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
   // const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
@@ -138,13 +161,14 @@ function Content() {
 
   return (
     <Stack>
-        <Code display={"block"} whiteSpace={"pre"}>
-        {
-`
+      <Text>
+        Install package by using these commands in a terminal:
+      </Text>
+      <Code display={'block'} whiteSpace={'pre'}>
+        {`
 package_name="action-sheet" 
 npx ts-node "./imports/\${package_name}/install-package.ts"
-`
-        }
+`}
       </Code>
       {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
@@ -204,24 +228,31 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
           }
         })
       }}>Insert Action Sheet</Button> */}
-      <Textarea value={actionSheetToInsert} rows={30}/>
-      <Button onClick={async () => {
-        insertActionSheetToDeep({deep,containInLinkId: deep.linkId, actionSheetData: JSON.parse(actionSheetToInsert)})
-      }}>Insert Action Sheet</Button>
+      <Textarea value={actionSheetToInsert} rows={30} />
+      <Button
+        onClick={async () => {
+          insertActionSheetToDeep({
+            deep,
+            containInLinkId: deep.linkId,
+            actionSheetData: JSON.parse(actionSheetToInsert),
+          });
+        }}
+      >
+        Insert Action Sheet
+      </Button>
       <Text>
-        Insert Notify link from ActionSheet to Device. You should see action-sheet on your page after that and result will be saved to deep.
+        Insert Notify link from ActionSheet to Device. You should see
+        action-sheet on your page after that and result will be saved to deep.
       </Text>
-            <Code display={"block"} whiteSpace={"pre"}>
-{
-  `
+      <Code display={'block'} whiteSpace={'pre'}>
+        {`
 await deep.insert({
     type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
     from_id: actionSheetLinkId, 
     to_id: deviceLinkId, 
     in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
 })
-  `
-}
+  `}
       </Code>
     </Stack>
   );

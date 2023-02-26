@@ -141,11 +141,30 @@ async function installPackage() {
             type_id: baseNotifyTypeLinkId,
             to_id: deviceTypeLinkId,
             in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'Notify' } },
-              },
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                  string: { data: { value: 'Notify' } },
+                },
+                {
+                  type_id: typeTypeLinkId,
+                  from_id: deviceTypeLinkId,
+                  in: {
+                    data: {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: 'ActionSheetResultIndex' } },
+                    },
+                  },
+                  out: {
+                    data: {
+                      type_id: valueTypeLinkId,
+                      to_id: numberTypeLinkId
+                    }
+                  }
+                },
+              ]
             },
             out: {
               data: {
@@ -240,22 +259,6 @@ async function installPackage() {
           string: { data: { value: 'DestructiveOptionStyle' } },
         },
       },
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'ActionSheetResultIndex' } },
-        },
-      },
-      out: {
-        data: {
-          type_id: valueTypeLinkId,
-          to_id: numberTypeLinkId
-        }
-      }
     },
   ]);
 }
