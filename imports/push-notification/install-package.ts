@@ -282,7 +282,32 @@ async function installPackage() {
             },
           },
         },
-        
+        {
+          type_id: await deep.id(NOTIFICATION_PACKAGE_NAME, "Notify"),
+          to_id: deviceTypeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'Notify' } },
+              },
+            ]
+          },
+          out: {
+            data: {
+              type_id: await deep.id(NOTIFICATION_PACKAGE_NAME, "Notified"),
+              to_id: deviceTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                  string: { data: { value: 'Notified' } },
+                },
+              },
+            },
+          }
+        },
       ]
     }
   },
@@ -336,19 +361,6 @@ async function installPackage() {
   }
 ]);
 
-  const {data: [{id: notifyTypeLinkId}]} = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: await deep.id(PACKAGE_NAME, "PushNotification"),
-    to_id: deviceTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Notify' } },
-      },
-    },
-  })
-
   const fileTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'SyncTextFile'
@@ -392,7 +404,7 @@ async function installPackage() {
               {
                 type_id: handleOperationLinkId,
                 // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
-                from_id: notifyTypeLinkId,
+                from_id: await deep.id(PACKAGE_NAME, "Notify"),
                 in: {
                   data: [
                     {
