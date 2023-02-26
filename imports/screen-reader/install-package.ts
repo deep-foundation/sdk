@@ -4,11 +4,10 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "../device/package-name";
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "../notification/package-name";
 import { execSync } from "child_process";
-
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-async function main () {
+async function installPackage () {
   const apolloClient = generateApolloClient({
     path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
     ssl: !!~process.env.NEXT_PUBLIC_GQL_PATH.indexOf('localhost')
@@ -110,7 +109,7 @@ async function main () {
           from_id: packageLinkId,
           string: {
             data: {
-              value: "Options"
+              value: "SpeakOptions"
             }
           },
         }
@@ -118,6 +117,7 @@ async function main () {
       out: {
         data: [
           {
+            type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
               data: {
@@ -132,6 +132,7 @@ async function main () {
             }
           },
           {
+            type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
               data: {
@@ -174,3 +175,5 @@ async function main () {
     },
   ])
 }
+
+installPackage();

@@ -12,7 +12,7 @@ export async function insertSpeakOptions({
   options: SpeakOptions;
 }): Promise<void> {
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-  const syncTextFileTypeLinkId = await deep.id(PACKAGE_NAME, 'SyncTextFile');
+  const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', 'SyncTextFile');
   const speakOptionsTypeLinkId = await deep.id(PACKAGE_NAME, 'SpeakOptions');
   const valueTypeLinkId = await deep.id(PACKAGE_NAME, 'Value');
   const languageTypeLinkId = await deep.id(PACKAGE_NAME, 'Language');
