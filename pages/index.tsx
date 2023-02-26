@@ -21,7 +21,6 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { insertPackageToDeep as insertMotionPackageToDeep } from '../imports/motion/insert-package-to-deep';
 import { PACKAGE_NAME as MOTION_PACKAGE_NAME } from '../imports/motion/package-name';
@@ -66,14 +65,6 @@ function Page() {
         return;
       }
       
-      if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
-        await insertDevicePackageToDeep({ deep });
-      }
-
-      if (!await getIsPackageInstalled({deep, packageName: MOTION_PACKAGE_NAME})) {
-        await insertMotionPackageToDeep({ deep });
-      }
-
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
