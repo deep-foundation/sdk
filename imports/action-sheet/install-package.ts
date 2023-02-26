@@ -1,8 +1,10 @@
 import { ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
-import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../notification/package-name';
+import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "./../device/package-name";
+import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "./../notification/package-name";
 import { generateApolloClient } from "@deep-foundation/hasura/client";
+import {execSync} from 'child_process';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -27,6 +29,50 @@ async function installPackage() {
   const joinTypeLinkId = await deep.id('@deep-foundation/core', 'Join');
   const valueTypeLinkId = await deep.id('@deep-foundation/core', 'Value');
   const numberTypeLinkId = await deep.id('@deep-foundation/core', 'Number');
+
+  {
+    const {data: [packageLinkId]} = await deep.select({
+      type_id: packageTypeLinkId,
+      string: {
+        value: {
+          _eq: PACKAGE_NAME
+        }
+      }
+    })
+    if(packageLinkId) {
+      console.info("Package is already installed");
+      return;
+    }
+  }
+
+  const {data: [devicePackageLinkId]} = await deep.select({
+    type_id: packageTypeLinkId,
+    string: {
+      value: {
+        _eq: DEVICE_PACKAGE_NAME
+      }
+    }
+  })
+  if(!devicePackageLinkId) {
+    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+    // throw new Error(`${DEVICE_PACKAGE_NAME} package is not installed`)
+  }
+
+  const {data: [notificationPackageLinkId]} = await deep.select({
+    type_id: packageTypeLinkId,
+    string: {
+      value: {
+        _eq: NOTIFICATION_PACKAGE_NAME
+      }
+    }
+  })
+  if(!notificationPackageLinkId) {
+    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+    // throw new Error(`${NOTIFICATION_PACKAGE_NAME} package is not installed`)
+  }
+
+  const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Device");
+
   const baseNotifyTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, 'Notify');
   const baseNotifiedTypeLinkId = await deep.id(NOTIFICATION_PACKAGE_NAME, 'Notified');
 
@@ -90,6 +136,30 @@ async function installPackage() {
                 string: { data: { value: 'ActionSheetMessage' } },
               },
             },
+          },
+          {
+            type_id: baseNotifyTypeLinkId,
+            to_id: deviceTypeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: 'Notify' } },
+              },
+            },
+            out: {
+              data: {
+                type_id: baseNotifiedTypeLinkId,
+                to_id: deviceTypeLinkId,
+                in: {
+                  data: {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                    string: { data: { value: 'Notified' } },
+                  },
+                },
+              },
+            }
           },
           
         ],
@@ -186,30 +256,6 @@ async function installPackage() {
           to_id: numberTypeLinkId
         }
       }
-    },
-    {
-      type_id: baseNotifyTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'Notify' } },
-        },
-      },
-    },
-    {
-      type_id: baseNotifiedTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'Notified' } },
-        },
-      },
     },
   ]);
 }
