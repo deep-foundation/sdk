@@ -73,11 +73,11 @@ function Page() {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsTypeLinkId = await deep.id(PACKAGE_NAME, "AudioRecords");
     await deep.insert({ type_id: audioRecordsTypeLinkId,
-      string: { data: { value: "Audio Records" } },
       in :{
         data : {
           type_id: containTypeLinkId,
-          from_id: deviceLinkId
+          from_id: deviceLinkId,
+          string: { data: { value: "AudioRecords" } },
         }
       }
     })
