@@ -258,6 +258,17 @@ async function installPackage() {
     }
   });
 
+  await deep.insert({
+    type_id: typeTypeLinkId,
+    from_id: anyTypeLinkId,
+    to_id: anyTypeLinkId,
+    in: { data: {
+      type_id: containTypeLinkId,
+      from_id: packageLinkId,
+      string: { data: { value: 'ChargingState' } },
+    } },
+  });
+
   const { data: [{ id: isChargingTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     from_id: anyTypeLinkId,
