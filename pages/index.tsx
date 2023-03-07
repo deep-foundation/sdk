@@ -22,7 +22,6 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
-import { PACKAGE_NAME as ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
