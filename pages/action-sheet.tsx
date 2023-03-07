@@ -67,6 +67,21 @@ function Content() {
     self['ActionSheetButtonStyle'] = ActionSheetButtonStyle;
   }, []);
 
+  useEffect(() => {
+    new Promise(async () => {
+      deep.minilinks.apply([
+        await deep.id("@deep-foundation/core", "Contain"),
+        await deep.id(PACKAGE_NAME, "ActionSheet"),
+        await deep.id(PACKAGE_NAME, "ActionSheetTitle"),
+        await deep.id(PACKAGE_NAME, "ActionSheetMessage"),
+        await deep.id(PACKAGE_NAME, "ActionSheetOption"),
+        await deep.id(PACKAGE_NAME, "ActionSheetResultIndex"),
+        await deep.id(PACKAGE_NAME, "Notify"),
+        await deep.id(PACKAGE_NAME, "Notified"),
+      ])
+    })
+  }, []);
+
   {
     const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
 
