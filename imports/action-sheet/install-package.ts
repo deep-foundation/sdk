@@ -4,7 +4,7 @@ import { PACKAGE_NAME } from './package-name';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "./../device/package-name";
 import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from "./../notification/package-name";
 import { generateApolloClient } from "@deep-foundation/hasura/client";
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -29,9 +29,19 @@ async function installPackage() {
   const joinTypeLinkId = await deep.id('@deep-foundation/core', 'Join');
   const valueTypeLinkId = await deep.id('@deep-foundation/core', 'Value');
   const numberTypeLinkId = await deep.id('@deep-foundation/core', 'Number');
+  const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
+  const treeIncludeNodeTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeNode'
+  );
+  const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeUp');
+  const treeIncludeDownTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeDown'
+  );
 
   {
-    const {data: [packageLinkId]} = await deep.select({
+    const { data: [packageLinkId] } = await deep.select({
       type_id: packageTypeLinkId,
       string: {
         value: {
@@ -39,13 +49,13 @@ async function installPackage() {
         }
       }
     })
-    if(packageLinkId) {
+    if (packageLinkId) {
       console.info("Package is already installed");
       return;
     }
   }
 
-  const {data: [devicePackageLinkId]} = await deep.select({
+  const { data: [devicePackageLinkId] } = await deep.select({
     type_id: packageTypeLinkId,
     string: {
       value: {
@@ -53,12 +63,12 @@ async function installPackage() {
       }
     }
   })
-  if(!devicePackageLinkId) {
-    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+  if (!devicePackageLinkId) {
+    execSync('npx ts-node ./imports/device/install-package.ts', { encoding: 'utf-8', stdio: 'inherit' })
     // throw new Error(`${DEVICE_PACKAGE_NAME} package is not installed`)
   }
 
-  const {data: [notificationPackageLinkId]} = await deep.select({
+  const { data: [notificationPackageLinkId] } = await deep.select({
     type_id: packageTypeLinkId,
     string: {
       value: {
@@ -66,8 +76,8 @@ async function installPackage() {
       }
     }
   })
-  if(!notificationPackageLinkId) {
-    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+  if (!notificationPackageLinkId) {
+    execSync('npx ts-node ./imports/notification/install-package.ts', { encoding: 'utf-8', stdio: 'inherit' })
     // throw new Error(`${NOTIFICATION_PACKAGE_NAME} package is not installed`)
   }
 
@@ -103,15 +113,38 @@ async function installPackage() {
     },
   });
 
+  const { data: [{ id: actionSheetTreeLinkId }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'ActionSheetTree' } },
+      },
+    }
+  })
+
   await deep.insert([
     {
       type_id: typeTypeLinkId,
       in: {
-        data: {
+        data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
           string: { data: { value: 'ActionSheet' } },
         },
+        {
+          type_id: treeIncludeNodeTypeLinkId,
+          from_id: actionSheetTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }],
       },
       out: {
         data: [
@@ -119,22 +152,46 @@ async function installPackage() {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ActionSheetTitle' } },
               },
+              {
+                type_id: treeIncludeUpTypeLinkId,
+                from_id: actionSheetTreeLinkId,
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                    },
+                  ],
+                },
+              }],
             },
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ActionSheetMessage' } },
               },
+              {
+                type_id: treeIncludeUpTypeLinkId,
+                from_id: actionSheetTreeLinkId,
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                    },
+                  ],
+                },
+              }],
             },
           },
           {
@@ -180,7 +237,7 @@ async function installPackage() {
               },
             }
           },
-          
+
         ],
       },
     },
@@ -197,11 +254,23 @@ async function installPackage() {
     {
       type_id: typeTypeLinkId,
       in: {
-        data: {
+        data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
           string: { data: { value: 'Option' } },
         },
+        {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: actionSheetTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }],
       },
       out: {
         data: [
@@ -209,57 +278,52 @@ async function installPackage() {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'OptionTitle' } },
               },
+              {
+                type_id: treeIncludeUpTypeLinkId,
+                from_id: actionSheetTreeLinkId,
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                    },
+                  ],
+                },
+              }],
             },
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'OptionStyle' } },
               },
+              {
+                type_id: treeIncludeUpTypeLinkId,
+                from_id: actionSheetTreeLinkId,
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                    },
+                  ],
+                },
+              },],
             },
+
           },
         ],
-      },
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'CancelOptionStyle' } },
-        },
-      },
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'DefaultOptionStyle' } },
-        },
-      },
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'DestructiveOptionStyle' } },
-        },
-      },
-    },
+      }
+    }
   ]);
 }
 
