@@ -10,31 +10,30 @@ export async function insertBatteryInfoToDeep({deep, deviceLinkId, deviceBattery
 
 	const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const batteryLevelTypeLinkId = await deep.id(PACKAGE_NAME, 'BatteryLevel');
+  const chargingStatusTypeLinkId = await deep.id(PACKAGE_NAME, "ChargingStatus");
   const isChargingTypeLinkId = await deep.id(PACKAGE_NAME, 'IsCharging');
   const isNotChargingTypeLinkId = await deep.id(PACKAGE_NAME, 'IsNotCharging');
 
-	const {
-		data: [{ id: batteryLevelLinkId }],
-	} = await deep.insert({
-		type_id: batteryLevelTypeLinkId,
-		number: { data: { value: Math.floor(deviceBatteryInfo.batteryLevel*100) } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
-			},
-		},
-	});
-
-  const {
-    data: [{ id: chargingLinkId }],
-  } = await deep.insert({
-    type_id: deviceBatteryInfo.isCharging ? isChargingTypeLinkId : isNotChargingTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: deviceLinkId,
+	await deep.insert([
+    deviceBatteryInfo.batteryLevel && {
+      type_id: batteryLevelTypeLinkId,
+      number: { data: { value: Math.floor(deviceBatteryInfo.batteryLevel*100) } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deviceLinkId,
+        },
       },
     },
-  });
+    {
+      type_id: chargingStatusTypeLinkId,
+      to_id: deviceBatteryInfo.isCharging ? isChargingTypeLinkId : isNotChargingTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deviceLinkId,
+        },
+      },
+    }
+  ]);
 }
