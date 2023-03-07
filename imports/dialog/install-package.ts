@@ -30,6 +30,16 @@ async function installPackage() {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join");
+  const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
+  const treeIncludeNodeTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeNode'
+  );
+  const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeUp');
+  const treeIncludeDownTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeDown'
+  );
 
   {
     const {data: [packageLinkId]} = await deep.select({
@@ -102,15 +112,38 @@ async function installPackage() {
     },
   });
 
+  const { data: [{ id: dialogTreeLinkId }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'DialogTree' } },
+      },
+    }
+  })
+
   await deep.insert([
     {
       type_id: typeTypeLinkId,
       in: {
-        data: {
+        data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
           string: { data: { value: 'Alert' } },
-        }
+        },
+        {
+          type_id: treeIncludeNodeTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
       },
       out: {
         data: [
@@ -118,33 +151,66 @@ async function installPackage() {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertMessage' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertButtonTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           }
         ]
@@ -159,6 +225,18 @@ async function installPackage() {
             from_id: packageLinkId,
             string: { data: { value: 'Prompt' } },
           },
+          {
+            type_id: treeIncludeNodeTypeLinkId,
+            from_id: dialogTreeLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                },
+              ],
+            },
+          }
         ]
       },
       out: {
@@ -167,66 +245,132 @@ async function installPackage() {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             },
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptMessage' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptOkButtonTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptCancelButtonTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptInputPlaceholder' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptInputText' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             },
           },
         ]
@@ -241,6 +385,18 @@ async function installPackage() {
           string: { data: { value: 'Confirm' } },
           
         },
+        {
+          type_id: treeIncludeNodeTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }
         ]
       },
       out: {
@@ -249,44 +405,88 @@ async function installPackage() {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmMessage' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmOkButtonTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
           {
             type_id: typeTypeLinkId,
             to_id: anyTypeLinkId,
             in: {
-              data: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmCancelButtonTitle' } },
-              }
+              }, {
+          type_id: treeIncludeUpTypeLinkId,
+          from_id: dialogTreeLinkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+              },
+            ],
+          },
+        }]
             }
           },
         ]
