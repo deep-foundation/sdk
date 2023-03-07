@@ -4,68 +4,65 @@ import { PACKAGE_NAME } from "./package-name";
 
 export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { deep: DeepClient, actionSheetLinkId: number }): Promise<ShowActionsOptions> {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const actionSheetTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTitle");
-  const actionSheetMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetMessage");
+  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTitle");
+  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetMessage");
   const optionTypeLinkId = await deep.id(PACKAGE_NAME, "Option");
   const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, "OptionTitle");
   const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, "OptionStyle");
+  const actionSheetTreeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTree");
   // const optionIconTypeLinkId = await deep.id(PACKAGE_NAME, "OptionIcon");
-  const { data: [linkWithActionSheetTitleString] } = await deep.select({
-    in: {
-      type_id: actionSheetTitleTypeLinkId,
-      from_id: actionSheetLinkId
+  const { data: linksDownToActionSheetMp } = await deep.select({
+    up: {
+      parent_id: { _eq: actionSheetLinkId },
+      tree_id: { _eq: actionSheetTreeLinkId }
     }
   });
 
-  const { data: [linkWithActionSheetMessageString] } = await deep.select({
-    in: {
-      type_id: actionSheetMessageTypeLinkId,
-      from_id: actionSheetLinkId
-    }
-  });
+  const linkWithTitle = linksDownToActionSheetMp.find(link => link.type_id === titleTypeLinkId);
+  if(!linkWithTitle) {
+    throw new Error(`A link with type ##${titleTypeLinkId} is not found`)
+  }
 
+  const linkWithMessage = linksDownToActionSheetMp.find(link => link.type_id === messageTypeLinkId);
+  if(!linkWithMessage) {
+    throw new Error(`A link with type ##${messageTypeLinkId} is not found`)
+  }
 
-  const {
-    data: optionLinks
-  } = await deep.select({
-    type_id: optionTypeLinkId,
-    in: {
-      type_id: containTypeLinkId,
-      from_id: actionSheetLinkId
-    }
-  });
-  if (optionLinks.length === 0) {
-    throw new Error(`To notify ##${actionSheetLinkId} - one or more links with type_id ##${optionTypeLinkId} must exist`)
+  const optionLinks = linksDownToActionSheetMp.filter(link => link.type_id === optionTypeLinkId);
+  if(optionLinks.length === 0) {
+    throw new Error(`A link with type ##${optionTypeLinkId} is not found`)
   }
 
   const options: ActionSheetButton[] = [];
 
   for (const optionLink of optionLinks) {
-    const { data: [linkWithOptionTitleString] } = await deep.select({
+    const { data: [linkWithOptionTitle] } = await deep.select({
       in: {
         type_id: optionTitleTypeLinkId,
         from_id: optionLink.id
       }
     })
-    if (!linkWithOptionTitleString) {
+    if (!linkWithOptionTitle) {
       throw new Error(`To notify ##${optionLink.id} - a link with type_id ##${optionTitleTypeLinkId} with from_id ##${optionLink.id} must exist`)
     }
 
     let style = undefined;
-    const { data: [optionStyleLink] } = await deep.select({
-      type_id: optionStyleTypeLinkId,
-      from_id: optionLink.id
-    })
-    if (optionStyleLink?.to_id) {
-      const { data: [{ value: { value } }] } = await deep.select({
-        type_id: containTypeLinkId,
-        to_id: optionStyleLink.to_id
-      });
-      style = value;
+    const { data: [containToOptionStyleLink] } = await deep.select({
+      type_id: containTypeLinkId,
+      to: {
+        in: {
+          type_id: optionStyleTypeLinkId,
+          from_id: optionLink.id
+        }
+      }
+    });
+    if(containToOptionStyleLink) {
+      style = containToOptionStyleLink.value.value;
     }
+    
 
     const option: ActionSheetButton = {
-      title: linkWithOptionTitleString.value.value,
+      title: linkWithOptionTitle.value.value,
       style: style
     };
 
@@ -73,8 +70,8 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
   }
 
   return {
-    title: linkWithActionSheetTitleString?.value?.value,
-    message: linkWithActionSheetMessageString?.value?.value,
+    title: linkWithTitle?.value?.value,
+    message: linkWithMessage?.value?.value,
     options: options
   }
 }
