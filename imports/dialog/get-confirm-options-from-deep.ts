@@ -3,43 +3,43 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function getConfirmOptionsFromDeep({deep, confirmLinkId}: {deep: DeepClient, confirmLinkId: number}): Promise<ConfirmOptions> {
-  const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
-  const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
-  const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
-  const confirmCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
+  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
+  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
+  const okButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
+  const cancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
+  const dialogTreeLinkId = await deep.id(PACKAGE_NAME, "DialogTree")
 
-  const {data: [{value: {value: title}}]} = await deep.select({
-    in: {
-      type_id: confirmTitleTypeLinkId,
-      from_id: confirmLinkId,
+  const { data: linksDownToConfirmMp } = await deep.select({
+    up: {
+      parent_id: { _eq: confirmLinkId },
+      tree_id: { _eq: dialogTreeLinkId }
     }
+  }, 
+  {
+    returning: `type_id id from_id to_id 
+    to {
+      value {
+        value
+      }
+    }
+    `
   });
 
-  const {data: [{value: {value: message}}]} = await deep.select({
-    in: {
-      type_id: confirmMessageTypeLinkId,
-      from_id: confirmLinkId,
-    }
-  });
+  const titleLink = linksDownToConfirmMp.find(link => link.type_id === titleTypeLinkId);
 
-  const {data: [{value: {value: okButtonTitle}}]} = await deep.select({
-    in: {
-      type_id: confirmOkButtonTitleTypeLinkId,
-      from_id: confirmLinkId,
-    }
-  });
+  const messageLink = linksDownToConfirmMp.find(link => link.type_id === messageTypeLinkId);
+  if(!messageLink) {
+    throw new Error(`A link with type ##${messageTypeLinkId} is not found`)
+  }
 
-  const {data: [{value: {value: cancelButtonTitle}}]} = await deep.select({
-    in: {
-      type_id: confirmCancelButtonTitleTypeLinkId,
-      from_id: confirmLinkId,
-    }
-  });
+  const okButtonTitleLink = linksDownToConfirmMp.find(link => link.type_id === okButtonTitleTypeLinkId);
+
+  const cancelButtonTitleLink = linksDownToConfirmMp.find(link => link.type_id === cancelButtonTitleTypeLinkId);
 
   return {
-    title,
-    message,
-    okButtonTitle,
-    cancelButtonTitle
+    title: titleLink?.to.value.value,
+    message: messageLink.to.value.value,
+    okButtonTitle: okButtonTitleLink?.to.value.value,
+    cancelButtonTitle: cancelButtonTitleLink?.to.value.value
   }
 }
