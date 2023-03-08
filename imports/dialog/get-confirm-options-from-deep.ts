@@ -18,9 +18,7 @@ export async function getConfirmOptionsFromDeep({deep, confirmLinkId}: {deep: De
   {
     returning: `type_id id from_id to_id 
     to {
-      value {
-        value
-      }
+      value 
     }
     `
   });

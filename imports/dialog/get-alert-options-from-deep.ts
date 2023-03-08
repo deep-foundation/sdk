@@ -17,9 +17,7 @@ export async function getAlertOptionsFromDeep({ deep, alertLinkId }: { deep: Dee
   {
     returning: `type_id id from_id to_id 
     to {
-      value {
-        value
-      }
+      value 
     }
     `
   });

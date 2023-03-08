@@ -156,7 +156,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -178,7 +178,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertMessage' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -200,7 +200,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'AlertButtonTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -250,7 +250,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -272,7 +272,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptMessage' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -294,7 +294,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptOkButtonTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -316,7 +316,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptCancelButtonTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -338,7 +338,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptInputPlaceholder' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -360,7 +360,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'PromptInputText' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -410,7 +410,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -432,7 +432,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmMessage' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -454,7 +454,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmOkButtonTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -476,7 +476,7 @@ async function installPackage() {
                 from_id: packageLinkId,
                 string: { data: { value: 'ConfirmCancelButtonTitle' } },
               }, {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -502,6 +502,18 @@ async function installPackage() {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'Notify' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: dialogTreeLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                },
+              ],
+            },
           },
           {
             type_id: typeTypeLinkId,

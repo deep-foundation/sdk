@@ -20,9 +20,7 @@ export async function getPromptOptionsFromDeep({deep, promptLinkId}: {deep: Deep
   {
     returning: `type_id id from_id to_id 
     to {
-      value {
-        value
-      }
+      value 
     }
     `
   });
