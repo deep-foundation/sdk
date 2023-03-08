@@ -78,7 +78,9 @@ export async function installPackage () {
     });
 
     const { data: [{ id: openAiApiKeyTypeLinkId, }] } = await deep.insert({
-        type_id: typeTypeLinkId,
+        type_id: await deep.id(`@deep-foundation/core`, "Value"),
+        from_id: await deep.id(`@deep-foundation/openai`, "OpenAiApiKey"),
+        to_id: await deep.id(`@deep-foundation/core`, "String"),
         in: {
             data: {
                 type_id: containTypeLinkId,
