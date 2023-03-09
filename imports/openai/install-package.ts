@@ -31,6 +31,8 @@ export async function installPackage () {
     const handleInsertLinkId = await deep.id('@deep-foundation/core', "HandleInsert");
     const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package");
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
+    const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
+    const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
         type_id: packageTypeLinkId,
@@ -78,15 +80,19 @@ export async function installPackage () {
     });
 
     const { data: [{ id: openAiApiKeyTypeLinkId, }] } = await deep.insert({
-        type_id: await deep.id(`@deep-foundation/core`, "Value"),
-        from_id: await deep.id(`@deep-foundation/openai`, "OpenAiApiKey"),
-        to_id: await deep.id(`@deep-foundation/core`, "String"),
+        type_id: typeTypeLinkId,
         in: {
             data: {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
                 string: {data: { value: "OpenAiApiKey"}}
             },
+        },
+        out:{
+            data: {
+                type_id: typeValueLinkId,
+                to_id: typeStringLinkId,
+            }
         }
     });
 
