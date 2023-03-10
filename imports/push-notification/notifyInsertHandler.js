@@ -4,14 +4,14 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   const notificationLinkId = notifyLink.from_id;
   const deviceLinkId = notifyLink.to_id;
 
+  const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+
   const getDeviceRegistrationToken = async () => {
     const deviceRegistrationTokenTypeLinkId = await deep.id("@deep-foundation/push-notification", "DeviceRegistrationToken");
     const { data: deviceRegistrationTokenLinks } = await deep.select({
       type_id: deviceRegistrationTokenTypeLinkId,
       in: {
-        type_id: {
-          _id: ["@deep-foundation/core", "Contain"]
-        },
+        type_id: containTypeLinkId,
         from_id: deviceLinkId
       }
     });
@@ -31,9 +31,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     const { data: [webPushCertificateLink] } = await deep.select({
       type_id: webPushCertificateTypeLinkId,
       in: {
-        type_id: {
-          _id: ["@deep-foundation/core", "Contain"]
-        },
+        type_id: containTypeLinkId,
         from_id: triggeredByLinkId
       }
     });
@@ -52,9 +50,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     const { data: [serviceAccountLink] } = await deep.select({
       type_id: serviceAccountTypeLinkId,
       in: {
-        type_id: {
-          _id: ["@deep-foundation/core", "Contain"]
-        },
+        type_id: containTypeLinkId,
         from_id: triggeredByLinkId
       }
     });
@@ -118,9 +114,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       const { data: [linkWithPushNotificationIconUrlString] } = await deep.select({
         type_id: notificationIconUrlTypeLinkId,
         in: {
-          type_id: {
-            _id: ["@deep-foundation/core", "Contain"]
-          },
+          type_id: containTypeLinkId,
           from_id: notificationLinkId
         }
       });
@@ -140,9 +134,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       const { data: [linkWithPushNotificationImageUrlString] } = await deep.select({
         type_id: notificationImageUrlTypeLinkId,
         in: {
-          type_id: {
-            _id: ["@deep-foundation/core", "Contain"]
-          },
+          type_id: containTypeLinkId,
           from_id: notificationLinkId
         }
       });
@@ -179,7 +171,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     type_id: await deep.id("@deep-foundation/push-notification", "Notified"),
     in: {
       data: {
-        type_id: await deep.id("@deep-foundation/core", "Contain"),
+        type_id: containTypeLinkId,
         from_id: triggeredByLinkId
       }
     },
