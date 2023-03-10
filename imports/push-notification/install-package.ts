@@ -162,9 +162,7 @@ async function installPackage() {
     }
   });
 
-  const {
-    data: [{ id: notificationTypeLinkId }],
-  } = await deep.insert([{
+  await deep.insert([{
     type_id: typeTypeLinkId,
     in: {
       data: [{
