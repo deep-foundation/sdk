@@ -11,7 +11,7 @@ export async function getOptionStyleTypeLinkIds({
   const optionStyleTypeLinkIds = new Map<ActionSheetButtonStyle, number>(
     await Promise.all(
       Object.keys(ActionSheetButtonStyle).map(
-        async (buttonStyle: keyof typeof ActionSheetButtonStyle) => [ActionSheetButtonStyle[buttonStyle] as ActionSheetButtonStyle, await deep.id(PACKAGE_NAME, `${buttonStyle}OptionStyle`)] as readonly [ActionSheetButtonStyle, number]
+        async (buttonStyle: keyof typeof ActionSheetButtonStyle) => [ActionSheetButtonStyle[buttonStyle] as ActionSheetButtonStyle, await deep.id(PACKAGE_NAME, `ActionSheet${buttonStyle}OptionStyle`)] as readonly [ActionSheetButtonStyle, number]
       )
     )
   );

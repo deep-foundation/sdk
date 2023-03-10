@@ -158,7 +158,7 @@ async function installPackage() {
                 string: { data: { value: 'ActionSheetTitle' } },
               },
               {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: actionSheetTreeLinkId,
                 in: {
                   data: [
@@ -181,7 +181,7 @@ async function installPackage() {
                 string: { data: { value: 'ActionSheetMessage' } },
               },
               {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: actionSheetTreeLinkId,
                 in: {
                   data: [
@@ -247,7 +247,7 @@ async function installPackage() {
         data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: `${styleName}OptionStyle` } },
+          string: { data: { value: `ActionSheet${styleName}OptionStyle` } },
         },
       }
     })),
@@ -257,10 +257,10 @@ async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'Option' } },
+          string: { data: { value: 'ActionSheetOption' } },
         },
         {
-          type_id: treeIncludeUpTypeLinkId,
+          type_id: treeIncludeDownTypeLinkId,
           from_id: actionSheetTreeLinkId,
           in: {
             data: [
@@ -281,10 +281,10 @@ async function installPackage() {
               data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
-                string: { data: { value: 'OptionTitle' } },
+                string: { data: { value: 'ActionSheetOptionTitle' } },
               },
               {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: actionSheetTreeLinkId,
                 in: {
                   data: [
@@ -304,10 +304,10 @@ async function installPackage() {
               data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
-                string: { data: { value: 'OptionStyle' } },
+                string: { data: { value: 'ActionSheetOptionStyle' } },
               },
               {
-                type_id: treeIncludeUpTypeLinkId,
+                type_id: treeIncludeDownTypeLinkId,
                 from_id: actionSheetTreeLinkId,
                 in: {
                   data: [
@@ -325,6 +325,47 @@ async function installPackage() {
       }
     }
   ]);
+
+  await deep.insert(
+    {
+      type_id: typeTypeLinkId,
+      from_id: await deep.id(PACKAGE_NAME, "ActionSheet"),
+      to_id: await deep.id(PACKAGE_NAME, "ActionSheetOption"),
+      in: {
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'UsesActionSheetOption' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: actionSheetTreeLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId,
+                },
+              ],
+            },
+          }
+        ]
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId
+            }
+          }
+        },
+      }
+    }
+  )
 }
 
 installPackage();

@@ -6,36 +6,50 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const titleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTitle");
   const messageTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetMessage");
-  const optionTypeLinkId = await deep.id(PACKAGE_NAME, "Option");
-  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, "OptionTitle");
-  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, "OptionStyle");
+  const optionTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOption");
+  const usesOptionTypeLinkId = await deep.id(PACKAGE_NAME, "UsesActionSheetOption");
+  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOptionTitle");
+  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOptionStyle");
   const actionSheetTreeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTree");
   // const optionIconTypeLinkId = await deep.id(PACKAGE_NAME, "OptionIcon");
-  const { data: linksDownToActionSheetMp } = await deep.select({
+
+  const { data: linksDownToParentActionSheetMp } = await deep.select({
     up: {
       parent_id: { _eq: actionSheetLinkId },
       tree_id: { _eq: actionSheetTreeLinkId }
     }
+  }, 
+  {
+    returning: `${deep.selectReturning}
+    to {
+      ${deep.selectReturning}
+    }
+    `
   });
 
-  const linkWithTitle = linksDownToActionSheetMp.find(link => link.type_id === titleTypeLinkId);
+  const linkWithTitle = linksDownToParentActionSheetMp.find(link => link.type_id === titleTypeLinkId);
   if(!linkWithTitle) {
     throw new Error(`A link with type ##${titleTypeLinkId} is not found`)
   }
 
-  const linkWithMessage = linksDownToActionSheetMp.find(link => link.type_id === messageTypeLinkId);
+  const linkWithMessage = linksDownToParentActionSheetMp.find(link => link.type_id === messageTypeLinkId);
   if(!linkWithMessage) {
     throw new Error(`A link with type ##${messageTypeLinkId} is not found`)
   }
 
-  const optionLinks = linksDownToActionSheetMp.filter(link => link.type_id === optionTypeLinkId);
-  if(optionLinks.length === 0) {
-    throw new Error(`A link with type ##${optionTypeLinkId} is not found`)
+  const usesOptionLinks = linksDownToParentActionSheetMp.filter(link => link.type_id === usesOptionTypeLinkId);
+  if(usesOptionLinks.length === 0) {
+    throw new Error(`A link with type ##${usesOptionTypeLinkId} is not found`)
   }
 
   const options: ActionSheetButton[] = [];
 
-  for (const optionLink of optionLinks) {
+  for (const usesOptionLink of usesOptionLinks) {
+    if(!usesOptionLink?.value.value) {
+      throw new Error(`##${usesOptionLink.id} must have a number value which indicates an index of the action sheet`)
+    }
+
+    const optionLink = usesOptionLink.to;
     const { data: [linkWithOptionTitle] } = await deep.select({
       in: {
         type_id: optionTitleTypeLinkId,
@@ -43,7 +57,7 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
       }
     })
     if (!linkWithOptionTitle) {
-      throw new Error(`To notify ##${optionLink.id} - a link with type_id ##${optionTitleTypeLinkId} with from_id ##${optionLink.id} must exist`)
+      throw new Error(`To notify ##${actionSheetLinkId} - a link with type_id ##${optionTitleTypeLinkId} with from_id ##${optionLink.id} must exist`)
     }
 
     let style = undefined;
@@ -52,7 +66,7 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
       to: {
         in: {
           type_id: optionStyleTypeLinkId,
-          from_id: optionLink.id
+          from_id: usesOptionLink.id
         }
       }
     });
@@ -66,12 +80,12 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
       style: style
     };
 
-    options.push(option);
+    options[usesOptionLink.value.value] = option;
   }
 
   return {
-    title: linkWithTitle?.value?.value,
-    message: linkWithMessage?.value?.value,
+    title: linkWithTitle?.to.value.value,
+    message: linkWithMessage?.to.value.value,
     options: options
   }
 }

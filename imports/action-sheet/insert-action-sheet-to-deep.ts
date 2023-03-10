@@ -33,9 +33,10 @@ export async function insertActionSheetToDeep({
     PACKAGE_NAME,
     'ActionSheetMessage'
   );
-  const optionTypeLinkId = await deep.id(PACKAGE_NAME, 'Option');
-  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionTitle');
-  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, 'OptionStyle');
+  const optionTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOption');
+  const usesOptionTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesActionSheetOption');
+  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOptionTitle');
+  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOptionStyle');
   const optionStyleTypeLinkIds = await getOptionStyleTypeLinkIds({ deep });
   console.log(optionStyleTypeLinkIds);
 
@@ -103,12 +104,31 @@ export async function insertActionSheetToDeep({
           },
           ...(await Promise.all(
             actionSheetData.options.map(
-              async (option) => (
+              async (option, i) => (
                 {
-                  type_id: containTypeLinkId,
+                  type_id: usesOptionTypeLinkId,
+                  in: {
+                    data: [{
+                      type_id: containTypeLinkId,
+                      from_id: deep.linkId
+                    }]
+                  },
+                  number: {
+                    data: {
+                      value: i
+                    }
+                  },
                   to: {
                     data: {
                       type_id: optionTypeLinkId,
+                      in: {
+                        data: [{
+                          type_id: containTypeLinkId,
+                          from_id: deep.linkId
+                        },
+                          
+                        ]
+                      },
                       out: {
                         data: [{
                           type_id: optionTitleTypeLinkId,
@@ -150,9 +170,10 @@ export async function insertActionSheetToDeep({
                         ] : [])
                         ]
                       }
-                    },
-                  },
+                    }
+                  }
                 }
+
               )
             )
           ))

@@ -33,6 +33,7 @@ import { insertNotifiedLinks } from '../imports/notification/insert-notified-lin
 import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-action-sheet-result-to-deep';
 import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
+import { notifyActionSheet } from '../imports/action-sheet/notify-action-sheet';
 
 const defaultOption: ActionSheetButton = {
   title: 'Action Sheet Option Title',
@@ -67,20 +68,20 @@ function Content() {
     self['ActionSheetButtonStyle'] = ActionSheetButtonStyle;
   }, []);
 
-  useEffect(() => {
-    new Promise(async () => {
-      deep.minilinks.apply([
-        await deep.id("@deep-foundation/core", "Contain"),
-        await deep.id(PACKAGE_NAME, "ActionSheet"),
-        await deep.id(PACKAGE_NAME, "ActionSheetTitle"),
-        await deep.id(PACKAGE_NAME, "ActionSheetMessage"),
-        await deep.id(PACKAGE_NAME, "ActionSheetOption"),
-        await deep.id(PACKAGE_NAME, "ActionSheetResultIndex"),
-        await deep.id(PACKAGE_NAME, "Notify"),
-        await deep.id(PACKAGE_NAME, "Notified"),
-      ])
-    })
-  }, []);
+  // useEffect(() => {
+  //   new Promise(async () => {
+  //     deep.minilinks.apply([
+  //       await deep.id("@deep-foundation/core", "Contain"),
+  //       await deep.id(PACKAGE_NAME, "ActionSheet"),
+  //       await deep.id(PACKAGE_NAME, "ActionSheetTitle"),
+  //       await deep.id(PACKAGE_NAME, "ActionSheetMessage"),
+  //       await deep.id(PACKAGE_NAME, "ActionSheetOption"),
+  //       await deep.id(PACKAGE_NAME, "ActionSheetResultIndex"),
+  //       await deep.id(PACKAGE_NAME, "Notify"),
+  //       await deep.id(PACKAGE_NAME, "Notified"),
+  //     ])
+  //   })
+  // }, []);
 
   {
     const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
@@ -117,44 +118,17 @@ function Content() {
           'Contain'
         );
 
-        const notProcessedNotifyConfirmLinks = notifyLinks.filter(
-          (link) => !notifyLinksBeingProcessed.current.includes(link)
-        );
-        notifyLinksBeingProcessed.current = [
-          ...notifyLinksBeingProcessed.current,
-          ...notProcessedNotifyConfirmLinks,
-        ];
+        const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
+        notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
         for (const notifyLink of notifyLinks) {
-          const actionSheetOptions = await getActionSheetDataFromDeep({
-            deep,
-            actionSheetLinkId: notifyLink.from_id,
-          });
-          const actionSheetResult = await ActionSheet.showActions(
-            actionSheetOptions
-          );
-          await insertActionSheetResultToDeep({
+          await notifyActionSheet({
             deep,
             deviceLinkId,
-            notifyLinkId: notifyLink.id,
-            actionSheetResult,
-          });
-          await deep.insert({
-            type_id: await deep.id(PACKAGE_NAME, "Notified"),
-            from_id: notifyLink.id,
-            to_id: deviceLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId
-              }
-            }
-          });
+            notifyLink
+          })
         }
-        const processedNotifyConfirmLinks = notProcessedNotifyConfirmLinks;
-        notifyLinksBeingProcessed.current =
-          notifyLinksBeingProcessed.current.filter(
-            (link) => !processedNotifyConfirmLinks.includes(link)
-          );
+        const processedNotifyAlertLinks = notProcessedNotifyLinks;
+        notifyLinksBeingProcessed.current = notifyLinksBeingProcessed.current.filter(link => !processedNotifyAlertLinks.find(processedNotifyLink => processedNotifyLink.id === link.id))
       });
     }, [notifyLinks, loading, error]);
   }
