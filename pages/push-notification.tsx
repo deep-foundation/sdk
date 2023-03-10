@@ -33,6 +33,7 @@ import {
 } from 'firebase/messaging';
 import { insertOrUpdateDeviceRegistrationToken } from '../imports/push-notification/insert-or-update-device-registration-token';
 import { PACKAGE_NAME } from '../imports/push-notification/package-name';
+import { requestPermissions } from '../imports/push-notification/request-permissions';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -122,17 +123,10 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         isDisabled={!platform}
         onClick={() => {
           new Promise(async () => {
-            let isPermissionsGranted: boolean;
             if (!platform) {
               return;
-            } else if (platform === 'web') {
-              const permissionsStatus = await Notification.requestPermission();
-              isPermissionsGranted = permissionsStatus === 'granted';
-            } else {
-              const permissionsStatus =
-                await PushNotifications.requestPermissions();
-              isPermissionsGranted = permissionsStatus.receive === 'granted';
             }
+            const isPermissionsGranted = await requestPermissions({platform});
             setIsPermissionsGranted(isPermissionsGranted);
           });
         }}
