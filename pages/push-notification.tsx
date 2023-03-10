@@ -34,6 +34,7 @@ import {
 import { insertOrUpdateDeviceRegistrationToken } from '../imports/push-notification/insert-or-update-device-registration-token';
 import { PACKAGE_NAME } from '../imports/push-notification/package-name';
 import { requestPermissions } from '../imports/push-notification/request-permissions';
+import { insertWebPushCertificate } from '../imports/push-notification/insert-web-push-certificate';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -146,43 +147,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       </Text>
       <Button
         onClick={async () => {
-          const containTypeLinkId = await deep.id(
-            '@deep-foundation/core',
-            'Contain'
-          );
-          const webPushCertificateTypeLinkId = await deep.id(
-            PACKAGE_NAME,
-            'WebPushCertificate'
-          );
-          console.log({ deviceLinkId });
-
-          await deep.delete({
-            down: {
-              parent: {
-                type_id: containTypeLinkId,
-                from_id: deviceLinkId,
-                to: {
-                  type_id: webPushCertificateTypeLinkId,
-                },
-              },
-            },
-          });
-          await deep.insert({
-            type_id: webPushCertificateTypeLinkId,
-            string: {
-              data: {
-                value: 'BIScptqotJFzjF7G6efs4_WCrbfVA0In5WaGU-bK62w083TNgfpQoqVKCbjI0ykZLWXbIQLQ1_iEi91u1p4YrH4',
-              },
-            },
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: deep.linkId,
-                },
-              ],
-            },
-          });
+          await insertWebPushCertificate({deep,webPushCertificate})
         }}
       >
         Insert Default  WebPushCertificate
