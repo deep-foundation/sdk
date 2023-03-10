@@ -5,10 +5,9 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   const deviceLinkId = notifyLink.to_id;
 
   const getDeviceRegistrationToken = async () => {
+    const deviceRegistrationTokenTypeLinkId = await deep.id("@deep-foundation/push-notification", "DeviceRegistrationToken");
     const { data: deviceRegistrationTokenLinks } = await deep.select({
-      type_id: {
-        _id: ["@deep-foundation/push-notification", "DeviceRegistrationToken"]
-      },
+      type_id: deviceRegistrationTokenTypeLinkId,
       in: {
         type_id: {
           _id: ["@deep-foundation/core", "Contain"]
@@ -17,21 +16,20 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       }
     });
     if (deviceRegistrationTokenLinks.length === 0) {
-      throw new Error("Device must have contained DeviceRegistrationToken to be nofified")
+      throw new Error(`${deviceLinkId} must have contained a link of type ${deviceRegistrationTokenTypeLinkId}`)
     }
     const deviceRegistrationTokenLink = deviceRegistrationTokenLinks[0];
     if (!deviceRegistrationTokenLink.value?.value) {
-      throw new Error("DeviceRegistrationToken must have value")
+      throw new Error(`${deviceRegistrationTokenLink.id} must have value`)
     }
     return deviceRegistrationTokenLink.value.value;
   }
   const deviceRegistrationToken = await getDeviceRegistrationToken();
 
   const getWebPushCertificateLink = async () => {
+    const webPushCertificateTypeLinkId = await deep.id("@deep-foundation/push-notification", "WebPushCertificate");
     const { data: [webPushCertificateLink] } = await deep.select({
-      type_id: {
-        _id: ["@deep-foundation/push-notification", "WebPushCertificate"]
-      },
+      type_id: webPushCertificateTypeLinkId,
       in: {
         type_id: {
           _id: ["@deep-foundation/core", "Contain"]
@@ -40,20 +38,19 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       }
     });
     if (!webPushCertificateLink) {
-      throw new Error("##deep.linkId must have contained WebPushCertificate to be able to notify")
+      throw new Error(`##${triggeredByLinkId} must have contained a link of type ${webPushCertificateTypeLinkId}`)
     }
     if (!webPushCertificateLink.value?.value) {
-      throw new Error("##webPushCertificateLink must have value")
+      throw new Error(`##${webPushCertificateLink.id} must have value`)
     }
     return webPushCertificateLink;
   }
   const webPushCertificateLink = await getWebPushCertificateLink();
 
   const getServiceAccount = async () => {
+    const serviceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "ServiceAccount");
     const { data: [serviceAccountLink] } = await deep.select({
-      type_id: {
-        _id: ["@deep-foundation/push-notification", "ServiceAccount"]
-      },
+      type_id: serviceAccountTypeLinkId,
       in: {
         type_id: {
           _id: ["@deep-foundation/core", "Contain"]
@@ -62,10 +59,10 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       }
     });
     if (!serviceAccountLink) {
-      // throw new Error("##triggeredByLinkId must have contained a link with type //{await deep.id("@deep-foundation/push-notification", "ServiceAccount")}")
+      throw new Error(`##${triggeredByLinkId} must have contained a link of type ${serviceAccountTypeLinkId}`)
     }
     if (!serviceAccountLink.value?.value) {
-      // throw new Error("##serviceAccountLink.id must have value")
+      throw new Error(`##${serviceAccountLink.id} must have value`)
     }
     return serviceAccount.value.value;
   }
@@ -90,10 +87,10 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
       });
       if (!linkWithPushNotificationTitleString) {
-        throw new Error("To notify ##deviceLinkId by ##notificationLinkId a link with type ##notificationTitleTypeLinkId must exist")
+        throw new Error(`A link of type ${notificationTitleTypeLinkId} must exist`)
       }
       if (!linkWithPushNotificationTitleString.value?.value) {
-        throw new Error("##linkWithPushNotificationTitleString must have value")
+        throw new Error(`##${linkWithPushNotificationTitleString.id} must have value`)
       }
       return linkWithPushNotificationTitleString.value.value;
     };
@@ -102,17 +99,15 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       const notificationBodyTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
       const { data: [linkWithPushNotificationBodyString] } = await deep.select({
         in: {
-          type_id: {
-            _id: ["@deep-foundation/push-notification", "Body"]
-          },
+          type_id: notificationBodyTypeLinkId,
           from_id: notificationLinkId
         }
       });
       if (!linkWithPushNotificationBodyString) {
-        throw new Error("To notify ##deviceLinkId by ##notificationLinkId a link with type ##notificationBodyTypeLinkId must exist")
+        throw new Error(`A link of type ${notificationBodyTypeLinkId} must exist`)
       }
       if (!linkWithPushNotificationBodyString.value?.value) {
-        throw new Error("##linkWithPushNotificationBodyString must have value")
+        throw new Error(`##${linkWithPushNotificationBodyString.id} must have value`)
       }
       return linkWithPushNotificationBodyString.value.value;
     };
@@ -121,9 +116,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     const getPushNotificationIconUrl = async () => {
       const notificationIconUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
       const { data: [linkWithPushNotificationIconUrlString] } = await deep.select({
-        type_id: {
-          _id: ["@deep-foundation/push-notification", "PushNotificationIconUrl"]
-        },
+        type_id: notificationIconUrlTypeLinkId,
         in: {
           type_id: {
             _id: ["@deep-foundation/core", "Contain"]
@@ -136,7 +129,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
         return undefined;
       }
       if (!linkWithPushNotificationIconUrlString.value?.value) {
-        throw new Error("##linkWithPushNotificationIconUrlString must have value")
+        throw new Error(`##${linkWithPushNotificationIconUrlString.id} must have value`)
       }
       return linkWithPushNotificationIconUrlString.value.value;
     };
@@ -145,9 +138,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     const getPushNotificationImageUrl = async () => {
       const notificationImageUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
       const { data: [linkWithPushNotificationImageUrlString] } = await deep.select({
-        type_id: {
-          _id: ["@deep-foundation/push-notification", "PushNotificationImageUrl"]
-        },
+        type_id: notificationImageUrlTypeLinkId,
         in: {
           type_id: {
             _id: ["@deep-foundation/core", "Contain"]
@@ -159,7 +150,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
         return undefined;
       }
       if (!linkWithPushNotificationImageUrlString.value?.value) {
-        throw new Error("##linkWithPushNotificationImageUrlString must have value")
+        throw new Error(`##${linkWithPushNotificationImageUrlString.id} must have value`)
       }
       return linkWithPushNotificationImageUrlString.value.value;
     };
