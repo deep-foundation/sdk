@@ -49,26 +49,30 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   }
   const webPushCertificateLink = await getWebPushCertificateLink();
 
-  const { data: [serviceAccountLink] } = await deep.select({
-    type_id: {
-      _id: ["@deep-foundation/push-notification", "ServiceAccount"]
-    },
-    in: {
+  const getServiceAccount = async () => {
+    const { data: [serviceAccountLink] } = await deep.select({
       type_id: {
-        _id: ["@deep-foundation/core", "Contain"]
+        _id: ["@deep-foundation/push-notification", "ServiceAccount"]
       },
-      from_id: triggeredByLinkId
+      in: {
+        type_id: {
+          _id: ["@deep-foundation/core", "Contain"]
+        },
+        from_id: triggeredByLinkId
+      }
+    });
+    if (!serviceAccountLink) {
+      // throw new Error("##triggeredByLinkId must have contained a link with type //{await deep.id("@deep-foundation/push-notification", "ServiceAccount")}")
     }
-  });
-  if (!serviceAccountLink) {
-    // throw new Error("##triggeredByLinkId must have contained a link with type //{await deep.id("@deep-foundation/push-notification", "ServiceAccount")}")
+    if (!serviceAccountLink.value?.value) {
+      // throw new Error("##serviceAccountLink.id must have value")
+    }
+    return serviceAccount.value.value;
   }
-  if (!serviceAccountLink.value?.value) {
-    // throw new Error("##serviceAccountLink.id must have value")
-  }
+  const serviceAccount = await getServiceAccount();
 
   const firebaseApplication = firebaseAdmin.apps.length === 0 ? firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccountLink.value.value)
+    credential: firebaseAdmin.credential.cert(serviceAccount)
   }) : firebaseAdmin.app()
 
   const getPushNotificationData = async () => {
