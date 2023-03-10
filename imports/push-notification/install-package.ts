@@ -721,7 +721,6 @@ async function installPackage() {
     '@deep-foundation/core',
     'SyncTextFile'
   );
-  const fileWithCodeOfHandlerName = 'FileWithCodeOfHandlerName';
   const supportsJsLinkId = await deep.id(
     '@deep-foundation/core',
     'dockerSupportsJs' /* | "plv8SupportsJs" */
@@ -730,12 +729,10 @@ async function installPackage() {
     '@deep-foundation/core',
     'Handler'
   );
-  const handlerName = 'HandlerName';
   const handleOperationLinkId = await deep.id(
     '@deep-foundation/core',
     'HandleInsert' /* | HandleUpdate | HandleDelete */
   );
-  const handleName = 'HandleName';
   const code = fs.readFileSync(path.join(__dirname, 'notifyInsertHandler.js'), { encoding: 'utf-8' });
 
   await deep.insert({
@@ -745,7 +742,7 @@ async function installPackage() {
         {
           type_id: containTypeLinkId,
           from_id: packageLinkId, // before created package
-          string: { data: { value: fileWithCodeOfHandlerName } },
+          string: { data: { value: "PushNotificationNotifyInsertHandlerCode" } },
         },
         {
           from_id: supportsJsLinkId,
@@ -755,7 +752,7 @@ async function installPackage() {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId, // before created package
-                string: { data: { value: handlerName } },
+                string: { data: { value: "PushNotificationNotifyInsertHandler" } },
               },
               {
                 type_id: handleOperationLinkId,
@@ -766,7 +763,7 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId, // before created package
-                      string: { data: { value: handleName } },
+                      string: { data: { value: "HandlePushNotificationNotifyInsert" } },
                     },
                   ],
                 },
