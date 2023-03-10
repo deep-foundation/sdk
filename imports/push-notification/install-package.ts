@@ -63,9 +63,19 @@ async function installPackage() {
     "@deep-foundation/core",
     "Any"
   );
+  const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
+  const treeIncludeNodeTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeNode'
+  );
+  const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeUp');
+  const treeIncludeDownTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'TreeIncludeDown'
+  );
 
   {
-    const {data: [packageLinkId]} = await deep.select({
+    const { data: [packageLinkId] } = await deep.select({
       type_id: packageTypeLinkId,
       string: {
         value: {
@@ -73,13 +83,13 @@ async function installPackage() {
         }
       }
     })
-    if(packageLinkId) {
+    if (packageLinkId) {
       console.info("Package is already installed");
       return;
     }
   }
 
-  const {data: [devicePackageLinkId]} = await deep.select({
+  const { data: [devicePackageLinkId] } = await deep.select({
     type_id: packageTypeLinkId,
     string: {
       value: {
@@ -87,12 +97,12 @@ async function installPackage() {
       }
     }
   })
-  if(!devicePackageLinkId) {
-    execSync('npx ts-node ./imports/device/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+  if (!devicePackageLinkId) {
+    execSync('npx ts-node ./imports/device/install-package.ts', { encoding: 'utf-8', stdio: 'inherit' })
     // throw new Error(`${DEVICE_PACKAGE_NAME} package is not installed`)
   }
 
-  const {data: [notificationPackageLinkId]} = await deep.select({
+  const { data: [notificationPackageLinkId] } = await deep.select({
     type_id: packageTypeLinkId,
     string: {
       value: {
@@ -100,8 +110,8 @@ async function installPackage() {
       }
     }
   })
-  if(!notificationPackageLinkId) {
-    execSync('npx ts-node ./imports/notification/install-package.ts', {encoding: 'utf-8', stdio: 'inherit'})
+  if (!notificationPackageLinkId) {
+    execSync('npx ts-node ./imports/notification/install-package.ts', { encoding: 'utf-8', stdio: 'inherit' })
     // throw new Error(`${NOTIFICATION_PACKAGE_NAME} package is not installed`)
   }
 
@@ -137,16 +147,44 @@ async function installPackage() {
     },
   });
 
+  const { data: [{ id: pushNotificationTreeLinkId }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: {
+          data: {
+            value: "PushNotificationTree"
+          }
+        }
+      }
+    }
+  });
+
   const {
     data: [{ id: notificationTypeLinkId }],
   } = await deep.insert([{
     type_id: typeTypeLinkId,
     in: {
-      data: {
+      data: [{
         type_id: containTypeLinkId,
         from_id: packageLinkId,
         string: { data: { value: 'PushNotification' } },
       },
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        from_id: pushNotificationTreeLinkId,
+        in: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+            },
+          ],
+        },
+      }
+      ],
     },
     out: {
       data: [
@@ -154,132 +192,277 @@ async function installPackage() {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Title' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Body' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'IconUrl' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'ImageUrl' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Subtitle' } },
             },
+
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Id' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Badge' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Payload' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'ClickAction' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'DeepLink' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'Group' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
           type_id: typeTypeLinkId,
           to_id: anyTypeLinkId,
           in: {
-            data: {
+            data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
               string: { data: { value: 'IsGroupSummary' } },
             },
+            {
+              type_id: treeIncludeDownTypeLinkId,
+              from_id: pushNotificationTreeLinkId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
+              },
+            }
+            ],
           },
         },
         {
@@ -359,7 +542,7 @@ async function installPackage() {
       },
     },
   }
-]);
+  ]);
 
   const fileTypeLinkId = await deep.id(
     '@deep-foundation/core',
@@ -380,7 +563,7 @@ async function installPackage() {
     'HandleInsert' /* | HandleUpdate | HandleDelete */
   );
   const handleName = 'HandleName';
-  const code = fs.readFileSync(path.join(__dirname,'notifyInsertHandler.js'), {encoding: 'utf-8'});
+  const code = fs.readFileSync(path.join(__dirname, 'notifyInsertHandler.js'), { encoding: 'utf-8' });
 
   await deep.insert({
     type_id: fileTypeLinkId,
