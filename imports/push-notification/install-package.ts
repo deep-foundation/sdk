@@ -73,6 +73,10 @@ async function installPackage() {
     '@deep-foundation/core',
     'TreeIncludeDown'
   );
+  const userTypeLinkId = await deep.id(
+    '@deep-foundation/core',
+    'User'
+  );
 
   {
     const { data: [packageLinkId] } = await deep.select({
@@ -639,11 +643,25 @@ async function installPackage() {
   {
     type_id: typeTypeLinkId,
     in: {
-      data: {
+      data: [{
         type_id: containTypeLinkId,
         from_id: packageLinkId,
         string: { data: { value: 'WebPushCertificate' } },
       },
+      {
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        in: {
+          data: [{
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'UsesWebPushCertificate' } },
+          },
+        
+        ],
+        },
+      },
+    ],
     },
     out: {
       data: {
@@ -655,11 +673,11 @@ async function installPackage() {
   {
     type_id: typeTypeLinkId,
     in: {
-      data: {
+      data: [{
         type_id: containTypeLinkId,
         from_id: packageLinkId,
         string: { data: { value: 'DeviceRegistrationToken' } },
-      },
+      }],
     },
     out: {
       data: {
@@ -671,11 +689,24 @@ async function installPackage() {
   {
     type_id: typeTypeLinkId,
     in: {
-      data: {
+      data: [{
         type_id: containTypeLinkId,
         from_id: packageLinkId,
         string: { data: { value: 'ServiceAccount' } },
       },
+      {
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        in: {
+          data: [{
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'UsesServiceAccount' } },
+          },
+        
+        ],
+        },
+      },],
     },
     out: {
       data: {
