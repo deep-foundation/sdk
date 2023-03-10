@@ -337,11 +337,23 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'Subtitle' } },
+              string: { data: { value: 'PushNotificationSubtitle' } },
             },
 
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -350,7 +362,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'Id' } },
+              string: { data: { value: 'PushNotificationId' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -366,6 +378,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -374,7 +398,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'Badge' } },
+              string: { data: { value: 'PushNotificationBadge' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -390,6 +414,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -398,7 +434,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'Payload' } },
+              string: { data: { value: 'PushNotificationPayload' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -414,6 +450,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -422,7 +470,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'ClickAction' } },
+              string: { data: { value: 'PushNotificationClickAction' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -438,6 +486,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -446,7 +506,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'DeepLink' } },
+              string: { data: { value: 'PushNotificationDeepLink' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -462,6 +522,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -470,7 +542,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'Group' } },
+              string: { data: { value: 'PushNotificationGroup' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -486,6 +558,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: typeTypeLinkId,
@@ -494,7 +578,7 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'IsGroupSummary' } },
+              string: { data: { value: 'PushNotificationIsGroupSummary' } },
             },
             {
               type_id: treeIncludeDownTypeLinkId,
@@ -510,6 +594,18 @@ async function installPackage() {
             }
             ],
           },
+          out: {
+            data: {
+              type_id: valueTypeLinkId,
+              to_id: numberTypeLinkId,
+              in: {
+                data: {
+                  type_id: containTypeLinkId,
+                  from_id: packageLinkId
+                }
+              }
+            },
+          }
         },
         {
           type_id: await deep.id(NOTIFICATION_PACKAGE_NAME, "Notify"),
