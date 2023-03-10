@@ -657,11 +657,11 @@ async function installPackage() {
             from_id: packageLinkId,
             string: { data: { value: 'UsesWebPushCertificate' } },
           },
-        
-        ],
+
+          ],
         },
       },
-    ],
+      ],
     },
     out: {
       data: {
@@ -703,8 +703,8 @@ async function installPackage() {
             from_id: packageLinkId,
             string: { data: { value: 'UsesServiceAccount' } },
           },
-        
-        ],
+
+          ],
         },
       },],
     },
