@@ -35,17 +35,17 @@ export async function insertDeviceRegistrationToken({
         type_id: containTypeLinkId,
         from_id: deviceLinkId,
       },
-    {
-      type_id: usesDeviceRegistrationTokenTypeLinkId,
-      from_id: deep.linkId,
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: deviceLinkId,
-        }]
+      {
+        type_id: usesDeviceRegistrationTokenTypeLinkId,
+        from_id: deep.linkId,
+        in: {
+          data: [{
+            type_id: containTypeLinkId,
+            from_id: deviceLinkId,
+          }]
+        }
       }
-    }
-    ],
+      ],
     },
   });
   return { deviceRegistrationTokenLinkId };
