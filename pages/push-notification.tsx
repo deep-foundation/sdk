@@ -69,7 +69,7 @@ function Page() {
         messagingSenderId: '430972811028',
         appId: '1:430972811028:web:7c43130f8166c437c03401',
         measurementId: 'G-NJ1R8HDWLK',
-      });
+      };);
       self['firebaseApplication'] = firebaseApplication;
       setFirebaseApplication(firebaseApplication);
 
