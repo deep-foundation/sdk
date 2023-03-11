@@ -19,6 +19,9 @@ export async function updateOrInsertAccelerationDataToDeep({
   const accelerationXIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationXIncludingGravity');
   const accelerationYIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationYIncludingGravity');
   const accelerationZIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationZIncludingGravity');
+  const rotationAlphaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateAlpha');
+  const rotationBetaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateBeta');
+  const rotationGammaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateGamma');
   const intervalTypeLinkId = await deep.id(PACKAGE_NAME, 'Interval');
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
 
@@ -130,6 +133,45 @@ export async function updateOrInsertAccelerationDataToDeep({
                   number: {
                     data: {
                       value: data.interval,
+                    },
+                  },
+                },
+              },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: rotationAlphaTypeLinkId,
+                  number: {
+                    data: {
+                      value: data.rotationRate.alpha,
+                    },
+                  },
+                },
+              },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: rotationBetaTypeLinkId,
+                  number: {
+                    data: {
+                      value: data.rotationRate.beta,
+                    },
+                  },
+                },
+              },
+            },
+            {
+              type_id: containTypeLinkId,
+              to: {
+                data: {
+                  type_id: rotationGammaTypeLinkId,
+                  number: {
+                    data: {
+                      value: data.rotationRate.gamma,
                     },
                   },
                 },
