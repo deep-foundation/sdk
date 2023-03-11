@@ -90,27 +90,6 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
       return linkWithPushNotificationBodyString.value.value;
     };
 
-
-    const getPushNotificationIconUrl = async () => {
-      const notificationIconUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationIconUrl")
-      const { data: [linkWithPushNotificationIconUrlString] } = await deep.select({
-        type_id: notificationIconUrlTypeLinkId,
-        in: {
-          type_id: containTypeLinkId,
-          from_id: notificationLinkId
-        }
-      });
-      console.log({ linkWithPushNotificationIconUrlString })
-      if (!linkWithPushNotificationIconUrlString) {
-        return undefined;
-      }
-      if (!linkWithPushNotificationIconUrlString.value?.value) {
-        throw new Error(`##${linkWithPushNotificationIconUrlString.id} must have value`)
-      }
-      return linkWithPushNotificationIconUrlString.value.value;
-    };
-
-
     const getPushNotificationImageUrl = async () => {
       const notificationImageUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationImageUrl")
       const { data: [linkWithPushNotificationImageUrlString] } = await deep.select({
@@ -136,10 +115,6 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
         body: await getPushNotificationBody(),
       }
     };
-    const iconUrl = await getPushNotificationIconUrl();
-    if (iconUrl) {
-      pushNotificationData.iconUrl = iconUrl;
-    }
     const imageUrl = await getPushNotificationImageUrl();
     if (imageUrl) {
       pushNotificationData.imageUrl = imageUrl;
