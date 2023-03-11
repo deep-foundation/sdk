@@ -26,25 +26,6 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   }
   const deviceRegistrationToken = await getDeviceRegistrationToken();
 
-  const getWebPushCertificateLink = async () => {
-    const webPushCertificateTypeLinkId = await deep.id("@deep-foundation/push-notification", "WebPushCertificate");
-    const { data: [webPushCertificateLink] } = await deep.select({
-      type_id: webPushCertificateTypeLinkId,
-      in: {
-        type_id: containTypeLinkId,
-        from_id: triggeredByLinkId
-      }
-    });
-    if (!webPushCertificateLink) {
-      throw new Error(`##${triggeredByLinkId} must have contained a link of type ${webPushCertificateTypeLinkId}`)
-    }
-    if (!webPushCertificateLink.value?.value) {
-      throw new Error(`##${webPushCertificateLink.id} must have value`)
-    }
-    return webPushCertificateLink;
-  }
-  const webPushCertificateLink = await getWebPushCertificateLink();
-
   const getServiceAccount = async () => {
     const serviceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "ServiceAccount");
     const { data: [serviceAccountLink] } = await deep.select({
