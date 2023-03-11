@@ -23,83 +23,21 @@ function Content() {
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
-  {
-    const accelerationHandler = useRef<PluginListenerHandle>(undefined);
-
-    const { data, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: ["@deep-foundation/core", "Contain"]
-      },
-      from_id: deviceLinkId,
-      to: {
-        type_id: {
-          _id: [PACKAGE_NAME, "SubscribeToAcceleration"]
-        }
-      }
-    })
-
-    useEffect(() => {
-      new Promise(async () => {
-        if (loading) {
-          return
-        }
-        if (data.length === 0) {
-          accelerationHandler.current?.remove()
-        } else {
-          accelerationHandler.current = await Motion.addListener('accel', async (event) => {
-            await updateOrInsertAccelerationDataToDeep({
-              deep,
-              data: event,
-              deviceLinkId,
-            });
-          });
-        }
-      })
-    }, [data, loading, error])
-  }
-
-  {
-    const orientationHandler = useRef<PluginListenerHandle>(undefined);
-
-    const { data, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: ["@deep-foundation/core", "Contain"]
-      },
-      from_id: deviceLinkId,
-      to: {
-        type_id: {
-          _id: [PACKAGE_NAME, "SubscribeToOrientation"]
-        }
-      }
-    })
-
-    useEffect(() => {
-      new Promise(async () => {
-        if (loading) {
-          return
-        }
-        if (data.length === 0) {
-          orientationHandler.current?.remove()
-        } else {
-          orientationHandler.current = await Motion.addListener(
-            'orientation',
-            async (event) => {
-              await updateOrInsertOrientationDataToDeep({
-                deep,
-                data: event,
-                deviceLinkId,
-              });
-            }
-          );
-        }
-      })
-    }, [data, loading, error])
-  }
-
+  const [accelerationHandler, setAccelerationHandler] = useState();
 
   return (
     <Stack>
-
+      <Button onClick={async () => {
+        Motion.addListener('accel', (accelData) => {
+          updateOrInsertAccelerationDataToDeep({
+            deep,
+            deviceLinkId,
+            data: accelData
+          })
+        })       
+      }}>
+        Subscritbe to Acceleration Changes
+      </Button>
     </Stack>
   );
 }
