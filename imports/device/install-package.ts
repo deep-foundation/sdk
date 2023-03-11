@@ -51,268 +51,261 @@ async function installPackage() {
         to_id: await deep.id('deep', 'admin'),
       },
     ] },
-  });
+});
 
 
-  const { data: [{ id: deviceTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Device' } },
-    } },
-  });
-
-  const { data: [{ id: uuidTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'UUID' } },
-    } },
-  });
-
-  const { data: [{ id: nameTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Name' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+  await deep.insert([
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Device' } },
+      } },
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'UUID' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: modelTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Model' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Name' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: platformTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Platform' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Model' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: operatingSystemTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Operating System' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Platform' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: osVersionTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'OS Version' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Operating System' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: manufacturerTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Manufacturer' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'OS Version' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-  const { data: [{ id: isVirtualTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'IsVirtual' } },
-    } },
-  });
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Manufacturer' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'IsVirtual' } },
+      } },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'MemUsed' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'RealDiskFree' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'WebViewVersion' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'BatteryLevel' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
+        }
+      }
+    },
   
-  const { data: [{ id: memUsedTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'MemUsed' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'ChargingState' } },
+      } },
+    },
   
-  const { data: [{ id: realDiskFreeTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'RealDiskFree' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'IsCharging' } },
+      } },
+    },
+  
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'IsNotCharging' } },
+      } },
+    },
+  
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'LanguageCode' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
-
-
-  const { data: [{ id: webViewVersionTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'WebViewVersion' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
+    },
+  
+    {
+      type_id: typeTypeLinkId,
+      from_id: anyTypeLinkId,
+      to_id: anyTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'LanguageTag' } },
+      } },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId
+        }
       }
-    }
-  });
+    },
+  ]);
 
-  const { data: [{ id: batteryLevelTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'BatteryLevel' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: numberTypeLinkId
-      }
-    }
-  });
-
-  const { data: [{ id: isChargingTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'IsCharging' } },
-    } },
-  });
-
-  const { data: [{ id: isNotChargingTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'IsNotCharging' } },
-    } },
-  });
-
-  const { data: [{ id: languageCodeTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'LanguageCode' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
-      }
-    }
-  });
-
-  const { data: [{ id: languageTagTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: anyTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'LanguageTag' } },
-    } },
-    out: {
-      data: {
-        type_id: valueTypeLinkId,
-        to_id: stringTypeLinkId
-      }
-    }
-  });
+  
+  
 }
 
 installPackage();
