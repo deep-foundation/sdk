@@ -650,13 +650,13 @@ async function installPackage() {
             from_id: packageLinkId,
             string: { data: { value: 'UsesDeviceRegistrationToken' } },
           },
-        {
-          
-        }
-        ],
+          {
+
+          }
+          ],
         },
       }
-    ],
+      ],
     },
     out: {
       data: {
