@@ -35,7 +35,15 @@ export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepCl
           ],
         },
       }
-    }
+    },
+    in: {
+      data: [
+        {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId,
+        },
+      ],
+    },
   });
 
 }
