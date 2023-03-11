@@ -644,6 +644,7 @@ async function installPackage() {
       },
       {
         type_id: typeTypeLinkId,
+        from_id: deviceTypeLinkId,
         in: {
           data: [{
             type_id: containTypeLinkId,
