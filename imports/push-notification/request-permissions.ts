@@ -1,6 +1,7 @@
+import { DeviceInfo } from "@capacitor/device";
 import { PushNotifications } from "@capacitor/push-notifications";
 
-export async function requestPermissions({platform}: {platform: string}){
+export async function requestPermissions({platform}: {platform: DeviceInfo["platform"]}){
   let isPermissionsGranted: boolean;
   if (platform === 'web') {
     const permissionsStatus = await Notification.requestPermission();
