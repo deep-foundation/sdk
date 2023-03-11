@@ -31,22 +31,13 @@ import {
   Messaging,
   onMessage,
 } from 'firebase/messaging';
-import { insertOrUpdateDeviceRegistrationToken } from '../imports/push-notification/insert-or-update-device-registration-token';
+import { insertDeviceRegistrationToken } from '../imports/push-notification/insert-device-registration-token';
 import { PACKAGE_NAME } from '../imports/push-notification/package-name';
 import { requestPermissions } from '../imports/push-notification/request-permissions';
 import { insertWebPushCertificate } from '../imports/push-notification/insert-web-push-certificate';
 import { insertServiceAccount } from '../imports/push-notification/insert-service-account';
 import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
-  authDomain: 'deep-97e93.firebaseapp.com',
-  projectId: 'deep-97e93',
-  storageBucket: 'deep-97e93.appspot.com',
-  messagingSenderId: '430972811028',
-  appId: '1:430972811028:web:7c43130f8166c437c03401',
-  measurementId: 'G-NJ1R8HDWLK',
-};
+import { registerDevice } from '../imports/push-notification/register-device';
 
 function Page() {
   const deep = useDeep();
@@ -70,7 +61,15 @@ function Page() {
 
   useEffect(() => {
     if (platform === 'web') {
-      const firebaseApplication = initializeApp(firebaseConfig);
+      const firebaseApplication = initializeApp({
+        apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
+        authDomain: 'deep-97e93.firebaseapp.com',
+        projectId: 'deep-97e93',
+        storageBucket: 'deep-97e93.appspot.com',
+        messagingSenderId: '430972811028',
+        appId: '1:430972811028:web:7c43130f8166c437c03401',
+        measurementId: 'G-NJ1R8HDWLK',
+      });
       self['firebaseApplication'] = firebaseApplication;
       setFirebaseApplication(firebaseApplication);
 
@@ -149,7 +148,10 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       </Text>
       <Button
         onClick={async () => {
-          await insertWebPushCertificate({deep,webPushCertificate})
+          await insertWebPushCertificate({
+            deep,
+            webPushCertificate: "Insert Web Push Certificate here. Get in on https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging"
+          })
         }}
       >
         Insert Default  WebPushCertificate
@@ -169,7 +171,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         onClick={async () => {
           await insertServiceAccount({
             deep,
-            serviceAccount
+            serviceAccount: "Insert Service Account here. Get in on https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk"
           })
         }}
       >
@@ -179,7 +181,10 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         onClick={async () => {
           await insertPushNotification({
             deep,
-            pushNotification
+            pushNotification: {
+              body: "Body",
+              title: "Title"
+            }
           })
         }}
       >
@@ -193,67 +198,15 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
           (platform === "web" && !firebaseMessaging)
         }
         onClick={async () => {
-          console.log({ platform });
-          const onDeviceRegistration = async ({ value: deviceRegistrationToken }: {value: string}) => {
-            console.log(`onDeviceRegistration deviceRegistrationToken: ${deviceRegistrationToken}`);
-            
-            const {deviceRegistrationTokenLinkId} = await insertOrUpdateDeviceRegistrationToken({
-              deep,
-              deviceRegistrationToken,
-              deviceLinkId,
-            });
-            setDeviceRegistrationTokenLinkId(deviceRegistrationTokenLinkId);
-          };
-
-          if (platform === 'web') {
-
-            const serviceWorkerRegistration =
-              await navigator.serviceWorker.register(
-                './firebase-messaging-sw.js',
-                { scope: 'firebase-cloud-messaging-push-scope' }
-              );
-            const containTypeLinkId = await deep.id(
-              '@deep-foundation/core',
-              'Contain'
-            );
-            const webPushCertificateTypeLinkId = await deep.id(
-              PACKAGE_NAME,
-              'WebPushCertificate'
-            );
-            const {
-              data: [webPushCertificateLink],
-            } = await deep.select({
-              type_id: webPushCertificateTypeLinkId,
-              in: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId,
-              },
-            });
-            if (!webPushCertificateLink) {
-              throw new Error(
-                `A link with type ${webPushCertificateTypeLinkId} is not found`
-              );
-            }
-            if (!webPushCertificateLink.value?.value) {
-              throw new Error(`${webPushCertificateLink} must have a value`);
-            }
-            const webPushCertificate = webPushCertificateLink.value.value;
-            console.log({webPushCertificateLink})
-            console.log({webPushCertificate})
-            const deviceRegistrationToken = await getToken(firebaseMessaging, {
-              serviceWorkerRegistration,
-              vapidKey: webPushCertificate,
-            });
-
-            onDeviceRegistration({value: deviceRegistrationToken})
-          } else {
-            await PushNotifications.removeAllListeners();
-            await PushNotifications.addListener(
-              'registration',
-              onDeviceRegistration
-            );
-            await PushNotifications.register();
-          }
+          await registerDevice({
+            deep,
+            deviceLinkId,
+            firebaseMessaging,
+            platform,
+            callback: ({ deviceRegistrationTokenLinkId }) => {
+              setDeviceRegistrationTokenLinkId(deviceRegistrationTokenLinkId);
+            },
+          })
         }}
       >
         Register
