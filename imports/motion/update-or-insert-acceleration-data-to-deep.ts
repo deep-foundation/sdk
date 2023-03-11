@@ -9,7 +9,7 @@ export async function updateOrInsertAccelerationDataToDeep({
   deviceLinkId,
 }: {
   deep: DeepClient;
-  data: Omit<AccelListenerEvent, 'rotationRate'>;
+  data: AccelListenerEvent;
   deviceLinkId: number;
 }) {
   const accelerationTypeLinkId = await deep.id(PACKAGE_NAME, 'Acceleration');
@@ -54,12 +54,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.acceleration.x,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
@@ -73,12 +67,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.acceleration.y,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
@@ -92,12 +80,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.acceleration.z,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
@@ -111,12 +93,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.accelerationIncludingGravity.x,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
@@ -130,12 +106,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.accelerationIncludingGravity.y,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
@@ -149,12 +119,6 @@ export async function updateOrInsertAccelerationDataToDeep({
                       value: data.accelerationIncludingGravity.z,
                     },
                   },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
                 },
               },
             },
