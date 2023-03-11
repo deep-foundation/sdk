@@ -42,7 +42,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     if (!serviceAccountLink.value?.value) {
       throw new Error(`##${serviceAccountLink.id} must have value`)
     }
-    return serviceAccount.value.value;
+    return serviceAccountLink.value.value;
   }
   const serviceAccount = await getServiceAccount();
 
