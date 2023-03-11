@@ -29,18 +29,22 @@ export async function registerDevice({ deep, deviceLinkId, platform, firebaseMes
       PACKAGE_NAME,
       'WebPushCertificate'
     );
+    const usesWebPushCertificateTypeLinkId = await deep.id(
+      PACKAGE_NAME,
+      'UsesWebPushCertificate'
+    );
     const {
       data: [webPushCertificateLink],
     } = await deep.select({
       type_id: webPushCertificateTypeLinkId,
       in: {
-        type_id: containTypeLinkId,
+        type_id: usesWebPushCertificateTypeLinkId,
         from_id: deep.linkId,
       },
     });
     if (!webPushCertificateLink) {
       throw new Error(
-        `A link with type ${webPushCertificateTypeLinkId} is not found`
+        `A link with type ##${usesWebPushCertificateTypeLinkId}, from ##${deep.linkId} to ##${webPushCertificateTypeLinkId} is not found`
       );
     }
     if (!webPushCertificateLink.value?.value) {
