@@ -1,6 +1,6 @@
 import { PACKAGE_NAME } from "./initialize-package";
 
-export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
+export default async function uploadRecords(deep, deviceLinkId, sounds) {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
     const soundTypeLinkId = await deep.id(PACKAGE_NAME, "Sound");
@@ -9,7 +9,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
     const startTimeTypeLinkId = await deep.id(PACKAGE_NAME, "StartTime");
     const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, "EndTime");
     const mimetypeTypeLinkId = await deep.id(PACKAGE_NAME, "MIME/type");
-    await deep.insert(audioChunks.map((audioChunk) => ({
+    await deep.insert(sounds.map((sound) => ({
       type_id: recordTypeLinkId,
       in: {
         data: [{
@@ -24,7 +24,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: soundTypeLinkId,
-                string: { data: { value: audioChunk.record["recordDataBase64"] } },
+                string: { data: { value: sound.record["recordDataBase64"] } },
               }
             }
           },
@@ -33,7 +33,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: durationTypeLinkId,
-                number: { data: { value: audioChunk.record["msDuration"] } },
+                number: { data: { value: sound.record["msDuration"] } },
               }
             }
           },
@@ -42,7 +42,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: startTimeTypeLinkId,
-                string: { data: { value: audioChunk.startTime } },
+                string: { data: { value: sound.startTime } },
               }
             }
           },
@@ -51,7 +51,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: endTimeTypeLinkId,
-                string: { data: { value: audioChunk.endTime } },
+                string: { data: { value: sound.endTime } },
               }
             }
           },
@@ -60,7 +60,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: mimetypeTypeLinkId,
-                string: { data: { value: audioChunk.record["mimeType"] } },
+                string: { data: { value: sound.record["mimeType"] } },
               }
             }
           }]

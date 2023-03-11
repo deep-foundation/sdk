@@ -17,7 +17,7 @@ export const delay = (time) => new Promise(res => setTimeout(() => res(null), ti
 function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
-  const [audioChunks, setAudioChunks] = useLocalStore("AudioChunks", []);
+  const [sounds, setSounds] = useLocalStore("Sounds", []);
   const [records, setRecords] = useState([]);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -26,11 +26,11 @@ function Page() {
 
   useEffect(() => {
     const useRecords = async () => {
-      await uploadRecords(deep, deviceLinkId, audioChunks);
-      setAudioChunks([]);
+      await uploadRecords(deep, deviceLinkId, sounds);
+      setSounds([]);
     }
-    if (audioChunks.length > 0) useRecords();
-  }, [audioChunks])
+    if (sounds.length > 0) useRecords();
+  }, [sounds])
 
   useEffect(() => {
     let loop = true;
@@ -42,7 +42,7 @@ function Page() {
         const record = await stopAudioRec(deep);
         const endTime = new Date().toLocaleDateString();
         console.log({ record });
-        setAudioChunks([...audioChunks, { record, startTime, endTime }]);
+        setSounds([...sounds, { record, startTime, endTime }]);
       }
     }
     if (recording) startRecordingCycle(5000);
@@ -51,21 +51,46 @@ function Page() {
 
   const startRecording = async (duration) => {
     await startAudioRec(deep);
-    const startTime = new Date().toLocaleTimeString();
+    const startTime = new Date().toLocaleString();
     await delay(duration);
     const record = await stopAudioRec(deep);
-    const endTime = new Date().toLocaleTimeString();
+    const endTime = new Date().toLocaleString();
     console.log({ record });
-    setAudioChunks([...audioChunks, { record, startTime, endTime }]);
+    setSounds([...sounds, { record, startTime, endTime }]);
   }
 
   const fetchRecords = async () => {
-    const soundTypeLinkId = await deep.id(PACKAGE_NAME, "Sound");
-    const { data } = await deep.select({
-      type_id: soundTypeLinkId
+    const recordTypelinkId = await deep.id(PACKAGE_NAME, "Record");
+    const soundTypelinkId = await deep.id(PACKAGE_NAME, "Sound");
+    const mimetypeTypelinkId = await deep.id(PACKAGE_NAME, "MIME/type");
+    const { data: recordLinks } = await deep.select({
+      type_id: recordTypelinkId
     });
-    console.log({ data });
-    setRecords(data);
+
+    let records = [];
+
+    for (let recordLink of recordLinks) {
+      const { data } = await deep.select({
+        up: {
+          parent: {
+            id: recordLink.id
+          },
+          link: {
+            type_id: {
+              _in:
+                [
+                  soundTypelinkId,
+                  mimetypeTypelinkId
+                ]
+            }
+          }
+        },
+      })
+      const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
+      const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
+      records = [...records, { sound: soundLink[0].value.value, mimetype: mimetypeLink[0].value.value }]
+    }
+    setRecords(records);
   }
 
   const createContainer = async (deep) => {
@@ -118,7 +143,7 @@ function Page() {
     <Button onClick={async () => await fetchRecords()}>
       LOAD RECORDS
     </Button>
-    {records?.map((r) => <audio key={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />)}
+    {records?.map((r) => <audio key={Math.random().toString()} controls src={`data:${r.mimetype};base64,${r.sound}`} />)}
   </Stack>
 }
 
