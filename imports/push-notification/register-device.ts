@@ -12,7 +12,7 @@ export async function registerDevice({ deep, deviceLinkId, platform, firebaseMes
       deviceRegistrationToken,
       deviceLinkId,
     });
-    await callback({deviceRegistrationTokenLinkId, deviceRegistrationToken});
+    callback({deviceRegistrationTokenLinkId, deviceRegistrationToken});
   };
 
   if (platform === 'web') {
