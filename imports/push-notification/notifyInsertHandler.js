@@ -28,15 +28,16 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
   const getServiceAccount = async () => {
     const serviceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "ServiceAccount");
+    const usesServiceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "UsesServiceAccount");
     const { data: [serviceAccountLink] } = await deep.select({
       type_id: serviceAccountTypeLinkId,
       in: {
-        type_id: containTypeLinkId,
+        type_id: usesServiceAccountTypeLinkId,
         from_id: triggeredByLinkId
       }
     });
     if (!serviceAccountLink) {
-      throw new Error(`##${triggeredByLinkId} must have contained a link of type ${serviceAccountTypeLinkId}`)
+      throw new Error(`A link of type ##${usesServiceAccountTypeLinkId} and from ${triggeredByLinkId} is not found`)
     }
     if (!serviceAccountLink.value?.value) {
       throw new Error(`##${serviceAccountLink.id} must have value`)
