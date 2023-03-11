@@ -7,9 +7,9 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
     PACKAGE_NAME,
     'PushNotification'
   );
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'Title');
-  const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'Body');
-  const imageUrlTypeLinkId = await deep.id(PACKAGE_NAME, 'ImageUrl');
+  const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'PushNotificationTitle');
+  const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'PushNotificationBody');
+  const imageUrlTypeLinkId = await deep.id(PACKAGE_NAME, 'PushNotificationImageUrl');
   const syncTextFileTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'SyncTextFile'
