@@ -36,6 +36,7 @@ import { PACKAGE_NAME } from '../imports/push-notification/package-name';
 import { requestPermissions } from '../imports/push-notification/request-permissions';
 import { insertWebPushCertificate } from '../imports/push-notification/insert-web-push-certificate';
 import { insertServiceAccount } from '../imports/push-notification/insert-service-account';
+import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
@@ -176,93 +177,10 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       </Button>
       <Button
         onClick={async () => {
-          const pushNotificationTypeLinkId = await deep.id(
-            PACKAGE_NAME,
-            'PushNotification'
-          );
-          const titleTypeLinkId = await deep.id(PACKAGE_NAME, 'Title');
-          const bodyTypeLinkId = await deep.id(PACKAGE_NAME, 'Body');
-          const syncTextFileTypeLinkId = await deep.id(
-            '@deep-foundation/core',
-            'SyncTextFile'
-          );
-          const containTypeLinkId = await deep.id(
-            '@deep-foundation/core',
-            'Contain'
-          );
-          await deep.insert({
-            type_id: pushNotificationTypeLinkId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: deep.linkId,
-                },
-              ],
-            },
-            out: {
-              data: [
-                {
-                  type_id: titleTypeLinkId,
-                  to: {
-                    data: {
-                      type_id: syncTextFileTypeLinkId,
-                      in: {
-                        data: [
-                          {
-                            type_id: containTypeLinkId,
-                            from_id: deep.linkId,
-                          },
-                        ],
-                      },
-                      string: {
-                        data: {
-                          value: 'Title',
-                        },
-                      },
-                    },
-                  },
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: deep.linkId,
-                      },
-                    ],
-                  },
-                },
-                {
-                  type_id: bodyTypeLinkId,
-                  to: {
-                    data: {
-                      type_id: syncTextFileTypeLinkId,
-                      in: {
-                        data: [
-                          {
-                            type_id: containTypeLinkId,
-                            from_id: deep.linkId,
-                          },
-                        ],
-                      },
-                      string: {
-                        data: {
-                          value: 'Body',
-                        },
-                      },
-                    },
-                  },
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: deep.linkId,
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          });
+          await insertPushNotification({
+            deep,
+            pushNotification
+          })
         }}
       >
         Insert Default Notification
