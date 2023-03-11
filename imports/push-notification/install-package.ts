@@ -269,42 +269,6 @@ async function installPackage() {
             data: [{
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationIconUrl' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
               string: { data: { value: 'PushNotificationImageUrl' } },
             },
             {
