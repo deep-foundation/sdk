@@ -12,10 +12,6 @@ export async function insertDeviceRegistrationToken({
     PACKAGE_NAME,
     'DeviceRegistrationToken'
   );
-  const usesDeviceRegistrationTokenTypeLinkId = await deep.id(
-    PACKAGE_NAME,
-    'UsesDeviceRegistrationToken'
-  );
   const containTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'Contain'
@@ -35,16 +31,6 @@ export async function insertDeviceRegistrationToken({
         type_id: containTypeLinkId,
         from_id: deviceLinkId,
       },
-      {
-        type_id: usesDeviceRegistrationTokenTypeLinkId,
-        from_id: deep.linkId,
-        in: {
-          data: [{
-            type_id: containTypeLinkId,
-            from_id: deviceLinkId,
-          }]
-        }
-      }
       ],
     },
   });

@@ -642,18 +642,6 @@ async function installPackage() {
         from_id: packageLinkId,
         string: { data: { value: 'DeviceRegistrationToken' } },
       },
-      {
-        type_id: typeTypeLinkId,
-        from_id: deviceTypeLinkId,
-        in: {
-          data: [{
-            type_id: containTypeLinkId,
-            from_id: packageLinkId,
-            string: { data: { value: 'UsesDeviceRegistrationToken' } },
-          }
-          ],
-        },
-      }
       ],
     },
     out: {
