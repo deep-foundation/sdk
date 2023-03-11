@@ -52,7 +52,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
   const getPushNotificationData = async () => {
     const getPushNotificationTitle = async () => {
-      const notificationTitleTypeLinkId = await deep.id("@deep-foundation/push-notification", "Title")
+      const notificationTitleTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationTitle")
       const { data: [linkWithPushNotificationTitleString] } = await deep.select({
         in: {
           type_id: {
@@ -74,7 +74,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     };
 
     const getPushNotificationBody = async () => {
-      const notificationBodyTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
+      const notificationBodyTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationBody")
       const { data: [linkWithPushNotificationBodyString] } = await deep.select({
         in: {
           type_id: notificationBodyTypeLinkId,
@@ -92,7 +92,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
 
     const getPushNotificationIconUrl = async () => {
-      const notificationIconUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
+      const notificationIconUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationIconUrl")
       const { data: [linkWithPushNotificationIconUrlString] } = await deep.select({
         type_id: notificationIconUrlTypeLinkId,
         in: {
@@ -112,7 +112,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
 
     const getPushNotificationImageUrl = async () => {
-      const notificationImageUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "Body")
+      const notificationImageUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationImageUrl")
       const { data: [linkWithPushNotificationImageUrlString] } = await deep.select({
         type_id: notificationImageUrlTypeLinkId,
         in: {
