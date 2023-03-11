@@ -48,7 +48,7 @@ export async function registerDevice({ deep, deviceLinkId, platform, firebaseMes
       );
     }
     if (!webPushCertificateLink.value?.value) {
-      throw new Error(`${webPushCertificateLink} must have a value`);
+      throw new Error(`##${webPushCertificateLink} must have a value`);
     }
     const webPushCertificate = webPushCertificateLink.value.value;
     console.log({ webPushCertificateLink })
