@@ -35,8 +35,7 @@ function Page() {
   useEffect(() => {
     let loop = true;
     const startRecordingCycle = async (duration) => {
-      for (; recording && loop ;) {
-        console.log("inside cycle loop: " + recording)
+      for (; recording && loop;) {
         await startAudioRec(deep);
         const startTime = new Date().toLocaleDateString();
         await delay(duration);
@@ -61,20 +60,21 @@ function Page() {
   }
 
   const fetchRecords = async () => {
-    const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
+    const soundTypeLinkId = await deep.id(PACKAGE_NAME, "Sound");
     const { data } = await deep.select({
-      type_id: audioChunkTypeLinkId
+      type_id: soundTypeLinkId
     });
-    console.log({data});
+    console.log({ data });
     setRecords(data);
   }
 
   const createContainer = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsTypeLinkId = await deep.id(PACKAGE_NAME, "AudioRecords");
-    await deep.insert({ type_id: audioRecordsTypeLinkId,
-      in :{
-        data : {
+    await deep.insert({
+      type_id: audioRecordsTypeLinkId,
+      in: {
+        data: {
           type_id: containTypeLinkId,
           from_id: deviceLinkId,
           string: { data: { value: "AudioRecords" } },
@@ -103,21 +103,22 @@ function Page() {
       GET RECORDING STATUS
     </Button>
     <Button onClick={() => {
-      setRecording(true); console.log(recording)}}>
+      setRecording(true); console.log(recording)
+    }}>
       START RECORDING CYCLE
     </Button>
     <Button onClick={() => {
-      setRecording(false);  console.log("inside Stop onClick: " +recording);
+      setRecording(false);
     }}>
       STOP RECORDING CYCLE
     </Button>
     <Button onClick={async () => await startRecording(5000)}>
       RECORD ONE CHUNK
     </Button>
-    <Button  onClick={async () => await fetchRecords()}>
-     LOAD RECORDS
+    <Button onClick={async () => await fetchRecords()}>
+      LOAD RECORDS
     </Button>
-    { records?.map((r) => <audio key={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />) }
+    {records?.map((r) => <audio key={Math.random().toString()} controls src={`data:audio/webm;base64,${r.value.value}`} />)}
   </Stack>
 }
 

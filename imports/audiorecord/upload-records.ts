@@ -3,12 +3,12 @@ import { PACKAGE_NAME } from "./initialize-package";
 export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
-    const audioChunkTypeLinkId = await deep.id(PACKAGE_NAME, "AudioChunk");
+    const soundTypeLinkId = await deep.id(PACKAGE_NAME, "Sound");
     const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
     const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");
     const startTimeTypeLinkId = await deep.id(PACKAGE_NAME, "StartTime");
     const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, "EndTime");
-    const formatTypeLinkId = await deep.id(PACKAGE_NAME, "Format");
+    const mimetypeTypeLinkId = await deep.id(PACKAGE_NAME, "MIME/type");
     await deep.insert(audioChunks.map((audioChunk) => ({
       type_id: recordTypeLinkId,
       in: {
@@ -23,7 +23,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             type_id: containTypeLinkId,
             to: {
               data: {
-                type_id: audioChunkTypeLinkId,
+                type_id: soundTypeLinkId,
                 string: { data: { value: audioChunk.record["recordDataBase64"] } },
               }
             }
@@ -33,7 +33,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             to: {
               data: {
                 type_id: durationTypeLinkId,
-                string: { data: { value: audioChunk.record["msDuration"].toString() } },
+                number: { data: { value: audioChunk.record["msDuration"] } },
               }
             }
           },
@@ -59,7 +59,7 @@ export default async function uploadRecords(deep, deviceLinkId, audioChunks) {
             type_id: containTypeLinkId,
             to: {
               data: {
-                type_id: formatTypeLinkId,
+                type_id: mimetypeTypeLinkId,
                 string: { data: { value: audioChunk.record["mimeType"] } },
               }
             }
