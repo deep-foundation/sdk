@@ -35,7 +35,15 @@ export async function insertWebPushCertificate({deep, webPushCertificate}:{deep:
           ],
         },
       }
-    }
+    },
+    in: {
+      data: [
+        {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId,
+        },
+      ],
+    },
   });
 
 }
