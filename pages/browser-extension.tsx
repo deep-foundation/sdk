@@ -9,6 +9,8 @@ import { PACKAGE_NAME } from "../imports/browser-extension/initialize-package";
 import Tab from "./tab";
 import Link from "next/link";
 import { useRouter } from 'next/router'
+import uploadHistory from "../imports/browser-extension/upload-history";
+import uploadTabs from "../imports/browser-extension/upload-tabs";
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -52,78 +54,19 @@ export function Extension() {
   }
 
   useEffect(() => {
-    const uploadHistory = async (history) => {
-      await deep.guest();
-      await deep.login({linkId: await deep.id("deep", 'admin')});
-      const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-      const browserHistoryLinkId = await deep.id(deviceLinkId, "BrowserHistory");
-      const pageTypeLinkId = await deep.id(PACKAGE_NAME, "Page");
-      const urlTypeLinkId = await deep.id(PACKAGE_NAME, "Url");
-      const titleTypeLinkId = await deep.id(PACKAGE_NAME, "Title");
-      const typedCountTypeLinkId = await deep.id(PACKAGE_NAME, "TypedCount");
-      const visitCountTypeLinkId = await deep.id(PACKAGE_NAME, "VisitCount");
-      const lastVisitTimeTypeLinkId = await deep.id(PACKAGE_NAME, "LastVisitTime");
-      await deep.insert(history.map((page) => ({
-        type_id: pageTypeLinkId,
-        string: { data: { value: `ID:${page.id}` } },
-        in: {
-          data: [{
-            type_id: containTypeLinkId,
-            from_id: browserHistoryLinkId,
-          }]
-        },
-        out: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: urlTypeLinkId,
-                  string: { data: { value: page.url } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: titleTypeLinkId,
-                  string: { data: { value: page.title } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: typedCountTypeLinkId,
-                  string: { data: { value: page.typedCount.toString() } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: visitCountTypeLinkId,
-                  string: { data: { value: page.visitCount.toString() } },
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: lastVisitTimeTypeLinkId,
-                  string: { data: { value: page.lastVisitTime.toString() } },
-                }
-              }
-            }]
-        }
-      })))
+    const upload = async (tabs) => {
+      await uploadTabs(deep, deviceLinkId, tabs);
       setHistory([]);
     }
-    if (history.length > 0) uploadHistory(history);
+    if (tabs.length > 0) upload(tabs);
+  }, [tabs])
+
+  useEffect(() => {
+    const upload = async (history) => {
+      await uploadHistory(deep, deviceLinkId, history);
+      setHistory([]);
+    }
+    if (history.length > 0) upload(history);
   }, [history])
 
   const createBrowserHistoryLink = async (deep) => {
@@ -146,12 +89,11 @@ export function Extension() {
         <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser(deep)}>ADMIN</Button>
         <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
         <Button onClick={async () => await createBrowserHistoryLink(deep)} >CREATE NEW BROWSERHISTORY LINK</Button>
-        <Button onClick={() => setTabsSubscription(true)}>SUBSCRIBE TO TABS</Button>
-        <Button onClick={() => setTabsSubscription(false)}>UNSUBSCRIBE</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
+        <Button onClick={() => setTabsSubscription(true)}>UPLOAD TABS</Button>
+        <Button onClick={() => {setTabsSubscription(false); setTabs([])}}>UNSUBSCRIBE</Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
-      {history?.map((page) => (<Tab type="page" key={page.id} id={page.id} favIconUrl={page.favIconUrl} title={page.title} url={page.url} />))}
     </>
   )
 }
