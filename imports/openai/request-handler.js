@@ -2,6 +2,8 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     const {Configuration, OpenAIApi} = require("openai")
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
     const openAiApiKeyTypeLinkId = await deep.id(`@deep-foundation/openai`, "OpenAiApiKey")
+    const usesOpenAiApiKeyTypeLinkId = await deep.id(`@deep-foundation/openai`, "UsesOpenAiApiKey")
+
 
     const {data: [linkWithStringValue]} = await deep.select({
         id: openAiRequestLink.to_id
@@ -10,13 +12,15 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
         throw new Error(`##${linkWithStringValue.id} must have a value`)
     }
     const openAiPrompt = linkWithStringValue.value.value
-    const {data: [apiKeyLink]} = await deep.select({
+
+    const { data: [apiKeyLink] } = await deep.select({
         type_id: openAiApiKeyTypeLinkId,
         in: {
-            type_id: containTypeLinkId,
-            from_id: triggeredByLinkId
+          type_id: usesOpenAiApiKeyTypeLinkId,
+          from_id: triggeredByLinkId
         }
-    })
+      });
+
     if(!apiKeyLink){
         throw new Error(`A link with type ##${openAiApiKeyTypeLinkId} is not found`)
     }
