@@ -54,6 +54,21 @@ function Content() {
       >
         add userInputLinkId link
       </Button>
+      <Button
+        onClick={async () => {
+          await deep.insert({
+            type_id: await deep.id('@deep-foundation/openai',"UsesOpenAiApiKey"),
+            in: {
+                data: {
+                    type_id: await deep.id('@deep-foundation/core', "Contain"),
+                    from_id: deep.linkId,
+                },
+            }
+        });
+        }}
+      >
+        add usesOpenAiApiKeyLinkId link
+      </Button>
     </Stack>
   );
 }
