@@ -96,13 +96,15 @@ export async function installPackage () {
         }
     });
 
-    const { data: [{ id: openAiApiKeyLinkId }] } = await deep.insert({
-        type_id: openAiApiKeyTypeLinkId,
-        string: { data: { value: process.env.OPENAI_API_KEY } },
+    const { data: [{ id: usesOpenAiApiKeyTypeLinkId, }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        to_id: openAiApiKeyTypeLinkId,
         in: {
             data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId,
+                type_id:containTypeLinkId,
+                from_id: packageLinkId,
+                string: {data: { value: "UsesOpenAiApiKey"}}
             },
         }
     });
