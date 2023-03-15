@@ -38,6 +38,7 @@ import { insertWebPushCertificate } from '../imports/push-notification/insert-we
 import { insertServiceAccount } from '../imports/push-notification/insert-service-account';
 import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
 import { registerDevice } from '../imports/push-notification/register-device';
+import {FilePicker} from '@capawesome/capacitor-file-picker';
 
 function Page() {
   const deep = useDeep();
@@ -167,16 +168,18 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         </Link>
         . Do not forget to change PROJECT_ID in URL to your project id
       </Text>
-      <Button
-        onClick={async () => {
-          await insertServiceAccount({
-            deep,
-            serviceAccount: "Insert Service Account here. Get in on https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk"
-          })
-        }}
-      >
-        Insert Default Service Account
-      </Button>
+      <Button onClick={async () => {
+                const pickFilesResult = await FilePicker.pickFiles({
+                  types: ['application/json']
+                });
+                console.log({pickFilesResult});
+                await insertServiceAccount({
+                  deep,
+                  serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text())
+                })
+              }}>
+                Insert Service Account
+              </Button>
       <Button
         onClick={async () => {
           await insertPushNotification({

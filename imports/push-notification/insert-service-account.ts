@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepClient, serviceAccount: string}) {
+export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepClient, serviceAccount: object}) {
   const containTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'Contain'
