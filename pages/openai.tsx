@@ -56,6 +56,18 @@ function Content() {
       </Button>
       <Button
         onClick={async () => {
+          await deep.delete({
+            up: {
+              parent: {
+                type: { id: { _eq: 3 } },
+                to: { type: { in: { string: { value: { _eq: "UsesOpenAiApiKey" } } } } },
+                from_id: {
+                  _eq: deep.linkId
+                }
+              }
+            }
+          })
+          
           await deep.insert({
             type_id: await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"),
             from_id: deep.linkId,
