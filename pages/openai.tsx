@@ -57,14 +57,35 @@ function Content() {
       <Button
         onClick={async () => {
           await deep.insert({
-            type_id: await deep.id('@deep-foundation/openai',"UsesOpenAiApiKey"),
-            in: {
-                data: {
-                    type_id: await deep.id('@deep-foundation/core', "Contain"),
-                    from_id: deep.linkId,
+            type_id: await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"),
+            from_id: deep.linkId,
+            to: {
+              data: {
+                type_id: await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
+                object: {
+                  data: {
+                    value: await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
+                  },
                 },
-            }
-        });
+                in: {
+                  data: [
+                    {
+                      type_id: await deep.id('@deep-foundation/core', "Contain"),
+                      from_id: deep.linkId,
+                    },
+                  ],
+                },
+              }
+            },
+            in: {
+              data: [
+                {
+                  type_id: await deep.id('@deep-foundation/core', "Contain"),
+                  from_id: deep.linkId,
+                },
+              ],
+            },
+          });
         }}
       >
         add usesOpenAiApiKeyLinkId link
