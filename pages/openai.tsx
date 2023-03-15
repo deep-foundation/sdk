@@ -62,10 +62,7 @@ function Content() {
             to: {
               data: {
                 type_id: await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
-                object: {
-                  data: {
-                    value: await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
-                  },
+                string: { data: { value: process.env.OPENAI_API_KEY },
                 },
                 in: {
                   data: [
