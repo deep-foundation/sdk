@@ -55,9 +55,9 @@ function Page() {
   const [platform, setPlatform] = useState(undefined);
 
   const [firebaseApplication, setFirebaseApplication] =
-    useState<FirebaseApp>(undefined);
+    useState<FirebaseApp|undefined>(undefined);
   const [firebaseMessaging, setFirebaseMessaging] =
-    useState<Messaging>(undefined);
+    useState<Messaging|undefined>(undefined);
 
   useEffect(() => {
     if (platform === 'web') {
