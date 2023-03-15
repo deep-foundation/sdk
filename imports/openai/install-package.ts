@@ -54,17 +54,6 @@ export async function installPackage () {
         },
         ] },
     });
-  
-    const { data: [{ id: userInputLinkId }] } = await deep.insert({
-      type_id: syncTextFileTypeLinkId,
-      string: { data: { value: "user input" } },
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId,
-        },
-      },
-    });
 
     const { data: [{id:openAiRequestTypeLinkId}] } = await deep.insert({
         type_id: typeTypeLinkId,
