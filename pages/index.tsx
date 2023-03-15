@@ -95,19 +95,23 @@ function Page() {
       <h1>Deep.Foundation sdk examples</h1> 
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
-       <div>
-        <Link href="/all">all subscribe</Link>
-      </div>
-      <div>
-        <Link href="/messanger">messanger</Link>
-      </div>
-      <div>
-        <Link href="/device">device</Link>
-      </div>
-      <div>
-        <Link href="/push-notification">push-notification</Link>
-      </div>
-      </div>
+      {deviceLinkId &&
+        <>
+          <div>
+            <Link href="/all">all subscribe</Link>
+          </div>
+          <div>
+            <Link href="/messanger">messanger</Link>
+          </div>
+          <div>
+            <Link href="/device">device</Link>
+          </div>
+          <div>
+            <Link href="/push-notification">push-notification</Link>
+          </div>
+        </>
+      }
+    </div>
   );
 }
 
