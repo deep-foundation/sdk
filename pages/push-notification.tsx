@@ -19,6 +19,9 @@ import {
   Divider,
   Textarea,
   Code,
+  Box,
+  RadioGroup,
+  Radio,
 } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -38,7 +41,7 @@ import { insertWebPushCertificate } from '../imports/push-notification/insert-we
 import { insertServiceAccount } from '../imports/push-notification/insert-service-account';
 import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
 import { registerDevice } from '../imports/push-notification/register-device';
-import {FilePicker} from '@capawesome/capacitor-file-picker';
+import { FilePicker } from '@capawesome/capacitor-file-picker';
 
 function Page() {
   const deep = useDeep();
@@ -56,9 +59,9 @@ function Page() {
   const [platform, setPlatform] = useState(undefined);
 
   const [firebaseApplication, setFirebaseApplication] =
-    useState<FirebaseApp|undefined>(undefined);
+    useState<FirebaseApp | undefined>(undefined);
   const [firebaseMessaging, setFirebaseMessaging] =
-    useState<Messaging|undefined>(undefined);
+    useState<Messaging | undefined>(undefined);
 
   useEffect(() => {
     if (platform === 'web') {
@@ -103,6 +106,60 @@ function Page() {
     });
   }, [deviceLinkId, deviceRegistrationTokenLinkId, platform]);
 
+  enum ServiceAccountObtainingWay {
+    File,
+    Text
+  }
+
+  const [serviceAccountObtainingWay, setServiceAccountObtainingWay] = useState<ServiceAccountObtainingWay>(ServiceAccountObtainingWay.File);
+  const [serviceAccount, setServiceAccount] = useState<string>("");
+
+  const layoutsByObtainintWays: Record<ServiceAccountObtainingWay, JSX.Element> = {
+    [ServiceAccountObtainingWay.File]: <Button onClick={async () => {
+      const pickFilesResult = await FilePicker.pickFiles({
+        types: ['application/json']
+      });
+      console.log({ pickFilesResult });
+      await insertServiceAccount({
+        deep,
+        serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text())
+      })
+    }}>
+      Insert Service Account
+    </Button>,
+    [ServiceAccountObtainingWay.Text]: <>
+    <Textarea placeholder='Service Account' value={serviceAccount} onChange={(event) => {
+    setServiceAccount(event.target.value);
+  }}>
+  </Textarea>
+  <Button
+    onClick={async () => {
+      await insertServiceAccount({
+        deep,
+        serviceAccount: JSON.parse(JSON.stringify(serviceAccount))
+      })
+    }}
+  >
+    Insert Default Service Account
+  </Button>
+  </>
+  }
+
+
+  const serviceAccountPageContent = <>
+    <RadioGroup onChange={(value) => {
+      setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
+    }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
+      <Stack direction='row'>
+        <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
+        <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
+      </Stack>
+    </RadioGroup>
+       {
+         layoutsByObtainintWays[serviceAccountObtainingWay]
+       }
+  </>;
+
   return (
     <Stack>
       <Text suppressHydrationWarning>Deep link id: {deep.linkId ?? ' '}</Text>
@@ -116,7 +173,7 @@ function Page() {
       </Text>
       <Code display={"block"} whiteSpace={"pre"}>
         {
-`
+          `
 package_name="push-notification" 
 npx ts-node "./imports/\${package_name}/install-package.ts"
 `
@@ -129,7 +186,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
             if (!platform) {
               return;
             }
-            const isPermissionsGranted = await requestPermissions({platform});
+            const isPermissionsGranted = await requestPermissions({ platform });
             setIsPermissionsGranted(isPermissionsGranted);
           });
         }}
@@ -168,18 +225,9 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         </Link>
         . Do not forget to change PROJECT_ID in URL to your project id
       </Text>
-      <Button onClick={async () => {
-                const pickFilesResult = await FilePicker.pickFiles({
-                  types: ['application/json']
-                });
-                console.log({pickFilesResult});
-                await insertServiceAccount({
-                  deep,
-                  serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text())
-                })
-              }}>
-                Insert Service Account
-              </Button>
+      {
+        serviceAccountPageContent
+      }
       <Button
         onClick={async () => {
           await insertPushNotification({
@@ -216,8 +264,8 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       </Button>
       <Text>After using these buttons insert a link with type Notify from PushNotification to device. You should get a notification after that.</Text>
       <Code display={"block"} whiteSpace={"pre"}>
-{
-  `
+        {
+          `
 await deep.insert({
     type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
     from_id: pushNotificationLinkId, 
@@ -225,7 +273,7 @@ await deep.insert({
     in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
 })
   `
-}
+        }
       </Code>
     </Stack>
   );
