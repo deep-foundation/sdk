@@ -1,8 +1,9 @@
 import {NotificationPayload} from 'firebase/messaging';
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
+import { PushNotification } from './push-notification';
 
-export async function insertPushNotification({deep, pushNotification}:{deep: DeepClient, pushNotification: NotificationPayload}) {
+export async function insertPushNotification({deep, pushNotification}:{deep: DeepClient, pushNotification: PushNotification}) {
   const pushNotificationTypeLinkId = await deep.id(
     PACKAGE_NAME,
     'PushNotification'

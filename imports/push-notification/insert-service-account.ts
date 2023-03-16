@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertServiceAccount({ deep, serviceAccount, makeActive }: { deep: DeepClient, serviceAccount: object, makeActive?: boolean }) {
+export async function insertServiceAccount({ deep, serviceAccount, makeActive = false }: { deep: DeepClient, serviceAccount: object, makeActive?: boolean }) {
   const containTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'Contain'

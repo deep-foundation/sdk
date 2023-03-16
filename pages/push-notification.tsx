@@ -27,6 +27,18 @@ import {
   Heading,
   CardBody,
   CardFooter,
+  Checkbox,
+  StackDivider,
+  NumberInputField,
+  NumberInput,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  HStack,
 } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -47,6 +59,9 @@ import { insertServiceAccount } from '../imports/push-notification/insert-servic
 import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
 import { registerDevice } from '../imports/push-notification/register-device';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
+import { PushNotification as PushNotificationComponent } from '../components/push-notification';
+import { PushNotification } from '../imports/push-notification/push-notification';
+import { getPushNotification } from '../imports/push-notification/get-push-notification';
 
 function Page() {
   const deep = useDeep();
@@ -111,6 +126,131 @@ function Page() {
     });
   }, [deviceLinkId, deviceRegistrationTokenLinkId, platform]);
 
+
+  const { data: pushNotificationLinks, loading: isPushNotificationLinksSubscriptionLoading, error: pushNotificationLinksSubscriptionError } = useDeepSubscription({
+    type_id: {
+      _id: [PACKAGE_NAME, "PushNotification"]
+    },
+    in: {
+      type_id: {
+        _id: ["@deep-foundation/core", "Contain"]
+      },
+      from_id: deep.linkId
+    }
+  });
+
+  const [pushNotifications, setPushNotifications] = useState<PushNotification[] | undefined>(undefined);
+  useEffect(() => {
+    if (isPushNotificationLinksSubscriptionLoading) {
+      return
+    };
+    new Promise(async () => {
+      const pushNotifications = [];
+      for (const pushNotificationLink of pushNotificationLinks) {
+        const pushNotification = await getPushNotification({
+          deep,
+          pushNotificationLinkId: pushNotificationLink.id
+        })
+        pushNotifications.push(pushNotification);
+      }
+      setPushNotifications(pushNotifications)
+    })
+  }, [pushNotificationLinks, isPushNotificationLinksSubscriptionLoading, pushNotificationLinksSubscriptionError])
+
+  const { data: deviceLinks, loading: isDeviceLinksSubscriptionLoading, error: deviceLinksSubscriptionError } = useDeepSubscription({
+    type_id: {
+      _id: [DEVICE_PACKAGE_NAME, "Device"]
+    },
+    in: {
+      type_id: {
+        _id: ["@deep-foundation/core", "Contain"]
+      },
+      from_id: deep.linkId
+    }
+  });
+  const [devices, setDevices] = useState<PushNotification[] | undefined>(undefined);
+  useEffect(() => {
+    if (isPushNotificationLinksSubscriptionLoading) {
+      return
+    };
+    new Promise(async () => {
+      const pushNotifications = [];
+      for (const pushNotificationLink of pushNotificationLinks) {
+        const pushNotification = await getPushNotification({
+          deep,
+          pushNotificationLinkId: pushNotificationLink.id
+        })
+        pushNotifications.push(pushNotification);
+      }
+      setPushNotifications(pushNotifications)
+    })
+  }, [pushNotificationLinks, isPushNotificationLinksSubscriptionLoading, pushNotificationLinksSubscriptionError])
+
+  const generalInfoCard = <Card>
+    <CardHeader>
+      <Heading size='md'>General Info</Heading>
+    </CardHeader>
+    <CardBody>
+      <Stack>
+        <Text suppressHydrationWarning>Deep link id: {deep.linkId ?? ' '}</Text>
+        <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? ' '}</Text>
+        <Text suppressHydrationWarning>
+          Device registration token link id: {deviceRegistrationTokenLinkId ?? ' '}
+        </Text>
+        <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
+      </Stack>
+    </CardBody>
+  </Card>;
+
+  const temporareDevelopmentCardAboutPackageInstallation = <Card>
+    <CardHeader>
+      <Heading size='md'>Temporarily While The Package Is Not Published</Heading>
+    </CardHeader>
+    <CardBody>
+      <Stack>
+        <Text>
+          Install the package by executing this code in the sdk repository root
+        </Text>
+        <Code display={"block"} whiteSpace={"pre"}>
+          {
+            `
+package_name="push-notification" 
+npx ts-node "./imports/\${package_name}/install-package.ts"
+`.trim()
+          }
+        </Code>
+      </Stack>
+    </CardBody>
+  </Card>;
+
+  const permissionsCard = <Card>
+    <CardHeader>
+      <Heading size='md'>Permissions</Heading>
+    </CardHeader>
+    <CardBody>
+      <Stack>
+        <Text suppressHydrationWarning>
+          Permissions are {!isPermissionsGranted && 'not'} granted
+        </Text>
+        <Button
+          isDisabled={!platform}
+          onClick={() => {
+            new Promise(async () => {
+              if (!platform) {
+                return;
+              }
+              const isPermissionsGranted = await requestPermissions({ platform });
+              setIsPermissionsGranted(isPermissionsGranted);
+            });
+          }}
+        >
+          Request permissions
+        </Button>
+
+      </Stack>
+    </CardBody>
+  </Card>
+
   enum ServiceAccountObtainingWay {
     File,
     Text
@@ -118,6 +258,7 @@ function Page() {
 
   const [serviceAccountObtainingWay, setServiceAccountObtainingWay] = useState<ServiceAccountObtainingWay>(ServiceAccountObtainingWay.File);
   const [serviceAccount, setServiceAccount] = useState<string>("");
+  const [makeServiceAccountActive, setMakeServiceAccountActive] = useState<boolean>(false);
 
   const layoutsByObtainintWays: Record<ServiceAccountObtainingWay, JSX.Element> = {
     [ServiceAccountObtainingWay.File]: <Button onClick={async () => {
@@ -127,140 +268,165 @@ function Page() {
       console.log({ pickFilesResult });
       await insertServiceAccount({
         deep,
-        serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text())
+        serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text()),
+        makeActive: makeServiceAccountActive
       })
     }}>
       Insert Service Account
     </Button>,
     [ServiceAccountObtainingWay.Text]: <>
-    <Textarea placeholder='Service Account' value={serviceAccount} onChange={(event) => {
-    setServiceAccount(event.target.value);
-  }}>
-  </Textarea>
-  <Button
-    onClick={async () => {
-      await insertServiceAccount({
-        deep,
-        serviceAccount: JSON.parse(JSON.stringify(serviceAccount))
-      })
-    }}
-  >
-    Insert Default Service Account
-  </Button>
-  </>
+      <Textarea placeholder='Service Account' value={serviceAccount} onChange={(event) => {
+        setServiceAccount(event.target.value);
+      }}>
+      </Textarea>
+      <Button
+        onClick={async () => {
+          await insertServiceAccount({
+            deep,
+            serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
+            makeActive: makeServiceAccountActive
+          })
+        }}
+      >
+        Insert Default Service Account
+      </Button>
+    </>
   }
 
 
-  const serviceAccountPageContent = (
+  const serviceAccountCard = (
     <Card>
       <CardHeader>
-        <Heading size='md'>Service Account</Heading>
+        <Heading size='md'>Insert Service Account</Heading>
       </CardHeader>
-      <CardBody><RadioGroup onChange={(value) => {
-        setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
-      }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
-        <Stack direction='row'>
-          <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
-          <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
+      <CardBody>
+        <Stack>
+          <RadioGroup onChange={(value) => {
+            setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
+          }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
+            <Stack direction='row'>
+              <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
+              <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
+            </Stack>
+          </RadioGroup>
+          <Checkbox
+            isChecked={makeServiceAccountActive}
+            onChange={(event) => setMakeServiceAccountActive(event.target.checked)}
+          >
+            Make Active
+          </Checkbox>
+          {
+            layoutsByObtainintWays[serviceAccountObtainingWay]
+          }
         </Stack>
-      </RadioGroup>
-        {
-          layoutsByObtainintWays[serviceAccountObtainingWay]
-        }
       </CardBody>
       <CardFooter>
-      <Text>
-        Service Account can be found on{' '}
-        <Link
-          href={
-            'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
-          }
-        >
-          https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
-        </Link>
-        . Do not forget to change PROJECT_ID in URL to your project id
-      </Text>
+        <Text>
+          Service Account can be found on{' '}
+          <Link
+            href={
+              'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
+            }
+          >
+            https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
+          </Link>
+          . Do not forget to change PROJECT_ID in URL to your project id
+        </Text>
       </CardFooter>
     </Card>
   );
 
-  return (
-    <Stack>
-      <Text suppressHydrationWarning>Deep link id: {deep.linkId ?? ' '}</Text>
-      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? ' '}</Text>
-      <Text suppressHydrationWarning>
-        Device registration token link id: {deviceRegistrationTokenLinkId ?? ' '}
-      </Text>
-      <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
-      <Text suppressHydrationWarning>
-        Permissions are {!isPermissionsGranted && 'not'} granted
-      </Text>
-      <Code display={"block"} whiteSpace={"pre"}>
-        {
-          `
-package_name="push-notification" 
-npx ts-node "./imports/\${package_name}/install-package.ts"
-`
-        }
-      </Code>
-      <Button
-        isDisabled={!platform}
-        onClick={() => {
-          new Promise(async () => {
-            if (!platform) {
-              return;
-            }
-            const isPermissionsGranted = await requestPermissions({ platform });
-            setIsPermissionsGranted(isPermissionsGranted);
-          });
-        }}
-      >
-        Request permissions
-      </Button>
-      <Text>
-        WebPushCertificate can be found on{' '}
-        <Link
-          href={
-            'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
-          }
+  const [webPushCertificate, setWebPushCertificate] = useState<string>("");
+  const webPushCertificateAccountCard = (
+    <Card>
+      <CardHeader>
+        <Heading size='md'>Insert Web Push Certificate</Heading>
+      </CardHeader>
+      <CardBody>
+        <Input placeholder='Web Push Certificate' value={webPushCertificate} onChange={(event) => {
+          setWebPushCertificate(event.target.value);
+        }}>
+        </Input>
+        <Button
+          onClick={async () => {
+            await insertWebPushCertificate({
+              deep,
+              webPushCertificate
+            })
+          }}
         >
-          https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
-        </Link>
-        . Do not forget to change PROJECT_ID in URL to your project id
-      </Text>
-      <Button
-        onClick={async () => {
-          await insertWebPushCertificate({
-            deep,
-            webPushCertificate: "Insert Web Push Certificate here. Get in on https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging"
-          })
-        }}
-      >
-        Insert Default  WebPushCertificate
-      </Button>
-      {
-        serviceAccountPageContent
-      }
+          Insert Default Service Account
+        </Button>
+      </CardBody>
+      <CardFooter>
+        <Text>
+          WebPushCertificate can be found on{' '}
+          <Link
+            href={
+              'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
+            }
+          >
+            https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
+          </Link>
+          . Do not forget to change PROJECT_ID in URL to your project id
+        </Text>
+        <Text>
+          Required to notificate web clients
+        </Text>
+      </CardFooter>
+    </Card>
+  );
+
+
+  const [title, setTitle] = useState<string>("");
+  const [body, setBody] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  const pushNotificationInsertionCard = <Card>
+    <CardHeader>
+      <Heading size='md'>Insert Push Notification</Heading>
+    </CardHeader>
+    <CardBody>
+      <HStack>
+        <label htmlFor="pushNotificationTitle">Title</label>
+        <Input id={"pushNotificationTitle"} value={title} onChange={(event) => {
+          setTitle(event.target.value);
+        }} />
+      </HStack>
+      <HStack>
+        <label htmlFor="pushNotificationBody">Body</label>
+        <Input id={"pushNotificationBody"} value={body} onChange={(event) => {
+          setBody(event.target.value);
+        }} />
+      </HStack>
+      <HStack>
+        <label htmlFor="pushNotificationImageUrl">Image Url</label>
+        <Input id={"pushNotificationImageUrl"} value={imageUrl} onChange={(event) => {
+          setImageUrl(event.target.value);
+        }} />
+      </HStack>
       <Button
         onClick={async () => {
           await insertPushNotification({
             deep,
             pushNotification: {
-              body: "Body",
-              title: "Title"
+              body: title,
+              title: body,
             }
           })
         }}
       >
-        Insert Default Notification
+        Insert Notification
       </Button>
+    </CardBody>
+  </Card>
+
+  const deviceRegistrationCard = <Card>
+    <CardHeader>
+      <Heading size='md'>Register Device</Heading>
+    </CardHeader>
+    <CardBody>
       <Button
-        isDisabled={
-          !isPermissionsGranted ||
-          !platform ||
-          (platform === "web" && !firebaseApplication) ||
-          (platform === "web" && !firebaseMessaging)
-        }
         onClick={async () => {
           await registerDevice({
             deep,
@@ -275,19 +441,116 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       >
         Register
       </Button>
-      <Text>After using these buttons insert a link with type Notify from PushNotification to device. You should get a notification after that.</Text>
-      <Code display={"block"} whiteSpace={"pre"}>
-        {
-          `
-await deep.insert({
-    type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
-    from_id: pushNotificationLinkId, 
-    to_id: deviceLinkId, 
-    in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
-})
-  `
-        }
-      </Code>
+    </CardBody>
+  </Card>;
+
+  const [isNotifyInsertionModalOpened, setIsNotifyInsertionModalOpened] = useState<boolean>(false)
+  const notifyInsertionModalOnClose = () => {
+    setIsNotifyInsertionModalOpened(false)
+  };
+  const notifyInsertionCard = <Card>
+    <Button onClick={async () => {
+      setIsNotifyInsertionModalOpened((oldState) => !oldState)
+    }}>
+      Insert Notify Links
+    </Button>
+    {
+      isNotifyInsertionModalOpened && <Modal isOpen={isNotifyInsertionModalOpened} onClose={notifyInsertionModalOnClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Insert</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack>
+              {
+                pushNotifications.map(pushNotification => (
+                  <PushNotificationComponent pushNotification={pushNotification} />
+                ))
+              }
+            </Stack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={notifyInsertionModalOnClose}>
+              Close
+            </Button>
+            <Button variant='ghost'>Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    }
+  </Card>
+
+  // const [pushNotificationToNotifyLinkId, setPushNotificationToNotifyLinkId] = useState<number|undefined>(undefined)
+  // const [deviceToNotifyLinkId, setDeviceToNotifyLinkId] = useState(0)
+  // const notifyInsertionCard = <Card>
+  //   <CardHeader>
+  //     <Heading size='md'>Insert Notify</Heading>
+  //   </CardHeader>
+  //   <CardBody>
+
+  //       <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Push Notification Link Id To Notify</label>
+  //     <NumberInput value={pushNotificationToNotifyLinkId} onChange={(value) => {
+  //       console.log({value})
+  //       setPushNotificationToNotifyLinkId(value !== '' ? parseInt(value) : undefined)
+  //     }}>
+  //       <NumberInputField id={"pushNotificationToNotifyLinkIdNumberInput"} placeholder='Device Link Id To Notify'/>
+  //     </NumberInput>
+  //     <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Device Link Id To Notify Link Id</label>
+  //     <NumberInput  value={deviceToNotifyLinkId} onChange={(value) => {
+  //       setDeviceToNotifyLinkId(value !== '' ? parseInt(value) : undefined)
+  //     }}>
+  //       <NumberInputField placeholder='Device Link Id To Be Notified'/>
+  //     </NumberInput>
+  //     <Button
+  //       onClick={async () => {
+  //         const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+  //         const notifyTypeLinkId = await deep.id(PACKAGE_NAME, "Notify");
+  //         await deep.insert({
+  //           type_id: notifyTypeLinkId,
+  //           from_id: pushNotificationToNotifyLinkId,
+  //           to_id: deviceToNotifyLinkId,
+  //           in: {
+  //             data: {
+  //               type_id: containTypeLinkId,
+  //               from_id: deep.linkId
+  //             }
+  //           }
+  //         })
+  //       }}
+  //     >
+  //       Register
+  //     </Button>
+  //   </CardBody>
+  // </Card>;
+
+
+  return (
+    <Stack justifyContent={"center"} maxWidth={"768px"} margin={[0, "auto"]} spacing={4}>
+      {
+        generalInfoCard
+      }
+      {
+        temporareDevelopmentCardAboutPackageInstallation
+      }
+      {
+        permissionsCard
+      }
+      {
+        serviceAccountCard
+      }
+      {
+        webPushCertificateAccountCard
+      }
+      {
+        pushNotificationInsertionCard
+      }
+      {
+        deviceRegistrationCard
+      }
+      {
+        notifyInsertionCard
+      }
     </Stack>
   );
 }
