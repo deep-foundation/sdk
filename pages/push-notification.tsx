@@ -22,6 +22,11 @@ import {
   Box,
   RadioGroup,
   Radio,
+  Card,
+  CardHeader,
+  Heading,
+  CardBody,
+  CardFooter,
 } from '@chakra-ui/react';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -146,19 +151,38 @@ function Page() {
   }
 
 
-  const serviceAccountPageContent = <>
-    <RadioGroup onChange={(value) => {
-      setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
-    }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
-      <Stack direction='row'>
-        <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
-        <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
-      </Stack>
-    </RadioGroup>
-       {
-         layoutsByObtainintWays[serviceAccountObtainingWay]
-       }
-  </>;
+  const serviceAccountPageContent = (
+    <Card>
+      <CardHeader>
+        <Heading size='md'>Service Account</Heading>
+      </CardHeader>
+      <CardBody><RadioGroup onChange={(value) => {
+        setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
+      }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
+        <Stack direction='row'>
+          <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
+          <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
+        </Stack>
+      </RadioGroup>
+        {
+          layoutsByObtainintWays[serviceAccountObtainingWay]
+        }
+      </CardBody>
+      <CardFooter>
+      <Text>
+        Service Account can be found on{' '}
+        <Link
+          href={
+            'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
+          }
+        >
+          https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
+        </Link>
+        . Do not forget to change PROJECT_ID in URL to your project id
+      </Text>
+      </CardFooter>
+    </Card>
+  );
 
   return (
     <Stack>
@@ -214,17 +238,6 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       >
         Insert Default  WebPushCertificate
       </Button>
-      <Text>
-        Service Account can be found on{' '}
-        <Link
-          href={
-            'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
-          }
-        >
-          https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
-        </Link>
-        . Do not forget to change PROJECT_ID in URL to your project id
-      </Text>
       {
         serviceAccountPageContent
       }
