@@ -1,7 +1,8 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { PACKAGE_NAME } from "./package-name";
 
-export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepClient, serviceAccount: object}) {
+export async function insertServiceAccount({ deep, serviceAccount, makeActive }: { deep: DeepClient, serviceAccount: object, makeActive?: boolean }) {
   const containTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'Contain'
@@ -15,26 +16,25 @@ export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepCl
     'UsesServiceAccount'
   );
 
-  await deep.insert({
-    type_id: usesServiceAccountTypeLinkId,
-    from_id: deep.linkId,
-    to: {
-      data: {
-        type_id: serviceAccountTypeLinkId,
-        object: {
-          data: {
-            value: serviceAccount,
-          },
-        },
-        in: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              from_id: deep.linkId,
-            },
-          ],
-        },
+  if (makeActive) {
+    await deep.delete({
+      up: {
+        tree_id: await deep.id("@deep-foundation/core", "containTree"),
+        parent: {
+          type_id: { _id: ["@deep-foundation/core", "Contain"] },
+          to: { type_id: usesServiceAccountTypeLinkId },
+          from_id: deep.linkId
+        }
       }
+    })
+  }
+
+  await deep.insert({
+    type_id: serviceAccountTypeLinkId,
+    object: {
+      data: {
+        value: serviceAccount,
+      },
     },
     in: {
       data: [
@@ -42,8 +42,19 @@ export async function insertServiceAccount({deep, serviceAccount}: {deep: DeepCl
           type_id: containTypeLinkId,
           from_id: deep.linkId,
         },
+        makeActive && {
+          type_id: usesServiceAccountTypeLinkId,
+          from_id: deep.linkId,
+          in: {
+            data: [
+              {
+                type_id: containTypeLinkId,
+                from_id: deep.linkId,
+              },
+            ],
+          },
+        }
       ],
     },
-  });
-
+  })
 }
