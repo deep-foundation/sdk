@@ -7,7 +7,6 @@ import {
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
-
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/openai/package-name';
 import { Provider } from '../imports/provider';
@@ -56,48 +55,47 @@ function Content() {
       </Button>
       <Button
         onClick={async () => {
-          await deep.delete({
-            up: {
-              parent: {
-                type: { id: { _eq: 3 } },
-                to: { type: { in: { string: { value: { _eq: "UsesOpenAiApiKey" } } } } },
-                from_id: {
-                  _eq: deep.linkId
+          let makeActive = true;
+          if (makeActive) {
+            await deep.delete({
+              up: {
+                tree_id: { _eq: await deep.id("@deep-foundation/core", "containTree") },
+                parent: {
+                  type_id: { _id: ["@deep-foundation/core", "Contain"] },
+                  to: { type_id: await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"), },
+                  from_id: deep.linkId
                 }
               }
-            }
-          })
+            })
+          }
           
           await deep.insert({
-            type_id: await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"),
-            from_id: deep.linkId,
-            to: {
-              data: {
-                type_id: await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
-                string: { data: { value: process.env.OPENAI_API_KEY },
-                },
-                in: {
-                  data: [
-                    {
-                      type_id: await deep.id('@deep-foundation/core', "Contain"),
-                      from_id: deep.linkId,
-                    },
-                  ],
-                },
-              }
-            },
+            type_id:  await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
+            string: { data: { value: process.env.OPENAI_API_KEY }},
             in: {
               data: [
                 {
                   type_id: await deep.id('@deep-foundation/core', "Contain"),
                   from_id: deep.linkId,
                 },
+                makeActive && {
+                  type_id:  await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"),
+                  from_id: deep.linkId,
+                  in: {
+                    data: [
+                      {
+                        type_id: await deep.id('@deep-foundation/core', "Contain"),
+                        from_id: deep.linkId,
+                      },
+                    ],
+                  },
+                }
               ],
             },
-          });
+          })
         }}
       >
-        add usesOpenAiApiKeyLinkId link
+        add OpenAiApiKey and UsesOpenAiApiKey links
       </Button>
     </Stack>
   );
