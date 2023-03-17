@@ -9,6 +9,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type")
+  const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
@@ -29,6 +30,18 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
       }]
     },
   })
+
+  const { data: [{ id: dialogTreeLinkId }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'DialogTree' } },
+      },
+    }
+  })
+
   const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     type_id: typeTypeLinkId,
     in: {
