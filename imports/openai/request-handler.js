@@ -1,8 +1,8 @@
 async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
+    const { PACKAGE_NAME } =require('../imports/openai/package-name')
     const {Configuration, OpenAIApi} = require("openai")
-    const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
-    const openAiApiKeyTypeLinkId = await deep.id(`@deep-foundation/openai`, "OpenAiApiKey")
-    const usesOpenAiApiKeyTypeLinkId = await deep.id(`@deep-foundation/openai`, "UsesOpenAiApiKey")
+    const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey")
+    const usesOpenAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey")
 
 
     const {data: [linkWithStringValue]} = await deep.select({
