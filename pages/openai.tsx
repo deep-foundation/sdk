@@ -62,7 +62,7 @@ function Content() {
                 tree_id: { _eq: await deep.id("@deep-foundation/core", "containTree") },
                 parent: {
                   type_id: { _id: ["@deep-foundation/core", "Contain"] },
-                  to: { type_id: await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"), },
+                  to: { type_id: await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey"), },
                   from_id: deep.linkId
                 }
               }
@@ -70,7 +70,7 @@ function Content() {
           }
           
           await deep.insert({
-            type_id:  await deep.id('@deep-foundation/openai', "OpenAiApiKey"),
+            type_id:  await deep.id(PACKAGE_NAME, "OpenAiApiKey"),
             string: { data: { value: process.env.OPENAI_API_KEY }},
             in: {
               data: [
@@ -79,7 +79,7 @@ function Content() {
                   from_id: deep.linkId,
                 },
                 makeActive && {
-                  type_id:  await deep.id('@deep-foundation/openai', "UsesOpenAiApiKey"),
+                  type_id:  await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey"),
                   from_id: deep.linkId,
                   in: {
                     data: [
