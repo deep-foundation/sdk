@@ -1,14 +1,10 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'sdk.app',
-  appName: 'SDK',
-  webDir: 'app',
-  bundledWebRuntime: false,
-  server: {
-    url: "http://localhost:3008",
-    cleartext: true,
-  },
+  appId: 'com.deepfoundation.deep',
+  appName: 'Deep',
+  webDir: 'out',
+  bundledWebRuntime: false
 };
 
 export default config;
