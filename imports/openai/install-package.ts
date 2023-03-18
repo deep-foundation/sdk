@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import fs from 'fs';
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
-import {PACKAGE_NAME} from "./package-name";
+import { PACKAGE_NAME } from './package-name';
 require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
