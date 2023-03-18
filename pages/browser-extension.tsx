@@ -3,12 +3,9 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-
 import initializePackage from "../imports/browser-extension/initialize-package";
 import { PACKAGE_NAME } from "../imports/browser-extension/initialize-package";
 import Tab from "./tab";
-import Link from "next/link";
-import { useRouter } from 'next/router'
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
 
@@ -16,40 +13,33 @@ export const delay = (time) => new Promise(res => setTimeout(() => res(null), ti
 
 export function Extension() {
   const deep = useDeep();
-  const [auth, setAuth] = useState(false);
-  const [tabsSubscription, setTabsSubscription] = useState(false);
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
+  const [activeTab, setActiveTab] = useLocalStore("ActiveTab", null);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
   );
 
-  const authUser = async (deep) => {
-    await deep.guest();
-    const { linkId, token, error } = await deep.login({
-      linkId: await deep.id("deep", 'admin')
-    })
-    token ? setAuth(true) : setAuth(false)
-  };
-
-  useEffect(() => {
-    let update = true;
-    const updateTabs = async (tabsSubscription) => {
-      for (; typeof (window) === "object" && tabsSubscription && update;) {
-        const newTabs = await chrome.tabs.query({});
-        setTabs(newTabs);
-        await delay(1000);
-      }
+  const getTabs = async () => {
+    if (typeof (window) === "object") {
+      const tabs = await chrome.tabs.query({});
+      setTabs(tabs);
     }
-    if (tabsSubscription) updateTabs(tabsSubscription);
-    return () => { update = false };
-  }, [tabsSubscription])
+  }
 
   const getHistory = async () => {
     if (typeof (window) === "object") {
-      const newHistory = await chrome.history.search({ text: '', maxResults: 10 });
-      setHistory(newHistory);
+      const history = await chrome.history.search({ text: '', maxResults: 10 });
+      setHistory(history);
+    }
+  }
+
+  const onActivated = async () => {
+    if (typeof (window) === "object") {
+      chrome.tabs.onActivated.addListener(async (activeInfo) => {
+        setActiveTab(activeInfo);
+      })
     }
   }
 
@@ -69,6 +59,14 @@ export function Extension() {
     if (history.length > 0) upload(history);
   }, [history])
 
+  useEffect(() => {
+    const upload = async (history) => {
+      await uploadHistory(deep, deviceLinkId, history);
+      setHistory([]);
+    }
+    if (history.length > 0) upload(history);
+  }, [activeTab])
+
   const createBrowserHistoryLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const { data: [{ id: browserHistoryLinkId }] } = await deep.insert({
@@ -86,19 +84,17 @@ export function Extension() {
   return (
     <>
       <Stack>
-        <Button style={{ background: auth ? "green" : "red" }} onClick={async () => await authUser(deep)}>ADMIN</Button>
         <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
         <Button onClick={async () => await createBrowserHistoryLink(deep)} >CREATE NEW BROWSERHISTORY LINK</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
-        <Button onClick={() => setTabsSubscription(true)}>UPLOAD TABS</Button>
-        <Button onClick={() => {setTabsSubscription(false); setTabs([])}}>UNSUBSCRIBE</Button>
+        <Button onClick={() => getTabs()}>UPLOAD TABS</Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
     </>
   )
 }
 
-export default function ExtensionPage() {
+export default function Page() {
   return (
     <>
       <ChakraProvider>
