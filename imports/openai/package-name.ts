@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/openai`
+export const PACKAGE_NAME=`@flakeed/openai`
