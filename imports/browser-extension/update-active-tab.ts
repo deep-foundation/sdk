@@ -3,7 +3,7 @@ import { PACKAGE_NAME } from "./initialize-package";
 
 export default async function updateActiveTab(deep: DeepClient, deviceLinkId, tabs) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const browserHistoryLinkId = await deep.id(deviceLinkId, "BrowserHistory");
+  const browserExtensionLinkId = await deep.id(deviceLinkId, "BrowserExtension");
   const tabTypeLinkId = await deep.id(PACKAGE_NAME, "Tab");
   const urlTypeLinkId = await deep.id(PACKAGE_NAME, "Url");
   const titleTypeLinkId = await deep.id(PACKAGE_NAME, "Title");
@@ -15,7 +15,7 @@ export default async function updateActiveTab(deep: DeepClient, deviceLinkId, ta
     in: {
       data: [{
         type_id: containTypeLinkId,
-        from_id: browserHistoryLinkId,
+        from_id: browserExtensionLinkId,
       }]
     },
     out: {

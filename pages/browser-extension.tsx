@@ -9,8 +9,6 @@ import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
 
-export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
-
 export function Extension() {
   const deep = useDeep();
   const [tabs, setTabs] = useLocalStore("Tabs", []);
@@ -67,15 +65,15 @@ export function Extension() {
     if (history.length > 0) upload(history);
   }, [activeTab])
 
-  const createBrowserHistoryLink = async (deep) => {
+  const createBrowserExtensionLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const { data: [{ id: browserHistoryLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "BrowserHistory"),
+    const { data: [{ id: browserExtensionLinkId }] } = await deep.insert({
+      type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
       in: {
         data: [{
           type_id: containTypeLinkId,
           from_id: deviceLinkId,
-          string: { data: { value: "BrowserHistory" } },
+          string: { data: { value: "BrowserExtension" } },
         }]
       }
     })
@@ -85,7 +83,7 @@ export function Extension() {
     <>
       <Stack>
         <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
-        <Button onClick={async () => await createBrowserHistoryLink(deep)} >CREATE NEW BROWSERHISTORY LINK</Button>
+        <Button onClick={async () => await createBrowserExtensionLink(deep)} >CREATE NEW CONTAINER LINK</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
         <Button onClick={() => getTabs()}>UPLOAD TABS</Button>
       </Stack>
