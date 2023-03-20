@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
-import { createClipboardPackage, createClipboard } from "../imports/packages/clipboard/clipboard";
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 
 function Page() {
   const deep = useDeep();
@@ -130,9 +130,9 @@ function Page() {
       </div>
       <div>
         <hr />
-        <button onClick={() => createClipboardPackage({ deep, deviceLinkId })}>create clipboard Package</button>
+        <button onClick={() => initPackageClipboard({ deep })}>create clipboard Package</button>
         <br />
-        <button onClick={() => createClipboard({ deep, deviceLinkId })}>create All clipboard</button>
+        <button onClick={() => copyClipboardToDeep({ deep, deviceLinkId })}>copy Clipboard to deep</button>
         <hr />
       </div>
     </>

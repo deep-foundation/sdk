@@ -1,68 +1,53 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Clipboard } from '@capacitor/clipboard';
 
-export async function createClipboard({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
+
+const CAPACITOR_CLIPBOARD_NAME_PACKAGE = "@l4legenda/capacitor-clipboard";
+const CORE_NAME_PACKAGE = "@deep-foundation/core";
+
+export async function copyClipboardToDeep({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
+
+
     const { type, value } = await Clipboard.read();
-    const clipboardType = await deep.id("@deep-foundation/clipboard", "clipboard");
+    const typeClipboardLinkId = await deep.id(CAPACITOR_CLIPBOARD_NAME_PACKAGE, "Clipboard");
+    const typeContainLinkId = await deep.id(CORE_NAME_PACKAGE, "Contain");
 
-    const ml = new ManagerLinks(deep);
-
-    const contactLink = await ml.createLink({
-        containName: "clipboard",
-        value: value,
-        contain_from_id: deviceLinkId,
-        type_id: clipboardType,
-    });
+    await deep.insert({
+        type_id: typeClipboardLinkId,
+        string: { data: { value: value } },
+        in: {
+            data: {
+                type_id: typeContainLinkId,
+                from_id: deep.linkId,
+            }
+        },
+    })
 }
 
-export async function createClipboardPackage({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
-    const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
-    const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
+export async function initPackageClipboard({ deep }: { deep: DeepClient }) {
+    const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
+    const typePackageQueryLinkId = await deep.id("@deep-foundation/core", "PackageQuery");
+    const typeInstallLinkId = await deep.id("@deep-foundation/npm-packager", "Install");
 
-    const ml = new ManagerLinks(deep);
+    console.log(typeInstallLinkId);
 
-    const clipbloardPackage = await ml.createLink({
-        value: "@deep-foundation/clipboard",
-        contain_from_id: deviceLinkId,
-        type_id: packageTypeLinkId,
-    });
-
-    const clipboard = await ml.createLink({
-        containName: "clipboard",
-        contain_from_id: clipbloardPackage,
-        type_id: typeTypeLinkId,
-    });
-
-}
-
-
-class ManagerLinks {
-    constructor(private deep: DeepClient) { }
-
-    async createLink({
-        containName,
-        value,
-        contain_from_id,
-        type_id,
-    }: {
-        containName?: string;
-        value?: string;
-        contain_from_id: number;
-        type_id: number;
-    }) {
-        const {
-            data: [{ id }],
-        } = await this.deep.insert({
-            type_id: type_id,
-            ...(value && { string: { data: { value: value } } }),
-            in: {
-                data: {
-                    type_id: 3,
-                    from_id: contain_from_id, // 362
-                    ...(containName && { string: { data: { value: containName } } }),
+    await deep.insert({
+        type_id: typePackageQueryLinkId,
+        string: { data: { value: CAPACITOR_CLIPBOARD_NAME_PACKAGE } },
+        in: {
+            data: [
+                {
+                    type_id: typeContainLinkId,
+                    from_id: deep.linkId,
                 },
-            },
-        });
-        return id;
-    }
+                {
+                    type_id: typeInstallLinkId,
+                    from_id: deep.linkId,
+                },
+            ]
+        },
+    })
+
 }
+
+
