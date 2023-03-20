@@ -18,7 +18,7 @@ export async function copyClipboardToDeep({ deep, deviceLinkId }: { deep: DeepCl
         in: {
             data: {
                 type_id: typeContainLinkId,
-                from_id: deep.linkId,
+                from_id: deviceLinkId,
             }
         },
     })
