@@ -29,8 +29,6 @@ export async function initPackageClipboard({ deep }: { deep: DeepClient }) {
     const typePackageQueryLinkId = await deep.id("@deep-foundation/core", "PackageQuery");
     const typeInstallLinkId = await deep.id("@deep-foundation/npm-packager", "Install");
 
-    console.log(typeInstallLinkId);
-
     await deep.insert({
         type_id: typePackageQueryLinkId,
         string: { data: { value: CAPACITOR_CLIPBOARD_NAME_PACKAGE } },
