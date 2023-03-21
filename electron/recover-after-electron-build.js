@@ -6,11 +6,13 @@ const typesPath = `node_modules${delimetr}@types`
 
 const linuxAppPath = 'dist/linux-unpacked/resources/app';
 const windowsAppPath = 'dist\\win-unpacked\\resources\\app';
-const macAppPath = 'dist/mac/Deep.Case.app/Contents/Resources/app';
+const macAppPath = 'dist/mac/SDK.app/Contents/Resources/app';
 
 const appPath = process.platform === 'win32' ? windowsAppPath : process.platform === 'darwin' ? macAppPath : linuxAppPath;
 
 exports.default = async function(context) {
+  console.log(`${appPath}${delimetr}${typesPath}`);
+  console.log(`cp -r ${typesPath} ${appPath}${delimetr}${typesPath}`);
   try {
     if (fs.existsSync(`${appPath}${delimetr}${typesPath}`))fs.rmSync(`${appPath}${delimetr}${typesPath}`, { recursive: true });
     shell(`cp -r ${typesPath} ${appPath}${delimetr}${typesPath}`);

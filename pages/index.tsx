@@ -21,8 +21,8 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
 function Page() {
   const deep = useDeep();
@@ -61,30 +61,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-
-      const getIsDevicePackageInstalled = async() => {
-        const devicePackageSelectResponse = await deep.select({
-          type_id: {
-            _id: ['@deep-foundation/core', 'Contain'],
-          },
-          from_id: deep.linkId,
-          to: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Package'],
-            },
-            string: {
-              value: DEVICE_PACKAGE_NAME,
-            },
-          },
-        });
-        const isDevicePackageInstalled =
-          devicePackageSelectResponse.data.length > 0;
-        return isDevicePackageInstalled;
-      }
       
-      if (!await getIsDevicePackageInstalled()) {
-        await insertDevicePackageLinksToDeep({deep});
-      }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
