@@ -23,7 +23,7 @@ import {
 import Link from 'next/link';
 import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
-import { createContactPackage, createAllContacts } from "../imports/packages/contact/contact";
+import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
 
 function Page() {
   const deep = useDeep();
@@ -131,7 +131,7 @@ function Page() {
         <hr />
         <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
         <br />
-        <button onClick={() => createContactPackage({ deep })}>create Contact Package</button>
+        <button onClick={() => initPackageContact({ deep })}>create Contact Package</button>
         <hr />
       </div>
     </>
