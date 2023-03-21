@@ -25,134 +25,114 @@ export async function insertGeneralInfoToDeep({deep, deviceLinkId, deviceGeneral
 		'WebViewVersion'
 	);
 
-	const {
-		data: [{ id: nameLinkId }],
-	} = await deep.insert({
-		type_id: nameTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.name } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		await deep.insert([
+			deviceGeneralInfo.name && {
+				type_id: nameTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.name } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: modelLinkId }],
-	} = await deep.insert({
-		type_id: modelTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.model } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			{
+				type_id: modelTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.model } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: platformLinkId }],
-	} = await deep.insert({
-		type_id: platformTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.platform } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			{
+				type_id: platformTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.platform } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: operatingSystemLinkId }],
-	} = await deep.insert({
-		type_id: operatingSystemTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.operatingSystem } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			{
+				type_id: operatingSystemTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.operatingSystem } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: osVersionLinkId }],
-	} = await deep.insert({
-		type_id: osVersionTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.osVersion } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			{
+				type_id: osVersionTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.osVersion } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: manufacturerLinkId }],
-	} = await deep.insert({
-		type_id: manufacturerTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.manufacturer } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			{
+				type_id: manufacturerTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.manufacturer } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-  if(deviceGeneralInfo.isVirtual) {
-    const {
-      data: [{ id: isVirtualLinkId }],
-    } = await deep.insert({
-      type_id: isVirtualTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deviceLinkId,
-        },
-      },
-    });
-  }
-
-	const {
-		data: [{ id: memUsedLinkId }],
-	} = await deep.insert({
-		type_id: memUsedTypeLinkId,
-		number: { data: { value: deviceGeneralInfo.memUsed } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			deviceGeneralInfo.isVirtual && {
+				type_id: isVirtualTypeLinkId,
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: realDiskFreeLinkId }],
-	} = await deep.insert({
-		type_id: realDiskFreeTypeLinkId,
-		number: { data: { value: deviceGeneralInfo.realDiskFree } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			deviceGeneralInfo.memUsed && {
+				type_id: memUsedTypeLinkId,
+				number: { data: { value: deviceGeneralInfo.memUsed } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
-
-	const {
-		data: [{ id: webViewVersionLinkId }],
-	} = await deep.insert({
-		type_id: webViewVersionTypeLinkId,
-		string: { data: { value: deviceGeneralInfo.webViewVersion } },
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: deviceLinkId,
+		
+			deviceGeneralInfo.realDiskFree && {
+				type_id: realDiskFreeTypeLinkId,
+				number: { data: { value: deviceGeneralInfo.realDiskFree } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
 			},
-		},
-	});
+		
+			{
+				type_id: webViewVersionTypeLinkId,
+				string: { data: { value: deviceGeneralInfo.webViewVersion } },
+				in: {
+					data: {
+						type_id: containTypeLinkId,
+						from_id: deviceLinkId,
+					},
+				},
+			},
+		])
 }
