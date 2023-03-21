@@ -21,9 +21,9 @@
     "build": "rm -rf app && next build",
     "start": "next start",
     "dev": "next dev",
-    "ios-run": "npx cap run ios",
-    "ios-open": "npx cap open ios",
-    "ios-build": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios"
+    "run-ios": "npx cap run ios",
+    "open-ios": "npx cap open ios",
+    "build-ios": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios"
   },
   "dependencies": {
     "@capacitor-community/contacts": "^2.0.0",
