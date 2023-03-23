@@ -31,6 +31,8 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
   const typeContactIdLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "contactId");
   const typeNameLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "name");
 
+  const typeDisplayLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "display");
+  const typeGivenLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "given");
   const typeMiddleLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "middle");
   const typeFamilyLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "family");
   const typePrefixLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "prefix");
