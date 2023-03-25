@@ -5,14 +5,16 @@ import { Device } from "../../imports/device/device";
 export function Device({ device }: { device: Device }) {
   return <Card >
     <CardHeader>
-      <Heading >{
-        device.name
-      }</Heading>
+      <Heading >
+        {
+          device.model
+        }
+      </Heading>
     </CardHeader>
     <CardBody>
       <Text>
         {
-          device.model
+          device.name
         }
       </Text>
     </CardBody>
