@@ -57,8 +57,6 @@ async function installPackage() {
   await deep.insert([
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
@@ -173,8 +171,6 @@ async function installPackage() {
     },
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
