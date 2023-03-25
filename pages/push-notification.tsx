@@ -258,7 +258,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
 
   const [serviceAccountObtainingWay, setServiceAccountObtainingWay] = useState<ServiceAccountObtainingWay>(ServiceAccountObtainingWay.File);
   const [serviceAccount, setServiceAccount] = useState<string>("");
-  const [makeServiceAccountActive, setMakeServiceAccountActive] = useState<boolean>(false);
+  const [shouldMakeServiceAccountActive, setShouldMakeServiceAccountActive] = useState<boolean>(false);
 
   const layoutsByObtainintWays: Record<ServiceAccountObtainingWay, JSX.Element> = {
     [ServiceAccountObtainingWay.File]: <Button onClick={async () => {
@@ -269,7 +269,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       await insertServiceAccount({
         deep,
         serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text()),
-        makeActive: makeServiceAccountActive
+        makeActive: shouldMakeServiceAccountActive
       })
     }}>
       Insert Service Account
@@ -284,7 +284,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
           await insertServiceAccount({
             deep,
             serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
-            makeActive: makeServiceAccountActive
+            makeActive: shouldMakeServiceAccountActive
           })
         }}
       >
@@ -310,8 +310,8 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
             </Stack>
           </RadioGroup>
           <Checkbox
-            isChecked={makeServiceAccountActive}
-            onChange={(event) => setMakeServiceAccountActive(event.target.checked)}
+            isChecked={shouldMakeServiceAccountActive}
+            onChange={(event) => setShouldMakeServiceAccountActive(event.target.checked)}
           >
             Make Active
           </Checkbox>
