@@ -44,7 +44,7 @@ import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-n
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { FirebaseApp, initializeApp } from 'firebase/app';
-import { Device } from '@capacitor/device';
+import { Device as CapacitorDevice } from '@capacitor/device';
 import {
   getMessaging,
   getToken,
@@ -62,6 +62,9 @@ import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
 import { PushNotification } from '../imports/push-notification/push-notification';
 import { getPushNotification } from '../imports/push-notification/get-push-notification';
+import { getDevice } from '../imports/device/get-device';
+import { Device as DeviceComponent } from '../components/device/device';
+import { Device } from '../imports/device/device';
 
 function Page() {
   const deep = useDeep();
@@ -105,7 +108,7 @@ function Page() {
 
   useEffect(() => {
     new Promise(async () => {
-      const deviceInfo = await Device.getInfo();
+      const deviceInfo = await CapacitorDevice.getInfo();
       setPlatform(deviceInfo.platform);
     });
   }, []);
@@ -168,7 +171,7 @@ function Page() {
       from_id: deep.linkId
     }
   });
-  const [devices, setDevices] = useState<PushNotification[] | undefined>(undefined);
+  const [devices, setDevices] = useState<Device[] | undefined>(undefined);
   useEffect(() => {
     if (isDeviceLinksSubscriptionLoading) {
       return
@@ -473,6 +476,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
           <ModalHeader>Insert</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <HStack>
           <Stack>
               {
                 pushNotifications.map((pushNotification, i) => (
@@ -487,6 +491,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
                 ))
               }
             </Stack>
+          </HStack>
           </ModalBody>
 
           <ModalFooter>
