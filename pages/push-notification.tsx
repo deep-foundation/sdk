@@ -170,21 +170,21 @@ function Page() {
   });
   const [devices, setDevices] = useState<PushNotification[] | undefined>(undefined);
   useEffect(() => {
-    if (isPushNotificationLinksSubscriptionLoading) {
+    if (isDeviceLinksSubscriptionLoading) {
       return
     };
     new Promise(async () => {
-      const pushNotifications = [];
-      for (const pushNotificationLink of pushNotificationLinks) {
-        const pushNotification = await getPushNotification({
+      const devices = [];
+      for (const deviceLink of deviceLinks) {
+        const device = await getDevice({
           deep,
-          pushNotificationLinkId: pushNotificationLink.id
+          deviceLinkId: deviceLink.id
         })
-        pushNotifications.push(pushNotification);
+        devices.push(device);
       }
-      setPushNotifications(pushNotifications)
+      setDevices(devices)
     })
-  }, [pushNotificationLinks, isPushNotificationLinksSubscriptionLoading, pushNotificationLinksSubscriptionError])
+  }, [deviceLinks, isDeviceLinksSubscriptionLoading, deviceLinksSubscriptionError])
 
   const generalInfoCard = <Card>
     <CardHeader>
@@ -337,28 +337,39 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
   );
 
   const [webPushCertificate, setWebPushCertificate] = useState<string>("");
+  const [shouldMakeWebPushCertificateActive, setShouldMakeWebPushCertificateActive] = useState<boolean>(false);
   const webPushCertificateAccountCard = (
     <Card>
       <CardHeader>
         <Heading size='md'>Insert Web Push Certificate</Heading>
       </CardHeader>
       <CardBody>
+        <Stack>
         <Input placeholder='Web Push Certificate' value={webPushCertificate} onChange={(event) => {
           setWebPushCertificate(event.target.value);
         }}>
         </Input>
+        <Checkbox
+            isChecked={shouldMakeWebPushCertificateActive}
+            onChange={(event) => setShouldMakeWebPushCertificateActive(event.target.checked)}
+          >
+            Make Active
+          </Checkbox>
         <Button
           onClick={async () => {
             await insertWebPushCertificate({
               deep,
-              webPushCertificate
+              webPushCertificate,
+              shouldMakeActive: shouldMakeWebPushCertificateActive
             })
           }}
         >
           Insert Default Service Account
         </Button>
+        </Stack>
       </CardBody>
       <CardFooter>
+        <Stack>
         <Text>
           WebPushCertificate can be found on{' '}
           <Link
@@ -373,6 +384,7 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
         <Text>
           Required to notificate web clients
         </Text>
+        </Stack>
       </CardFooter>
     </Card>
   );
@@ -461,10 +473,17 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
           <ModalHeader>Insert</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <Stack>
+              {
+                pushNotifications.map((pushNotification, i) => (
+                  <PushNotificationComponent key={i} pushNotification={pushNotification} />
+                ))
+              }
+            </Stack>
             <Stack>
               {
-                pushNotifications.map(pushNotification => (
-                  <PushNotificationComponent pushNotification={pushNotification} />
+                devices.map((device, i) => (
+                  <DeviceComponent key={i} device={device} />
                 ))
               }
             </Stack>

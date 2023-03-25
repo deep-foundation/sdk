@@ -3,6 +3,7 @@ import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function insertServiceAccount({ deep, serviceAccount, makeActive = false }: { deep: DeepClient, serviceAccount: object, makeActive?: boolean }) {
+  console.log({ deep, serviceAccount, makeActive });
   const containTypeLinkId = await deep.id(
     '@deep-foundation/core',
     'Contain'
@@ -19,7 +20,7 @@ export async function insertServiceAccount({ deep, serviceAccount, makeActive = 
   if (makeActive) {
     await deep.delete({
       up: {
-        tree_id: await deep.id("@deep-foundation/core", "containTree"),
+        tree_id: {_eq: await deep.id("@deep-foundation/core", "containTree")},
         parent: {
           type_id: { _id: ["@deep-foundation/core", "Contain"] },
           to: { type_id: usesServiceAccountTypeLinkId },
@@ -42,18 +43,20 @@ export async function insertServiceAccount({ deep, serviceAccount, makeActive = 
           type_id: containTypeLinkId,
           from_id: deep.linkId,
         },
-        makeActive && {
-          type_id: usesServiceAccountTypeLinkId,
-          from_id: deep.linkId,
-          in: {
-            data: [
-              {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId,
-              },
-            ],
-          },
-        }
+        ...(makeActive ? [
+          {
+            type_id: usesServiceAccountTypeLinkId,
+            from_id: deep.linkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: deep.linkId,
+                },
+              ],
+            },
+          }
+        ] : [] )
       ],
     },
   })

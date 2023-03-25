@@ -1,6 +1,7 @@
 import { DeviceInfo } from "@capacitor/device";
 import { PushNotifications } from "@capacitor/push-notifications";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { getToken, Messaging } from "firebase/messaging";
 import { insertDeviceRegistrationToken } from "./insert-device-registration-token";
 import { PACKAGE_NAME } from "./package-name";
@@ -33,22 +34,24 @@ export async function registerDevice({ deep, deviceLinkId, platform, firebaseMes
       PACKAGE_NAME,
       'UsesWebPushCertificate'
     );
-    const {
-      data: [webPushCertificateLink],
-    } = await deep.select({
+    const webPushCertificateSelectData: BoolExpLink = {
       type_id: webPushCertificateTypeLinkId,
       in: {
         type_id: usesWebPushCertificateTypeLinkId,
         from_id: deep.linkId,
       },
-    });
+    };
+    const {
+      data: [webPushCertificateLink],
+    } = await deep.select(webPushCertificateSelectData);
     if (!webPushCertificateLink) {
       throw new Error(
-        `A link with type ##${usesWebPushCertificateTypeLinkId}, from ##${deep.linkId} to ##${webPushCertificateTypeLinkId} is not found`
+        // `A link with type ##${usesWebPushCertificateTypeLinkId}, from ##${deep.linkId} to ##${webPushCertificateTypeLinkId} is not found`
+        `${JSON.stringify(webPushCertificateSelectData)} query has found 0 links`
       );
     }
     if (!webPushCertificateLink.value?.value) {
-      throw new Error(`##${webPushCertificateLink} must have a value`);
+      throw new Error(`##${webPushCertificateLink.id} must have a value`);
     }
     const webPushCertificate = webPushCertificateLink.value.value;
     console.log({ webPushCertificateLink })
