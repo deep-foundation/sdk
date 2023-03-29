@@ -1,8 +1,6 @@
 import { Contacts } from '@capacitor-community/contacts';
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-const CAPACITOR_CONTACT_NAME_PACKAGE = "@l4legenda/capacitor-contact";
-const CORE_NAME_PACKAGE = "@deep-foundation/core";
 
 export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
 
@@ -26,38 +24,57 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
         image: true,
       }
     })
-  const typeContainLinkId = await deep.id(CORE_NAME_PACKAGE, "Contain");
-  const typeContactLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "contact");
-  const typeContactIdLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "contactId");
-  const typeNameLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "name");
+  const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
+  const typeContactLinkId = await deep.id("@l4legenda/capacitor-contact", "contact");
+  const typeContactIdLinkId = await deep.id("@l4legenda/capacitor-contact-contact-id", "contactId");
 
-  const typeDisplayLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "display");
-  const typeGivenLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "given");
-  const typeMiddleLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "middle");
-  const typeFamilyLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "family");
-  const typePrefixLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "prefix");
-  const typeSuffixLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "suffix");
+  const typeNameLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "name");
+  const typeDisplayLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "display");
+  const typeGivenLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "given");
+  const typeMiddleLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "middle");
+  const typeFamilyLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "family");
+  const typePrefixLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "prefix");
+  const typeSuffixLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "suffix");
 
-  const typeOrganizationLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "organization");
+  const typeOrganizationLinkId = await deep.id("@l4legenda/capacitor-contact-organization-payload", "organization");
+  const typeOrganizationCompanyLinkId = await deep.id("@l4legenda/capacitor-contact-organization-payload", "company");
+  const typeOrganizationJobTitleLinkId = await deep.id("@l4legenda/capacitor-contact-organization-payload", "jobTitle");
+  const typeOrganizationDepartmentLinkId = await deep.id("@l4legenda/capacitor-contact-organization-payload", "department");
 
-  const typeCompanyLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "company");
-  const typeJobTitleLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "jobTitle");
-  const typeDepartmentLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "department");
+  const typeBirthdayLinkId = await deep.id("@l4legenda/capacitor-contact-birthday-payload", "birthday");
 
-  const typeBirthdayLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "birthday");
+  const typeBirthdayDayLinkId = await deep.id("@l4legenda/capacitor-contact-birthday-payload", "day");
+  const typeBirthdayMonthLinkId = await deep.id("@l4legenda/capacitor-contact-birthday-payload", "month");
+  const typeBirthdayYearLinkId = await deep.id("@l4legenda/capacitor-contact-birthday-payload", "year");
 
-  const typeDayLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "day");
-  const typeMonthLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "month");
-  const typeYearLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "year");
+  const typeNoteLinkId = await deep.id("@l4legenda/capacitor-contact-note", "note");
 
-  const typeNoteLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "note");
-  const typePhonesLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "phones");
-  const typePhoneNumberLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "phoneNumber");
-  const typeEmailsLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "emails");
-  const typeEmailAddressLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "emailAddress");
-  const typeUrlsLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "urls");
-  const typePostalAddressesLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "postalAddresses");
-  const typeImageLinkId = await deep.id(CAPACITOR_CONTACT_NAME_PACKAGE, "image");
+  const typePhonesPhoneLinkId = await deep.id("@l4legenda/capacitor-contact-phones-payload", "phone");
+  const typePhoneNumberLinkId = await deep.id("@l4legenda/capacitor-contact-phones-payload", "number");
+  const typePhoneLabelLinkId = await deep.id("@l4legenda/capacitor-contact-phones-payload", "label");
+  const typePhoneTypeLinkId = await deep.id("@l4legenda/capacitor-contact-phones-payload", "type");
+
+  const typeEmailsEmailLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "email");
+  const typeEmailsTypeLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "type");
+  const typeEmailsLabelLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "label");
+  const typeEmailsNumberLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "number");
+  const typeEmailsIsPrimaryLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "isPrimary");
+
+  const typeUrlsLinkId = await deep.id("@l4legenda/capacitor-contact-urls", "urls");
+  const typeUrlsUrlLinkId = await deep.id("@l4legenda/capacitor-contact-urls", "url");
+
+  const typePostalAddressesLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "postalAddresses");
+  const typePostalAddressesCountryLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "country");
+  const typePostalAddressesStreetLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "street");
+  const typePostalAddressesRegionLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "region");
+  const typePostalAddressesPostcodeLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "postcode");
+  const typePostalAddressesCityLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "city");
+  const typePostalAddressesIsPrimaryLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "isPrimary");
+  const typePostalAddressesTypeLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "type");
+  const typePostalAddressesNeighborhoodLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "neighborhood");
+  const typePostalAddressesLabelLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "label");
+
+  const typeImageBase64StringLinkId = await deep.id("@l4legenda/capacitor-contact-image-payload", "base64String");
 
   for (const contact of contacts) {
     console.log(JSON.stringify(contact))
