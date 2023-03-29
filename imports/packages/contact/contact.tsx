@@ -75,6 +75,178 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
   const typePostalAddressesLabelLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "label");
 
   const typeImageBase64StringLinkId = await deep.id("@l4legenda/capacitor-contact-image-payload", "base64String");
+  const contactsObject = contacts.map(contact => {
+    const constactIdObject = {
+      type_id: typeContainLinkId,
+      to: {
+        data: {
+          type_id: typeContactIdLinkId,
+          string: { data: { value: contact.contactId } }
+        }
+      }
+    };
+
+    const name = {
+      type_id: typeContainLinkId,
+      to: {
+        data: {
+          type_id: typeNameLinkId,
+          out: {
+            data: [
+              // middle
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeMiddleLinkId,
+                    string: { data: { value: contact.name?.middle } }
+                  }
+                }
+              },
+              // family
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeFamilyLinkId,
+                    string: { data: { value: contact.name?.family } }
+                  }
+                }
+              },
+              // prefix
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typePrefixLinkId,
+                    string: { data: { value: contact.name?.prefix } }
+                  }
+                }
+              },
+              // suffix
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeSuffixLinkId,
+                    string: { data: { value: contact.name?.suffix } }
+                  }
+                }
+              },
+            ]
+          }
+        }
+      }
+    };
+
+    const organization = {
+      type_id: typeContainLinkId,
+      to: {
+        data: {
+          type_id: typeOrganizationLinkId,
+          out: {
+            data: (contact.organization && [
+              // company
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeOrganizationCompanyLinkId,
+                    string: { data: { value: contact.organization?.company } }
+                  }
+                }
+              },
+              // jobTitle
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeOrganizationJobTitleLinkId,
+                    string: { data: { value: contact.organization?.jobTitle } }
+                  }
+                }
+              },
+              // department
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeOrganizationDepartmentLinkId,
+                    string: { data: { value: contact.organization?.department } }
+                  }
+                }
+              },
+            ] || [])
+          }
+        }
+      }
+    };
+
+    // birthday
+    const birthday = {
+      type_id: typeContainLinkId,
+      to: {
+        data: {
+          type_id: typeBirthdayLinkId,
+          out: {
+            data: (contact.birthday && [
+              // day
+              (contact.birthday.day && {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeBirthdayDayLinkId,
+                    number: { data: { value: contact?.birthday?.day } }
+                  }
+                }
+              }),
+              // month
+              (contact.birthday.month && {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeBirthdayMonthLinkId,
+                    number: { data: { value: contact.birthday.month } }
+                  }
+                }
+              }),
+              // year
+              (contact.birthday.year && {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeBirthdayYearLinkId,
+                    number: { data: { value: contact.birthday.year } }
+                  }
+                }
+              }),
+            ] || [])
+          }
+        }
+      }
+    };
+
+    const contactObject = {
+      type_id: typeContactLinkId,
+      in: {
+        data: {
+          type_id: typeContainLinkId,
+          from_id: deviceLinkId,
+        }
+      },
+      out: {
+        data: [
+          constactIdObject,
+          name,
+          organization,
+          birthday
+        ]
+      }
+    }
+
+    return contactObject
+  })
+
 
   for (const contact of contacts) {
     console.log(JSON.stringify(contact))
@@ -88,155 +260,8 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
       },
       out: {
         data: [
-          // contactId link
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typeContactIdLinkId,
-                string: { data: { value: contact.contactId } }
-              }
-            }
-          },
-          // name link
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typeNameLinkId,
-                out: {
-                  data: [
-                    // middle
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeMiddleLinkId,
-                          string: { data: { value: contact.name?.middle } }
-                        }
-                      }
-                    },
-                    // family
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeFamilyLinkId,
-                          string: { data: { value: contact.name?.family } }
-                        }
-                      }
-                    },
-                    // prefix
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typePrefixLinkId,
-                          string: { data: { value: contact.name?.prefix } }
-                        }
-                      }
-                    },
-                    // suffix
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeSuffixLinkId,
-                          string: { data: { value: contact.name?.suffix } }
-                        }
-                      }
-                    },
-                  ]
-                }
-              }
-            }
-          },
-          // organization
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typeOrganizationLinkId,
-                out: {
-                  data: (contact.organization && [
-                    // company
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeCompanyLinkId,
-                          string: { data: { value: contact.organization?.company } }
-                        }
-                      }
-                    },
-                    // jobTitle
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeJobTitleLinkId,
-                          string: { data: { value: contact.organization?.jobTitle } }
-                        }
-                      }
-                    },
-                    // department
-                    {
-                      type_id: typeContainLinkId,
-                      to: {
-                        data: {
-                          type_id: typeDepartmentLinkId,
-                          string: { data: { value: contact.organization?.department } }
-                        }
-                      }
-                    },
-                  ] || [])
-                }
-              }
-            }
-          },
-          // birthday
-          // {
-          //   type_id: typeContainLinkId,
-          //   to: {
-          //     data: {
-          //       type_id: typeBirthdayLinkId,
-          //       out: {
-          //         data: (contact.birthday && [
-          //           // day
-          //           (contact.birthday.day && {
-          //             type_id: typeContainLinkId,
-          //             to: {
-          //               data: {
-          //                 type_id: typeDayLinkId,
-          //                 number: { data: { value: contact?.birthday?.day } }
-          //               }
-          //             }
-          //           }),
-          //           // month
-          //           (contact.birthday.month && {
-          //             type_id: typeContainLinkId,
-          //             to: {
-          //               data: {
-          //                 type_id: typeMonthLinkId,
-          //                 number: { data: { value: contact.birthday.month } }
-          //               }
-          //             }
-          //           }),
-          //           // year
-          //           (contact.birthday.year && {
-          //             type_id: typeContainLinkId,
-          //             to: {
-          //               data: {
-          //                 type_id: typeYearLinkId,
-          //                 number: { data: { value: contact.birthday.year } }
-          //               }
-          //             }
-          //           }),
-          //         ] || [])
-          //       }
-          //     }
-          //   }
-          // },
+
+          
           // note
           {
             type_id: typeContainLinkId,
