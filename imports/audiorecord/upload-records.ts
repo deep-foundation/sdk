@@ -1,4 +1,4 @@
-import { PACKAGE_NAME } from "./initialize-package";
+import { PACKAGE_NAME } from "./install-package";
 
 export default async function uploadRecords(deep, deviceLinkId, sounds) {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");

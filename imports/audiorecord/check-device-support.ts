@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { VoiceRecorder } from "capacitor-voice-recorder"
-import { PACKAGE_NAME } from "./initialize-package";
+import { PACKAGE_NAME } from "./install-package";
 
 export default async function checkDeviceSupport(deep: DeepClient, deviceLinkId) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");

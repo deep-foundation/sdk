@@ -3,7 +3,7 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/audiorecord/initialize-package';
+import initializePackage, { PACKAGE_NAME } from '../imports/audiorecord/install-package';
 import checkDeviceSupport from '../imports/audiorecord/check-device-support';
 import checkAudioRecPermission from '../imports/audiorecord/check-permission';
 import getAudioRecPermission from '../imports/audiorecord/get-permission';
@@ -11,6 +11,7 @@ import getRecordingStatus from '../imports/audiorecord/get-recording-status';
 import startAudioRec from '../imports/audiorecord/strart-recording';
 import stopAudioRec from '../imports/audiorecord/stop-recording';
 import uploadRecords from '../imports/audiorecord/upload-records';
+import installPackage from '../imports/audiorecord/install-package';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -109,8 +110,9 @@ function Page() {
   }
 
   return <Stack>
-    <Button onClick={async () => await initializePackage(deep, deviceLinkId)}>
-      INITIALIZE PACKAGE
+    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+    <Button onClick={async () => await installPackage(deviceLinkId)}>
+      INSTALL PACKAGE
     </Button>
     <Button onClick={async () => await createContainer(deep)}>
       CREATE NEW CONTAINER
