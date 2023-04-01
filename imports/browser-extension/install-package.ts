@@ -1,9 +1,31 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
+import * as dotenv from 'dotenv';
+import { getIsLinkExist } from "../get-is-link-exist";
+dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/browser-extension"
+  
+export default async function installPackage(deviceLinkId:number) {
 
-export default async function initializePackage(deep: DeepClient, deviceLinkId) {
+  const apolloClient = generateApolloClient({
+    path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
+    ssl: !!~process.env.NEXT_PUBLIC_GQL_PATH.indexOf('localhost')
+      ? false
+      : true,
+    // admin token in prealpha deep secret key
+    // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsibGluayJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJsaW5rIiwieC1oYXN1cmEtdXNlci1pZCI6IjI2MiJ9LCJpYXQiOjE2NTYxMzYyMTl9.dmyWwtQu9GLdS7ClSLxcXgQiKxmaG-JPDjQVxRXOpxs',
+  });
+
+  const unloginedDeep = new DeepClient({ apolloClient });
+  const guest = await unloginedDeep.guest();
+  const guestDeep = new DeepClient({ deep: unloginedDeep, ...guest });
+  const admin = await guestDeep.login({
+    linkId: await guestDeep.id('deep', 'admin'),
+  });
+  const deep = new DeepClient({ deep: guestDeep, ...admin });
+  
   if (!await getIsPackageInstalled({ deep, packageName: PACKAGE_NAME })) {
     const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
@@ -41,13 +63,13 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
       },
     })
 
-    const { data: [{ id: dialogTreeLinkId }] } = await deep.insert({
+    const { data: [{ id: browserExtensionTreeLinkId }] } = await deep.insert({
       type_id: treeTypeLinkId,
       in: {
         data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'DialogTree' } },
+          string: { data: { value: 'BrowserExtensionTree' } },
         },
       }
     })
@@ -63,7 +85,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
           },
           {
             type_id: treeIncludeNodeTypeLinkId,
-            from_id: dialogTreeLinkId,
+            from_id: browserExtensionTreeLinkId,
             in: {
               data: [
                 {
@@ -87,7 +109,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                 },
                 {
                   type_id: treeIncludeNodeTypeLinkId,
-                  from_id: dialogTreeLinkId,
+                  from_id: browserExtensionTreeLinkId,
                   in: {
                     data: [
                       {
@@ -110,7 +132,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'PageUrl' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -132,7 +154,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'LastVisitTime' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -154,7 +176,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'TypedCount' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -176,7 +198,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'VisitCount' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -198,7 +220,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'PageTitle' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -224,7 +246,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                 },
                 {
                   type_id: treeIncludeNodeTypeLinkId,
-                  from_id: dialogTreeLinkId,
+                  from_id: browserExtensionTreeLinkId,
                   in: {
                     data: [
                       {
@@ -247,7 +269,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'TabUrl' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -269,7 +291,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'TabTitle' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -291,7 +313,7 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                         string: { data: { value: 'Active' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: dialogTreeLinkId,
+                        from_id: browserExtensionTreeLinkId,
                         in: {
                           data: [
                             {
@@ -311,15 +333,20 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
       },
     ]);
 
-    const { data: [{ id: browserExtensionLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: deviceLinkId,
-          string: { data: { value: "BrowserExtension" } },
-        }]
+    if (deviceLinkId) {
+      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/browser-extension", linkName: "BrowserExtension" })) {
+        const { data: [{ id: BrowserExtensionLinkId }] } = await deep.insert({
+          type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: deviceLinkId,
+              string: { data: { value: "BrowserExtension" } },
+            }
+          }
+        })
       }
-    })
-  } else console.log("browser-history package already exists")
+    }
+    console.log("browser-history package installed")
+  } else console.log("browser-history package already exists");
 }

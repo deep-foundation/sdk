@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, HStack, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import initializePackage from "../imports/browser-extension/initialize-package";
-import { PACKAGE_NAME } from "../imports/browser-extension/initialize-package";
+import installPackage from "../imports/browser-extension/install-package";
+import { PACKAGE_NAME } from "../imports/browser-extension/install-package";
 import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
+import updateActiveTab from "../imports/browser-extension/update-active-tab";
 
 export function Extension() {
   const deep = useDeep();
   const [tabs, setTabs] = useLocalStore("Tabs", []);
   const [history, setHistory] = useLocalStore("History", []);
-  const [activeTab, setActiveTab] = useLocalStore("ActiveTab", null);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
@@ -33,18 +33,10 @@ export function Extension() {
     }
   }
 
-  const onActivated = async () => {
-    if (typeof (window) === "object") {
-      chrome.tabs.onActivated.addListener(async (activeInfo) => {
-        setActiveTab(activeInfo);
-      })
-    }
-  }
-
   useEffect(() => {
     const upload = async (tabs) => {
       await uploadTabs(deep, deviceLinkId, tabs);
-      setHistory([]);
+      setTabs([]);
     }
     if (tabs.length > 0) upload(tabs);
   }, [tabs])
@@ -56,14 +48,6 @@ export function Extension() {
     }
     if (history.length > 0) upload(history);
   }, [history])
-
-  useEffect(() => {
-    const upload = async (history) => {
-      await uploadHistory(deep, deviceLinkId, history);
-      setHistory([]);
-    }
-    if (history.length > 0) upload(history);
-  }, [activeTab])
 
   const createBrowserExtensionLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
@@ -82,10 +66,20 @@ export function Extension() {
   return (
     <>
       <Stack>
-        <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
-        <Button onClick={async () => await createBrowserExtensionLink(deep)} >CREATE NEW CONTAINER LINK</Button>
-        <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
-        <Button onClick={() => getTabs()}>UPLOAD TABS</Button>
+        <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}
+        </Text>
+        <Button onClick={async () => await installPackage(deviceLinkId)}>
+          INITIALIZE PACKAGE
+        </Button>
+        <Button onClick={async () => await createBrowserExtensionLink(deep)}>
+          CREATE NEW CONTAINER LINK
+        </Button>
+        <Button onClick={async () => await getHistory()}>
+          UPLOAD HISTORY
+        </Button>
+        <Button onClick={async () => await getTabs()}>
+          UPLOAD TABS
+        </Button>
       </Stack>
       {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
     </>
