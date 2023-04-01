@@ -5,7 +5,7 @@ import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 
-import initializePackage, { PACKAGE_NAME as NETWORK_PACKAGE_NAME } from "../imports/network/initialize-package";
+import installPackage, { PACKAGE_NAME as NETWORK_PACKAGE_NAME } from "../imports/network/install-package";
 import saveNetworkStatus from '../imports/network/save-network-status';
 import updateNetworkStatus from '../imports/network/update-network-status';
 
@@ -34,7 +34,8 @@ function Page() {
   }
 
   return <Stack>
-    <Button onClick={async () => { await initializePackage(deep, deviceLinkId) }}>
+    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+    <Button onClick={async () => { await installPackage(deviceLinkId) }}>
       <Text>INITIALIZE PACKAGE</Text>
     </Button>
     <Button onClick={async () => { await subscribeToNetworkStatus() }}>
