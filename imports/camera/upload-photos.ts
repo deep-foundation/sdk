@@ -1,4 +1,4 @@
-import { PACKAGE_NAME } from './initialize-package';
+import { PACKAGE_NAME } from './install-package';
 
 export default async function uploadPhotos(deep, deviceLinkId, photos) {
     const cameraLinkId = await deep.id(deviceLinkId, "Camera");

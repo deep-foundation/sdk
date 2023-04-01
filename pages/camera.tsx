@@ -4,13 +4,14 @@ import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 
-import initializePackage, { PACKAGE_NAME } from '../imports/camera/initialize-package';
+import installPackage, { PACKAGE_NAME } from '../imports/camera/install-package';
 import checkCameraPermission from '../imports/camera/check-permission';
 import getCameraPermission from '../imports/camera/get-permission';
 import takePhoto from '../imports/camera/take-photo';
 import pickImages from '../imports/camera/pick-images';
 import uploadPhotos from '../imports/camera/upload-photos';
 import uploadGallery from '../imports/camera/upload-gallery';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 function Page() {
   const deep = useDeep();
@@ -21,6 +22,9 @@ function Page() {
     'deviceLinkId',
     undefined
   );
+  useEffect(() => {
+    if (typeof(window) === "object") defineCustomElements(window);
+   });
 
   useEffect(() => {
     const useCamera = async () => {
@@ -55,11 +59,11 @@ function Page() {
     const { data } = await deep.select({
       type_id: base64TypeLinkId,
       in: {
-          type_id: containTypeLinkId,
-          from: {
-              type_id: photoTypeLinkId
-          }
+        type_id: containTypeLinkId,
+        from: {
+          type_id: photoTypeLinkId
         }
+      }
     },);
     setImages(data);
   }
@@ -80,7 +84,8 @@ function Page() {
 
   return <>
     <Stack>
-      <Button onClick={async () => await initializePackage(deep, deviceLinkId)}>
+      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+      <Button onClick={async () => await installPackage(deviceLinkId)}>
         <Text>INITIALIZE PACKAGE</Text>
       </Button>
       <Button onClick={async () => await createCameraLink(deep)}>

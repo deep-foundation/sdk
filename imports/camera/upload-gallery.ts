@@ -1,4 +1,4 @@
-import { PACKAGE_NAME } from './initialize-package';
+import { PACKAGE_NAME } from './install-package';
 
 
 export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
