@@ -57,7 +57,7 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
   const typeEmailsEmailLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "email");
   const typeEmailsTypeLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "type");
   const typeEmailsLabelLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "label");
-  const typeEmailsNumberLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "number");
+  const typeEmailsAddressLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "address");
   const typeEmailsIsPrimaryLinkId = await deep.id("@l4legenda/capacitor-contact-email-payload", "isPrimary");
 
   const typeUrlsLinkId = await deep.id("@l4legenda/capacitor-contact-urls", "urls");
@@ -75,7 +75,10 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
   const typePostalAddressesLabelLinkId = await deep.id("@l4legenda/capacitor-contact-postal-addresses", "label");
 
   const typeImageBase64StringLinkId = await deep.id("@l4legenda/capacitor-contact-image-payload", "base64String");
-  const contactsObject = contacts.map(contact => {
+
+  const contactsArray = contacts.map(contact => {
+    const out_data = [];
+
     const constactIdObject = {
       type_id: typeContainLinkId,
       to: {
@@ -85,6 +88,7 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
         }
       }
     };
+    out_data.push(constactIdObject);
 
     const name = {
       type_id: typeContainLinkId,
@@ -138,93 +142,183 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
         }
       }
     };
+    out_data.push(name);
 
-    const organization = {
-      type_id: typeContainLinkId,
-      to: {
-        data: {
-          type_id: typeOrganizationLinkId,
-          out: {
-            data: (contact.organization && [
-              // company
-              {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeOrganizationCompanyLinkId,
-                    string: { data: { value: contact.organization?.company } }
+    // organization
+    if (contact.organization) {
+      const organization = {
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typeOrganizationLinkId,
+            out: {
+              data: [
+                // company
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeOrganizationCompanyLinkId,
+                      string: { data: { value: contact.organization?.company } }
+                    }
                   }
-                }
-              },
-              // jobTitle
-              {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeOrganizationJobTitleLinkId,
-                    string: { data: { value: contact.organization?.jobTitle } }
+                },
+                // jobTitle
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeOrganizationJobTitleLinkId,
+                      string: { data: { value: contact.organization?.jobTitle } }
+                    }
                   }
-                }
-              },
-              // department
-              {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeOrganizationDepartmentLinkId,
-                    string: { data: { value: contact.organization?.department } }
+                },
+                // department
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeOrganizationDepartmentLinkId,
+                      string: { data: { value: contact.organization?.department } }
+                    }
                   }
-                }
-              },
-            ] || [])
+                },
+              ]
+            }
           }
         }
-      }
-    };
+      };
+      out_data.push(organization);
+    }
 
     // birthday
-    const birthday = {
-      type_id: typeContainLinkId,
-      to: {
-        data: {
-          type_id: typeBirthdayLinkId,
-          out: {
-            data: (contact.birthday && [
-              // day
-              (contact.birthday.day && {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeBirthdayDayLinkId,
-                    number: { data: { value: contact?.birthday?.day } }
+    if (contact.birthday) {
+      const birthday = {
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typeBirthdayLinkId,
+            out: {
+              data: [
+                // day
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeBirthdayDayLinkId,
+                      number: { data: { value: contact.birthday.day } }
+                    }
+                  }
+                },
+                // month
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeBirthdayMonthLinkId,
+                      number: { data: { value: contact.birthday.month } }
+                    }
+                  }
+                },
+                // year
+                {
+                  type_id: typeContainLinkId,
+                  to: {
+                    data: {
+                      type_id: typeBirthdayYearLinkId,
+                      number: { data: { value: contact.birthday.year } }
+                    }
+                  }
+                },
+              ]
+            }
+          }
+        }
+      };
+      out_data.push(birthday)
+    };
+
+    // note
+    if (contact.note) {
+      const note = {
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typeNoteLinkId,
+            string: { data: { value: contact.note } }
+          }
+        }
+      };
+      out_data.push(note);
+    }
+
+    // phones
+    if (contact.phones?.length) {
+      const phones = {
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typePhonesPhoneLinkId,
+            out: {
+              data: contact.phones?.map((phone) => (
+                {
+                  type_id: typeContainLinkId,
+                  string: { data: { value: phone.label } },
+                  to: {
+                    data: {
+                      type_id: typePhoneNumberLinkId,
+                      string: { data: { value: phone.number } }
+                    }
                   }
                 }
-              }),
-              // month
-              (contact.birthday.month && {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeBirthdayMonthLinkId,
-                    number: { data: { value: contact.birthday.month } }
-                  }
-                }
-              }),
-              // year
-              (contact.birthday.year && {
-                type_id: typeContainLinkId,
-                to: {
-                  data: {
-                    type_id: typeBirthdayYearLinkId,
-                    number: { data: { value: contact.birthday.year } }
-                  }
-                }
-              }),
-            ] || [])
+              )),
+            }
           }
         }
       }
-    };
+      out_data.push(phones);
+    }
+
+    // emails
+    if (contact.emails.length) {
+      const emails = {
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typeEmailsEmailLinkId,
+            out: {
+              data: contact.emails?.map((email) => (
+                {
+                  type_id: typeContainLinkId,
+                  string: { data: { value: email.label } },
+                  to: {
+                    data: {
+                      type_id: typeEmailsAddressLinkId,
+                      string: { data: { value: email.address } }
+                    }
+                  }
+                }
+              )),
+            }
+          }
+        }
+      };
+      out_data.push(emails);
+    }
+
+    // urls
+    if (contact.urls.length) {
+      const urls = (contact.urls.map((url) => ({
+        type_id: typeContainLinkId,
+        to: {
+          data: {
+            type_id: typeUrlsLinkId,
+            string: { data: { value: url } },
+          }
+        }
+      })));
+      out_data.push(urls);
+    }
 
     const contactObject = {
       type_id: typeContactLinkId,
@@ -235,12 +329,7 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
         }
       },
       out: {
-        data: [
-          constactIdObject,
-          name,
-          organization,
-          birthday
-        ]
+        data: out_data
       }
     }
 
@@ -259,80 +348,7 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
         }
       },
       out: {
-        data: [
-
-          
-          // note
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typeNoteLinkId,
-                string: { data: { value: contact.note } }
-              }
-            }
-          },
-          // phones
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typePhonesLinkId,
-                out: {
-                  data: (contact.phones?.map((phone) => (
-                    {
-                      type_id: typeContainLinkId,
-                      string: { data: { value: phone.label } },
-                      to: {
-                        data: {
-                          type_id: typePhoneNumberLinkId,
-                          string: { data: { value: phone.number } }
-                        }
-                      }
-                    }
-                  )) || []),
-
-                }
-              }
-            }
-          },
-          // emails
-          {
-            type_id: typeContainLinkId,
-            to: {
-              data: {
-                type_id: typeEmailsLinkId,
-                out: {
-                  data: (contact.emails?.map((email) => (
-                    {
-                      type_id: typeContainLinkId,
-                      string: { data: { value: email.label } },
-                      to: {
-                        data: {
-                          type_id: typeEmailAddressLinkId,
-                          string: { data: { value: email.address } }
-                        }
-                      }
-                    }
-                  )) || []),
-
-                }
-              }
-            }
-          },
-          // urls
-          // ...(contact.urls && (contact.urls?.map((url) => ({
-          //   type_id: typeContainLinkId,
-          //   to: {
-          //     data: {
-          //       type_id: typeUrlsLinkId,
-          //       string: { data: { value: url } },
-          //     }
-          //   }
-          // }))) || []),
-          // postalAddresses
-          // image
-        ]
+        data: contactsArray[0]
       }
     })
   }
@@ -345,7 +361,7 @@ export async function initPackageContact({ deep }: { deep: DeepClient }) {
 
   await deep.insert({
     type_id: typePackageQueryLinkId,
-    string: { data: { value: CAPACITOR_CONTACT_NAME_PACKAGE } },
+    string: { data: { value: "@l4legenda/capacitor-contact" } },
     in: {
       data: [
         {
