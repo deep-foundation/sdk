@@ -77,6 +77,8 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
   const typeImageBase64StringLinkId = await deep.id("@l4legenda/capacitor-contact-image-payload", "base64String");
 
   const contactsArray = contacts.map(contact => {
+    console.log(JSON.stringify(contact));
+
     const out_data = [];
 
     const constactIdObject = {
@@ -134,6 +136,24 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
                   data: {
                     type_id: typeSuffixLinkId,
                     string: { data: { value: contact.name?.suffix } }
+                  }
+                }
+              },
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeDisplayLinkId,
+                    string: { data: { value: contact.name?.display } }
+                  }
+                }
+              },
+              {
+                type_id: typeContainLinkId,
+                to: {
+                  data: {
+                    type_id: typeGivenLinkId,
+                    string: { data: { value: contact.name?.given } }
                   }
                 }
               },
@@ -254,71 +274,220 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
 
     // phones
     if (contact.phones?.length) {
-      const phones = {
-        type_id: typeContainLinkId,
-        to: {
-          data: {
-            type_id: typePhonesPhoneLinkId,
-            out: {
-              data: contact.phones?.map((phone) => (
-                {
-                  type_id: typeContainLinkId,
-                  string: { data: { value: phone.label } },
-                  to: {
-                    data: {
-                      type_id: typePhoneNumberLinkId,
-                      string: { data: { value: phone.number } }
+      for (const phone of contact.phones) {
+        const phones = {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typePhonesPhoneLinkId,
+              out: {
+                data: [
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePhoneNumberLinkId,
+                        string: { data: { value: phone.number } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePhoneLabelLinkId,
+                        string: { data: { value: phone.label } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePhoneTypeLinkId,
+                        string: { data: { value: phone.type } }
+                      }
                     }
                   }
-                }
-              )),
+                ],
+              }
             }
           }
         }
+        out_data.push(phones);
       }
-      out_data.push(phones);
     }
 
     // emails
-    if (contact.emails.length) {
-      const emails = {
-        type_id: typeContainLinkId,
-        to: {
-          data: {
-            type_id: typeEmailsEmailLinkId,
-            out: {
-              data: contact.emails?.map((email) => (
-                {
-                  type_id: typeContainLinkId,
-                  string: { data: { value: email.label } },
-                  to: {
-                    data: {
-                      type_id: typeEmailsAddressLinkId,
-                      string: { data: { value: email.address } }
+    if (contact.emails?.length) {
+      for (const email of contact.emails) {
+        const emails = {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typeEmailsEmailLinkId,
+              out: {
+                data: [
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typeEmailsAddressLinkId,
+                        string: { data: { value: email.address } }
+                      }
                     }
-                  }
-                }
-              )),
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typeEmailsLabelLinkId,
+                        string: { data: { value: email.label } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typeEmailsIsPrimaryLinkId,
+                        string: { data: { value: email.isPrimary } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typeEmailsTypeLinkId,
+                        string: { data: { value: email.type } }
+                      }
+                    }
+                  },
+                ],
+              }
             }
           }
-        }
-      };
-      out_data.push(emails);
+        };
+        out_data.push(emails);
+      }
     }
 
     // urls
-    if (contact.urls.length) {
+    if (contact.urls?.length) {
       const urls = (contact.urls.map((url) => ({
         type_id: typeContainLinkId,
         to: {
           data: {
-            type_id: typeUrlsLinkId,
+            type_id: typeUrlsUrlLinkId,
             string: { data: { value: url } },
           }
         }
       })));
       out_data.push(urls);
     }
+
+    if(contact.postalAddresses?.length) {
+      for (const postalAddress of contact.postalAddresses) {
+        const postal_address = {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typePostalAddressesLinkId,
+              out: {
+                data: [
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesTypeLinkId,
+                        string: { data: { value: postalAddress.type } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesLabelLinkId,
+                        string: { data: { value: postalAddress.label } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesIsPrimaryLinkId,
+                        string: { data: { value: postalAddress.isPrimary } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesStreetLinkId,
+                        string: { data: { value: postalAddress.street } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesNeighborhoodLinkId,
+                        string: { data: { value: postalAddress.neighborhood } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesCityLinkId,
+                        string: { data: { value: postalAddress.city } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesRegionLinkId,
+                        string: { data: { value: postalAddress.region } }
+                      }
+                    }
+                  },
+                  {
+                    type_id: typeContainLinkId,
+                    to: {
+                      data: {
+                        type_id: typePostalAddressesPostcodeLinkId,
+                        string: { data: { value: postalAddress.postcode } }
+                      }
+                    }
+                  },
+                ],
+              },
+            },
+          },
+        };
+        out_data.push(postal_address);
+      }
+    }
+
+    // image
+    const postal_address = {
+      type_id: typeContainLinkId,
+      to: {
+        data: {
+          type_id: typeImageBase64StringLinkId,
+          string: { data: { value: contact.image?.base64String } }
+        },
+      },
+    };
+    out_data.push(postal_address);
 
     const contactObject = {
       type_id: typeContactLinkId,
@@ -335,23 +504,9 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
 
     return contactObject
   })
+  console.log(JSON.stringify(contactsArray[0]));
 
-
-  for (const contact of contacts) {
-    console.log(JSON.stringify(contact))
-    await deep.insert({
-      type_id: typeContactLinkId,
-      in: {
-        data: {
-          type_id: typeContainLinkId,
-          from_id: deviceLinkId,
-        }
-      },
-      out: {
-        data: contactsArray[0]
-      }
-    })
-  }
+  await deep.insert(contactsArray[0])
 }
 
 export async function initPackageContact({ deep }: { deep: DeepClient }) {
