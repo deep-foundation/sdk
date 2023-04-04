@@ -20,131 +20,86 @@ interface ICallHistoryPlugin {
 export const CallLog = registerPlugin<ICallHistoryPlugin>('CallHistory');
 
 
-export async function createAllCallHistory({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
+export async function createAllCallHistory({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
   await CallLog.getPermissions();
 
-  const callInfoType = await deep.id(
-    "@deep-foundation/callhistory",
+  const typeContainLinkId = await deep.id(
+    "@deep-foundation/core",
+    "Contain"
+  );
+
+  const typeCallInfoLinkId = await deep.id(
+    "@l4legenda/capacitor-call-history",
     "callInfo"
   );
-  const phoneNumberType = await deep.id(
-    "@deep-foundation/callhistory",
+  const typePhoneNumberLinkId = await deep.id(
+    "@l4legenda/capacitor-call-history",
     "phoneNumber"
   );
-  const typeType = await deep.id(
-    "@deep-foundation/callhistory",
+  const typeTypeLinkId = await deep.id(
+    "@l4legenda/capacitor-call-history",
     "type"
   );
-  const dateType = await deep.id(
-    "@deep-foundation/callhistory",
+  const typeDateLinkId = await deep.id(
+    "@l4legenda/capacitor-call-history",
     "date"
   );
-  const durationType = await deep.id(
-    "@deep-foundation/callhistory",
+  const typeDurationLinkId = await deep.id(
+    "@l4legenda/capacitor-call-history",
     "duration"
   );
 
-  const ml = new ManagerLinks(deep);
+
   const res = await CallLog.getCallHistory();
-  for (const call_log of res.call_log) {
-    const callInfoLink = await ml.createLink({
-      containName: "",
-      contain_from_id: deviceLinkId,
-      type_id: callInfoType,
-    });
-    const phoneNumber = await ml.createLink({
-      containName: "phoneNumber",
-      value: call_log.phoneNumber,
-      contain_from_id: callInfoLink,
-      type_id: phoneNumberType,
-    });
-    const type = await ml.createLink({
-      containName: "type",
-      value: call_log.type,
-      contain_from_id: callInfoLink,
-      type_id: typeType,
-    });
-    const date = await ml.createLink({
-      containName: "date",
-      value: call_log.date,
-      contain_from_id: callInfoLink,
-      type_id: dateType,
-    });
-    const duration = await ml.createLink({
-      containName: "duration",
-      value: call_log.duration,
-      contain_from_id: callInfoLink,
-      type_id: durationType,
-    });
-    break;
-  }
-}
-
-export async function createCallHistoryPackage({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
-  const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
-  const packageTypeLinkId = await deep.id("@deep-foundation/core", "Package");
-
-  const ml = new ManagerLinks(deep);
-
-  const callhistoryPackage = await ml.createLink({
-    value: "@deep-foundation/callhistory",
-    contain_from_id: deviceLinkId,
-    type_id: packageTypeLinkId,
-  });
-  const callInfo = await ml.createLink({
-    containName: "callInfo",
-    contain_from_id: callhistoryPackage,
-    type_id: typeTypeLinkId,
-  });
-  const phoneNumber = await ml.createLink({
-    containName: "phoneNumber",
-    contain_from_id: callhistoryPackage,
-    type_id: typeTypeLinkId,
-  });
-  const type = await ml.createLink({
-    containName: "type",
-    contain_from_id: callhistoryPackage,
-    type_id: typeTypeLinkId,
-  });
-  const date = await ml.createLink({
-    containName: "date",
-    contain_from_id: callhistoryPackage,
-    type_id: typeTypeLinkId,
-  });
-  const duration = await ml.createLink({
-    containName: "duration",
-    contain_from_id: callhistoryPackage,
-    type_id: typeTypeLinkId,
-  });
-}
-
-class ManagerLinks {
-  constructor(private deep: DeepClient) { }
-
-  async createLink({
-    containName,
-    value,
-    contain_from_id,
-    type_id,
-  }: {
-    containName?: string;
-    value?: string;
-    contain_from_id: number;
-    type_id: number;
-  }) {
-    const {
-      data: [{ id }],
-    } = await this.deep.insert({
-      type_id: type_id,
-      ...(value && { string: { data: { value: value } } }),
-      in: {
-        data: {
-          type_id: 3,
-          from_id: contain_from_id,
-          ...(containName && { string: { data: { value: containName } } }),
+  const call_history_request = res.call_log.map(callLog => ({
+    type_id: typeCallInfoLinkId,
+    in: {
+      data: {
+        type_id: typeContainLinkId,
+        from_id: deviceLinkId,
+      }
+    },
+    out: {
+      data: [
+        {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typePhoneNumberLinkId,
+              string: { data: { value: callLog.phoneNumber } }
+            }
+          }
         },
-      },
-    });
-    return id;
-  }
+        {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typeTypeLinkId,
+              string: { data: { value: callLog.type } }
+            }
+          }
+        },
+        {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typeDurationLinkId,
+              string: { data: { value: callLog.duration } }
+            }
+          }
+        },
+        {
+          type_id: typeContainLinkId,
+          to: {
+            data: {
+              type_id: typeDateLinkId,
+              string: { data: { value: callLog.date } }
+            }
+          }
+        },
+      ]
+    }
+  }))
+
+  await deep.insert(call_history_request[0]);
 }

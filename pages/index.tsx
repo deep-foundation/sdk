@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
-import { createCallHistoryPackage, createAllCallHistory } from "../imports/packages/callhistory/callhistory";
+import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
 
 function Page() {
   const deep = useDeep();
@@ -129,8 +129,6 @@ function Page() {
         <Link href="/device">device</Link>
       </div>
       <div>
-        <button onClick={() => createCallHistoryPackage({ deep, deviceLinkId })}>create CallHistory Package</button>
-        <br />
         <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
         <hr />
       </div>

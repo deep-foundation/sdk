@@ -17,7 +17,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@capacitor-community/contacts": "^2.0.0",
     "@capacitor-community/electron": "^4.1.2",
     "@capacitor/action-sheet": "^4.1.0",
     "@capacitor/android": "^4.6.1",
