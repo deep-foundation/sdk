@@ -1,4 +1,4 @@
-import { GQL_URL, GQL_TOKEN } from "./config.js"
+import { GQL_URL, GQL_TOKEN, PACKAGE_NAME } from "./config.js"
 
 const pathToWhere = (start, ...path) => {
   const pckg = typeof (start) === 'string' ? { type_id: { _eq: 2 }, string: { value: { _eq: start } } } : { id: { _eq: start } };

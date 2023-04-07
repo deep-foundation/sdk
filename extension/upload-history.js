@@ -1,5 +1,5 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID } from "./config.js"
+import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID, PACKAGE_NAME } from "./config.js"
 
 const uploadHistory = async (newHistory) => {
   const requestPayload = {
@@ -38,12 +38,12 @@ const uploadHistory = async (newHistory) => {
 const prepareHistoryData = async (history) => {
   const containTypeLinkId = await getLinkId("@deep-foundation/core", "Contain");
   const browserExtensionLinkId = await getLinkId(DEVICE_LINK_ID, "BrowserExtension");
-  const pageTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Page");
-  const urlTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "PageUrl");
-  const titleTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "PageTitle");
-  const typedCountTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "TypedCount");
-  const visitCountTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "VisitCount");
-  const lastVisitTimeTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "LastVisitTime");
+  const pageTypeLinkId = await getLinkId(PACKAGE_NAME, "Page");
+  const urlTypeLinkId = await getLinkId(PACKAGE_NAME, "PageUrl");
+  const titleTypeLinkId = await getLinkId(PACKAGE_NAME, "PageTitle");
+  const typedCountTypeLinkId = await getLinkId(PACKAGE_NAME, "TypedCount");
+  const visitCountTypeLinkId = await getLinkId(PACKAGE_NAME, "VisitCount");
+  const lastVisitTimeTypeLinkId = await getLinkId(PACKAGE_NAME, "LastVisitTime");
 
   const historyData = history.map((page) => {
     return {
@@ -130,7 +130,7 @@ export const executeUploadHistory = async (history) => {
 
 const checkExistingHistory = async (history) => {
   const historyIds = history.map((page) => page.id);
-  const pageTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Page");
+  const pageTypeLinkId = await getLinkId(PACKAGE_NAME, "Page");
 
   const requestPayload = {
     query: `

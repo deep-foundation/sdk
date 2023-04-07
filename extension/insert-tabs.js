@@ -1,13 +1,13 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID } from "./config.js"
+import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID, PACKAGE_NAME } from "./config.js"
 
 const prepareInsertTabsVariables = async (tabs) => {
   const containTypeLinkId = await getLinkId("@deep-foundation/core", "Contain");
   const browserExtensionLinkId = await getLinkId(DEVICE_LINK_ID, "BrowserExtension");
-  const tabTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Tab");
-  const urlTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "TabUrl");
-  const titleTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "TabTitle");
-  const activeTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Active");
+  const tabTypeLinkId = await getLinkId(PACKAGE_NAME, "Tab");
+  const urlTypeLinkId = await getLinkId(PACKAGE_NAME, "TabUrl");
+  const titleTypeLinkId = await getLinkId(PACKAGE_NAME, "TabTitle");
+  const activeTypeLinkId = await getLinkId(PACKAGE_NAME, "Active");
   const links = tabs.map((tab) => ({
     type_id: tabTypeLinkId,
     number: { data: { value: tab.id } },
@@ -102,7 +102,7 @@ export const executeInsertTabs = async (tabs) => {
 
 const checkExistingTabs = async (tabs) => {
   const tabIds = tabs.map((tab) => tab.id);
-  const tabTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Tab");
+  const tabTypeLinkId = await getLinkId(PACKAGE_NAME, "Tab");
 
   const requestPayload = {
     query: `

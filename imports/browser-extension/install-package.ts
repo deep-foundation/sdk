@@ -6,7 +6,7 @@ import { getIsLinkExist } from "../get-is-link-exist";
 import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
-export const PACKAGE_NAME = "@deep-foundation/browser-extension"
+export const PACKAGE_NAME = "@romanxz/browser-extension"
   
 export default async function installPackage(deviceLinkId:number) {
 
@@ -346,7 +346,7 @@ export default async function installPackage(deviceLinkId:number) {
     ]);
 
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/browser-extension", linkName: "BrowserExtension" })) {
+      if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "BrowserExtension" })) {
         const { data: [{ id: BrowserExtensionLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
           in: {

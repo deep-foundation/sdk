@@ -1,8 +1,8 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN } from "./config.js"
+import { GQL_URL, GQL_TOKEN, PACKAGE_NAME } from "./config.js"
 
 export const executeDeactivateTabs = async () => {
-  const activeTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Active");
+  const activeTypeLinkId = await getLinkId(PACKAGE_NAME, "Active");
   const requestPayload = {
     query: `
         mutation deactivateTabs {
