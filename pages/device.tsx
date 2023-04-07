@@ -1,21 +1,12 @@
-import React, { useCallback } from 'react';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
+import React from 'react';
 import {
-  LocalStoreProvider,
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
-
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
-import { PACKAGE_NAME } from '../imports/device/package-name';
-import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
-import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
-import { insertLanguageTagToDeep } from '../imports/device/insert-language-tag-to-deep';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
