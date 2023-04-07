@@ -58,34 +58,65 @@ import { executeActivateTab } from "./activate-tab.js";
 import { executeDeleteTab } from "./delete-tab.js";
 import { executeUploadHistory } from "./upload-history.js";
 
-chrome.runtime.onInstalled.addListener((reason) => {
-  console.log("Extension installed or updated:", reason);
+// chrome.runtime.onInstalled.addListener((reason) => {
+//   console.log("Extension installed or updated:", reason);
 
-  chrome.tabs.query({}, async (tabs) => {
-    await executeInsertTabs(tabs);
-  });
+//   chrome.tabs.query({}, async (tabs) => {
+//     await executeInsertTabs(tabs);
+//   });
 
-  chrome.history.search({ text: '', maxResults: 2 }, async (history) => {
-    await executeUploadHistory(history);
-  });
+//   chrome.history.search({ text: '', maxResults: 2 }, async (history) => {
+//     await executeUploadHistory(history);
+//   });
 
-  chrome.tabs.onActivated.addListener(async (activeInfo) => {
-    // Add code to execute when a tab is activated
-    console.log("Tab activated:", activeInfo.tabId);
-    await executeDeactivateTabs();
-    await executeActivateTab(activeInfo.tabId);
-  });
+//   chrome.tabs.onActivated.addListener(async (activeInfo) => {
+//     // Add code to execute when a tab is activated
+//     await executeDeactivateTabs();
+//     await executeActivateTab(activeInfo.tabId);
+//     console.log("Tab activated:", activeInfo.tabId);
+//   });
 
-  chrome.tabs.onCreated.addListener(async (tab) => {
-    // Add code to execute when a new tab is created
-    await executeInsertTabs([tab]);
-    console.log("Tab created:", tab.id);
-  });
+//   chrome.tabs.onCreated.addListener(async (tab) => {
+//     // Add code to execute when a new tab is created
+//     await executeInsertTabs([tab]);
+//     console.log("Tab created:", tab.id);
+//   });
 
-  chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
-    // Add code to execute when a tab is deleted
-    await executeDeleteTab(tabId);
-    console.log("Tab removed:", tabId);
-  });
-})
+//   chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+//     // Add code to execute when a tab is deleted
+//     await executeDeleteTab(tabId);
+//     console.log("Tab removed:", tabId);
+//   });
+// })
 
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  if (message.action === "uploadHistory") {
+    // Code to execute when UPLOAD HISTORY button is clicked
+    chrome.history.search({ text: "", maxResults: 2 }, async (history) => {
+      await executeUploadHistory(history);
+    });
+  } else if (message.action === "uploadTabs") {
+    // Code to execute when SUBSCRIBE TABS button is clicked
+    chrome.tabs.query({}, async (tabs) => {
+      await executeInsertTabs(tabs);
+    });
+    chrome.tabs.onActivated.addListener(async (activeInfo) => {
+      // Add code to execute when a tab is activated
+      await executeDeactivateTabs();
+      await executeActivateTab(activeInfo.tabId);
+      console.log("Tab activated:", activeInfo.tabId);
+    });
+  
+    chrome.tabs.onCreated.addListener(async (tab) => {
+      // Add code to execute when a new tab is created
+      await executeInsertTabs([tab]);
+      console.log("Tab created:", tab.id);
+    });
+  
+    chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+      // Add code to execute when a tab is deleted
+      await executeDeleteTab(tabId);
+      console.log("Tab removed:", tabId);
+    });
+  }
+});

@@ -160,7 +160,5 @@ const checkExistingHistory = async (history) => {
   });
 
   const responseData = await response.json();
-  console.log("checkExistingHistory:");
-  console.log(responseData);
   return responseData.data.links;
 };

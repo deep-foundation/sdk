@@ -8,46 +8,53 @@ import { PACKAGE_NAME } from "../imports/browser-extension/install-package";
 import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
-import updateActiveTab from "../imports/browser-extension/update-active-tab";
 
 export function Extension() {
   const deep = useDeep();
-  const [tabs, setTabs] = useLocalStore("Tabs", []);
-  const [history, setHistory] = useLocalStore("History", []);
+  // const [tabs, setTabs] = useLocalStore("Tabs", []);
+  // const [history, setHistory] = useLocalStore("History", []);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
   );
 
-  const getTabs = async () => {
-    if (typeof (window) === "object") {
-      const tabs = await chrome.tabs.query({});
-      setTabs(tabs);
-    }
-  }
+  // const getTabs = async () => {
+  //   if (typeof (window) === "object") {
+  //     const tabs = await chrome.tabs.query({});
+  //     setTabs(tabs);
+  //   }
+  // }
 
-  const getHistory = async () => {
-    if (typeof (window) === "object") {
-      const history = await chrome.history.search({ text: '', maxResults: 10 });
-      setHistory(history);
-    }
-  }
+  // const getHistory = async () => {
+  //   if (typeof (window) === "object") {
+  //     const history = await chrome.history.search({ text: '', maxResults: 10 });
+  //     setHistory(history);
+  //   }
+  // }
 
-  useEffect(() => {
-    const upload = async (tabs) => {
-      await uploadTabs(deep, deviceLinkId, tabs);
-      setTabs([]);
-    }
-    if (tabs.length > 0) upload(tabs);
-  }, [tabs])
+  // useEffect(() => {
+  //   const upload = async (tabs) => {
+  //     await uploadTabs(deep, deviceLinkId, tabs);
+  //     setTabs([]);
+  //   }
+  //   if (tabs.length > 0) upload(tabs);
+  // }, [tabs])
 
-  useEffect(() => {
-    const upload = async (history) => {
-      await uploadHistory(deep, deviceLinkId, history);
-      setHistory([]);
-    }
-    if (history.length > 0) upload(history);
-  }, [history])
+  // useEffect(() => {
+  //   const upload = async (history) => {
+  //     await uploadHistory(deep, deviceLinkId, history);
+  //     setHistory([]);
+  //   }
+  //   if (history.length > 0) upload(history);
+  // }, [history])
+
+  const handleUploadHistory = () => {
+    chrome.runtime.sendMessage({ action: "uploadHistory" });
+  };
+
+  const handleUploadTabs = () => {
+    chrome.runtime.sendMessage({ action: "uploadTabs" });
+  };
 
   const createBrowserExtensionLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
@@ -74,14 +81,10 @@ export function Extension() {
         <Button onClick={async () => await createBrowserExtensionLink(deep)}>
           CREATE NEW CONTAINER LINK
         </Button>
-        <Button onClick={async () => await getHistory()}>
-          UPLOAD HISTORY
-        </Button>
-        <Button onClick={async () => await getTabs()}>
-          UPLOAD TABS
-        </Button>
+        <Button onClick={handleUploadHistory}>UPLOAD HISTORY</Button>
+      <Button onClick={handleUploadTabs}>SUBSCRIBE TABS</Button>
       </Stack>
-      {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))}
+      {/* {tabs?.map((tab) => (<Tab type="tab" key={tab.id} id={tab.id} favIconUrl={tab.favIconUrl} title={tab.title} url={tab.url} />))} */}
     </>
   )
 }

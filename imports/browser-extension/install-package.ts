@@ -3,6 +3,7 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 import { getIsLinkExist } from "../get-is-link-exist";
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/browser-extension"
@@ -91,6 +92,7 @@ export default async function installPackage(deviceLinkId:number) {
                 {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
+                  string: { data: { value: uuidv4()}}
                 },
               ],
             },
@@ -115,6 +117,7 @@ export default async function installPackage(deviceLinkId:number) {
                       {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
+                        string: { data: { value: uuidv4()}}
                       },
                     ],
                   },
@@ -138,6 +141,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -160,6 +164,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -182,6 +187,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -204,6 +210,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -226,6 +233,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -252,6 +260,7 @@ export default async function installPackage(deviceLinkId:number) {
                       {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
+                        string: { data: { value: uuidv4()}}
                       },
                     ],
                   },
@@ -275,6 +284,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -297,6 +307,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -319,6 +330,7 @@ export default async function installPackage(deviceLinkId:number) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
