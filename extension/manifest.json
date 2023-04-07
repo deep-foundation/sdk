@@ -1,12 +1,12 @@
 {
-  "name": "Next Chrome",
-  "description": "Next.js Chrome Extension starter",
+  "name": "Deep",
+  "description": "deep-foundation/sdk",
   "version": "0.0.1",
   "manifest_version": 3,
-  "permissions": ["action"],
+  "permissions": ["tabs", "history", "scripting"],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "Next.js app",
+    "default_title": "deep.browser-extension",
     "default_popup": "index.html"
   }
 }

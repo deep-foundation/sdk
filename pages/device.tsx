@@ -18,6 +18,7 @@ import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/d
 import { insertLanguageTagToDeep } from '../imports/device/insert-language-tag-to-deep';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
+import { saveDeviceData } from '../imports/device/save-device-data';
 
 function Content() {
   const deep = useDeep();
@@ -32,7 +33,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
-          await insertGeneralInfoToDeep({deep, deviceLinkId, deviceGeneralInfo});
+          await saveDeviceData({deep, deviceLinkId, data: deviceGeneralInfo});
         }}
       >
         Save general info
@@ -40,7 +41,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceBatteryInfo = await Device.getBatteryInfo();
-          await insertBatteryInfoToDeep({deep, deviceLinkId, deviceBatteryInfo});
+          await saveDeviceData({deep, deviceLinkId, data: deviceBatteryInfo});
         }}
       >
         Save battery info
@@ -48,7 +49,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageCode = await Device.getLanguageCode();
-          await insertLanguageCodeToDeep({deep, deviceLinkId, deviceLanguageCode});
+          await saveDeviceData({deep, deviceLinkId, data: deviceLanguageCode});
         }}
       >
         Save language id
@@ -56,7 +57,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageTag = await Device.getLanguageTag();
-          await insertLanguageTagToDeep({deep, deviceLinkId, deviceLanguageTag});
+          await saveDeviceData({deep, deviceLinkId, data: deviceLanguageTag});
         }}
       >
         Save language tag
