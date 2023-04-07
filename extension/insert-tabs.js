@@ -53,42 +53,10 @@ const prepareInsertTabsVariables = async (tabs) => {
 
   }));
 
-  return { links };
+  return links;
 };
 
-const prepareTabsData = async (tabs) => {
-  const tabTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Tab");
-  const urlTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "TabUrl");
-  const titleTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "TabTitle");
-  const activeTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Active");
-
-  return tabs.map((tab) => {
-    return {
-      type_id: tabTypeLinkId,
-      number: { data: { value: tab.id } },
-      out: {
-        data: [
-          {
-            type_id: urlTypeLinkId,
-            string: { data: { value: tab.url } },
-          },
-          {
-            type_id: titleTypeLinkId,
-            string: { data: { value: tab.title } },
-          },
-          {
-            type_id: activeTypeLinkId,
-            string: { data: { value: tab.active ? "true" : "false" } },
-          },
-        ],
-      },
-    };
-  });
-};
-
-const insertTabs = async (tabs) => {
-  const variables = await prepareInsertTabsVariables(tabs);
-
+const insertTabs = async (newTabs) => {
   const requestPayload = {
     query: `
       mutation InsertLinks($links: [links_insert_input!]!) {
@@ -99,7 +67,7 @@ const insertTabs = async (tabs) => {
         }
       }
       `,
-    variables,
+      variables: {links: newTabs},
   };
 
   const response = await fetch(GQL_URL, {
@@ -114,21 +82,17 @@ const insertTabs = async (tabs) => {
     body: JSON.stringify(requestPayload),
   });
   const responseData = await response.json();
-  console.log(requestPayload.query);
-  console.log(requestPayload.variables);
-  console.log(responseData);
-
   return responseData.data;
 };
 
 export const executeInsertTabs = async (tabs) => {
-  const tabsData = await prepareTabsData(tabs);
+  const tabsData = await prepareInsertTabsVariables(tabs);
   const existingTabs = await checkExistingTabs(tabs);
 
   const newTabs = tabsData.filter(
     (tab) => !existingTabs.some((existingTab) => existingTab.number.value === tab.number.data.value)
   );
-
+  console.log({newTabs})
   if (newTabs.length) {
     await insertTabs(newTabs);
   } else {
@@ -138,12 +102,11 @@ export const executeInsertTabs = async (tabs) => {
 
 const checkExistingTabs = async (tabs) => {
   const tabIds = tabs.map((tab) => tab.id);
-  console.log({tabIds});
   const tabTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Tab");
 
   const requestPayload = {
     query: `
-      query getTabsByIds($tabIds: [Int!]) {
+      query getTabsByIds($tabIds: [bigint!]) {
         links(where: {type_id: {_eq: ${tabTypeLinkId}}, number: {value: {_in: $tabIds}}}) {
           number {
             value

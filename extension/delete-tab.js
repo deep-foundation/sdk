@@ -3,20 +3,20 @@ import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID } from "./config.js"
 
 export const executeDeleteTab = async (tabId) => {
   const containTypeLinkId = await getLinkId("@deep-foundation/core", "Contain");
-  const browserExtensionLinkId = await getLinkId(DEVICE_LINK_ID, "BrowserExtension");
+  const browserExtensionTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "BrowserExtension");
   const tabTypeLinkId = await getLinkId("@deep-foundation/browser-extension", "Tab");
   const containTreeId = await getLinkId("@deep-foundation/core", "containTree");
 
   const requestPayload = {
     query: `
-        mutation deleteTab($containTypeLinkId: bigint!, $browserExtensionLinkId: bigint!, $tabTypeLinkId: bigint!, $tabId: bigint!, $containTreeId: bigint!) {
+        mutation deleteTab($containTypeLinkId: bigint!, $browserExtensionTypeLinkId: bigint!, $tabTypeLinkId: bigint!, $tabId: bigint!, $containTreeId: bigint!) {
             delete_links(
                 where: {
                   up: {
                     tree_id: { _eq: $containTreeId }
                     parent: {
                       type_id: { _eq: $containTypeLinkId }
-                      from: { type_id: { _eq: $browserExtensionLinkId } }
+                      from: { type_id: { _eq: $browserExtensionTypeLinkId } }
                       to: {
                         _or: [
                           { type_id: { _eq: $tabTypeLinkId }, number: { value: { _eq: $tabId} } }
@@ -34,7 +34,7 @@ export const executeDeleteTab = async (tabId) => {
       `,
     variables: {
       containTypeLinkId: containTypeLinkId,
-      browserExtensionLinkId: browserExtensionLinkId,
+      browserExtensionTypeLinkId: browserExtensionTypeLinkId,
       tabTypeLinkId: tabTypeLinkId,
       tabId: tabId,
       containTreeId: containTreeId,
@@ -58,7 +58,3 @@ export const executeDeleteTab = async (tabId) => {
 
   return responseData.data.delete_links.returning;
 };
-
-// Usage example:
-const tabId = 265062314;
-executeDeleteTab(tabId);

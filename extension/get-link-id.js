@@ -35,7 +35,5 @@ export const getLinkId = async (start, ...path) => {
     body: JSON.stringify(deepquery2), // body data type must match "Content-Type" header
   });
   const result = await response.json()
-
-  console.log(start, ...path, "LinkId:" + result.data.links[0].id)
   return result.data.links[0].id
 }
