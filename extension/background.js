@@ -52,12 +52,11 @@
 //       `,
 // }
 
-import { executeInsertTabs } from "./insert-tabs";
-import { executeDeactivateTabs } from "./deactivate-tabs";
-
-// Usage example:
-const tabLinkId = "your-tab-link-id";
-executeDeleteLinks(tabLinkId);
+import { executeInsertTabs } from "./insert-tabs.js";
+import { executeDeactivateTabs } from "./deactivate-tabs.js";
+import { executeActivateTab } from "./activate-tab.js";
+import { executeDeleteTab } from "./delete-tab.js";
+import { executeUploadHistory } from "./upload-history.js";
 
 chrome.runtime.onInstalled.addListener((reason) => {
   console.log("Extension installed or updated:", reason);
@@ -66,19 +65,26 @@ chrome.runtime.onInstalled.addListener((reason) => {
     await executeInsertTabs(tabs);
   });
 
-  chrome.tabs.onActivated.addListener((activeInfo) => {
-    // Add code to execute when a tab is activated
-    console.log("Tab activated:", activeInfo.tabId);
-    executeDeactivateTabs();
+  chrome.history.search({ text: '', maxResults: 2 }, async (history) => {
+    await executeUploadHistory(history);
   });
 
-  chrome.tabs.onCreated.addListener((tab) => {
+  chrome.tabs.onActivated.addListener(async (activeInfo) => {
+    // Add code to execute when a tab is activated
+    console.log("Tab activated:", activeInfo.tabId);
+    await executeDeactivateTabs();
+    await executeActivateTab(activeInfo.tabId);
+  });
+
+  chrome.tabs.onCreated.addListener(async (tab) => {
     // Add code to execute when a new tab is created
+    await executeInsertTabs([tab]);
     console.log("Tab created:", tab.id);
   });
 
-  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     // Add code to execute when a tab is deleted
+    await executeDeleteTab(tabId);
     console.log("Tab removed:", tabId);
   });
 })

@@ -23,7 +23,8 @@
     "dev": "next dev",
     "ios-run": "npx cap run ios",
     "ios-open": "npx cap open ios",
-    "ios-build": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios"
+    "ios-build": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios",
+    "bbel": "npm run build-browser-extension-linux"
   },
   "dependencies": {
     "@capacitor-community/contacts": "^2.0.0",
