@@ -11,9 +11,7 @@ export async function insertLanguageIdToDeep({deep, deviceLinkId, deviceLanguage
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const languageCodeTypeLinkId = await deep.id(PACKAGE_NAME, 'LanguageCode');
 
-  const {
-		data: [{ id: languageCodeLinkId }],
-	} = await deep.insert({
+  await deep.insert({
 		type_id: languageCodeTypeLinkId,
 		string: { data: { value: deviceLanguageCode.value } },
 		in: {
