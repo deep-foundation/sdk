@@ -11,9 +11,7 @@ export async function insertLanguageTagToDeep({deep, deviceLinkId, deviceLanguag
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const languageTagTypeLinkId = await deep.id(PACKAGE_NAME, 'LanguageTag');
 
-  const {
-		data: [{ id: batteryLevelLinkId }],
-	} = await deep.insert({
+  await deep.insert({
 		type_id: languageTagTypeLinkId,
 		string: { data: { value: deviceLanguageTag.value } },
 		in: {

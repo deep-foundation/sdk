@@ -12,7 +12,6 @@ import {
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
-import { insertPackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME } from '../imports/device/package-name';
 import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
 import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
@@ -29,7 +28,7 @@ function Content() {
 
   return (
     <Stack>
-      <Text>{deviceLinkId}</Text>
+      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
