@@ -27,6 +27,10 @@ import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
 import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 
+import {
+  createTelegramPackage,
+} from "../imports/packages/telegram/telegram";
+
 function Page() {
   const deep = useDeep();
 
@@ -118,6 +122,9 @@ function Page() {
           <button onClick={() => copyClipboardToDeep({ deep, deviceLinkId })}>copy Clipboard to deep</button>
           <hr />
         </div>
+        <div>
+        <button onClick={() => createTelegramPackage({ deep })}>create telegram Package</button>
+      </div>
         </>
       }
     </div>
