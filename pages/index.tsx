@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
+import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
 import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 
 function Page() {
@@ -105,6 +106,10 @@ function Page() {
           </div>
           <div>
             <Link href="/device">device</Link>
+          </div>
+          <div>
+            <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
+            <hr />
           </div>
         <div>
           <hr />
