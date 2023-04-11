@@ -24,6 +24,8 @@ import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
+
 function Page() {
   const deep = useDeep();
 
@@ -33,7 +35,7 @@ function Page() {
   );
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -53,7 +55,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -61,7 +63,6 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-      
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -105,6 +106,13 @@ function Page() {
           <div>
             <Link href="/device">device</Link>
           </div>
+        <div>
+          <hr />
+          <button onClick={() => initPackageClipboard({ deep })}>create clipboard Package</button>
+          <br />
+          <button onClick={() => copyClipboardToDeep({ deep, deviceLinkId })}>copy Clipboard to deep</button>
+          <hr />
+        </div>
         </>
       }
     </div>
