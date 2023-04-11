@@ -21,8 +21,11 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+
+import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 
 import {
   createTelegramPackage,
@@ -65,30 +68,6 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-
-      const getIsDevicePackageInstalled = async () => {
-        const devicePackageSelectResponse = await deep.select({
-          type_id: {
-            _id: ['@deep-foundation/core', 'Contain'],
-          },
-          from_id: deep.linkId,
-          to: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Package'],
-            },
-            string: {
-              value: DEVICE_PACKAGE_NAME,
-            },
-          },
-        });
-        const isDevicePackageInstalled =
-          devicePackageSelectResponse.data.length > 0;
-        return isDevicePackageInstalled;
-      }
-
-      if (!await getIsDevicePackageInstalled()) {
-        await insertDevicePackageLinksToDeep({ deep });
-      }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -117,23 +96,38 @@ function Page() {
   }, [deep]);
 
   return (
-    <>
-      <h1>Deep.Foundation sdk examples</h1>
-      <Text>Authentication Link Id: {deep.linkId}</Text>
-      <Text>Device Link Id: {deviceLinkId}</Text>
-      <div>
-        <Link href="/all">all subscribe</Link>
-      </div>
-      <div>
-        <Link href="/messanger">messanger</Link>
-      </div>
-      <div>
-        <Link href="/device">device</Link>
-      </div>
-      <div>
+    <div>
+      <h1>Deep.Foundation sdk examples</h1> 
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+      {deviceLinkId &&
+        <>
+          <div>
+            <Link href="/all">all subscribe</Link>
+          </div>
+          <div>
+            <Link href="/messanger">messanger</Link>
+          </div>
+          <div>
+            <Link href="/device">device</Link>
+          </div>
+          <div>
+            <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
+            <hr />
+          </div>
+        <div>
+          <hr />
+          <button onClick={() => initPackageClipboard({ deep })}>create clipboard Package</button>
+          <br />
+          <button onClick={() => copyClipboardToDeep({ deep, deviceLinkId })}>copy Clipboard to deep</button>
+          <hr />
+        </div>
+        <div>
         <button onClick={() => createTelegramPackage({ deep })}>create telegram Package</button>
       </div>
-    </>
+        </>
+      }
+    </div>
   );
 }
 
