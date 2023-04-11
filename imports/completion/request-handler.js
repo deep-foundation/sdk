@@ -1,7 +1,7 @@
 async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
   const {Configuration, OpenAIApi} = require("openai")
   const apiKeyTypeLinkId = await deep.id('@flakeed/openai', "ApiKey")
-  const usesApiKeyTypeLinkId = await deep.id('@flakeed/openai', "UsesOpenAiApiKey")
+  const usesApiKeyTypeLinkId = await deep.id('@flakeed/openai', "UsesApiKey")
 
   const {data: [linkWithStringValue]} = await deep.select({
       id: openAiRequestLink.to_id
