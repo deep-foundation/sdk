@@ -3,10 +3,11 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 import { getIsLinkExist } from "../get-is-link-exist";
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 
-export const PACKAGE_NAME = "@deep-foundation/camera"
+export const PACKAGE_NAME = "@romanxz/camera"
 
 export default async function installPackage(deviceLinkId?) {
 
@@ -92,6 +93,7 @@ export default async function installPackage(deviceLinkId?) {
                 {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
+                  string: { data: { value: uuidv4()}}
                 },
               ],
             },
@@ -115,6 +117,7 @@ export default async function installPackage(deviceLinkId?) {
                       {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
+                        string: { data: { value: uuidv4()}}
                       },
                     ],
                   },
@@ -137,6 +140,7 @@ export default async function installPackage(deviceLinkId?) {
                       {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
+                        string: { data: { value: uuidv4()}}
                       },
                     ],
                   },
@@ -160,6 +164,7 @@ export default async function installPackage(deviceLinkId?) {
                       {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
+                        string: { data: { value: uuidv4()}}
                       },
                     ],
                   },
@@ -183,6 +188,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -205,6 +211,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -227,6 +234,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -249,6 +257,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -271,6 +280,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -293,6 +303,7 @@ export default async function installPackage(deviceLinkId?) {
                             {
                               type_id: containTypeLinkId,
                               from_id: packageLinkId,
+                              string: { data: { value: uuidv4()}}
                             },
                           ],
                         },
@@ -308,7 +319,7 @@ export default async function installPackage(deviceLinkId?) {
     ]);
     
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/camera", linkName: "Camera" })) {
+      if (!await getIsLinkExist({ deep, packageName: "@romanxz/camera", linkName: "Camera" })) {
         const { data: [{ id: CameraLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "Camera"),
           in: {
