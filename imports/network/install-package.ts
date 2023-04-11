@@ -3,10 +3,11 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 import { getIsLinkExist } from "../get-is-link-exist";
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/network"
-export const PACKAGE_TYPES = ["Wifi", "Cellular", "Unknown", "None"]
+export const PACKAGE_TYPES = ["Wifi", "Cellular", "Unknown", "None",]
 
 export default async function installPackage(deviceLinkId?) {
 
@@ -91,6 +92,7 @@ export default async function installPackage(deviceLinkId?) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: { data: { value: uuidv4()}}
               },
             ],
           },
@@ -114,6 +116,7 @@ export default async function installPackage(deviceLinkId?) {
                   {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId,
+                    string: { data: { value: uuidv4()}}
                   },
                 ],
               },
@@ -122,6 +125,19 @@ export default async function installPackage(deviceLinkId?) {
         }))
       }
     });
+
+    const { data: [{ id: dependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@freephoenix888/boolean", "True"),
+      to_id: await deep.id("@freephoenix888/boolean", "True"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Dependency' } },
+        },
+      }
+    })
 
     // await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     //   type_id: typeTypeLinkId,
