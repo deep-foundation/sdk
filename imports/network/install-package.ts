@@ -6,7 +6,7 @@ import { getIsLinkExist } from "../get-is-link-exist";
 import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
-export const PACKAGE_NAME = "@deep-foundation/network"
+export const PACKAGE_NAME = "@@romanxz/network"
 export const PACKAGE_TYPES = ["Wifi", "Cellular", "Unknown", "None",]
 
 export default async function installPackage(deviceLinkId?) {
@@ -165,7 +165,7 @@ export default async function installPackage(deviceLinkId?) {
     // })));
 
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/network", linkName: "Network" })) {
+      if (!await getIsLinkExist({ deep, packageName: "@@romanxz/network", linkName: "Network" })) {
         const { data: [{ id: networkLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "Network"),
           in: {
