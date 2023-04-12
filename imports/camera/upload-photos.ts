@@ -61,7 +61,7 @@ export default async function uploadPhotos(deep, deviceLinkId, photos) {
                     to: {
                         data: {
                             type_id: timestampTypeLinkId,
-                            string: { data: { value: new Date() } },
+                            string: { data: { value: new Date().toDateString() } },
                         }
                     }
                 }

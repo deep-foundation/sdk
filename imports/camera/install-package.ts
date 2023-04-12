@@ -317,6 +317,19 @@ export default async function installPackage(deviceLinkId?) {
         }
       },
     ]);
+
+    const { data: [{ id: dependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/device", "Device"),
+      to_id: await deep.id("@deep-foundation/device", "Device"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Dependency' } },
+        },
+      }
+    })
     
     if (deviceLinkId) {
       if (!await getIsLinkExist({ deep, packageName: "@romanxz/camera", linkName: "Camera" })) {

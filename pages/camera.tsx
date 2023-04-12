@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Image, Stack, Text, Box } from '@chakra-ui/react';
 
 import installPackage, { PACKAGE_NAME } from '../imports/camera/install-package';
 import checkCameraPermission from '../imports/camera/check-permission';
@@ -12,6 +12,7 @@ import pickImages from '../imports/camera/pick-images';
 import uploadPhotos from '../imports/camera/upload-photos';
 import uploadGallery from '../imports/camera/upload-gallery';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import ImageCard from './image-card';
 
 function Page() {
   const deep = useDeep();
@@ -23,8 +24,8 @@ function Page() {
     undefined
   );
   useEffect(() => {
-    if (typeof(window) === "object") defineCustomElements(window);
-   });
+    if (typeof (window) === "object") defineCustomElements(window);
+  });
 
   useEffect(() => {
     const useCamera = async () => {
@@ -55,17 +56,34 @@ function Page() {
   const fetchPhotos = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-    const base64TypeLinkId = await deep.id(PACKAGE_NAME, "Base64");
+    const cameraTypeLinkId = await deep.id(PACKAGE_NAME, "Camera");
     const { data } = await deep.select({
-      type_id: base64TypeLinkId,
+      type_id: photoTypeLinkId,
       in: {
         type_id: containTypeLinkId,
         from: {
-          type_id: photoTypeLinkId
+          type_id: cameraTypeLinkId
         }
       }
-    },);
-    setImages(data);
+    }, {
+      "returning": `id
+    properties: out {
+      property: to {
+        type {
+          in(where: {value: {_is_null: false}}) {
+            value
+          }
+        }
+        value
+      }
+    }
+  `})
+
+    const images = data.map(photo => {
+      photo.properties.forEach(property => photo[property.property.type.in[0].value.value] = property.property.value.value)
+      return photo;
+    })
+    setImages(images);
   }
 
   const createCameraLink = async (deep) => {
@@ -75,7 +93,7 @@ function Page() {
       in: {
         data: [{
           type_id: containTypeLinkId,
-          from_id: await deep.id("deep", "admin"),
+          from_id: deviceLinkId,
           string: { data: { value: "Camera" } }
         }]
       }
@@ -84,7 +102,7 @@ function Page() {
 
   return <>
     <Stack>
-      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? "NONE"}</Text>
       <Button onClick={async () => await installPackage(deviceLinkId)}>
         <Text>INITIALIZE PACKAGE</Text>
       </Button>
@@ -104,11 +122,11 @@ function Page() {
         <Text>USE GALLERY</Text>
       </Button>
       <Button onClick={async () => await fetchPhotos(deep)}>
-        <Text>LOAD IMAGES</Text>
+        <Text>VIEW IMAGES</Text>
       </Button>
     </Stack>
-    <Stack>
-      {images?.map((i) => <img key={i.id} src={`data:${i.format};base64, ${i.value.value}`} />)}
+    <Stack align="center" direction="column">
+      {images?.map((image) => <ImageCard key={image.id} image={image} />)}
     </Stack>
   </>
 }
