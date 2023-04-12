@@ -90,10 +90,6 @@ function Page() {
           devicePackageSelectResponse.data.length > 0;
         return isDevicePackageInstalled;
       }
-
-      if (!await getIsDevicePackageInstalled()) {
-        await insertDevicePackageLinksToDeep({ deep });
-      }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
