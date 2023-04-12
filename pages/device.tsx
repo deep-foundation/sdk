@@ -40,7 +40,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageCode = await Device.getLanguageCode();
-          await saveDeviceData({deep, deviceLinkId, data: deviceLanguageCode});
+          await saveDeviceData({deep, deviceLinkId, data: {languageCode: deviceLanguageCode.value}});
         }}
       >
         Save language id
@@ -48,7 +48,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageTag = await Device.getLanguageTag();
-          await saveDeviceData({deep, deviceLinkId, data: deviceLanguageTag});
+          await saveDeviceData({deep, deviceLinkId, data: {languageTag: deviceLanguageTag.value}});
         }}
       >
         Save language tag
