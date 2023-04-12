@@ -4,7 +4,7 @@ import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } f
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { createSerialOperation } from "@deep-foundation/deeplinks/imports/gql";
 
-export async function saveDeviceData(params: { deep: DeepClient, data: (DeviceInfo | BatteryInfo | GetLanguageCodeResult | LanguageTag) } & ({deviceLinkId: number} | {deviceLink: Link<number>})) {
+export async function saveDeviceData(params: { deep: DeepClient, data: (DeviceInfo | BatteryInfo | {languageCode: GetLanguageCodeResult['value']} | {languageTag: LanguageTag['value']}) } & ({deviceLinkId: number} | {deviceLink: Link<number>})) {
   const {deep} = params;
   let deviceLink: Link<number>;
   if('deviceLinkId' in params) {
