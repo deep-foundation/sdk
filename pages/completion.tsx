@@ -9,7 +9,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-const PACKAGE_NAME="@deep-foundation/completion"
+const PACKAGE_NAME="@deep-foundation/openai";
 
 function Content() {
   const deep = useDeep();
