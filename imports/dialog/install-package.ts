@@ -123,9 +123,10 @@ async function installPackage() {
     }
   })
 
+  const notificationTypeLinkId = await deep.id("@deep-foundation/notification", "Notification");
   await deep.insert([
     {
-      type_id: typeTypeLinkId,
+      type_id: notificationTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -140,6 +141,11 @@ async function installPackage() {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {
+                  data: {
+                    value: 'TreeIncludeNodeAlert'
+                  }
+                }
               },
             ],
           },
@@ -163,6 +169,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownAlertTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -185,6 +196,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownAlertMessage'
+                        }
+                      }
                     },
                   ],
                 },
@@ -207,6 +223,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownAlertButtonTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -217,7 +238,7 @@ async function installPackage() {
       }
     },
     {
-      type_id: typeTypeLinkId,
+      type_id: notificationTypeLinkId,
       in: {
         data: [
           {
@@ -233,6 +254,11 @@ async function installPackage() {
                 {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
+                  string: {
+                    data: {
+                      value: 'TreeIncludeNodePrompt'
+                    }
+                  }
                 },
               ],
             },
@@ -257,6 +283,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -279,6 +310,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptMessage'
+                        }
+                      }
                     },
                   ],
                 },
@@ -301,6 +337,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptOkButtonTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -323,6 +364,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptCancelButtonTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -345,6 +391,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptInputPlaceholder'
+                        }
+                      }
                     },
                   ],
                 },
@@ -367,6 +418,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownPromptInputText'
+                        }
+                      }
                     },
                   ],
                 },
@@ -377,7 +433,7 @@ async function installPackage() {
       }
     },
     {
-      type_id: typeTypeLinkId,
+      type_id: notificationTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -393,6 +449,11 @@ async function installPackage() {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {
+                  data: {
+                    value: 'TreeIncludeNodeConfirm'
+                  }
+                }
               },
             ],
           },
@@ -417,6 +478,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownConfirmTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -439,6 +505,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownConfirmMessage'
+                        }
+                      }
                     },
                   ],
                 },
@@ -461,6 +532,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownConfirmOkButtonTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -483,6 +559,11 @@ async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
+                      string: {
+                        data: {
+                          value: 'TreeIncludeDownConfirmCancelButtonTitle'
+                        }
+                      }
                     },
                   ],
                 },
@@ -511,6 +592,11 @@ async function installPackage() {
                 {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
+                  string: {
+                    data: {
+                      value: 'TreeIncludeDownNotify'
+                    }
+                  }
                 },
               ],
             },
