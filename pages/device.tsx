@@ -10,6 +10,7 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
+import { NavBar } from '../components/navbar';
 
 function Content() {
   const deep = useDeep();
@@ -19,8 +20,8 @@ function Content() {
   );
 
   return (
-    <Stack>
-      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+    <Stack alignItems={"center"}>
+      <NavBar/>
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
