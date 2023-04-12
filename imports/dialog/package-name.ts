@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/dialog`
+export const PACKAGE_NAME=`@deep-foundation/capacitor-dialog`
