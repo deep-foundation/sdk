@@ -14,13 +14,13 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
 import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
@@ -40,6 +40,7 @@ function Page() {
     'deviceLinkId',
     undefined
   );
+  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     if (deep.linkId === 0) {
@@ -51,6 +52,7 @@ function Page() {
     new Promise(async () => {
       if (deep.linkId != 0) {
         const adminLinkId = await deep.id('deep', 'admin');
+        setAdminLinkId(adminLinkId)
         if (deep.linkId != adminLinkId) {
 
           await deep.login({
@@ -94,43 +96,45 @@ function Page() {
           setDeviceLinkId(newDeviceLinkId);
         };
         initializeDeviceLink();
+      } else {
+        const { data: [deviceLink] } = await deep.select(deviceLinkId);
+        if (!deviceLink) {
+          setDeviceLinkId(undefined);
+        }
       }
     });
   }, [deep]);
 
+  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLinkId !== undefined;
+
   return (
-    <div>
-      <h1>Deep.Foundation sdk examples</h1> 
-      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+    <Stack alignItems={"center"}>
+      <h1>Deep</h1>
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
-      {deviceLinkId &&
-        <>
-          <div>
-            <Link href="/all">all subscribe</Link>
-          </div>
-          <div>
-            <Link href="/messanger">messanger</Link>
-          </div>
-          <div>
-            <Link href="/device">device</Link>
-          </div>
-          <div>
-            <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
-            <hr />
-          </div>
-        <div>
-          <hr />
-          <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
-          <br />
-          <button onClick={() => initPackageContact({ deep })}>create Contact Package</button>
-          <hr />
-        </div>
-        <div>
-        <button onClick={() => createTelegramPackage({ deep })}>create telegram Package</button>
+      <div>
+        <Link as={NextLink} href='/device'>
+          Device
+        </Link>
       </div>
-        </>
-      }
-    </div>
+      <div>
+        <Link as={NextLink} href='/call-history'>
+          Call History
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href='/contacts'>
+          Contacts
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href='/telegram'>
+          Telegarm
+        </Link>
+      </div>
+      <div>
+      </div>
+    </Stack>
   );
 }
 
