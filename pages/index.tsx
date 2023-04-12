@@ -22,6 +22,8 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+
+import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
 import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
@@ -67,6 +69,30 @@ function Page() {
       const adminLinkId = await deep.id('deep', 'admin');
       if (deep.linkId != adminLinkId) {
         return;
+      }
+
+      const getIsDevicePackageInstalled = async () => {
+        const devicePackageSelectResponse = await deep.select({
+          type_id: {
+            _id: ['@deep-foundation/core', 'Contain'],
+          },
+          from_id: deep.linkId,
+          to: {
+            type_id: {
+              _id: ['@deep-foundation/core', 'Package'],
+            },
+            string: {
+              value: DEVICE_PACKAGE_NAME,
+            },
+          },
+        });
+        const isDevicePackageInstalled =
+          devicePackageSelectResponse.data.length > 0;
+        return isDevicePackageInstalled;
+      }
+
+      if (!await getIsDevicePackageInstalled()) {
+        await insertDevicePackageLinksToDeep({ deep });
       }
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
@@ -117,9 +143,9 @@ function Page() {
           </div>
         <div>
           <hr />
-          <button onClick={() => initPackageClipboard({ deep })}>create clipboard Package</button>
+          <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
           <br />
-          <button onClick={() => copyClipboardToDeep({ deep, deviceLinkId })}>copy Clipboard to deep</button>
+          <button onClick={() => initPackageContact({ deep })}>create Contact Package</button>
           <hr />
         </div>
         <div>
