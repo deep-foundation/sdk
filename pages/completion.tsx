@@ -8,8 +8,8 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-const PACKAGE_NAME='@flakeed/openai';
 import { Provider } from '../imports/provider';
+const PACKAGE_NAME="@deep-foundation/completion"
 
 function Content() {
   const deep = useDeep();
@@ -35,13 +35,13 @@ function Content() {
         });
         }}
       >
-        add openAiApiKeyLinkId link
+        add ApiKey link
       </Button>
       <Button
         onClick={async () => {
           await deep.insert({
             type_id: await deep.id('@deep-foundation/core', "SyncTextFile"),
-            string: { data: { value: "user input" } },
+            string: { data: { value: "" } },
             in: {
               data: {
                 type_id: await deep.id('@deep-foundation/core', "Contain"),
@@ -51,7 +51,7 @@ function Content() {
           });
         }}
       >
-        add userInputLinkId link
+        add userInput link
       </Button>
       <Button
         onClick={async () => {
