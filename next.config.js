@@ -11,8 +11,8 @@ module.exports = withNextEnv({
   
   webpack: (config) => {
     config.resolve.fallback = {
-      "buffer": require.resolve('buffer/'),
-      "events": require.resolve("events/"),
+      "buffer":false,
+      "events": false,
       "os": false,
       "fs": false,
       "tls": false,
