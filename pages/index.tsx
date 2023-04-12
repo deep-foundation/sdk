@@ -21,9 +21,13 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { insertPackageLinksToDeep as insertDevicePackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+
 import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
+import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+
+import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 
 function Page() {
   const deep = useDeep();
@@ -114,27 +118,35 @@ function Page() {
   }, [deep]);
 
   return (
-    <>
-      <h1>Deep.Foundation sdk examples</h1>
-      <Text>Authentication Link Id: {deep.linkId}</Text>
-      <Text>Device Link Id: {deviceLinkId}</Text>
-      <div>
-        <Link href="/all">all subscribe</Link>
-      </div>
-      <div>
-        <Link href="/messanger">messanger</Link>
-      </div>
-      <div>
-        <Link href="/device">device</Link>
-      </div>
-      <div>
-        <hr />
-        <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
-        <br />
-        <button onClick={() => initPackageContact({ deep })}>create Contact Package</button>
-        <hr />
-      </div>
-    </>
+    <div>
+      <h1>Deep.Foundation sdk examples</h1> 
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+      {deviceLinkId &&
+        <>
+          <div>
+            <Link href="/all">all subscribe</Link>
+          </div>
+          <div>
+            <Link href="/messanger">messanger</Link>
+          </div>
+          <div>
+            <Link href="/device">device</Link>
+          </div>
+          <div>
+            <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
+            <hr />
+          </div>
+        <div>
+          <hr />
+          <button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</button>
+          <br />
+          <button onClick={() => initPackageContact({ deep })}>create Contact Package</button>
+          <hr />
+        </div>
+        </>
+      }
+    </div>
   );
 }
 
