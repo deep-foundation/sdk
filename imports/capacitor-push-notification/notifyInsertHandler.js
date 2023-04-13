@@ -7,7 +7,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
 
   const getDeviceRegistrationToken = async () => {
-    const deviceRegistrationTokenTypeLinkId = await deep.id("@deep-foundation/push-notification", "DeviceRegistrationToken");
+    const deviceRegistrationTokenTypeLinkId = await deep.id(deep.linkId, "DeviceRegistrationToken");
     const { data: deviceRegistrationTokenLinks } = await deep.select({
       type_id: deviceRegistrationTokenTypeLinkId,
       in: {
@@ -27,8 +27,8 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   const deviceRegistrationToken = await getDeviceRegistrationToken();
 
   const getServiceAccount = async () => {
-    const serviceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "ServiceAccount");
-    const usesServiceAccountTypeLinkId = await deep.id("@deep-foundation/push-notification", "UsesServiceAccount");
+    const serviceAccountTypeLinkId = await deep.id(deep.linkId, "ServiceAccount");
+    const usesServiceAccountTypeLinkId = await deep.id(deep.linkId, "UsesServiceAccount");
     const { data: [serviceAccountLink] } = await deep.select({
       type_id: serviceAccountTypeLinkId,
       in: {
@@ -52,7 +52,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
 
   const getPushNotificationData = async () => {
     const getPushNotificationTitle = async () => {
-      const notificationTitleTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationTitle")
+      const notificationTitleTypeLinkId = await deep.id(deep.linkId, "PushNotificationTitle")
       const { data: [linkWithPushNotificationTitleString] } = await deep.select({
         in: {
           type_id: {
@@ -74,7 +74,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     };
 
     const getPushNotificationBody = async () => {
-      const notificationBodyTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationBody")
+      const notificationBodyTypeLinkId = await deep.id(deep.linkId, "PushNotificationBody")
       const { data: [linkWithPushNotificationBodyString] } = await deep.select({
         in: {
           type_id: notificationBodyTypeLinkId,
@@ -91,7 +91,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
     };
 
     const getPushNotificationImageUrl = async () => {
-      const notificationImageUrlTypeLinkId = await deep.id("@deep-foundation/push-notification", "PushNotificationImageUrl")
+      const notificationImageUrlTypeLinkId = await deep.id(deep.linkId, "PushNotificationImageUrl")
       const { data: [linkWithPushNotificationImageUrlString] } = await deep.select({
         type_id: notificationImageUrlTypeLinkId,
         in: {
@@ -125,7 +125,7 @@ async ({ require, deep, data: { newLink: notifyLink, triggeredByLinkId } }) => {
   await firebaseAdmin.messaging(firebaseApplication).send(pushNotificationData);
 
   await deep.insert({
-    type_id: await deep.id("@deep-foundation/push-notification", "Notified"),
+    type_id: await deep.id(deep.linkId, "Notified"),
     in: {
       data: {
         type_id: containTypeLinkId,
