@@ -13,10 +13,10 @@ export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
 
   const readAsBase64 = async (webPath) => {
     // Fetch the photo, read as a blob, then convert to base64 format
-    const response = await fetch(webPath!);
+    const response = await fetch(webPath);
     const blob = await response.blob();
     return await convertBlobToBase64(blob) as string;
-  }
+  };
 
   const convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -26,11 +26,16 @@ export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
     };
     reader.readAsDataURL(blob);
   });
-  const webPath = await readAsBase64(galleryImages[0].webPath);
-  console.log(webPath);
 
+  const photos = await Promise.all(galleryImages.map(async (image) => ({
+    format: image.photos[0].format,
+    webPath: image.photos[0].webPath,
+    base64: await readAsBase64(image.photos[0].webPath),
+  })));
 
-  const { data: [{ id: photoLinkId }] } = await deep.insert(galleryImages.map(async (images) => ({
+  console.log({ photos });
+
+  const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
     type_id: photoTypeLinkId,
     in: {
       data: [{
@@ -44,8 +49,17 @@ export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
           type_id: containTypeLinkId,
           to: {
             data: {
+              type_id: base64TypeLinkId,
+              string: { data: { value: photo.base64 } },
+            }
+          }
+        },
+        {
+          type_id: containTypeLinkId,
+          to: {
+            data: {
               type_id: webPathTypeLinkId,
-              // string: { data: { value: await readAsBase64(images.photos[0].webPath) } },
+              string: { data: { value: photo.webPath } },
             }
           }
         },
@@ -54,7 +68,16 @@ export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
           to: {
             data: {
               type_id: formatTypeLinkId,
-              string: { data: { value: images.photos[0].format } },
+              string: { data: { value: photo.format } },
+            }
+          }
+        },
+        {
+          type_id: containTypeLinkId,
+          to: {
+            data: {
+              type_id: exifTypeLinkId,
+              string: { data: { value: photo.exif ? photo.exif : "none" } },
             }
           }
         },

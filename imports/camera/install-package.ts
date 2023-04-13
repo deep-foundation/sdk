@@ -65,17 +65,6 @@ export default async function installPackage(deviceLinkId?) {
       },
     })
 
-    const { data: [{ id: cameraTreeId }] } = await deep.insert({
-      type_id: treeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'CameraTree' } },
-        },
-      }
-    })
-
     await deep.insert([
       {
         type_id: typeTypeLinkId,
@@ -84,19 +73,6 @@ export default async function installPackage(deviceLinkId?) {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'Camera' } },
-          },
-          {
-            type_id: treeIncludeNodeTypeLinkId,
-            from_id: cameraTreeId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId,
-                  string: { data: { value: uuidv4()}}
-                },
-              ],
-            },
           }]
         },
         out: {
@@ -109,18 +85,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'CameraPermissions' } },
-                }, {
-                  type_id: treeIncludeDownTypeLinkId,
-                  from_id: cameraTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: uuidv4()}}
-                      },
-                    ],
-                  },
                 }]
               }
             },
@@ -132,18 +96,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'PhotoPermissions' } },
-                }, {
-                  type_id: treeIncludeDownTypeLinkId,
-                  from_id: cameraTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: uuidv4()}}
-                      },
-                    ],
-                  },
                 }]
               }
             },
@@ -155,19 +107,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Photo' } },
-                },
-                {
-                  type_id: treeIncludeNodeTypeLinkId,
-                  from_id: cameraTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: uuidv4()}}
-                      },
-                    ],
-                  },
                 }]
               },
               out: {
@@ -180,18 +119,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Base64' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -203,18 +130,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Path' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -226,18 +141,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'WebPath' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -249,18 +152,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Exif' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -272,18 +163,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Format' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -295,18 +174,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'TimeStamp' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: cameraTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   }
@@ -329,8 +196,8 @@ export default async function installPackage(deviceLinkId?) {
           string: { data: { value: 'Dependency' } },
         },
       }
-    })
-    
+    });
+
     if (deviceLinkId) {
       if (!await getIsLinkExist({ deep, packageName: "@romanxz/camera", linkName: "Camera" })) {
         const { data: [{ id: CameraLinkId }] } = await deep.insert({
@@ -344,7 +211,7 @@ export default async function installPackage(deviceLinkId?) {
           }
         })
       }
-    }
-    console.log("camera package installed")
+    };
+    console.log("camera package installed");
   } else console.log("camera package already exists");
 }
