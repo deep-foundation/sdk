@@ -148,6 +148,11 @@ function Page() {
         </Link>
       </div> 
       <div>
+        <Link as={NextLink} href="/openai-completion">
+          OpenAI Completion
+        </Link>
+      </div> 
+      <div>
       </div>
     </Stack>
   );
