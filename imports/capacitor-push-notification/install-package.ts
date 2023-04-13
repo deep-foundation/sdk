@@ -182,6 +182,7 @@ async function installPackage() {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeNodePushNotification' } },
             },
           ],
         },
@@ -207,24 +208,13 @@ async function installPackage() {
                   {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId,
+                    string: { data: { value: 'TreeIncludeDownPushNotificationTitle' } },
                   },
                 ],
               },
             }
             ],
           },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
         },
         {
           type_id: typeTypeLinkId,
@@ -243,24 +233,14 @@ async function installPackage() {
                   {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId,
+                    string: { data: { value: 'TreeIncludeDownPushNotificationBody' } },
                   },
                 ],
               },
             }
             ],
           },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
+          
         },
         {
           type_id: typeTypeLinkId,
@@ -279,301 +259,14 @@ async function installPackage() {
                   {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId,
+                    string: { data: { value: 'TreeIncludeDownPushNotificationImageUrl' } },
                   },
                 ],
               },
             }
             ],
           },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationSubtitle' } },
-            },
-
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationId' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationBadge' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationPayload' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationClickAction' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationDeepLink' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationGroup' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
-        },
-        {
-          type_id: typeTypeLinkId,
-          to_id: anyTypeLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: packageLinkId,
-              string: { data: { value: 'PushNotificationIsGroupSummary' } },
-            },
-            {
-              type_id: treeIncludeDownTypeLinkId,
-              from_id: pushNotificationTreeLinkId,
-              in: {
-                data: [
-                  {
-                    type_id: containTypeLinkId,
-                    from_id: packageLinkId,
-                  },
-                ],
-              },
-            }
-            ],
-          },
-          out: {
-            data: {
-              type_id: valueTypeLinkId,
-              to_id: numberTypeLinkId,
-              in: {
-                data: {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId
-                }
-              }
-            },
-          }
+          
         },
         {
           type_id: await deep.id(NOTIFICATION_PACKAGE_NAME, "Notify"),
@@ -631,6 +324,8 @@ async function installPackage() {
       data: {
         type_id: valueTypeLinkId,
         to_id: stringTypeLinkId,
+        string: { data: { value: 'TypeOfValueOfWebPushCertificate' } },
+
       },
     },
   },
@@ -648,6 +343,7 @@ async function installPackage() {
       data: {
         type_id: valueTypeLinkId,
         to_id: stringTypeLinkId,
+        string: { data: { value: 'TypeOfValueOfDeviceRegistrationToken' } },
       },
     },
   },
@@ -677,6 +373,7 @@ async function installPackage() {
       data: {
         type_id: valueTypeLinkId,
         to_id: objectTypeLinkId,
+        string: { data: { value: 'TypeOfValueOfServiceAccount' } },
       },
     },
   }
