@@ -26,8 +26,10 @@ import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-n
 import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
+import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
 import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
 import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
+import {Haptics} from '@capacitor/haptics';
 
 import {
   createTelegramPackage,
@@ -41,6 +43,8 @@ function Page() {
     undefined
   );
   const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
+
+  useHapticVibrate({deviceLinkId});
 
   useEffect(() => {
     if (deep.linkId === 0) {
