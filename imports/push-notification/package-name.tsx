@@ -1,1 +1,1 @@
-export const PACKAGE_NAME = "@deep-foundation/push-notification";
+export const PACKAGE_NAME = "@deep-foundation/firebase-push-notification";
