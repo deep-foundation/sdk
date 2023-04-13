@@ -17,6 +17,7 @@
       "es6",
       "es7"
     ],
+    "downlevelIteration": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "isolatedModules": true,

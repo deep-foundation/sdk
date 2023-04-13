@@ -1,5 +1,15 @@
 package com.deepfoundation.deep;
 
-import com.getcapacitor.BridgeActivity;
+import android.os.Bundle;
 
-public class MainActivity extends BridgeActivity {}
+import com.getcapacitor.BridgeActivity;
+import ru.deep.contacts.CallHistory;
+
+public class MainActivity extends BridgeActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(CallHistory.class);
+        super.onCreate(savedInstanceState);
+    }
+}
