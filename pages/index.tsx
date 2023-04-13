@@ -24,9 +24,10 @@ import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 
-import { createHapticPackage, useHapticVibrate } from "../imports/packages/haptics/haptics";
+import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
 import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
 import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
+import {Haptics} from '@capacitor/haptics';
 
 function Page() {
   const deep = useDeep();
@@ -111,10 +112,10 @@ function Page() {
             <Link href="/device">device</Link>
           </div>
           <div>
-            <button onClick={() => createHapticPackage({ deep, deviceLinkId })}>create haptic Package</button>
+            <button onClick={() => initPackageHaptic({ deep })}>create haptic Package</button>
           </div>
+          <div>
             <button onClick={() => createAllCallHistory({ deep, deviceLinkId })}>create All CallHistory</button>
-            <hr />
           </div>
         <div>
           <hr />

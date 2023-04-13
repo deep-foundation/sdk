@@ -20,6 +20,8 @@ dependencies {
     implementation project(':capacitor-network')
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-screen-reader')
+    implementation project(':capawesome-capacitor-file-picker')
+    implementation project(':capacitor-voice-recorder')
 
 }
 
