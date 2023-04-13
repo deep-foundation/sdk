@@ -143,6 +143,11 @@ function Page() {
         </Link>
       </div>
       <div>
+        <Link as={NextLink} href="/screen-reader">
+          Screen Reader
+        </Link>
+      </div> 
+      <div>
       </div>
     </Stack>
   );
