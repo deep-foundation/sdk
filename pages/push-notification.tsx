@@ -51,17 +51,17 @@ import {
   Messaging,
   onMessage,
 } from 'firebase/messaging';
-import { insertDeviceRegistrationToken } from '../imports/capacitor-push-notification/insert-device-registration-token';
-import { PACKAGE_NAME } from '../imports/capacitor-push-notification/package-name';
-import { requestPermissions } from '../imports/capacitor-push-notification/request-permissions';
-import { insertWebPushCertificate } from '../imports/capacitor-push-notification/insert-web-push-certificate';
-import { insertServiceAccount } from '../imports/capacitor-push-notification/insert-service-account';
-import { insertPushNotification } from '../imports/capacitor-push-notification/insert-push-notification';
-import { registerDevice } from '../imports/capacitor-push-notification/register-device';
+import { insertDeviceRegistrationToken } from '../imports/firebase-push-notification/insert-device-registration-token';
+import { PACKAGE_NAME } from '../imports/firebase-push-notification/package-name';
+import { requestPermissions } from '../imports/firebase-push-notification/request-permissions';
+import { insertWebPushCertificate } from '../imports/firebase-push-notification/insert-web-push-certificate';
+import { insertServiceAccount } from '../imports/firebase-push-notification/insert-service-account';
+import { insertPushNotification } from '../imports/firebase-push-notification/insert-push-notification';
+import { registerDevice } from '../imports/firebase-push-notification/register-device';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
-import { PushNotification } from '../imports/capacitor-push-notification/push-notification';
-import { getPushNotification } from '../imports/capacitor-push-notification/get-push-notification';
+import { PushNotification } from '../imports/firebase-push-notification/push-notification';
+import { getPushNotification } from '../imports/firebase-push-notification/get-push-notification';
 import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { Device } from '../imports/device/device';
