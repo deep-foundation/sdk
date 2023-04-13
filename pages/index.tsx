@@ -138,6 +138,11 @@ function Page() {
         </Link>
       </div>
       <div>
+        <Link as={NextLink} href='/dialog'>
+          Dialog
+        </Link>
+      </div>
+      <div>
       </div>
     </Stack>
   );
