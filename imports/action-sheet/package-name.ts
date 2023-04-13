@@ -1,1 +1,1 @@
-export const PACKAGE_NAME = "@deep-foundation/action-sheet";
+export const PACKAGE_NAME = "@deep-foundation/capacitor-action-sheet";
