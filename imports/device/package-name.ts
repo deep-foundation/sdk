@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@freephoenix888/device`
+export const PACKAGE_NAME=`@deep-foundation/device`
