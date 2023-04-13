@@ -64,17 +64,6 @@ export default async function installPackage(deviceLinkId:number) {
       },
     })
 
-    const { data: [{ id: browserExtensionTreeLinkId }] } = await deep.insert({
-      type_id: treeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'BrowserExtensionTree' } },
-        },
-      }
-    })
-
     await deep.insert([
       {
         type_id: typeTypeLinkId,
@@ -83,19 +72,6 @@ export default async function installPackage(deviceLinkId:number) {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'BrowserExtension' } },
-          },
-          {
-            type_id: treeIncludeNodeTypeLinkId,
-            from_id: browserExtensionTreeLinkId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId,
-                  string: { data: { value: uuidv4()}}
-                },
-              ],
-            },
           }]
         },
         out: {
@@ -108,19 +84,6 @@ export default async function installPackage(deviceLinkId:number) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Page' } },
-                },
-                {
-                  type_id: treeIncludeNodeTypeLinkId,
-                  from_id: browserExtensionTreeLinkId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: uuidv4()}}
-                      },
-                    ],
-                  },
                 }]
               },
               out: {
@@ -133,18 +96,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'PageUrl' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -156,18 +107,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'LastVisitTime' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -179,18 +118,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'TypedCount' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -202,18 +129,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'VisitCount' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -225,18 +140,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'PageTitle' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -251,19 +154,6 @@ export default async function installPackage(deviceLinkId:number) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Tab' } },
-                },
-                {
-                  type_id: treeIncludeNodeTypeLinkId,
-                  from_id: browserExtensionTreeLinkId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: uuidv4()}}
-                      },
-                    ],
-                  },
                 }]
               },
               out: {
@@ -276,18 +166,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'TabUrl' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -299,18 +177,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'TabTitle' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -322,18 +188,6 @@ export default async function installPackage(deviceLinkId:number) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Active' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: browserExtensionTreeLinkId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                              string: { data: { value: uuidv4()}}
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -344,6 +198,19 @@ export default async function installPackage(deviceLinkId:number) {
         }
       },
     ]);
+
+    const { data: [{ id: deviceDependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/device", "Device"),
+      to_id: await deep.id("@deep-foundation/device", "Device"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'DeviceDependency' } },
+        },
+      }
+    });
 
     if (deviceLinkId) {
       if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "BrowserExtension" })) {
