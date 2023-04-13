@@ -1,15 +1,24 @@
-# How to run
-
 ## Prerequisitions
+- Install and use nodejs version from .nvmrc
+```
+nvm install && nvm use
+```
+- Install dependencyes
 ```
 npm-install
 ```
-Add `.env` file with these environment variables:
+- Add `.env` file with these environment variables:
 ```
 NEXT_PUBLIC_GQL_PATH=3006-deepfoundation-dev-urovmzfl8a1.ws-eu85.gitpod.io/gql
 NEXT_PUBLIC_GQL_SSL=1
 ```
 And do not forget to change NEXT_PUBLIC_GQL_PATH to your graphql address
+
+## Package installation (temporare)
+```
+package_name="device" # Replace to any package name
+npx ts-node "./imports/${package_name}/install-package.ts"
+```
 
 ## Web
 ```
