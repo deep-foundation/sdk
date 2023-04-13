@@ -51,17 +51,17 @@ import {
   Messaging,
   onMessage,
 } from 'firebase/messaging';
-import { insertDeviceRegistrationToken } from '../imports/push-notification/insert-device-registration-token';
-import { PACKAGE_NAME } from '../imports/push-notification/package-name';
-import { requestPermissions } from '../imports/push-notification/request-permissions';
-import { insertWebPushCertificate } from '../imports/push-notification/insert-web-push-certificate';
-import { insertServiceAccount } from '../imports/push-notification/insert-service-account';
-import { insertPushNotification } from '../imports/push-notification/insert-push-notification';
-import { registerDevice } from '../imports/push-notification/register-device';
+import { insertDeviceRegistrationToken } from '../imports/capacitor-push-notification/insert-device-registration-token';
+import { PACKAGE_NAME } from '../imports/capacitor-push-notification/package-name';
+import { requestPermissions } from '../imports/capacitor-push-notification/request-permissions';
+import { insertWebPushCertificate } from '../imports/capacitor-push-notification/insert-web-push-certificate';
+import { insertServiceAccount } from '../imports/capacitor-push-notification/insert-service-account';
+import { insertPushNotification } from '../imports/capacitor-push-notification/insert-push-notification';
+import { registerDevice } from '../imports/capacitor-push-notification/register-device';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
-import { PushNotification } from '../imports/push-notification/push-notification';
-import { getPushNotification } from '../imports/push-notification/get-push-notification';
+import { PushNotification } from '../imports/capacitor-push-notification/push-notification';
+import { getPushNotification } from '../imports/capacitor-push-notification/get-push-notification';
 import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { Device } from '../imports/device/device';
