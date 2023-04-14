@@ -172,6 +172,12 @@ function Page() {
           Camera
         </Link>
       </div> 
+
+      <div>
+        <Link as={NextLink} href="/audiorecord">
+          Audiorecord
+        </Link>
+      </div> 
       <div>
       </div>
     </Stack>
