@@ -105,7 +105,10 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if (deep.linkId == 0) {
+    if (
+      deep.linkId == 0 || 
+      !isMemoPackageInstalled
+      ) {
       return;
     }
     new Promise(async () => {
@@ -144,7 +147,7 @@ function Page() {
         }
       }
     });
-  }, [deep]);
+  }, [deep, deviceLinkId, isMemoPackageInstalled]);
 
   const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLinkId !== undefined;
 
