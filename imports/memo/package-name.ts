@@ -1,1 +1,1 @@
-export const PACKAGE_NAME = `@deep-foundatin/memo`;
+export const PACKAGE_NAME = `@deep-foundation/memo`;
