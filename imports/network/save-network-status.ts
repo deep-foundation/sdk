@@ -1,8 +1,8 @@
-import { Network } from "@capacitor/network"
+import { ConnectionStatus, Network } from "@capacitor/network"
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./install-package";
+import { PACKAGE_NAME } from "./package-name";
 
-export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: number, newConnection?: any) {
+export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: number, newConnection?: ConnectionStatus) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const networkTypeLinkId = await deep.id(PACKAGE_NAME, "Network");
   const wifiTypeLinkId = await deep.id(PACKAGE_NAME, "Wifi");
