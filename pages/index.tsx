@@ -24,13 +24,13 @@ import {
 import NextLink from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
-import { initPackageContact, createAllContacts } from "../imports/contact/contact";
+import { createAllContacts } from "../imports/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { useRouter } from 'next/router'
 
-import { initPackageHaptic, useHapticVibrate } from "../imports/haptics/haptics";
+import { useHapticVibrate } from "../imports/haptics/haptics";
 import { createAllCallHistory } from "../imports/callhistory/callhistory";
-import { initPackageClipboard, copyClipboardToDeep } from "../imports/clipboard/clipboard";
+import { copyClipboardToDeep } from "../imports/clipboard/clipboard";
 import {Haptics} from '@capacitor/haptics';
 
 import {
