@@ -117,11 +117,6 @@ function Content() {
           return
         }
         notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
-        const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, 'Notified');
-        const containTypeLinkId = await deep.id(
-          '@deep-foundation/core',
-          'Contain'
-        );
         for (const notifyLink of notProcessedNotifyLinks) {
           await notifyActionSheet({
             deep,
