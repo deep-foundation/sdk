@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Camera } from "@capacitor/camera"
-import { PACKAGE_NAME } from "./install-package";
+import { PACKAGE_NAME } from "./package-name";
 
 export default async function getCameraPermission(deep: DeepClient, deviceLinkId) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
