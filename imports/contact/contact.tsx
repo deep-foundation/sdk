@@ -508,26 +508,3 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
 
   await deep.insert(contactsArray[0])
 }
-
-export async function initPackageContact({ deep }: { deep: DeepClient }) {
-  const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const typePackageQueryLinkId = await deep.id("@deep-foundation/core", "PackageQuery");
-  const typeInstallLinkId = await deep.id("@deep-foundation/npm-packager", "Install");
-
-  await deep.insert({
-    type_id: typePackageQueryLinkId,
-    string: { data: { value: "@l4legenda/capacitor-contact" } },
-    in: {
-      data: [
-        {
-          type_id: typeContainLinkId,
-          from_id: deep.linkId,
-        },
-        {
-          type_id: typeInstallLinkId,
-          from_id: deep.linkId,
-        },
-      ]
-    },
-  })
-}

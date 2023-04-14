@@ -24,28 +24,4 @@ export async function copyClipboardToDeep({ deep, deviceLinkId }: { deep: DeepCl
     })
 }
 
-export async function initPackageClipboard({ deep }: { deep: DeepClient }) {
-    const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const typePackageQueryLinkId = await deep.id("@deep-foundation/core", "PackageQuery");
-    const typeInstallLinkId = await deep.id("@deep-foundation/npm-packager", "Install");
-
-    await deep.insert({
-        type_id: typePackageQueryLinkId,
-        string: { data: { value: CAPACITOR_CLIPBOARD_NAME_PACKAGE } },
-        in: {
-            data: [
-                {
-                    type_id: typeContainLinkId,
-                    from_id: deep.linkId,
-                },
-                {
-                    type_id: typeInstallLinkId,
-                    from_id: deep.linkId,
-                },
-            ]
-        },
-    })
-
-}
-
 
