@@ -12,7 +12,6 @@ import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { createAllCallHistory } from '../imports/callhistory/callhistory';
 import { createAllContacts } from '../imports/contact/contact';
-import { createTelegramPackage } from '../imports/telegram/telegram';
 import { NavBar } from '../components/navbar';
 
 function Content() {
@@ -25,7 +24,6 @@ function Content() {
   return (
     <Stack>
       <NavBar/>
-      <Button onClick={() => createTelegramPackage({ deep })}>create telegram Package</Button>
     </Stack>
   );
 }
