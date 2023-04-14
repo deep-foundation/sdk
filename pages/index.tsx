@@ -163,6 +163,11 @@ function Page() {
         <Link as={NextLink} replace href="/browser-extension">Browser Extension</Link>
       </div>
       <div>
+        <Link as={NextLink} href="/network">
+          Network
+        </Link>
+      </div> 
+      <div>
       </div>
     </Stack>
   );

@@ -1,14 +1,6 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "jsx": "preserve",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
@@ -27,7 +19,13 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
   "types": ["chrome"],
   "include": [
@@ -36,10 +34,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "electron"
-  ],
-  "typeRoots": [
-    "./node_modules/@types"
+    "node_modules"
   ]
 }
