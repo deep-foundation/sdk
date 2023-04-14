@@ -29,7 +29,7 @@ import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { useRouter } from 'next/router'
 
 import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
-import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
+import { createAllCallHistory } from "../imports/callhistory/callhistory";
 import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
 import {Haptics} from '@capacitor/haptics';
 
