@@ -25,6 +25,7 @@ import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-n
 
 import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+import { useRouter } from 'next/router'
 
 import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
 import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
@@ -37,6 +38,8 @@ import {
 
 function Page() {
   const deep = useDeep();
+  const router = useRouter();
+
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -79,7 +82,7 @@ function Page() {
 
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
-          const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
+          const deviceTypeLinkId = await deep.id("@freephoenix888/device", 'Device');
           const containTypeLinkId = await deep.id(
             '@deep-foundation/core',
             'Contain'
@@ -156,6 +159,9 @@ function Page() {
           OpenAI Completion
         </Link>
       </div> 
+      <div>
+        <Link as={NextLink} replace href="/browser-extension">Browser Extension</Link>
+      </div>
       <div>
       </div>
     </Stack>

@@ -29,6 +29,7 @@
     "noEmit": true,
     "incremental": true
   },
+  "types": ["chrome"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
