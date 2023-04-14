@@ -24,18 +24,18 @@ import {
 import NextLink from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
-import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
+import { initPackageContact, createAllContacts } from "../imports/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { useRouter } from 'next/router'
 
-import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
+import { initPackageHaptic, useHapticVibrate } from "../imports/haptics/haptics";
 import { createAllCallHistory } from "../imports/callhistory/callhistory";
-import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/clipboard/clipboard";
 import {Haptics} from '@capacitor/haptics';
 
 import {
   createTelegramPackage,
-} from "../imports/packages/telegram/telegram";
+} from "../imports/telegram/telegram";
 import DevicePage from './device';
 import CallHistoryPage from './call-history';
 import ContactsPage from './contacts';

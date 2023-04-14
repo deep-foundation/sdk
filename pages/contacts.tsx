@@ -11,7 +11,7 @@ import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { createAllCallHistory } from '../imports/callhistory/callhistory';
-import { createAllContacts, initPackageContact } from '../imports/packages/contact/contact';
+import { createAllContacts, initPackageContact } from '../imports/contact/contact';
 import { NavBar } from '../components/navbar';
 
 function Content() {

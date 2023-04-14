@@ -11,8 +11,8 @@ import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { createAllCallHistory } from '../imports/callhistory/callhistory';
-import { createAllContacts, initPackageContact } from '../imports/packages/contact/contact';
-import { createTelegramPackage } from '../imports/packages/telegram/telegram';
+import { createAllContacts, initPackageContact } from '../imports/contact/contact';
+import { createTelegramPackage } from '../imports/telegram/telegram';
 import { NavBar } from '../components/navbar';
 
 function Content() {
