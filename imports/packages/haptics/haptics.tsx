@@ -15,6 +15,12 @@ export function useHapticVibrate({ deep, deviceLinkId }: { deep: DeepClient, dev
 
   useEffect(() => {
     new Promise(async () => {
+      if(error) {
+        console.error(error.message)
+      }
+      if(loading) {
+        return
+      }
       const notProcessedLinks = vibrateLinks.filter(link => !linksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
       if (notProcessedLinks.length === 0) {
         return
