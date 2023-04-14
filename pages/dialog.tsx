@@ -117,17 +117,6 @@ function Content() {
   return (
     <Stack>
       <Text>Device package</Text>
-      <Text>
-        Insert this package by using:
-      </Text>
-      <Code display={"block"} whiteSpace={"pre"}>
-        {
-          `
-package_name="dialog" 
-npx ts-node "./imports/\${package_name}/install-package.ts"
-`
-        }
-      </Code>
       <Input value={alertTitle} placeholder='Alert Title' onChange={(event) => {
         setAlertTitle(event.target.value);
       }} />

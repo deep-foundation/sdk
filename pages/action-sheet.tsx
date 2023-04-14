@@ -150,15 +150,6 @@ function Content() {
 
   return (
     <Stack>
-      <Text>
-        Install package by using these commands in a terminal:
-      </Text>
-      <Code display={'block'} whiteSpace={'pre'}>
-        {`
-package_name="action-sheet" 
-npx ts-node "./imports/\${package_name}/install-package.ts"
-`}
-      </Code>
       {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>

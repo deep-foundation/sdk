@@ -107,13 +107,6 @@ function Content() {
       {platform === 'web' && (
         <Text suppressHydrationWarning>Allow sound in website settings</Text>
       )}
-      <Text>Install the package by using these commands in terminal:</Text>
-      <Code display={'block'} whiteSpace={'pre'}>
-        {`
-package_name="screen-reader" 
-npx ts-node "./imports/\${package_name}/install-package.ts"
-`}
-      </Code>
       <Button
         onClick={async () => {
           await insertSpeakOptions({
@@ -127,20 +120,6 @@ npx ts-node "./imports/\${package_name}/install-package.ts"
       >
         Insert Default Speak Options
       </Button>
-      <Text>
-        Insert a link with type Notify from ScreenReader to device. You should
-        get a notification after that.
-      </Text>
-      <Code display={'block'} whiteSpace={'pre'}>
-        {`
-await deep.insert({
-    type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
-    from_id: pushNotificationLinkId, 
-    to_id: deviceLinkId, 
-    in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
-})
-  `}
-      </Code>
     </Stack>
   );
 
