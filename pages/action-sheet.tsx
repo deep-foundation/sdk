@@ -112,15 +112,17 @@ function Content() {
 
     useEffect(() => {
       new Promise(async () => {
+        const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
+        if(notProcessedNotifyLinks.length === 0) {
+          return
+        }
+        notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
         const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, 'Notified');
         const containTypeLinkId = await deep.id(
           '@deep-foundation/core',
           'Contain'
         );
-
-        const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
-        notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
-        for (const notifyLink of notifyLinks) {
+        for (const notifyLink of notProcessedNotifyLinks) {
           await notifyActionSheet({
             deep,
             deviceLinkId,
