@@ -23,7 +23,7 @@ function Content() {
     undefined
   );
 
-  useHapticVibrate({deviceLinkId});
+  useHapticVibrate({deviceLinkId,deep});
 
   return (
     <Stack>
