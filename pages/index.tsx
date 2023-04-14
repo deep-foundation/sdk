@@ -14,7 +14,7 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text, Link, Stack, Card } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -130,8 +130,111 @@ function Page() {
       <h1>Deep</h1>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
-      <DevicePage/>
-      <CallHistoryPage/>
+      <Card>
+      <CardHeader>
+        <Heading>Device</Heading>
+      </CardHeader>
+      <CardBody>
+        <DevicePage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Call History</Heading>
+      </CardHeader>
+      <CardBody>
+        <CallHistoryPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Contacts</Heading>
+      </CardHeader>
+      <CardBody>
+        <ContactsPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Telegram</Heading>
+      </CardHeader>
+      <CardBody>
+        <TelegramPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Action Sheet</Heading>
+      </CardHeader>
+      <CardBody>
+        <ActionSheetPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Dialog</Heading>
+      </CardHeader>
+      <CardBody>
+        <DialogPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Screen Reader</Heading>
+      </CardHeader>
+      <CardBody>
+        <ScreenReaderPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>OpenAI Completion</Heading>
+      </CardHeader>
+      <CardBody>
+        <OpenaiCompletionPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Browser Extension</Heading>
+      </CardHeader>
+      <CardBody>
+        <BrowserExtensionPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Network</Heading>
+      </CardHeader>
+      <CardBody>
+        <NetworkPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Camera</Heading>
+      </CardHeader>
+      <CardBody>
+        <CameraPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Audio Record</Heading>
+      </CardHeader>
+      <CardBody>
+        <AudioRecordPage />
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>Haptics</Heading>
+      </CardHeader>
+      <CardBody>
+        <HapticsPage />
+      </CardBody>
+    </Card>
+      {/* <CallHistoryPage/>
       <ContactsPage/>
       <TelegramPage/>
       <ActionSheetPage/>
@@ -142,7 +245,7 @@ function Page() {
       <NetworkPage/>
       <CameraPage/>
       <AudioRecordPage/>
-      <HapticsPage/>
+      <HapticsPage/> */}
       <div>
         <Link as={NextLink} href='/device'>
           Device
