@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, ChakraProvider, Heading, Stack, Text } from '@chakra-ui/react';
 import initializePackage, { PACKAGE_NAME } from '../imports/audiorecord/install-package';
 import checkDeviceSupport from '../imports/audiorecord/check-device-support';
 import checkAudioRecPermission from '../imports/audiorecord/check-permission';
@@ -12,6 +12,7 @@ import startAudioRec from '../imports/audiorecord/strart-recording';
 import stopAudioRec from '../imports/audiorecord/stop-recording';
 import uploadRecords from '../imports/audiorecord/upload-records';
 import installPackage from '../imports/audiorecord/install-package';
+import { VoiceRecorder } from 'capacitor-voice-recorder';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -108,24 +109,49 @@ function Page() {
       }
     })
   }
+  const [arePermissionsGranted, setArePermissionsGranted] = useState<boolean|undefined>(undefined)
+  const [canDeviceRecord, setCanDeviceRecord] = useState<boolean|undefined>(undefined)
+
+
+  useEffect(() => {
+    new Promise(async () => {
+      const { value: canDeviceRecord } = await VoiceRecorder.canDeviceVoiceRecord();
+      setCanDeviceRecord(canDeviceRecord);
+    })
+  }, [])
 
   return <Stack>
-    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
-    <Button onClick={async () => await installPackage(deviceLinkId)}>
-      INSTALL PACKAGE
+    <Card>
+      <CardHeader>
+        <Heading>
+          Ability to record
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{`Device is ${!canDeviceRecord && 'not'} able to record.`}</Text>
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>
+          Permissions
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{`Permissions are ${!arePermissionsGranted && 'not'} granted.`}</Text>
+        <Button onClick={async () => {
+      const { value: arePermissionsGranted } = await VoiceRecorder.requestAudioRecordingPermission();
+      setArePermissionsGranted(arePermissionsGranted);
+    }}>
+      Request permissions
     </Button>
+      </CardBody>
+    </Card>
+    
     <Button onClick={async () => await createContainer(deep)}>
       CREATE NEW CONTAINER
     </Button>
-    <Button onClick={async () => await checkDeviceSupport(deep, deviceLinkId)}>
-      CHECK DEVICE SUPPORT
-    </Button>
-    <Button onClick={async () => await checkAudioRecPermission(deep, deviceLinkId)}>
-      CHECK RECORDING PERMISSION
-    </Button>
-    <Button onClick={async () => await getAudioRecPermission(deep, deviceLinkId)}>
-      GET RECORDING PERMISSION
-    </Button>
+   
     <Button onClick={async () => await getRecordingStatus(deep)}>
       GET RECORDING STATUS
     </Button>
