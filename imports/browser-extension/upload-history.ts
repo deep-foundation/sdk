@@ -1,5 +1,5 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./install-package";
+import { PACKAGE_NAME } from "./package-name";
 
 export default async function uploadHistory(deep: DeepClient, deviceLinkId, history) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");

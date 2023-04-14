@@ -3,8 +3,6 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Image, Stack, Text, Box } from '@chakra-ui/react';
-
-import installPackage, { PACKAGE_NAME } from '../imports/camera/install-package';
 import checkCameraPermission from '../imports/camera/check-permission';
 import getCameraPermission from '../imports/camera/get-permission';
 import takePhoto from '../imports/camera/take-photo';
@@ -13,6 +11,7 @@ import uploadPhotos from '../imports/camera/upload-photos';
 import uploadGallery from '../imports/camera/upload-gallery';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import ImageCard from './image-card';
+import { PACKAGE_NAME } from '../imports/camera/package-name';
 
 function Page() {
   const deep = useDeep();

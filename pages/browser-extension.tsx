@@ -3,11 +3,10 @@ import { Button, ChakraProvider, HStack, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import installPackage from "../imports/browser-extension/install-package";
-import { PACKAGE_NAME } from "../imports/browser-extension/install-package";
 import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
+import { PACKAGE_NAME } from "../imports/browser-extension/package-name";
 
 export function Extension() {
   const deep = useDeep();
