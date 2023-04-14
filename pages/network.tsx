@@ -47,7 +47,7 @@ function Page() {
   </Stack>
 }
 
-export default function Index() {
+export default function NetworkPage() {
   return (
     <ChakraProvider>
       <Provider>

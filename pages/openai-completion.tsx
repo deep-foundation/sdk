@@ -101,7 +101,7 @@ function Content() {
   );
 }
 
-export default function OpenaiPage() {
+export default function OpenaiCompletionPage() {
   return (
     <ChakraProvider>
       <Provider>

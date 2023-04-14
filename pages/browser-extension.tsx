@@ -89,7 +89,7 @@ export function Extension() {
   )
 }
 
-export default function Page() {
+export default function BrowserExtensionPage() {
   return (
     <>
       <ChakraProvider>

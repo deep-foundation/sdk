@@ -147,7 +147,7 @@ await deep.insert({
   return content;
 }
 
-export default function DevicePage() {
+export default function ScreenReaderPage() {
   return (
     <ChakraProvider>
       <Provider>

@@ -149,7 +149,7 @@ function Page() {
   </Stack>
 }
 
-export default function Index() {
+export default function AudioRecordPage() {
   return (
     <ChakraProvider>
       <Provider>

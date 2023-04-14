@@ -14,7 +14,7 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text, Link, Stack } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack, Card } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -35,6 +35,19 @@ import {Haptics} from '@capacitor/haptics';
 import {
   createTelegramPackage,
 } from "../imports/packages/telegram/telegram";
+import DevicePage from './device';
+import CallHistoryPage from './call-history';
+import ContactsPage from './contacts';
+import TelegramPage from './telegram';
+import ActionSheetPage from './action-sheet';
+import DialogPage from './dialog';
+import ScreenReaderPage from './screen-reader';
+import OpenaiCompletionPage from './openai-completion';
+import BrowserExtensionPage from './browser-extension';
+import NetworkPage from './network';
+import CameraPage from './camera';
+import HapticsPage from './haptics';
+import AudioRecordPage from './audiorecord';
 
 function Page() {
   const deep = useDeep();
@@ -46,8 +59,6 @@ function Page() {
     undefined
   );
   const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
-
-  useHapticVibrate({deviceLinkId});
 
   useEffect(() => {
     if (deep.linkId === 0) {
@@ -119,6 +130,19 @@ function Page() {
       <h1>Deep</h1>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+      <DevicePage/>
+      <CallHistoryPage/>
+      <ContactsPage/>
+      <TelegramPage/>
+      <ActionSheetPage/>
+      <DialogPage/>
+      <ScreenReaderPage/>
+      <OpenaiCompletionPage/>
+      <BrowserExtensionPage/>
+      <NetworkPage/>
+      <CameraPage/>
+      <AudioRecordPage/>
+      <HapticsPage/>
       <div>
         <Link as={NextLink} href='/device'>
           Device
@@ -176,6 +200,11 @@ function Page() {
       <div>
         <Link as={NextLink} href="/audiorecord">
           Audiorecord
+        </Link>
+      </div> 
+      <div>
+        <Link as={NextLink} href="/haptics">
+          Haptics
         </Link>
       </div> 
       <div>

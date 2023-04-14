@@ -131,7 +131,7 @@ function Page() {
   </>
 }
 
-export default function Camera() {
+export default function CameraPage() {
   return (
     <ChakraProvider>
       <Provider>

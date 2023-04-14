@@ -14,6 +14,7 @@ import { createAllCallHistory } from '../imports/packages/callhistory/callhistor
 import { createAllContacts, initPackageContact } from '../imports/packages/contact/contact';
 import { createTelegramPackage } from '../imports/packages/telegram/telegram';
 import { NavBar } from '../components/navbar';
+import { useHapticVibrate } from '../imports/packages/haptics/haptics';
 
 function Content() {
   const deep = useDeep();
@@ -22,15 +23,16 @@ function Content() {
     undefined
   );
 
+  useHapticVibrate({deviceLinkId});
+
   return (
     <Stack>
       <NavBar/>
-      <Button onClick={() => createTelegramPackage({ deep })}>create telegram Package</Button>
     </Stack>
   );
 }
 
-export default function TelegramPage() {
+export default function HapticsPage() {
   return (
     <ChakraProvider>
       <Provider>
