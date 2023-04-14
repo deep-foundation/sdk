@@ -111,6 +111,12 @@ function Content() {
     });
 
     useEffect(() => {
+      if(error) {
+        console.error(error.message)
+      }
+      if(loading) {
+        return
+      }
       new Promise(async () => {
         const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
         if(notProcessedNotifyLinks.length === 0) {
