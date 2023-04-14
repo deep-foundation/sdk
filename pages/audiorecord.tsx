@@ -4,15 +4,12 @@ import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client
 import { Provider } from '../imports/provider';
 import { Button, Card, CardBody, CardHeader, ChakraProvider, Heading, Stack, Text } from '@chakra-ui/react';
 import initializePackage, { PACKAGE_NAME } from '../imports/audiorecord/install-package';
-import checkDeviceSupport from '../imports/audiorecord/check-device-support';
-import checkAudioRecPermission from '../imports/audiorecord/check-permission';
-import getAudioRecPermission from '../imports/audiorecord/get-permission';
-import getRecordingStatus from '../imports/audiorecord/get-recording-status';
 import startAudioRec from '../imports/audiorecord/strart-recording';
 import stopAudioRec from '../imports/audiorecord/stop-recording';
 import uploadRecords from '../imports/audiorecord/upload-records';
 import installPackage from '../imports/audiorecord/install-package';
 import { VoiceRecorder } from 'capacitor-voice-recorder';
+import { useRecordingStatus } from '../imports/audiorecord/use-recording-status';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -120,6 +117,8 @@ function Page() {
     })
   }, [])
 
+  const audioRecordingStatus = useRecordingStatus({})
+
   return <Stack>
     <Card>
       <CardHeader>
@@ -147,14 +146,21 @@ function Page() {
     </Button>
       </CardBody>
     </Card>
+    <Card>
+      <CardHeader>
+        <Heading>
+          Audio Recording Status
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{audioRecordingStatus}</Text>
+      </CardBody>
+    </Card>
     
     <Button onClick={async () => await createContainer(deep)}>
       CREATE NEW CONTAINER
     </Button>
    
-    <Button onClick={async () => await getRecordingStatus(deep)}>
-      GET RECORDING STATUS
-    </Button>
     <Button onClick={() => {
       setRecording(true); console.log(recording)
     }}>
