@@ -4,61 +4,43 @@ import {
   useDeep,
   useDeepSubscription,
 } from "@deep-foundation/deeplinks/imports/client";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { PACKAGE_NAME } from "./package-name";
+import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export function useHapticVibrate({ deviceLinkId }: { deviceLinkId: number }) {
-  const [vibratedType, setVibratedType] = useState(0);
-  const [vibrateType, setVibrateType] = useState(0);
+export function useHapticVibrate({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
+  const linksBeingProcessed = useRef<Array<Link<number>>>();
 
-  const deep = useDeep();
+  const { data: vibrateLinks, loading, error } = useDeepSubscription({ type_id: { _id: [PACKAGE_NAME, "Vibrate"] }, _not: { in: { type_id: { _id: [PACKAGE_NAME, 'Vibrated'] } } } });
 
   useEffect(() => {
-    deep.id("@deep-foundation/haptics", "Vibrate").then((vibrateType) => {
-      setVibrateType(vibrateType)
+    new Promise(async () => {
+      const notProcessedLinks = vibrateLinks.filter(link => !linksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
+      if (notProcessedLinks.length === 0) {
+        return
+      }
+      linksBeingProcessed.current = [...linksBeingProcessed.current, ...notProcessedLinks];
+      const vibratedTypeLinkId = await deep.id(PACKAGE_NAME, "Vibrated");
+      const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+      for (const vibrateLink of notProcessedLinks) {
+        const vibrateLinkId = vibrateLink.id
+        await Haptics.vibrate();
+        await deep.insert({
+          type_id: vibratedTypeLinkId,
+          from_id: vibrateLinkId,
+          to_id: vibrateLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: deviceLinkId,
+            },
+          },
+        })
+      }
+      const processedLinks = notProcessedLinks;
+      linksBeingProcessed.current = linksBeingProcessed.current.filter(link => !processedLinks.find(processedNotifyLink => processedNotifyLink.id === link.id))
     })
-    deep.id("@deep-foundation/haptics", "Vibrated").then((vibratedType) => {
-      setVibratedType(vibratedType)
-    })
-  }, [])
-
-
-  const vibrateLinks = useDeepSubscription({ type_id: vibrateType, _not: { in: { type_id: { _eq: vibratedType } } } });
-  for (const vibrateLink of vibrateLinks.data) {
-    const vibrateLinkId = vibrateLink.id
-    Haptics.vibrate();
-    deep.insert({
-      type_id: vibratedType,
-      from_id: vibrateLinkId,
-      to_id: vibrateLinkId,
-      in: {
-        data: {
-          type_id: 3,
-          from_id: deviceLinkId,
-        },
-      },
-    })
-  }
+  }, [vibrateLinks, loading, error])
 }
-export async function initPackageHaptic({ deep }: { deep: DeepClient }) {
-  const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const typePackageQueryLinkId = await deep.id("@deep-foundation/core", "PackageQuery");
-  const typeInstallLinkId = await deep.id("@deep-foundation/npm-packager", "Install");
 
-  await deep.insert({
-      type_id: typePackageQueryLinkId,
-      string: { data: { value: "@deep-foundation/haptics" } },
-      in: {
-          data: [
-              {
-                  type_id: typeContainLinkId,
-                  from_id: deep.linkId,
-              },
-              {
-                  type_id: typeInstallLinkId,
-                  from_id: deep.linkId,
-              },
-          ]
-      },
-  })
 
-}
