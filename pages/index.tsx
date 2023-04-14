@@ -19,6 +19,7 @@ import { Provider } from '../imports/provider';
 import {
   DeepProvider,
   useDeep,
+  useDeepSubscription
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
@@ -48,10 +49,32 @@ import NetworkPage from './network';
 import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
+import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/memo/package-name';
 
 function Page() {
   const deep = useDeep();
   const router = useRouter();
+
+  const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<boolean|undefined>(undefined)
+  {
+    const {data, loading, error} = useDeepSubscription({
+      type_id: {
+        _id: ["@deep-foundation/core", "Package"]
+      },
+      string: {
+        value: "@deep-foundation/memo"
+      }
+    })
+    useEffect(() => {
+      if(error) {
+        console.error(error.message)
+      }
+      if(loading) {
+        return
+      }
+      setIsMemoPackageInstalled(data.length !== 0);
+    }, [data, loading, error])
+  }
 
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
@@ -128,6 +151,18 @@ function Page() {
   return (
     <Stack alignItems={"center"}>
       <h1>Deep</h1>
+      <Card>
+        <CardHeader>
+          <Heading>
+          {`${MEMO_PACKAGE_NAME} installation status`}
+          </Heading>
+          </CardHeader>
+        <CardBody>
+        <Text>
+        {`${MEMO_PACKAGE_NAME} is ${!isMemoPackageInstalled && 'not'} installed`}
+        </Text>
+        </CardBody>
+      </Card>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
       <Card>
