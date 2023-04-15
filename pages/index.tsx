@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   useLocalStore,
 } from '@deep-foundation/store/local';
-import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader, Alert, AlertDescription, AlertIcon, AlertTitle } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -166,7 +166,11 @@ function Page() {
       
       {
         !isMemoPackageInstalled ?
-        <Text>Install {MEMO_PACKAGE_NAME} to proceed</Text> :
+        <Alert status='error'>
+  <AlertIcon />
+  <AlertTitle>Install {MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
+  <AlertDescription>{MEMO_PACKAGE_NAME} package contains all the packages required to use this application. You can install it by using npm-packager-ui located in deepcase or any other posibble way.</AlertDescription>
+</Alert> :
         <>
         <Card>
       <CardHeader>
