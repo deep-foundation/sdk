@@ -164,7 +164,11 @@ function Page() {
       </CardBody>
     </Card>
       
-      <Card>
+      {
+        !isMemoPackageInstalled ?
+        <Text>Install {MEMO_PACKAGE_NAME} to proceed</Text> :
+        <>
+        <Card>
       <CardHeader>
         <Heading>Device</Heading>
       </CardHeader>
@@ -346,6 +350,8 @@ function Page() {
       </div> 
       <div>
       </div>
+      </>
+      }
     </Stack>
   );
 }
