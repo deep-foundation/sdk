@@ -3,15 +3,15 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/audiorecord/install-package';
-import checkDeviceSupport from '../imports/audiorecord/check-device-support';
-import checkAudioRecPermission from '../imports/audiorecord/check-permission';
-import getAudioRecPermission from '../imports/audiorecord/get-permission';
-import getRecordingStatus from '../imports/audiorecord/get-recording-status';
-import startAudioRec from '../imports/audiorecord/strart-recording';
-import stopAudioRec from '../imports/audiorecord/stop-recording';
-import uploadRecords from '../imports/audiorecord/upload-records';
-import installPackage from '../imports/audiorecord/install-package';
+import initializePackage, { PACKAGE_NAME } from '../imports/capacitor-voice-recorder/install-package';
+import checkDeviceSupport from '../imports/capacitor-voice-recorder/check-device-support';
+import checkAudioRecPermission from '../imports/capacitor-voice-recorder/check-permission';
+import getAudioRecPermission from '../imports/capacitor-voice-recorder/get-permission';
+import getRecordingStatus from '../imports/capacitor-voice-recorder/get-recording-status';
+import startAudioRec from '../imports/capacitor-voice-recorder/strart-recording';
+import stopAudioRec from '../imports/capacitor-voice-recorder/stop-recording';
+import uploadRecords from '../imports/capacitor-voice-recorder/upload-records';
+import installPackage from '../imports/capacitor-voice-recorder/install-package';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 

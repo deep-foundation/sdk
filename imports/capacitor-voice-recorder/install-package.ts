@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 
-export const PACKAGE_NAME = "@romanxz/audiorecord"
+export const PACKAGE_NAME = "@deep-foundation/capacitor-voice-recorder"
 
 export default async function installPackage(deviceLinkId?) {
 
@@ -144,28 +144,6 @@ export default async function installPackage(deviceLinkId?) {
                         string: { data: { value: 'EndTime' } },
                       }]
                     }
-                  },
-                  {
-                    type_id: typeTypeLinkId,
-                    to_id: anyTypeLinkId,
-                    in: {
-                      data: [{
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: 'Sound' } },
-                      }]
-                    }
-                  },
-                  {
-                    type_id: typeTypeLinkId,
-                    to_id: anyTypeLinkId,
-                    in: {
-                      data: [{
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                        string: { data: { value: 'MIME/type' } },
-                      }]
-                    }
                   }
                 ]
               }
@@ -187,9 +165,22 @@ export default async function installPackage(deviceLinkId?) {
         },
       }
     });
+
+    const { data: [{ id: soundDependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/sound", "Sound"),
+      to_id: await deep.id("@deep-foundation/sound", "Sound"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'SoundDependency' } },
+        },
+      }
+    });
     
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@romanxz/audiorecord", linkName: "AudioRecords" })) {
+      if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "AudioRecords" })) {
         const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
           in: {
@@ -202,6 +193,6 @@ export default async function installPackage(deviceLinkId?) {
         })
       }
     }
-    console.log("audiorecord package installed");
-  } else console.log("audiorecord package already exists");
+    console.log("capacitor-voice-recorder package installed");
+  } else console.log("capacitor-voice-recorder package already exists");
 }
