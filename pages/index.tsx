@@ -143,18 +143,6 @@ function Page() {
     <Stack alignItems={"center"}>
       <h1>Deep</h1>
       <Card>
-        <CardHeader>
-          <Heading>
-          {`${MEMO_PACKAGE_NAME} installation status`}
-          </Heading>
-          </CardHeader>
-        <CardBody>
-        <Text>
-        {`${MEMO_PACKAGE_NAME} is ${!isMemoPackageInstalled && 'not'} installed`}
-        </Text>
-        </CardBody>
-      </Card>
-      <Card>
       <CardHeader>
         <Heading>General Info</Heading>
       </CardHeader>
