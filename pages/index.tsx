@@ -154,8 +154,16 @@ function Page() {
         </Text>
         </CardBody>
       </Card>
+      <Card>
+      <CardHeader>
+        <Heading>General Info</Heading>
+      </CardHeader>
+      <CardBody>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLink ?? " "}</Text>
+      </CardBody>
+    </Card>
+      
       <Card>
       <CardHeader>
         <Heading>Device</Heading>
