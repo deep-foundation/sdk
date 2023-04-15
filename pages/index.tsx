@@ -27,7 +27,7 @@ import NetworkPage from './network';
 import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
-import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/memo/package-name';
+import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { Device } from '@capacitor/device';
 
