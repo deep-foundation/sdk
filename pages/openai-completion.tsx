@@ -13,10 +13,6 @@ const PACKAGE_NAME="@deep-foundation/openai";
 
 function Content() {
   const deep = useDeep();
-  const [openAiLinkId] = useLocalStore(
-    'openAiLinkId',
-    undefined
-  );
 
   return (
     <Stack>
