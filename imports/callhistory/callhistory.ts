@@ -1,5 +1,6 @@
 import { registerPlugin } from '@capacitor/core';
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { CALL_HISTORY_PACKAGE_NAME } from './package-name';
 interface IPermissionStatus {
   granted: boolean;
 }
@@ -29,23 +30,23 @@ export async function createAllCallHistory({ deep, deviceLinkId }: { deep: DeepC
   );
 
   const typeCallInfoLinkId = await deep.id(
-    "@l4legenda/capacitor-call-history",
+    CALL_HISTORY_PACKAGE_NAME,
     "callInfo"
   );
   const typePhoneNumberLinkId = await deep.id(
-    "@l4legenda/capacitor-call-history",
+    CALL_HISTORY_PACKAGE_NAME,
     "phoneNumber"
   );
   const typeTypeLinkId = await deep.id(
-    "@l4legenda/capacitor-call-history",
+    CALL_HISTORY_PACKAGE_NAME,
     "type"
   );
   const typeDateLinkId = await deep.id(
-    "@l4legenda/capacitor-call-history",
+    CALL_HISTORY_PACKAGE_NAME,
     "date"
   );
   const typeDurationLinkId = await deep.id(
-    "@l4legenda/capacitor-call-history",
+    CALL_HISTORY_PACKAGE_NAME,
     "duration"
   );
 

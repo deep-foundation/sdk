@@ -1,13 +1,13 @@
 import { ConfirmOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: DeepClient, confirmOptions: ConfirmOptions }): Promise<void> {
-  const confirmTypeLinkId = await deep.id(PACKAGE_NAME, "Confirm");
-  const confirmTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
-  const confirmMessageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
-  const confirmOkButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
-  const confirmCancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
+  const confirmTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Confirm");
+  const confirmTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmTitle");
+  const confirmMessageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmMessage");
+  const confirmOkButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmOkButtonTitle");
+  const confirmCancelButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmCancelButtonTitle");
   const syncTextFileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
 

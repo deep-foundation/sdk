@@ -1,15 +1,15 @@
 import { PromptOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function getPromptOptionsFromDeep({deep, promptLinkId}: {deep: DeepClient, promptLinkId: number}): Promise<PromptOptions> {
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptTitle");
-  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "PromptMessage");
-  const okButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptOkButtonTitle");
-  const cancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "PromptCancelButtonTitle");
-  const inputPlaceholderTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputPlaceholder");
-  const inputTextTypeLinkId = await deep.id(PACKAGE_NAME, "PromptInputText");
-  const dialogTreeLinkId = await deep.id(PACKAGE_NAME, "DialogTree")
+  const titleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptTitle");
+  const messageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptMessage");
+  const okButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptOkButtonTitle");
+  const cancelButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptCancelButtonTitle");
+  const inputPlaceholderTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptInputPlaceholder");
+  const inputTextTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptInputText");
+  const dialogTreeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "DialogTree")
 
   const { data: linksDownToPromptmMp } = await deep.select({
     up: {

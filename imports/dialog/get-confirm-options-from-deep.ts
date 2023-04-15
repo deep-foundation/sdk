@@ -1,13 +1,13 @@
 import { ConfirmOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function getConfirmOptionsFromDeep({deep, confirmLinkId}: {deep: DeepClient, confirmLinkId: number}): Promise<ConfirmOptions> {
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmTitle");
-  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmMessage");
-  const okButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmOkButtonTitle");
-  const cancelButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ConfirmCancelButtonTitle");
-  const dialogTreeLinkId = await deep.id(PACKAGE_NAME, "DialogTree")
+  const titleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmTitle");
+  const messageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmMessage");
+  const okButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmOkButtonTitle");
+  const cancelButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmCancelButtonTitle");
+  const dialogTreeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "DialogTree")
 
   const { data: linksDownToConfirmMp } = await deep.select({
     up: {

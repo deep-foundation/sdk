@@ -1,15 +1,15 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Device } from "./device";
-import { PACKAGE_NAME } from "./package-name";
+import { DEVICE_PACKAGE_NAME } from "./package-name";
 
 export async function getDevice({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}): Promise<Device> {
-  const nameTypeLinkId = await deep.id(PACKAGE_NAME, "Name");
-  const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
+  const nameTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Name");
+  const modelTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, "Model");
 
   const {data: deviceTreeLinksUpToParentDevice} = await deep.select({
     up: {
       tree_id: {
-        _id: [PACKAGE_NAME, "DeviceTree"]
+        _id: [DEVICE_PACKAGE_NAME, "DeviceTree"]
       },
       parent_id: deviceLinkId
     }

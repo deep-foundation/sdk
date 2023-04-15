@@ -1,9 +1,9 @@
 import { PromptResult } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function insertPromptResultToDeep({ deep, deviceLinkId, notifyLinkId, promptResult }: { deep: DeepClient, deviceLinkId: number, notifyLinkId: number, promptResult: PromptResult }) {
-  const promptValueTypeLinkdId = await deep.id(PACKAGE_NAME, "PromptValue");
+  const promptValueTypeLinkdId = await deep.id(DIALOG_PACKAGE_NAME, "PromptValue");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   await deep.insert([
     {
@@ -23,7 +23,7 @@ export async function insertPromptResultToDeep({ deep, deviceLinkId, notifyLinkI
       }
     },
     {
-      type_id: promptResult.cancelled ? await deep.id(PACKAGE_NAME, "PromptIsCancelled") : await deep.id(PACKAGE_NAME, "PromptIsNotCancelled"),
+      type_id: promptResult.cancelled ? await deep.id(DIALOG_PACKAGE_NAME, "PromptIsCancelled") : await deep.id(DIALOG_PACKAGE_NAME, "PromptIsNotCancelled"),
       from_id: deviceLinkId,
       to_id: notifyLinkId,
       in: {

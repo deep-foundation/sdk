@@ -7,8 +7,8 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Code, Input, Stack, Text } from '@chakra-ui/react';
-import { PACKAGE_NAME } from '../imports/dialog/package-name';
-import { PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
+import { DIALOG_PACKAGE_NAME } from '../imports/dialog/package-name';
+import { NOTIFICATION_PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { Provider } from '../imports/provider';
 import { Dialog } from '@capacitor/dialog';
 import { getPromptOptionsFromDeep } from '../imports/dialog/get-prompt-options-from-deep';

@@ -22,7 +22,7 @@ import {
   ShowActionsOptions,
 } from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
-import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
+import { ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 
 const defaultOption: ActionSheetButton = {
@@ -169,7 +169,7 @@ function Content() {
       <Code display={'block'} whiteSpace={'pre'}>
         {`
 await deep.insert({
-    type_id: await deep.id("${PACKAGE_NAME}", "Notify"),
+    type_id: await deep.id("${ACTION_SHEET_PACKAGE_NAME}", "Notify"),
     from_id: actionSheetLinkId, 
     to_id: deviceLinkId, 
     in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}

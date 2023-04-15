@@ -4,7 +4,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { getActionSheetDataFromDeep } from "./get-action-sheet-data-from-deep";
 import { insertActionSheetResultToDeep } from "./insert-action-sheet-result-to-deep";
-import { PACKAGE_NAME } from "./package-name";
+import { ACTION_SHEET_PACKAGE_NAME } from "./package-name";
 
 export async function notifyActionSheet({ deep, deviceLinkId, notifyLink }: { deep: DeepClient, deviceLinkId: number, notifyLink: Link<number> }) {
 
@@ -25,7 +25,7 @@ export async function notifyActionSheet({ deep, deviceLinkId, notifyLink }: { de
   });
   
   await deep.insert({
-    type_id: await deep.id(PACKAGE_NAME, "Notified"),
+    type_id: await deep.id(ACTION_SHEET_PACKAGE_NAME, "Notified"),
     from_id: notifyLink.id,
     to_id: deviceLinkId,
     in: {

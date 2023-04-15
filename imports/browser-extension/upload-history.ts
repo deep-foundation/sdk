@@ -1,15 +1,15 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { BROWSER_EXTENSION_PACKAGE_NAME } from "./package-name";
 
 export default async function uploadHistory(deep: DeepClient, deviceLinkId, history) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const browserExtensionLinkId = await deep.id(deviceLinkId, "BrowserExtension");
-  const pageTypeLinkId = await deep.id(PACKAGE_NAME, "Page");
-  const urlTypeLinkId = await deep.id(PACKAGE_NAME, "PageUrl");
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "PageTitle");
-  const typedCountTypeLinkId = await deep.id(PACKAGE_NAME, "TypedCount");
-  const visitCountTypeLinkId = await deep.id(PACKAGE_NAME, "VisitCount");
-  const lastVisitTimeTypeLinkId = await deep.id(PACKAGE_NAME, "LastVisitTime");
+  const pageTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "Page");
+  const urlTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "PageUrl");
+  const titleTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "PageTitle");
+  const typedCountTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "TypedCount");
+  const visitCountTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "VisitCount");
+  const lastVisitTimeTypeLinkId = await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "LastVisitTime");
 
   await deep.insert(history.map((page) => ({
     type_id: pageTypeLinkId,

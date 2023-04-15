@@ -1,10 +1,10 @@
 import { ShowActionsResult } from "@capacitor/action-sheet";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { ACTION_SHEET_PACKAGE_NAME } from "./package-name";
 
 export async function insertActionSheetResultToDeep({ deep, deviceLinkId, notifyLinkId, actionSheetResult }: { deep: DeepClient, deviceLinkId: number, notifyLinkId: number, actionSheetResult: ShowActionsResult }) {
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-  const actionSheetResultIndexTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetResultIndex");
+  const actionSheetResultIndexTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetResultIndex");
   await deep.insert({
     type_id: actionSheetResultIndexTypeLinkId,
     from_id: deviceLinkId,

@@ -9,7 +9,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-import { PACKAGE_NAME } from '../imports/openai-completion/package-name';
+import { OPENAI_COMPLETION_PACKAGE_NAME } from '../imports/openai-completion/package-name';
 
 function Content() {
   const deep = useDeep();
@@ -26,7 +26,7 @@ function Content() {
                 tree_id: { _eq: await deep.id("@deep-foundation/core", "containTree") },
                 parent: {
                   type_id: { _id: ["@deep-foundation/core", "Contain"] },
-                  to: { type_id: await deep.id(PACKAGE_NAME, "UsesApiKey"), },
+                  to: { type_id: await deep.id(OPENAI_COMPLETION_PACKAGE_NAME, "UsesApiKey"), },
                   from_id: deep.linkId
                 }
               }
@@ -34,7 +34,7 @@ function Content() {
           }
           
           await deep.insert({
-            type_id:  await deep.id(PACKAGE_NAME, "ApiKey"),
+            type_id:  await deep.id(OPENAI_COMPLETION_PACKAGE_NAME, "ApiKey"),
             string: { data: { value: apiKey }},
             in: {
               data: [
@@ -43,7 +43,7 @@ function Content() {
                   from_id: deep.linkId,
                 },
                 makeActive && {
-                  type_id:  await deep.id(PACKAGE_NAME, "UsesApiKey"),
+                  type_id:  await deep.id(OPENAI_COMPLETION_PACKAGE_NAME, "UsesApiKey"),
                   from_id: deep.linkId,
                   in: {
                     data: [

@@ -2,7 +2,7 @@ import { SpeakOptions } from '@capacitor/screen-reader';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { getLanguageOption } from './get-language-option';
 import { getValueOption } from './get-value-option';
-import { PACKAGE_NAME } from './package-name';
+import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from './package-name';
 
 export async function insertSpeakOptions({
   deep,
@@ -13,9 +13,9 @@ export async function insertSpeakOptions({
 }): Promise<void> {
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', 'SyncTextFile');
-  const speakOptionsTypeLinkId = await deep.id(PACKAGE_NAME, 'SpeakOptions');
-  const valueTypeLinkId = await deep.id(PACKAGE_NAME, 'Value');
-  const languageTypeLinkId = await deep.id(PACKAGE_NAME, 'Language');
+  const speakOptionsTypeLinkId = await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, 'SpeakOptions');
+  const valueTypeLinkId = await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, 'Value');
+  const languageTypeLinkId = await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, 'Language');
 
   await deep.insert({
     type_id: speakOptionsTypeLinkId,

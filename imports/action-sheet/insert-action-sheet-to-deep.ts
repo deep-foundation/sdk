@@ -6,7 +6,7 @@ import {
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { getOptionStyleName } from './get-option-style-name';
 import { getOptionStyleTypeLinkIds } from './get-option-style-type-link-ids';
-import { PACKAGE_NAME } from './package-name';
+import { ACTION_SHEET_PACKAGE_NAME } from './package-name';
 
 export async function insertActionSheetToDeep({
   deep,
@@ -24,19 +24,19 @@ export async function insertActionSheetToDeep({
     'SyncTextFile'
   );
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-  const actionSheetTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheet');
+  const actionSheetTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, 'ActionSheet');
   const actionSheetTitleTypeLinkId = await deep.id(
-    PACKAGE_NAME,
+    ACTION_SHEET_PACKAGE_NAME,
     'ActionSheetTitle'
   );
   const actionSheetMessageTypeLinkId = await deep.id(
-    PACKAGE_NAME,
+    ACTION_SHEET_PACKAGE_NAME,
     'ActionSheetMessage'
   );
-  const optionTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOption');
-  const usesOptionTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesActionSheetOption');
-  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOptionTitle');
-  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, 'ActionSheetOptionStyle');
+  const optionTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, 'ActionSheetOption');
+  const usesOptionTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, 'UsesActionSheetOption');
+  const optionTitleTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, 'ActionSheetOptionTitle');
+  const optionStyleTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, 'ActionSheetOptionStyle');
   const optionStyleTypeLinkIds = await getOptionStyleTypeLinkIds({ deep });
   console.log(optionStyleTypeLinkIds);
 

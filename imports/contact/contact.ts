@@ -25,7 +25,7 @@ export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClie
       }
     })
   const typeContainLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const typeContactLinkId = await deep.id("@l4legenda/capacitor-contact", "contact");
+  const typeContactLinkId = await deep.id(CAPACITOR_CONTACT_PACKAGE_NAME, "contact");
   const typeContactIdLinkId = await deep.id("@l4legenda/capacitor-contact-contact-id", "contactId");
 
   const typeNameLinkId = await deep.id("@l4legenda/capacitor-contact-name-payload", "name");

@@ -1,14 +1,14 @@
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_CAMERA_PACKAGE_NAME } from "./package-name";
 
 export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
   const cameraLinkId = await deep.id(deviceLinkId, "Camera");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-  const base64TypeLinkId = await deep.id(PACKAGE_NAME, "Base64");
-  const webPathTypeLinkId = await deep.id(PACKAGE_NAME, "WebPath");
-  const exifTypeLinkId = await deep.id(PACKAGE_NAME, "Exif");
-  const formatTypeLinkId = await deep.id(PACKAGE_NAME, "Format");
-  const timestampTypeLinkId = await deep.id(PACKAGE_NAME, "TimeStamp");
+  const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
+  const base64TypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Base64");
+  const webPathTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "WebPath");
+  const exifTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Exif");
+  const formatTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Format");
+  const timestampTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "TimeStamp");
 
   const readAsBase64 = async (webPath) => {
     // Fetch the photo, read as a blob, then convert to base64 format

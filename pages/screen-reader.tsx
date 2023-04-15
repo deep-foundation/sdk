@@ -9,7 +9,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { PACKAGE_NAME } from '../imports/screen-reader/package-name';
+import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from '../imports/screen-reader/package-name';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { ScreenReader } from '@capacitor/screen-reader';

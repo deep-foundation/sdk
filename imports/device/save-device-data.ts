@@ -1,5 +1,5 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DEVICE_PACKAGE_NAME } from "./package-name";
 import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } from "@capacitor/device";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { createSerialOperation } from "@deep-foundation/deeplinks/imports/gql";

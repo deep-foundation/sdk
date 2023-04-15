@@ -1,8 +1,8 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from "./package-name";
 
 export async function getLanguageOption({deep, linkId}: {deep: DeepClient, linkId: number}): Promise<string> {
-  const languageTypeLinkId = await deep.id(PACKAGE_NAME, "Language");
+  const languageTypeLinkId = await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, "Language");
   const {data: [linkWithString]} = await deep.select({
     in: {
       type_id: languageTypeLinkId,

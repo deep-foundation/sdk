@@ -1,1 +1,1 @@
-export const PACKAGE_NAME="@deep-foundation/openai-completion"
+export const OPENAI_COMPLETION_PACKAGE_NAME="@deep-foundation/openai-completion"

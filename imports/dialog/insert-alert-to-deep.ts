@@ -1,12 +1,12 @@
 import { AlertOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }: { deep: DeepClient, containInLinkId: number, alertOptions: AlertOptions }): Promise<void> {
-  const alertTypeLinkId = await deep.id(PACKAGE_NAME, "Alert");
-  const alertTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");
-  const alertMessageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
-  const alertButtonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
+  const alertTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Alert");
+  const alertTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertTitle");
+  const alertMessageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertMessage");
+  const alertButtonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertButtonTitle");
   const syncTextFileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
 

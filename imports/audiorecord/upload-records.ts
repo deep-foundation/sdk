@@ -1,14 +1,14 @@
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from "./package-name";
 
 export default async function uploadRecords(deep, deviceLinkId, sounds) {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
-    const soundTypeLinkId = await deep.id(PACKAGE_NAME, "Sound");
-    const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
-    const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");
-    const startTimeTypeLinkId = await deep.id(PACKAGE_NAME, "StartTime");
-    const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, "EndTime");
-    const mimetypeTypeLinkId = await deep.id(PACKAGE_NAME, "MIME/type");
+    const soundTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Sound");
+    const recordTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
+    const durationTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Duration");
+    const startTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "StartTime");
+    const endTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "EndTime");
+    const mimetypeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "MIME/type");
     await deep.insert(sounds.map((sound) => ({
       type_id: recordTypeLinkId,
       in: {

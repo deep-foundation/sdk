@@ -1,12 +1,12 @@
 import { AlertOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function getAlertOptionsFromDeep({ deep, alertLinkId }: { deep: DeepClient, alertLinkId: number }): Promise<AlertOptions> {
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertTitle");
-  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "AlertMessage");
-  const buttonTitleTypeLinkId = await deep.id(PACKAGE_NAME, "AlertButtonTitle");
-  const dialogTreeLinkId = await deep.id(PACKAGE_NAME, "DialogTree")
+  const titleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertTitle");
+  const messageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertMessage");
+  const buttonTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertButtonTitle");
+  const dialogTreeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "DialogTree")
 
   const { data: linksDownToAlertMp } = await deep.select({
     up: {

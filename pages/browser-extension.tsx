@@ -6,7 +6,7 @@ import { Provider } from "../imports/provider";
 import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
-import { PACKAGE_NAME } from "../imports/browser-extension/package-name";
+import { BROWSER_EXTENSION_PACKAGE_NAME } from "../imports/browser-extension/package-name";
 
 export function Extension() {
   const deep = useDeep();
@@ -58,7 +58,7 @@ export function Extension() {
   const createBrowserExtensionLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const { data: [{ id: browserExtensionLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
+      type_id: await deep.id(BROWSER_EXTENSION_PACKAGE_NAME, "BrowserExtension"),
       in: {
         data: [{
           type_id: containTypeLinkId,

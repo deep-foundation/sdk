@@ -11,7 +11,7 @@ import uploadPhotos from '../imports/camera/upload-photos';
 import uploadGallery from '../imports/camera/upload-gallery';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import ImageCard from './image-card';
-import { PACKAGE_NAME } from '../imports/camera/package-name';
+import { CAPACITOR_CAMERA_PACKAGE_NAME } from '../imports/camera/package-name';
 
 function Page() {
   const deep = useDeep();
@@ -54,8 +54,8 @@ function Page() {
 
   const fetchPhotos = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-    const cameraTypeLinkId = await deep.id(PACKAGE_NAME, "Camera");
+    const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
+    const cameraTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Camera");
     const { data } = await deep.select({
       type_id: photoTypeLinkId,
       in: {
@@ -88,7 +88,7 @@ function Page() {
   const createCameraLink = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const { data: [{ id: cameraLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "Camera"),
+      type_id: await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Camera"),
       in: {
         data: [{
           type_id: containTypeLinkId,

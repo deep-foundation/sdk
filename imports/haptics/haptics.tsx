@@ -5,13 +5,13 @@ import {
   useDeepSubscription,
 } from "@deep-foundation/deeplinks/imports/client";
 import { useState, useEffect, useRef } from 'react'
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_HAPTICS_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
 export function useHapticVibrate({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
   const linksBeingProcessed = useRef<Array<Link<number>>>();
 
-  const { data: vibrateLinks, loading, error } = useDeepSubscription({ type_id: { _id: [PACKAGE_NAME, "Vibrate"] }, _not: { in: { type_id: { _id: [PACKAGE_NAME, 'Vibrated'] } } } });
+  const { data: vibrateLinks, loading, error } = useDeepSubscription({ type_id: { _id: [CAPACITOR_HAPTICS_PACKAGE_NAME, "Vibrate"] }, _not: { in: { type_id: { _id: [CAPACITOR_HAPTICS_PACKAGE_NAME, 'Vibrated'] } } } });
 
   useEffect(() => {
     new Promise(async () => {
@@ -26,7 +26,7 @@ export function useHapticVibrate({ deep, deviceLinkId }: { deep: DeepClient, dev
         return
       }
       linksBeingProcessed.current = [...linksBeingProcessed.current, ...notProcessedLinks];
-      const vibratedTypeLinkId = await deep.id(PACKAGE_NAME, "Vibrated");
+      const vibratedTypeLinkId = await deep.id(CAPACITOR_HAPTICS_PACKAGE_NAME, "Vibrated");
       const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
       for (const vibrateLink of notProcessedLinks) {
         const vibrateLinkId = vibrateLink.id

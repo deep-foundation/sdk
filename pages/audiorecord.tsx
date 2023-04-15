@@ -8,7 +8,7 @@ import stopAudioRec from '../imports/audiorecord/stop-recording';
 import uploadRecords from '../imports/audiorecord/upload-records';
 import { VoiceRecorder } from 'capacitor-voice-recorder';
 import { useRecordingStatus } from '../imports/audiorecord/use-recording-status';
-import { PACKAGE_NAME } from '../imports/audiorecord/package-name';
+import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from '../imports/audiorecord/package-name';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -58,9 +58,9 @@ function Page() {
   }
 
   const fetchRecords = async () => {
-    const recordTypelinkId = await deep.id(PACKAGE_NAME, "Record");
-    const soundTypelinkId = await deep.id(PACKAGE_NAME, "Sound");
-    const mimetypeTypelinkId = await deep.id(PACKAGE_NAME, "MIME/type");
+    const recordTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
+    const soundTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Sound");
+    const mimetypeTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "MIME/type");
     const { data: recordLinks } = await deep.select({
       type_id: recordTypelinkId
     });
@@ -93,7 +93,7 @@ function Page() {
 
   const createContainer = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const audioRecordsTypeLinkId = await deep.id(PACKAGE_NAME, "AudioRecords");
+    const audioRecordsTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "AudioRecords");
     await deep.insert({
       type_id: audioRecordsTypeLinkId,
       in: {

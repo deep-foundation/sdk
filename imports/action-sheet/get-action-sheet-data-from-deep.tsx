@@ -1,16 +1,16 @@
 import { ActionSheetButton, ActionSheetButtonStyle, ShowActionsOptions } from "@capacitor/action-sheet";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { ACTION_SHEET_PACKAGE_NAME } from "./package-name";
 
 export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { deep: DeepClient, actionSheetLinkId: number }): Promise<ShowActionsOptions> {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const titleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTitle");
-  const messageTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetMessage");
-  const optionTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOption");
-  const usesOptionTypeLinkId = await deep.id(PACKAGE_NAME, "UsesActionSheetOption");
-  const optionTitleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOptionTitle");
-  const optionStyleTypeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetOptionStyle");
-  const actionSheetTreeLinkId = await deep.id(PACKAGE_NAME, "ActionSheetTree");
+  const titleTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetTitle");
+  const messageTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetMessage");
+  const optionTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetOption");
+  const usesOptionTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "UsesActionSheetOption");
+  const optionTitleTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetOptionTitle");
+  const optionStyleTypeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetOptionStyle");
+  const actionSheetTreeLinkId = await deep.id(ACTION_SHEET_PACKAGE_NAME, "ActionSheetTree");
   // const optionIconTypeLinkId = await deep.id(PACKAGE_NAME, "OptionIcon");
 
   const { data: linksDownToParentActionSheetMp } = await deep.select({

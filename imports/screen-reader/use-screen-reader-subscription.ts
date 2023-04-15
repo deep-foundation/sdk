@@ -2,7 +2,7 @@ import { ScreenReader } from "@capacitor/screen-reader";
 import { DeepClient, useDeepSubscription } from "@deep-foundation/deeplinks/imports/client";
 import { useRef, useEffect } from "react";
 import { getSpeakOptions } from "./get-speak-options";
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
 export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: DeepClient,deviceLinkId: number}) {
@@ -13,12 +13,12 @@ export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: D
     error,
   } = useDeepSubscription({
     type_id: {
-      _id: [PACKAGE_NAME, 'Notify'],
+      _id: [CAPACITOR_SCREEN_READER_PACKAGE_NAME, 'Notify'],
     },
     _not: {
       out: {
         type_id: {
-          _id: [PACKAGE_NAME, 'Notified'],
+          _id: [CAPACITOR_SCREEN_READER_PACKAGE_NAME, 'Notified'],
         },
       },
     },
@@ -52,7 +52,7 @@ export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: D
         console.log(`await ScreenReader.speak(${JSON.stringify(options)});`);
         await ScreenReader.speak(options);
         await deep.insert({
-          type_id: await deep.id(PACKAGE_NAME, "Notified"),
+          type_id: await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, "Notified"),
           from_id: notifyLink.id,
           to_id: deviceLinkId,
           in: {

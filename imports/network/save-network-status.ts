@@ -1,14 +1,14 @@
 import { ConnectionStatus, Network } from "@capacitor/network"
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { CAPACITOR_NETWORK_PACKAGE_NAME } from "./package-name";
 
 export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: number, newConnection?: ConnectionStatus) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const networkTypeLinkId = await deep.id(PACKAGE_NAME, "Network");
-  const wifiTypeLinkId = await deep.id(PACKAGE_NAME, "Wifi");
-  const cellularTypeLinkId = await deep.id(PACKAGE_NAME, "Cellular");
-  const unknownTypeLinkId = await deep.id(PACKAGE_NAME, "Unknown");
-  const noneTypeLinkId = await deep.id(PACKAGE_NAME, "None");
+  const networkTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Network");
+  const wifiTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Wifi");
+  const cellularTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Cellular");
+  const unknownTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Unknown");
+  const noneTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "None");
   const trueLinkId = await deep.id("@freephoenix888/boolean", "True");
   const falseLinkId = await deep.id("@freephoenix888/boolean", "False");
 
@@ -34,7 +34,7 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
               _or: [
                 {
                   type_id: {
-                    _id: [PACKAGE_NAME, 'Wifi'],
+                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'Wifi'],
                   },
                 },
               ],
@@ -83,7 +83,7 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
               _or: [
                 {
                   type_id: {
-                    _id: [PACKAGE_NAME, 'Cellular'],
+                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'Cellular'],
                   },
                 },
               ],
@@ -132,7 +132,7 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
               _or: [
                 {
                   type_id: {
-                    _id: [PACKAGE_NAME, 'unknown'],
+                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'unknown'],
                   },
                 },
               ],
@@ -181,7 +181,7 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
               _or: [
                 {
                   type_id: {
-                    _id: [PACKAGE_NAME, 'none'],
+                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'none'],
                   },
                 },
               ],

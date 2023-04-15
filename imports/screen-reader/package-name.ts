@@ -1,1 +1,1 @@
-export const PACKAGE_NAME = "@deep-foundation/capacitor-screen-reader";
+export const CAPACITOR_SCREEN_READER_PACKAGE_NAME = "@deep-foundation/capacitor-screen-reader";

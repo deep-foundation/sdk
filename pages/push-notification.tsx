@@ -40,7 +40,7 @@ import {
   ModalFooter,
   HStack,
 } from '@chakra-ui/react';
-import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { DEVICE_PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { FirebaseApp, initializeApp } from 'firebase/app';

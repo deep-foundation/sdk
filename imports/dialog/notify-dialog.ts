@@ -6,14 +6,14 @@ import { getConfirmOptionsFromDeep } from "./get-confirm-options-from-deep";
 import { getPromptOptionsFromDeep } from "./get-prompt-options-from-deep";
 import { insertConfirmResultToDeep } from "./insert-confirm-result-to-deep";
 import { insertPromptResultToDeep } from "./insert-prompt-result-to-deep";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 
 export async function notifyDialog({ deep, deviceLinkId, notifyLink }: { deep: DeepClient, deviceLinkId: number, notifyLink: Link<number> }) {
 
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const alertTypeLinkId = await deep.id(PACKAGE_NAME, "Alert");
-  const promptTypeLinkId = await deep.id(PACKAGE_NAME, "Prompt");
-  const confirmTypeLinkId = await deep.id(PACKAGE_NAME, "Confirm");
+  const alertTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Alert");
+  const promptTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Prompt");
+  const confirmTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Confirm");
 
   if(!notifyLink.from) {
     throw new Error(`##${notifyLink.id} passed to notifyDialog must have from. Use returning in your select or subscription query to have it.`)
@@ -47,7 +47,7 @@ export async function notifyDialog({ deep, deviceLinkId, notifyLink }: { deep: D
   }
   
   await deep.insert({
-    type_id: await deep.id(PACKAGE_NAME, "Notified"),
+    type_id: await deep.id(DIALOG_PACKAGE_NAME, "Notified"),
     from_id: notifyLink.id,
     to_id: deviceLinkId,
     in: {

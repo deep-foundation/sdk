@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/device`
+export const DEVICE_PACKAGE_NAME=`@deep-foundation/device`

@@ -1,6 +1,6 @@
 import { DeepClient, useDeepSubscription } from "@deep-foundation/deeplinks/imports/client";
 import { useRef, useEffect } from "react";
-import { PACKAGE_NAME } from "./package-name";
+import { DIALOG_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { notifyDialog } from "./notify-dialog";
 
@@ -9,12 +9,12 @@ export function useDialogSubscription({deep, deviceLinkId}: {deep: DeepClient,de
 
   const { data: notifyLinks, loading, error } = useDeepSubscription({
     type_id: {
-      _id: [PACKAGE_NAME, "Notify"]
+      _id: [DIALOG_PACKAGE_NAME, "Notify"]
     },
     _not: {
       out: {
         type_id: {
-          _id: [PACKAGE_NAME, "Notified"]
+          _id: [DIALOG_PACKAGE_NAME, "Notified"]
         }
       }
     },
@@ -22,17 +22,17 @@ export function useDialogSubscription({deep, deviceLinkId}: {deep: DeepClient,de
       _or: [
         {
           type_id: {
-            _id: [PACKAGE_NAME, "Alert"]
+            _id: [DIALOG_PACKAGE_NAME, "Alert"]
           },
         },
         {
           type_id: {
-            _id: [PACKAGE_NAME, "Prompt"]
+            _id: [DIALOG_PACKAGE_NAME, "Prompt"]
           },
         },
         {
           type_id: {
-            _id: [PACKAGE_NAME, "Confirm"]
+            _id: [DIALOG_PACKAGE_NAME, "Confirm"]
           },
         }
       ]
