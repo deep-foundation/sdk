@@ -28,6 +28,8 @@ import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
 import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/memo/package-name';
+import { saveDeviceData } from '../imports/device/save-device-data';
+import { Device } from '@capacitor/device';
 
 function Page() {
   const deep = useDeep();
@@ -55,8 +57,8 @@ function Page() {
   }
 
 
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
+  const [deviceLink, setDeviceLink] = useLocalStore(
+    'deviceLink',
     undefined
   );
   const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
@@ -95,7 +97,7 @@ function Page() {
         return;
       }
 
-      if (!deviceLinkId) {
+      if (!deviceLink) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id("@freephoenix888/device", 'Device');
           const containTypeLinkId = await deep.id(
@@ -103,7 +105,7 @@ function Page() {
             'Contain'
           );
           const {
-            data: [{ id: newDeviceLinkId }],
+            data: [deviceLink],
           } = await deep.insert({
             type_id: deviceTypeLinkId,
             in: {
@@ -114,20 +116,28 @@ function Page() {
                 },
               ],
             },
-          });
-          setDeviceLinkId(newDeviceLinkId);
+          }, {returning: deep.selectReturning});
+          setDeviceLink(deviceLink);
         };
         initializeDeviceLink();
       } else {
-        const { data: [deviceLink] } = await deep.select(deviceLinkId);
-        if (!deviceLink) {
-          setDeviceLinkId(undefined);
+        const { data: deviceLinks } = await deep.select(deviceLink.id);
+        if (deviceLinks.length === 0) {
+          setDeviceLink(undefined);
+        } else {
+          await saveDeviceData({deep, deviceLink, data: {
+            ...(await Device.getInfo()),
+            ...(await Device.getBatteryInfo()),
+            ...(await Device.getId()),
+            ...(await Device.getLanguageCode()),
+            ...(await Device.getLanguageTag())
+          }})
         }
       }
     });
-  }, [deep, deviceLinkId, isMemoPackageInstalled]);
+  }, [deep, deviceLink, isMemoPackageInstalled]);
 
-  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLinkId !== undefined;
+  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLink !== undefined;
 
   return (
     <Stack alignItems={"center"}>
@@ -145,7 +155,7 @@ function Page() {
         </CardBody>
       </Card>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
-      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
+      <Text suppressHydrationWarning>Device Link Id: {deviceLink ?? " "}</Text>
       <Card>
       <CardHeader>
         <Heading>Device</Heading>
