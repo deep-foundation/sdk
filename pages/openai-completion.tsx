@@ -13,48 +13,16 @@ const PACKAGE_NAME="@deep-foundation/openai";
 
 function Content() {
   const deep = useDeep();
-  const [openAiLinkId, setOpenAiLinkId] = useLocalStore(
+  const [openAiLinkId] = useLocalStore(
     'openAiLinkId',
     undefined
   );
 
   return (
     <Stack>
-      <Text suppressHydrationWarning>OpenAi link id: {openAiLinkId ?? " "}</Text>
       <Button
         onClick={async () => {
-          await deep.insert({
-            type_id: await deep.id(PACKAGE_NAME, "ApiKey"),
-            string: { data: { value: process.env.OPENAI_API_KEY } },
-            in: {
-                data: {
-                    type_id: await deep.id('@deep-foundation/core', "Contain"),
-                    from_id: deep.linkId,
-                },
-            }
-        });
-        }}
-      >
-        add ApiKey link
-      </Button>
-      <Button
-        onClick={async () => {
-          await deep.insert({
-            type_id: await deep.id('@deep-foundation/core', "SyncTextFile"),
-            string: { data: { value: "" } },
-            in: {
-              data: {
-                type_id: await deep.id('@deep-foundation/core', "Contain"),
-                from_id: deep.linkId,
-              },
-            },
-          });
-        }}
-      >
-        add userInput link
-      </Button>
-      <Button
-        onClick={async () => {
+          const apiKey = "";
           let makeActive = true;
           if (makeActive) {
             await deep.delete({
@@ -71,7 +39,7 @@ function Content() {
           
           await deep.insert({
             type_id:  await deep.id(PACKAGE_NAME, "ApiKey"),
-            string: { data: { value: process.env.OPENAI_API_KEY }},
+            string: { data: { value: apiKey }},
             in: {
               data: [
                 {
@@ -95,7 +63,7 @@ function Content() {
           })
         }}
       >
-        add ApiKey and UsesApiKey links
+        Add ApiKey
       </Button>
     </Stack>
   );
