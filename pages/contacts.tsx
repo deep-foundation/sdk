@@ -24,7 +24,7 @@ function Content() {
   return (
     <Stack>
       <NavBar/>
-      <Button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</Button>
+      <Button onClick={() => createAllContacts({ deep, deviceLinkId })}>Save All Contacts</Button>
     </Stack>
   );
 }
