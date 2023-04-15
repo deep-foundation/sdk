@@ -1,7 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  LocalStoreProvider,
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
@@ -10,18 +8,15 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Code, Stack, Text } from '@chakra-ui/react';
-import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
+import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/screen-reader/package-name';
-import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
-import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
-import { insertLanguageTagToDeep } from '../imports/device/insert-language-tag-to-deep';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { ScreenReader } from '@capacitor/screen-reader';
 import { getSpeakOptions } from '../imports/screen-reader/get-speak-options';
 import { insertSpeakOptions } from '../imports/screen-reader/insert-speak-options';
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
+import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -39,71 +34,10 @@ function Content() {
     Device.getInfo().then((info) => setPlatform(info.platform));
   }, []);
 
-  const notifyConfirmLinksBeingProcessed = useRef<Link<number>[]>([]);
-  const {
-    data: notifyLinks,
-    loading,
-    error,
-  } = useDeepSubscription({
-    type_id: {
-      _id: [PACKAGE_NAME, 'Notify'],
-    },
-    _not: {
-      out: {
-        type_id: {
-          _id: [PACKAGE_NAME, 'Notified'],
-        },
-      },
-    },
-    to_id: deviceLinkId,
-  });
-
-  useEffect(() => {
-    if (loading) {
-      return;
-    }
-    new Promise(async () => {
-      const containTypeLinkId = await deep.id(
-        '@deep-foundation/core',
-        'Contain'
-      );
-      const notProcessedNotifyConfirmLinks = notifyLinks.filter(
-        (link) => !notifyConfirmLinksBeingProcessed.current.includes(link)
-      );
-      notifyConfirmLinksBeingProcessed.current = [
-        ...notifyConfirmLinksBeingProcessed.current,
-        ...notProcessedNotifyConfirmLinks,
-      ];
-      for (const notifyLink of notifyLinks) {
-        const options = await getSpeakOptions({
-          deep,
-          linkId: notifyLink.from_id,
-        });
-        console.log(`await ScreenReader.speak(${JSON.stringify(options)});`);
-        await ScreenReader.speak(options);
-        await deep.insert({
-          type_id: await deep.id(PACKAGE_NAME, "Notified"),
-          from_id: notifyLink.id,
-          to_id: deviceLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: deep.linkId
-            }
-          }
-        });
-      }
-      const processedNotifyConfirmLinks = notProcessedNotifyConfirmLinks;
-      notifyConfirmLinksBeingProcessed.current =
-        notifyConfirmLinksBeingProcessed.current.filter(
-          (link) => !processedNotifyConfirmLinks.includes(link)
-        );
-    });
-  }, [notifyLinks, loading, error]);
+  useScreenReaderSubscription({deep, deviceLinkId})
 
   const content = (
     <Stack>
-      <Text suppressHydrationWarning>isEnabled: {isEnabled ?? ' '}</Text>
       {platform === 'web' && (
         <Text suppressHydrationWarning>Allow sound in website settings</Text>
       )}

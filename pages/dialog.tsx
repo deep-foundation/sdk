@@ -25,6 +25,7 @@ import { insertAlertToDeep } from '../imports/dialog/insert-alert-to-deep';
 import { notifyDialog } from '../imports/dialog/notify-dialog';
 import { insertPromptToDeep } from '../imports/dialog/insert-prompt-to-deep';
 import { insertConfirmToDeep } from '../imports/dialog/insert-confirm-to-deep';
+import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -34,69 +35,7 @@ function Content() {
     self["Dialog"] = Dialog;
   }, [])
 
-  {
-    const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
-
-    const { data: notifyLinks, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: [PACKAGE_NAME, "Notify"]
-      },
-      _not: {
-        out: {
-          type_id: {
-            _id: [PACKAGE_NAME, "Notified"]
-          }
-        }
-      },
-      from: {
-        _or: [
-          {
-            type_id: {
-              _id: [PACKAGE_NAME, "Alert"]
-            },
-          },
-          {
-            type_id: {
-              _id: [PACKAGE_NAME, "Prompt"]
-            },
-          },
-          {
-            type_id: {
-              _id: [PACKAGE_NAME, "Confirm"]
-            },
-          }
-        ]
-      },
-      to_id: deviceLinkId
-    }, 
-    {
-      returning: `${deep.selectReturning}
-      from {
-        ${deep.selectReturning}
-      }
-      `
-    })
-
-
-    useEffect(() => {
-      if (loading) {
-        return
-      }
-      new Promise(async () => {
-        const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
-        notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
-        for (const notifyLink of notProcessedNotifyLinks) {
-          await notifyDialog({
-            deep,
-            deviceLinkId,
-            notifyLink
-          });
-        };
-        const processedNotifyAlertLinks = notProcessedNotifyLinks;
-        notifyLinksBeingProcessed.current = notifyLinksBeingProcessed.current.filter(link => !processedNotifyAlertLinks.find(processedNotifyLink => processedNotifyLink.id === link.id))
-      })
-    }, [notifyLinks, loading, error])
-  }
+  useDialogSubscription({deep,deviceLinkId})  
 
   const [alertTitle, setAlertTitle] = useState<string>("AlertTitle");
   const [alertMessage, setAlertMessage] = useState<string>("AlertMessage");

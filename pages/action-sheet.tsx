@@ -1,19 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
 import {
-  Box,
   Button,
   ChakraProvider,
   Code,
-  Input,
-  Radio,
-  RadioGroup,
   Stack,
   Text,
   Textarea,
@@ -27,13 +22,8 @@ import {
   ShowActionsOptions,
 } from '@capacitor/action-sheet';
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
-import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
-import { getActionSheetDataFromDeep } from '../imports/action-sheet/get-action-sheet-data-from-deep';
-import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
-import { insertActionSheetResultToDeep } from '../imports/action-sheet/insert-action-sheet-result-to-deep';
 import { PACKAGE_NAME } from '../imports/action-sheet/package-name';
-import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
-import { notifyActionSheet } from '../imports/action-sheet/notify-action-sheet';
+import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 
 const defaultOption: ActionSheetButton = {
   title: 'Action Sheet Option Title',
@@ -83,59 +73,8 @@ function Content() {
   //   })
   // }, []);
 
-  {
-    const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
-
-    const {
-      data: notifyLinks,
-      loading,
-      error,
-    } = useDeepSubscription({
-      type_id: {
-        _id: [PACKAGE_NAME, 'Notify'],
-      },
-      _not: {
-        out: {
-          type_id: {
-            _id: [PACKAGE_NAME, 'Notified'],
-          },
-          to_id: deviceLinkId,
-        },
-      },
-      from: {
-        type_id: {
-          _id: [PACKAGE_NAME, 'ActionSheet'],
-        },
-      },
-      to_id: deviceLinkId,
-    });
-
-    useEffect(() => {
-      if(error) {
-        console.error(error.message)
-      }
-      if(loading) {
-        return
-      }
-      new Promise(async () => {
-        const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
-        if(notProcessedNotifyLinks.length === 0) {
-          return
-        }
-        notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
-        for (const notifyLink of notProcessedNotifyLinks) {
-          await notifyActionSheet({
-            deep,
-            deviceLinkId,
-            notifyLink
-          })
-        }
-        const processedNotifyAlertLinks = notProcessedNotifyLinks;
-        notifyLinksBeingProcessed.current = notifyLinksBeingProcessed.current.filter(link => !processedNotifyAlertLinks.find(processedNotifyLink => processedNotifyLink.id === link.id))
-      });
-    }, [notifyLinks, loading, error]);
-  }
-
+  useActionSheetSubscription({deep, deviceLinkId})
+  
   const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(
     JSON.stringify(defaultActionSheet, null, 2)
   );
