@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 
-export const PACKAGE_NAME = "@romanxz/camera"
+export const PACKAGE_NAME = "@deep-foundation/capacitor-camera"
 
 export default async function installPackage(deviceLinkId?) {
 
@@ -199,7 +199,7 @@ export default async function installPackage(deviceLinkId?) {
     });
 
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@romanxz/camera", linkName: "Camera" })) {
+      if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "Camera" })) {
         const { data: [{ id: CameraLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "Camera"),
           in: {
