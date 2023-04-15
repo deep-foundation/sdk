@@ -141,10 +141,10 @@ function Page() {
 
   return (
     <Stack alignItems={"center"}>
-      <h1>Deep</h1>
+      <Heading as={'h1'}>DeepMemo</Heading>
       <Card>
       <CardHeader>
-        <Heading>General Info</Heading>
+        <Heading as={'h2'}>General Info</Heading>
       </CardHeader>
       <CardBody>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
