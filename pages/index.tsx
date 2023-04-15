@@ -104,7 +104,7 @@ function Page() {
         <Link href="/device">device</Link>
       </div> 
       <div>
-        <Link href="/camera">camera</Link>
+        <Link href="/capacitor-camera">capacitor-camera</Link>
       </div>
     </div>
   );
