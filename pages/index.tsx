@@ -137,7 +137,7 @@ function Page() {
     });
   }, [deep, deviceLink, isMemoPackageInstalled]);
 
-  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLink !== undefined;
+  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
 
   return (
     <Stack alignItems={"center"}>
