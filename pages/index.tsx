@@ -1,19 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
+import React, { useEffect, useState } from 'react';
 import {
-  TokenProvider,
-  useTokenController,
-} from '@deep-foundation/deeplinks/imports/react-token';
-import { useQuery, useSubscription, gql } from '@apollo/client';
-import {
-  LocalStoreProvider,
   useLocalStore,
 } from '@deep-foundation/store/local';
-import {
-  MinilinksLink,
-  MinilinksResult,
-  useMinilinksConstruct,
-} from '@deep-foundation/deeplinks/imports/minilinks';
 import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
@@ -22,20 +10,10 @@ import {
   useDeepSubscription
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
-import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
-import { createAllContacts } from "../imports/contact/contact";
-import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { useRouter } from 'next/router'
 
-import { useHapticVibrate } from "../imports/haptics/haptics";
-import { createAllCallHistory } from "../imports/callhistory/callhistory";
-import { copyClipboardToDeep } from "../imports/clipboard/clipboard";
-import {Haptics} from '@capacitor/haptics';
 
-import {
-  createTelegramPackage,
-} from "../imports/telegram/telegram";
 import DevicePage from './device';
 import CallHistoryPage from './call-history';
 import ContactsPage from './contacts';
