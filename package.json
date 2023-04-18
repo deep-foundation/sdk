@@ -47,7 +47,7 @@
     "@capacitor/screen-reader": "^4.1.2",
     "@capawesome/capacitor-file-picker": "^0.6.3",
     "@chakra-ui/react": "^2.5.5",
-    "@deep-foundation/deeplinks": "0.0.139",
+    "@deep-foundation/deeplinks": "^0.0.141",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@google-cloud/speech": "^5.4.0",
