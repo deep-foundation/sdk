@@ -8,11 +8,11 @@ import { useState, useEffect, useRef } from 'react'
 import { CAPACITOR_HAPTICS_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export function useHapticVibrateSubscription({ deep, deviceLinkId, isEnabled }: { deep: DeepClient, deviceLinkId: number , isEnabled: boolean}) {
+export function useHapticVibrateSubscription({ deep, deviceLinkId, isEnabled = true }: { deep: DeepClient, deviceLinkId: number , isEnabled?: boolean}) {
   if (!isEnabled) {
     return;
   }
-  
+
   const linksBeingProcessed = useRef<Array<Link<number>>>();
 
   const { data: vibrateLinks, loading, error } = useDeepSubscription({ type_id: { _id: [CAPACITOR_HAPTICS_PACKAGE_NAME, "Vibrate"] }, _not: { in: { type_id: { _id: [CAPACITOR_HAPTICS_PACKAGE_NAME, 'Vibrated'] } } } });

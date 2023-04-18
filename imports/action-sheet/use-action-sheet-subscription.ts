@@ -4,11 +4,11 @@ import { notifyActionSheet } from "./notify-action-sheet";
 import { ACTION_SHEET_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export function useActionSheetSubscription({deep, deviceLinkId, isEnabled}: {deep: DeepClient,deviceLinkId: number, isEnabled: boolean}) {
+export function useActionSheetSubscription({deep, deviceLinkId, isEnabled = true}: {deep: DeepClient,deviceLinkId: number, isEnabled?: boolean}) {
   if(!isEnabled) {
     return;
   }
-  
+
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
 
   const {
