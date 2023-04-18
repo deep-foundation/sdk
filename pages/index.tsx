@@ -30,6 +30,7 @@ import AudioRecordPage from './audiorecord';
 import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { Device } from '@capacitor/device';
+import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 
 function Page() {
   const deep = useDeep();
@@ -42,7 +43,7 @@ function Page() {
         _id: ["@deep-foundation/core", "Package"]
       },
       string: {
-        value: "@deep-foundation/memo"
+        value: "@deep-foundation/deep-memo"
       }
     })
     useEffect(() => {
@@ -96,10 +97,9 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-
       if (!deviceLink) {
         const initializeDeviceLink = async () => {
-          const deviceTypeLinkId = await deep.id("@freephoenix888/device", 'Device');
+          const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
           const containTypeLinkId = await deep.id(
             '@deep-foundation/core',
             'Contain'
@@ -148,7 +148,7 @@ function Page() {
       </CardHeader>
       <CardBody>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
-      <Text suppressHydrationWarning>Device Link Id: {deviceLink ?? " "}</Text>
+      <Text suppressHydrationWarning>Device Link Id: {deviceLink?.id ?? " "}</Text>
       </CardBody>
     </Card>
       
