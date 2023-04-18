@@ -87,17 +87,10 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if (
-      deep.linkId == 0 || 
-      !isMemoPackageInstalled
-      ) {
+    if (!adminLinkId) {
       return;
     }
     new Promise(async () => {
-      const adminLinkId = await deep.id('deep', 'admin');
-      if (deep.linkId != adminLinkId) {
-        return;
-      }
       if (!deviceLink) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
