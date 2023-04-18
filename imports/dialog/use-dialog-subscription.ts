@@ -4,7 +4,11 @@ import { DIALOG_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { notifyDialog } from "./notify-dialog";
 
-export function useDialogSubscription({deep, deviceLinkId}: {deep: DeepClient,deviceLinkId: number}) {
+export function useDialogSubscription({deep, deviceLinkId, isEnaled}: {deep: DeepClient,deviceLinkId: number, isEnaled: boolean}) {
+  if(!isEnaled) {
+    return;
+  }
+  
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
 
   const { data: notifyLinks, loading, error } = useDeepSubscription({

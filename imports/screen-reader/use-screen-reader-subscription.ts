@@ -5,7 +5,11 @@ import { getSpeakOptions } from "./get-speak-options";
 import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: DeepClient,deviceLinkId: number}) {
+export async function useScreenReaderSubscription({deep, deviceLinkId, isEnabled}: {deep: DeepClient,deviceLinkId: number, isEnabled: boolean}) {
+  if(!isEnabled) {
+    return;
+  }
+  
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
   const {
     data: notifyLinks,
