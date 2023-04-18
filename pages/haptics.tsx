@@ -14,7 +14,7 @@ import { createAllCallHistory } from '../imports/callhistory/callhistory';
 import { createAllContacts } from '../imports/contact/contact';
 import { createTelegramPackage } from '../imports/telegram/telegram';
 import { NavBar } from '../components/navbar';
-import { useHapticVibrate } from '../imports/haptics/haptics';
+import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -23,7 +23,7 @@ function Content() {
     undefined
   );
 
-  useHapticVibrate({deviceLinkId,deep});
+  useHapticVibrateSubscription({deviceLinkId,deep});
 
   return (
     <Stack>
