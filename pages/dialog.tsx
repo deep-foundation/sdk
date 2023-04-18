@@ -1,28 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import {
   DeepProvider,
   useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Code, Input, Stack, Text } from '@chakra-ui/react';
-import { DIALOG_PACKAGE_NAME } from '../imports/dialog/package-name';
-import { NOTIFICATION_PACKAGE_NAME as NOTIFICATION_PACKAGE_NAME } from '../imports/notification/package-name';
 import { Provider } from '../imports/provider';
 import { Dialog } from '@capacitor/dialog';
-import { getPromptOptionsFromDeep } from '../imports/dialog/get-prompt-options-from-deep';
-import { insertPromptResultToDeep } from '../imports/dialog/insert-prompt-result-to-deep';
-import { getConfirmOptionsFromDeep } from '../imports/dialog/get-confirm-options-from-deep';
-import { insertConfirmResultToDeep } from '../imports/dialog/insert-confirm-result-to-deep';
-import { getAlertOptionsFromDeep } from '../imports/dialog/get-alert-options-from-deep';
-import { useSubscriptionToNotNotifiedLinks } from '../imports/notification/use-subscription-to-not-notified-links';
-import { useNotNotifiedLinksHandling } from '../imports/notification/use-not-notified-links-handling';
-import { insertNotifiedLinks } from '../imports/notification/insert-notified-links';
-import { usePackageInstalling } from '../imports/use-package-installing';
-import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
 import { insertAlertToDeep } from '../imports/dialog/insert-alert-to-deep';
-import { notifyDialog } from '../imports/dialog/notify-dialog';
 import { insertPromptToDeep } from '../imports/dialog/insert-prompt-to-deep';
 import { insertConfirmToDeep } from '../imports/dialog/insert-confirm-to-deep';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
