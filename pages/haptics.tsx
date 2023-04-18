@@ -6,13 +6,8 @@ import {
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { ChakraProvider, Stack } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-import { Device } from '@capacitor/device';
-import { saveDeviceData } from '../imports/device/save-device-data';
-import { createAllCallHistory } from '../imports/callhistory/callhistory';
-import { createAllContacts } from '../imports/contact/contact';
-import { createTelegramPackage } from '../imports/telegram/telegram';
 import { NavBar } from '../components/navbar';
 import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 
