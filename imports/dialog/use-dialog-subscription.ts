@@ -4,8 +4,8 @@ import { DIALOG_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { notifyDialog } from "./notify-dialog";
 
-export function useDialogSubscription({deep, deviceLinkId, isEnaled = true}: {deep: DeepClient,deviceLinkId: number, isEnaled?: boolean}) {
-  if(!isEnaled) {
+export function useDialogSubscription({deep, deviceLinkId, isEnabled = true}: {deep: DeepClient,deviceLinkId: number, isEnabled?: boolean}) {
+  if(!isEnabled) {
     return;
   }
 
