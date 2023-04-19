@@ -138,16 +138,16 @@ function Page() {
   const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
 
   const [isActionSheetSubscriptionEnabled, setIsActionSheetSubscriptionEnabled] = useLocalStore('isActionSheetSubscriptionEnabled', false);
-  useActionSheetSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isActionSheetSubscriptionEnabled});
+  useActionSheetSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isActionSheetSubscriptionEnabled});
 
   const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
-  useDialogSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isDialogSubscriptionEnabled});
+  useDialogSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isDialogSubscriptionEnabled});
 
   const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
-  useScreenReaderSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isScreenReaderSubscriptionEnabled});
+  useScreenReaderSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isScreenReaderSubscriptionEnabled});
 
   const [isHapticVibrateSubscriptionEnabled, setIsHapticVibrateSubscriptionEnabled] = useLocalStore('isHapticVibrateSubscriptionEnabled', false);
-  useHapticVibrateSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isHapticVibrateSubscriptionEnabled});
+  useHapticVibrateSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isHapticVibrateSubscriptionEnabled});
 
   const tumblersCard = (
     <Card>
