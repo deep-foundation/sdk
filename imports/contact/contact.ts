@@ -2,7 +2,7 @@ import { Contacts } from '@capacitor-community/contacts';
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 
-export async function createAllContacts({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
+export async function saveAllContacts({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
 
   const checkPermissions = await Contacts.checkPermissions();
 
