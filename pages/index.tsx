@@ -39,6 +39,7 @@ import { WithActionSheetSubscription } from '../components/action-sheet/with-act
 import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
+import { insertDevice } from '../imports/device/insert-device';
 
 function Page() {
   const deep = useDeep();
@@ -67,8 +68,8 @@ function Page() {
   }
 
 
-  const [deviceLink, setDeviceLink] = useLocalStore(
-    'deviceLink',
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+    'deviceLinkId',
     undefined
   );
   const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
@@ -99,35 +100,15 @@ function Page() {
       return;
     }
     new Promise(async () => {
-      if (!deviceLink) {
-        const initializeDeviceLink = async () => {
-          const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
-          const containTypeLinkId = await deep.id(
-            '@deep-foundation/core',
-            'Contain'
-          );
-          const {
-            data: [deviceLink],
-          } = await deep.insert({
-            type_id: deviceTypeLinkId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: deep.linkId,
-                },
-              ],
-            },
-          }, {returning: deep.selectReturning});
-          setDeviceLink(deviceLink);
-        };
-        initializeDeviceLink();
+      if (!deviceLinkId) {
+        const {deviceLink} = await insertDevice({deep});
+        setDeviceLinkId(deviceLink.id);
       } else {
-        const { data: deviceLinks } = await deep.select(deviceLink.id);
+        const { data: deviceLinks } = await deep.select(deviceLinkId);
         if (deviceLinks.length === 0) {
-          setDeviceLink(undefined);
+          setDeviceLinkId(undefined);
         } else {
-          await saveDeviceData({deep, deviceLink, data: {
+          await saveDeviceData({deep, deviceLink: deviceLinkId, data: {
             ...(await Device.getInfo()),
             ...(await Device.getBatteryInfo()),
             ...(await Device.getId()),
@@ -137,9 +118,9 @@ function Page() {
         }
       }
     });
-  }, [deep, deviceLink, isMemoPackageInstalled]);
+  }, [deep, deviceLinkId, isMemoPackageInstalled]);
 
-  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
+  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLinkId !== undefined;
 
   const [isActionSheetSubscriptionEnabled, setIsActionSheetSubscriptionEnabled] = useLocalStore('isActionSheetSubscriptionEnabled', false);
   const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
@@ -194,7 +175,7 @@ function Page() {
       </CardHeader>
       <CardBody>
       <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
-      <Text suppressHydrationWarning>Device Link Id: {deviceLink?.id ?? " "}</Text>
+      <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
       </CardBody>
     </Card>
       
@@ -207,12 +188,12 @@ function Page() {
 </Alert> :
         <>
         {tumblersCard}
-        {Boolean(deviceLink?.id) && 
+        {Boolean(deviceLinkId) && 
         <>
-        {isActionSheetSubscriptionEnabled && <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLink.id} />}
-        {isDialogSubscriptionEnabled && <WithDialogSubscription deep={deep} deviceLinkId={deviceLink.id} />}
-        {isScreenReaderSubscriptionEnabled && <WithScreenReaderSubscription deep={deep} deviceLinkId={deviceLink.id} />}
-        {isHapticsSubscriptionEnabled && <WithHapticsSubscription deep={deep} deviceLinkId={deviceLink.id} />}
+        {isActionSheetSubscriptionEnabled && <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLinkId} />}
+        {isDialogSubscriptionEnabled && <WithDialogSubscription deep={deep} deviceLinkId={deviceLinkId} />}
+        {isScreenReaderSubscriptionEnabled && <WithScreenReaderSubscription deep={deep} deviceLinkId={deviceLinkId} />}
+        {isHapticsSubscriptionEnabled && <WithHapticsSubscription deep={deep} deviceLinkId={deviceLinkId} />}
         </>
           
         
