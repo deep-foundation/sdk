@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Network as CapacitorNetwork } from "@capacitor/network"
+import { Network as CapacitorNetwork, ConnectionStatus } from "@capacitor/network"
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
@@ -8,15 +8,12 @@ import saveNetworkStatus from '../imports/network/save-network-status';
 
 function Page() {
   const deep = useDeep();
-  const [connections, setConnections] = useLocalStore("Connections", []);
-  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
+  const [connections, setConnections] = useLocalStore<Array<ConnectionStatus>>("Connections", []);
+  const [deviceLinkId] = useLocalStore<number>('deviceLinkId', undefined);
 
   useEffect(() => {
-    const useNetwork = async (connections) => {
-      await saveNetworkStatus(deep, deviceLinkId, connections)
-    }
     if (connections.length > 0) {
-      useNetwork(connections);
+      saveNetworkStatus(deep, deviceLinkId, connections);
       setConnections([]);
     }
   }, [connections])
