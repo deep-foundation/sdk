@@ -45,7 +45,6 @@ export async function getActionSheetDataFromDeep({ deep, actionSheetLinkId }: { 
   const options: ActionSheetButton[] = [];
 
   for (const usesOptionLink of usesOptionLinks) {
-    console.log({usesOptionLink})
     if(usesOptionLink?.value.value === undefined) {
       throw new Error(`##${usesOptionLink.id} must have a number value which indicates an index of the action sheet`)
     }

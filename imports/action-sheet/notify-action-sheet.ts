@@ -14,9 +14,12 @@ export async function notifyActionSheet({ deep, deviceLinkId, notifyLink }: { de
     deep,
     actionSheetLinkId: notifyLink.from_id,
   });
+  console.log({actionSheetOptions})
   const actionSheetResult = await ActionSheet.showActions(
     actionSheetOptions
   );
+  console.log({actionSheetResult})
+
   await insertActionSheetResultToDeep({
     deep,
     deviceLinkId,
