@@ -208,7 +208,10 @@ function Page() {
       {deep.linkId ? (
         isMemoPackageInstalled ? (
           Boolean(deviceLinkId) ? (
+            <>
             <WithSubscriptions deep={deep} />
+            {linksOfPages}
+            </>
           ) : (
             <Text>Initializing the device...</Text>
           )
