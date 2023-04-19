@@ -1,4 +1,5 @@
 export enum CapacitorStoreKeys {
+   AdminLinkId,
    DeviceLinkId,
    IsActionSheetSubscriptionEnabled,
    IsDialogSubscriptionEnabled,
@@ -12,6 +13,7 @@ export enum CapacitorStoreKeys {
    CallHistorySyncTimeFrequency,
    CallHistoryLastSyncTime,
    DeviceRegistrationToken,
+   IsVoiceRecorderEnabled,
    PhotoAlbum,
    Gallery,
    Images,
