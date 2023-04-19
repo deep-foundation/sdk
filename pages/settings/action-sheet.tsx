@@ -25,7 +25,7 @@ function Content() {
         <Heading>Action Sheet</Heading>
       </CardHeader>
       <CardBody>
-        <FormControl display="flex" alignItems="center">
+      <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
             Action Sheet Subscription
           </FormLabel>
