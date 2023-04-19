@@ -4,7 +4,17 @@ import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } f
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { createSerialOperation } from "@deep-foundation/deeplinks/imports/gql";
 
-export async function saveDeviceData(params: { deep: DeepClient, data: (DeviceInfo | BatteryInfo | {languageCode: GetLanguageCodeResult['value']} | {languageTag: LanguageTag['value']}) } & ({deviceLinkId: number} | {deviceLink: Link<number>})) {
+async function getAllDeviceData() {
+  return {
+    ...(await Device.getInfo()),
+    ...(await Device.getBatteryInfo()),
+    ...(await Device.getId()),
+    ...(await Device.getLanguageCode()),
+    ...(await Device.getLanguageTag()),
+  }
+}
+
+export async function saveDeviceData(params: { deep: DeepClient, data?: (DeviceInfo | BatteryInfo | {languageCode: GetLanguageCodeResult['value']} | {languageTag: LanguageTag['value']}) } & ({deviceLinkId: number} | {deviceLink: Link<number>})) {
   const {deep} = params;
   let deviceLink: Link<number>;
   if('deviceLinkId' in params) {
@@ -17,33 +27,18 @@ export async function saveDeviceData(params: { deep: DeepClient, data: (DeviceIn
   } else {
     throw new Error(`Either deviceLink or deviceLinkId must be passed`)
   }
-  if(!deviceLink.value?.value) {
-    await deep.serial({
-      operations: [
-        createSerialOperation({
-          table: 'objects',
-          type: 'insert',
-          objects: {
-            link_id: deviceLink.id,
-            value: params.data
-          }
-        })
-      ]
-    })
-  } else {
-    await deep.serial({
-      operations: [
-        createSerialOperation({
-          table: 'objects',
-          type: 'update',
-          exp: {
-            link_id: deviceLink.id
-          },
-          value: {
-            value: {...deviceLink.value.value, ...params.data}
-          }
-        })
-      ]
-    })
-  }
+  await deep.serial({
+    operations: [
+      createSerialOperation({
+        table: 'objects',
+        type: 'update',
+        exp: {
+          link_id: deviceLink.id
+        },
+        value: {
+          value: {...(deviceLink.value?.value ?? {}), ...params.data ?? await getAllDeviceData()}
+        }
+      })
+    ]
+  })
 }
