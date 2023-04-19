@@ -58,6 +58,8 @@ import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
+import { initDeviceIfNotInited } from '../imports/device/init-device-if-not-inited';
+import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 
 function Page() {
   useEffect(() => {
@@ -73,43 +75,30 @@ function Page() {
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
+    useEffect(() => {
+      initDeviceIfNotInited({
+        deep,
+        deviceLinkId,
+        setDeviceLinkId: (deviceLinkId) => {
+          setDeviceLinkId(deviceLinkId)
+      }})
+    })
 
-  useEffect(() => {
-    new Promise(async () => {
-      if(deviceLinkId) {
-        const { data: deviceLinks } = await deep.select(deviceLinkId);
-        if (deviceLinks.length === 0) {
-          setDeviceLinkId(undefined);
-        }
-      } else {
-        const { deviceLink } = await insertDevice({ deep });
-        setDeviceLinkId(deviceLink.id);
-      }
-    });
-  }, [deviceLinkId]);
 
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
   >(undefined);
   {
-    const { data, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: ['@deep-foundation/core', 'Package'],
-      },
-      string: {
-        value: DEEP_MEMO_PACKAGE_NAME,
-      },
-    });
+    const { isPackageInstalled, loading, error } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME});
     useEffect(() => {
-      if (error) {
-        console.error(error.message);
-      }
       if (loading) {
         return;
       }
-      console.log({ data });
-      setIsMemoPackageInstalled(data.length !== 0);
-    }, [data, loading, error]);
+      if (error) {
+        console.error(error.message);
+      }
+      setIsMemoPackageInstalled(isPackageInstalled);
+    }, [isPackageInstalled, loading, error]);
   }
 
   useEffect(() => {
