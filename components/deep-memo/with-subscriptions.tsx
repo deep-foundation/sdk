@@ -73,42 +73,33 @@ export function WithSubscriptions({ deep }: { deep: DeepClient }) {
     CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled],
     undefined
   );
+  
 
   useEffect(() => {
     new Promise(async () => {
-      if (!deviceLinkId) {
-        const { deviceLink } = await insertDevice({ deep });
-        setDeviceLinkId(deviceLink.id);
-      } else {
-        const { data: deviceLinks } = await deep.select(deviceLinkId);
-        if (deviceLinks.length === 0) {
-          setDeviceLinkId(undefined);
-        } else {
-          const {data: [deviceLink]} = await deep.select(deviceLinkId)
-          await saveDeviceData({
-            deep,
-            deviceLink: deviceLink,
-          });
-          const currentTime = new Date().getTime();
-          if (isContactsSyncEnabled) {
-            if (currentTime - lastContactsSyncTime) {
-              await saveAllContacts({ deep, deviceLinkId });
-              setLastContactsSyncTime(currentTime);
-            }
-          }
-          if (isCallHistorySyncEnabled) {
-            if (currentTime - lastCallHistorySyncTime) {
-              await saveAllCallHistory({ deep, deviceLinkId });
-              setLastCallHistorySyncTime(currentTime);
-            }
-          }
-          if (isNetworkSubscriptionEnabled) {
-            // TODO
-          }
+      const {data: [deviceLink]} = await deep.select(deviceLinkId)
+      await saveDeviceData({
+        deep,
+        deviceLink: deviceLink,
+      });
+      const currentTime = new Date().getTime();
+      if (isContactsSyncEnabled) {
+        if (currentTime - lastContactsSyncTime) {
+          await saveAllContacts({ deep, deviceLinkId });
+          setLastContactsSyncTime(currentTime);
         }
       }
-    });
-  }, [deviceLinkId]);
+      if (isCallHistorySyncEnabled) {
+        if (currentTime - lastCallHistorySyncTime) {
+          await saveAllCallHistory({ deep, deviceLinkId });
+          setLastCallHistorySyncTime(currentTime);
+        }
+      }
+      if (isNetworkSubscriptionEnabled) {
+        // TODO
+      }
+    })
+  })
 
   return <>
   {isActionSheetSubscriptionEnabled && (

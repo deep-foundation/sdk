@@ -74,6 +74,20 @@ function Page() {
     undefined
   );
 
+  useEffect(() => {
+    new Promise(async () => {
+      if(deviceLinkId) {
+        const { data: deviceLinks } = await deep.select(deviceLinkId);
+        if (deviceLinks.length === 0) {
+          setDeviceLinkId(undefined);
+        }
+      } else {
+        const { deviceLink } = await insertDevice({ deep });
+        setDeviceLinkId(deviceLink.id);
+      }
+    });
+  }, [deviceLinkId]);
+
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
   >(undefined);
