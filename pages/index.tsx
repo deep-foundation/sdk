@@ -53,10 +53,15 @@ import { WithDialogSubscription } from '../components/dialog/with-dialog-subscri
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
 import { insertDevice } from '../imports/device/insert-device';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 function Page() {
   const deep = useDeep();
   const router = useRouter();
+
+  useEffect(() => {
+    defineCustomElements(window);
+  }, [])
 
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
