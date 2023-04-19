@@ -186,7 +186,7 @@ function Page() {
 </Alert> :
         <>
         {tumblersCard}
-        <Card>
+        {/* <Card>
       <CardHeader>
         <Heading>Device</Heading>
       </CardHeader>
@@ -289,7 +289,7 @@ function Page() {
       <CardBody>
         <HapticsPage />
       </CardBody>
-    </Card>
+    </Card> */}
       {/* <CallHistoryPage/>
       <ContactsPage/>
       <TelegramPage/>
