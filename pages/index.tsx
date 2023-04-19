@@ -27,7 +27,7 @@ import NetworkPage from './network';
 import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
-import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
+import { DEEP_MEMO_PACKAGE_NAME as DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { Device } from '@capacitor/device';
 import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
@@ -47,7 +47,7 @@ function Page() {
         _id: ["@deep-foundation/core", "Package"]
       },
       string: {
-        value: "@deep-foundation/deep-memo"
+        value: DEEP_MEMO_PACKAGE_NAME
       }
     })
     useEffect(() => {
@@ -57,6 +57,7 @@ function Page() {
       if(loading) {
         return
       }
+      console.log({data})
       setIsMemoPackageInstalled(data.length !== 0);
     }, [data, loading, error])
   }
@@ -90,17 +91,10 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if (
-      deep.linkId == 0 || 
-      !isMemoPackageInstalled
-      ) {
+    if (!adminLinkId) {
       return;
     }
     new Promise(async () => {
-      const adminLinkId = await deep.id('deep', 'admin');
-      if (deep.linkId != adminLinkId) {
-        return;
-      }
       if (!deviceLink) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -185,8 +179,8 @@ function Page() {
         !isMemoPackageInstalled ?
         <Alert status='error'>
   <AlertIcon />
-  <AlertTitle>Install {MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
-  <AlertDescription>{MEMO_PACKAGE_NAME} package contains all the packages required to use this application. You can install it by using npm-packager-ui located in deepcase or any other posibble way.</AlertDescription>
+  <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
+  <AlertDescription>{DEEP_MEMO_PACKAGE_NAME} package contains all the packages required to use this application. You can install it by using npm-packager-ui located in deepcase or any other posibble way.</AlertDescription>
 </Alert> :
         <>
         {tumblersCard}
