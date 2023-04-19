@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react'
 import { CAPACITOR_HAPTICS_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export function useHapticVibrateSubscription({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
+export function useHapticsSubscription({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
 
   if(!deviceLinkId) {
     throw new Error("deviceLinkId is required")

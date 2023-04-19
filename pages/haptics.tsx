@@ -9,7 +9,7 @@ import {
 import { ChakraProvider, Stack } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { NavBar } from '../components/navbar';
-import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
+import { useHapticsSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -18,7 +18,7 @@ function Content() {
     undefined
   );
 
-  useHapticVibrateSubscription({deviceLinkId,deep});
+  useHapticsSubscription({deviceLinkId,deep});
 
   return (
     <Stack>

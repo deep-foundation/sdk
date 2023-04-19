@@ -34,8 +34,11 @@ import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
-import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
+import { useHapticsSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
+import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
+import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
+import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
 
 function Page() {
   const deep = useDeep();
@@ -139,16 +142,9 @@ function Page() {
   const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
 
   const [isActionSheetSubscriptionEnabled, setIsActionSheetSubscriptionEnabled] = useLocalStore('isActionSheetSubscriptionEnabled', false);
-  // useActionSheetSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isActionSheetSubscriptionEnabled});
-
-  // const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
-  // useDialogSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isDialogSubscriptionEnabled});
-
-  // const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
-  // useScreenReaderSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isScreenReaderSubscriptionEnabled});
-
-  // const [isHapticVibrateSubscriptionEnabled, setIsHapticVibrateSubscriptionEnabled] = useLocalStore('isHapticVibrateSubscriptionEnabled', false);
-  // useHapticVibrateSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isHapticVibrateSubscriptionEnabled});
+  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
+  const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
+  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] = useLocalStore('isHapticsSubscriptionEnabled', false);
 
   const tumblersCard = (
     <Card>
@@ -159,6 +155,30 @@ function Page() {
           </FormLabel>
           <Switch id="action-sheet-subscription-switch" isChecked={isActionSheetSubscriptionEnabled} onChange={(event) => {
             setIsActionSheetSubscriptionEnabled(event.target.checked)
+          }} />
+        </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="dialog-subscription-switch" mb="0">
+            Dialog Subscription
+          </FormLabel>
+          <Switch id="dialog-subscription-switch" isChecked={isDialogSubscriptionEnabled} onChange={(event) => {
+            setIsDialogSubscriptionEnabled(event.target.checked)
+          }} />
+        </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="screen-reader-subscription-switch" mb="0">
+            Screen Reader Subscription
+          </FormLabel>
+          <Switch id="screen-reader-subscription-switch" isChecked={isScreenReaderSubscriptionEnabled} onChange={(event) => {
+            setIsScreenReaderSubscriptionEnabled(event.target.checked)
+          }} />
+        </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="haptic-vibrate-subscription-switch" mb="0">
+            Haptic Vibrate Subscription
+          </FormLabel>
+          <Switch id="haptic-vibrate-subscription-switch" isChecked={isHapticsSubscriptionEnabled} onChange={(event) => {
+            setIsHapticsSubscriptionEnabled(event.target.checked)
           }} />
         </FormControl>
       </CardBody>
@@ -187,6 +207,17 @@ function Page() {
 </Alert> :
         <>
         {tumblersCard}
+        {Boolean(deviceLink?.id) && 
+        <>
+        {isActionSheetSubscriptionEnabled && <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLink.id} />}
+        {isDialogSubscriptionEnabled && <WithDialogSubscription deep={deep} deviceLinkId={deviceLink.id} />}
+        {isScreenReaderSubscriptionEnabled && <WithScreenReaderSubscription deep={deep} deviceLinkId={deviceLink.id} />}
+        {isHapticsSubscriptionEnabled && <WithHapticsSubscription deep={deep} deviceLinkId={deviceLink.id} />}
+        </>
+          
+        
+        
+        }
         {/* <Card>
       <CardHeader>
         <Heading>Device</Heading>
@@ -327,7 +358,6 @@ function Page() {
         <Link as={NextLink} href='/action-sheet'>
           Action Sheet
         </Link>
-        {isActionSheetSubscriptionEnabled && Boolean(deviceLink?.id) && <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLink.id} />}
       </div>
       <div>
         <Link as={NextLink} href='/dialog'>
