@@ -128,9 +128,9 @@ function Page() {
   const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
     useLocalStore('isHapticsSubscriptionEnabled', false);
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore('isContactsSyncEnabled',false);
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore('lastContactsSyncTime',undefined);
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<number|undefined>('lastContactsSyncTime',undefined);
   const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore('isCallHistorySyncEnabled',false);
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore('lastCallHistorySyncTime',undefined);
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<number|undefined>('lastCallHistorySyncTime',undefined);
   const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] = useLocalStore('isNetworkSubscriptionEnabled',false);
   const [isVoiceReorderEnabled, setIsVoiceReorderEnabled] = useLocalStore('isVoiceReorderEnabled',false);
 
@@ -153,15 +153,15 @@ function Page() {
           });
           const currentTime = new Date().getTime();
           if(isContactsSyncEnabled) {
-            if(currentTime - parseInt(lastContactsSyncTime)) {
+            if(currentTime - lastContactsSyncTime) {
               await saveAllContacts({deep,deviceLinkId})
-              setLastContactsSyncTime(currentTime.toString())
+              setLastContactsSyncTime(currentTime)
             } 
           }
           if(isCallHistorySyncEnabled) {
-            if(currentTime - parseInt(lastCallHistorySyncTime)) {
+            if(currentTime - lastCallHistorySyncTime) {
               await saveAllCallHistory({deep,deviceLinkId})
-              setLastCallHistorySyncTime(currentTime.toString())
+              setLastCallHistorySyncTime(currentTime)
             } 
           }
           if(isNetworkSubscriptionEnabled) {
