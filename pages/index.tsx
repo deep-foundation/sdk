@@ -154,9 +154,11 @@ function Page() {
       <CardBody>
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Enable email alerts?
+            Action Sheet Subscription
           </FormLabel>
-          <Switch id="action-sheet-subscription-switch" />
+          <Switch id="action-sheet-subscription-switch" isChecked={isActionSheetSubscriptionEnabled} onChange={(event) => {
+            setIsActionSheetSubscriptionEnabled(event.target.checked)
+          }} />
         </FormControl>
       </CardBody>
     </Card>
