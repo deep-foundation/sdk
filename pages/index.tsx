@@ -116,6 +116,8 @@ function Page() {
     });
   }, [deep]);
 
+  const isDeepReady = deep.linkId !== 0 && adminLinkId !== undefined && deep.linkId === adminLinkId;
+
   const memoPackageIsNotInstalledAlert = (
     <Alert status="error">
       <AlertIcon />
@@ -224,7 +226,7 @@ function Page() {
     <Stack alignItems={'center'}>
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {deep.linkId ? (
+      {isDeepReady ? (
         isMemoPackageInstalled ? (
           Boolean(deviceLinkId) ? (
             <>
