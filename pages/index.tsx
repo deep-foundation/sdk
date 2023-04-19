@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   useLocalStore,
 } from '@deep-foundation/store/local';
-import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader, Alert, AlertDescription, AlertIcon, AlertTitle } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack, Card, CardBody, Heading, CardHeader, Alert, AlertDescription, AlertIcon, AlertTitle, Switch, FormControl, FormLabel } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -31,6 +31,10 @@ import { PACKAGE_NAME as MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { Device } from '@capacitor/device';
 import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
+import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
+import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
+import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 
 function Page() {
   const deep = useDeep();
@@ -139,6 +143,31 @@ function Page() {
 
   const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
 
+  const [isActionSheetSubscriptionEnabled, setIsActionSheetSubscriptionEnabled] = useLocalStore('isActionSheetSubscriptionEnabled', false);
+  useActionSheetSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isActionSheetSubscriptionEnabled});
+
+  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
+  useDialogSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isDialogSubscriptionEnabled});
+
+  const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
+  useScreenReaderSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isScreenReaderSubscriptionEnabled});
+
+  const [isHapticVibrateSubscriptionEnabled, setIsHapticVibrateSubscriptionEnabled] = useLocalStore('isHapticVibrateSubscriptionEnabled', false);
+  useHapticVibrateSubscription({deep, deviceLinkId: deviceLink.id, isEnabled: isHapticVibrateSubscriptionEnabled});
+
+  const tumblersCard = (
+    <Card>
+      <CardBody>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
+            Enable email alerts?
+          </FormLabel>
+          <Switch id="action-sheet-subscription-switch" />
+        </FormControl>
+      </CardBody>
+    </Card>
+  );
+
   return (
     <Stack alignItems={"center"}>
       <Heading as={'h1'}>DeepMemo</Heading>
@@ -160,6 +189,7 @@ function Page() {
   <AlertDescription>{MEMO_PACKAGE_NAME} package contains all the packages required to use this application. You can install it by using npm-packager-ui located in deepcase or any other posibble way.</AlertDescription>
 </Alert> :
         <>
+        {tumblersCard}
         <Card>
       <CardHeader>
         <Heading>Device</Heading>
