@@ -21,7 +21,7 @@ interface ICallHistoryPlugin {
 export const CallLog = registerPlugin<ICallHistoryPlugin>('CallHistory');
 
 
-export async function createAllCallHistory({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
+export async function saveAllCallHistory({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
   await CallLog.getPermissions();
 
   const typeContainLinkId = await deep.id(
