@@ -17,6 +17,7 @@ import { getSpeakOptions } from '../imports/screen-reader/get-speak-options';
 import { insertSpeakOptions } from '../imports/screen-reader/insert-speak-options';
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
+import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -34,13 +35,15 @@ function Content() {
     Device.getInfo().then((info) => setPlatform(info.platform));
   }, []);
 
-  useScreenReaderSubscription({deep, deviceLinkId})
-
   const content = (
     <Stack>
       {platform === 'web' && (
         <Text suppressHydrationWarning>Allow sound in website settings</Text>
       )}
+      {
+        Boolean(deviceLinkId) &&
+        <WithScreenReaderSubscription deep={deep} deviceLinkId={deviceLinkId} />
+      }
       <Button
         onClick={async () => {
           await insertSpeakOptions({

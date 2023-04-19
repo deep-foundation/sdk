@@ -12,6 +12,7 @@ import { insertAlertToDeep } from '../imports/dialog/insert-alert-to-deep';
 import { insertPromptToDeep } from '../imports/dialog/insert-prompt-to-deep';
 import { insertConfirmToDeep } from '../imports/dialog/insert-confirm-to-deep';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
+import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
 
 function Content() {
   const deep = useDeep();
@@ -20,8 +21,6 @@ function Content() {
   useEffect(() => {
     self["Dialog"] = Dialog;
   }, [])
-
-  useDialogSubscription({deep,deviceLinkId})  
 
   const [alertTitle, setAlertTitle] = useState<string>("AlertTitle");
   const [alertMessage, setAlertMessage] = useState<string>("AlertMessage");
@@ -42,6 +41,10 @@ function Content() {
   return (
     <Stack>
       <Text>Device package</Text>
+      {
+        Boolean(deviceLinkId) && 
+        <WithDialogSubscription deep={deep} deviceLinkId={deviceLinkId} />
+      }
       <Input value={alertTitle} placeholder='Alert Title' onChange={(event) => {
         setAlertTitle(event.target.value);
       }} />

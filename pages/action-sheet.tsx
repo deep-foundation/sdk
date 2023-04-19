@@ -24,6 +24,7 @@ import {
 import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-sheet-to-deep';
 import { ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
+import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
 
 const defaultOption: ActionSheetButton = {
   title: 'Action Sheet Option Title',
@@ -72,9 +73,7 @@ function Content() {
   //     ])
   //   })
   // }, []);
-
-  useActionSheetSubscription({deep, deviceLinkId})
-  
+ 
   const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(
     JSON.stringify(defaultActionSheet, null, 2)
   );
@@ -92,6 +91,10 @@ function Content() {
 
   return (
     <Stack>
+      {
+        Boolean(deviceLinkId) &&
+        <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLinkId} />
+      }
       {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>
