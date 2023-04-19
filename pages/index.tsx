@@ -35,6 +35,7 @@ import { useActionSheetSubscription } from '../imports/action-sheet/use-action-s
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
 import { useHapticVibrateSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
+import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
 
 function Page() {
   const deep = useDeep();
@@ -138,16 +139,16 @@ function Page() {
   const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && isMemoPackageInstalled && deviceLink !== undefined;
 
   const [isActionSheetSubscriptionEnabled, setIsActionSheetSubscriptionEnabled] = useLocalStore('isActionSheetSubscriptionEnabled', false);
-  useActionSheetSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isActionSheetSubscriptionEnabled});
+  // useActionSheetSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isActionSheetSubscriptionEnabled});
 
-  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
-  useDialogSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isDialogSubscriptionEnabled});
+  // const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] = useLocalStore('isDialogSubscriptionEnabled', false);
+  // useDialogSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isDialogSubscriptionEnabled});
 
-  const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
-  useScreenReaderSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isScreenReaderSubscriptionEnabled});
+  // const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
+  // useScreenReaderSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isScreenReaderSubscriptionEnabled});
 
-  const [isHapticVibrateSubscriptionEnabled, setIsHapticVibrateSubscriptionEnabled] = useLocalStore('isHapticVibrateSubscriptionEnabled', false);
-  useHapticVibrateSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isHapticVibrateSubscriptionEnabled});
+  // const [isHapticVibrateSubscriptionEnabled, setIsHapticVibrateSubscriptionEnabled] = useLocalStore('isHapticVibrateSubscriptionEnabled', false);
+  // useHapticVibrateSubscription({deep, deviceLinkId: deviceLink?.id, isEnabled: deviceLink?.id && isHapticVibrateSubscriptionEnabled});
 
   const tumblersCard = (
     <Card>
@@ -326,6 +327,7 @@ function Page() {
         <Link as={NextLink} href='/action-sheet'>
           Action Sheet
         </Link>
+        {isActionSheetSubscriptionEnabled && Boolean(deviceLink?.id) && <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLink.id} />}
       </div>
       <div>
         <Link as={NextLink} href='/dialog'>

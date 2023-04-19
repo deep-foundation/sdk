@@ -5,10 +5,7 @@ import { getSpeakOptions } from "./get-speak-options";
 import { CAPACITOR_SCREEN_READER_PACKAGE_NAME } from "./package-name";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export async function useScreenReaderSubscription({deep, deviceLinkId, isEnabled = true}: {deep: DeepClient,deviceLinkId: number, isEnabled?: boolean}) {
-  if(!isEnabled) {
-    return;
-  }
+export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: DeepClient,deviceLinkId: number}) {
   if(!deviceLinkId) {
     throw new Error("deviceLinkId is required")
   }
