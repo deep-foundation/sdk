@@ -1,8 +1,8 @@
 import { ConnectionStatus, Network } from "@capacitor/network"
-import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { DeepClient, SerialOperation } from "@deep-foundation/deeplinks/imports/client";
 import { CAPACITOR_NETWORK_PACKAGE_NAME } from "./package-name";
 
-export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: number, newConnection?: ConnectionStatus) {
+export default async function saveNetworkStatuses(deep: DeepClient, deviceLinkId: number, connectionStatuses?: Array<ConnectionStatus>) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const networkTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Network");
   const wifiTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Wifi");
@@ -12,208 +12,63 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
   const trueLinkId = await deep.id("@freephoenix888/boolean", "True");
   const falseLinkId = await deep.id("@freephoenix888/boolean", "False");
 
-  const connection = !!newConnection ? newConnection : await Network.getStatus();
+  if(connectionStatuses.length === 0) {
+    const connectionStatus = await Network.getStatus()
+    connectionStatuses.push(connectionStatus)
+  }
 
   const { data: [{ id: networkLinkId }] } = await deep.select({
-    type_id: networkTypeLinkId
+    type_id: networkTypeLinkId,
+    in: {
+      type_id: containTypeLinkId,
+      from_id: deviceLinkId,
+    }
   });
 
-  switch (connection.connectionType) {
-    case "wifi":
-      await deep.delete({
-        up: {
-          tree_id: {
-            _id: ['@deep-foundation/core', 'containTree'],
-          },
-          parent: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Contain'],
+  await deep.serial({
+    operations: [
+      {
+        table: 'links',
+        type: 'delete',
+        exp: {
+          up: {
+            tree_id: {
+              _id: ['@deep-foundation/core', 'containTree'],
             },
-            from_id: deviceLinkId,
-            to: {
-              _or: [
-                {
-                  type_id: {
-                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'Wifi'],
-                  },
+            parent: {
+              type_id: {
+                _id: ['@deep-foundation/core', 'Contain'],
+              },
+              from_id: deviceLinkId,
+              to: {
+                type_id: {
+                  _in: [
+                    connectionStatuses.find(connectionStatus => connectionStatus.connectionType === 'wifi') ? wifiTypeLinkId : 
+                    connectionStatuses.find(connectionStatus => connectionStatus.connectionType === 'cellular') ? cellularTypeLinkId :
+                    connectionStatuses.find(connectionStatus => connectionStatus.connectionType === 'none') ? noneTypeLinkId :
+                    unknownTypeLinkId,
+                  ]
                 },
-              ],
+              },
             },
           },
-        },
-      });
-      if (connection.connected) {
-        const { data: [{ id: newWifiLinkId }] } = await deep.insert({
+        }
+      },
+      {
+        table: 'links',
+        type: 'insert',
+        objects: connectionStatuses.map(connectionStatus => ({
           type_id: wifiTypeLinkId,
           from_id: networkLinkId,
-          to_id: trueLinkId,
+          to_id: connectionStatus.connected ? trueLinkId : falseLinkId,
           in: {
             data: [{
               type_id: containTypeLinkId,
               from_id: deviceLinkId
             }]
           }
-        });
-      } else {
-        const { data: [{ id: newWifiLinkId }] } = await deep.insert({
-          type_id: wifiTypeLinkId,
-          from_id: networkLinkId,
-          to_id: falseLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      };
-      break;
-    case "cellular":
-      await deep.delete({
-        up: {
-          tree_id: {
-            _id: ['@deep-foundation/core', 'containTree'],
-          },
-          parent: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Contain'],
-            },
-            from_id: deviceLinkId,
-            to: {
-              _or: [
-                {
-                  type_id: {
-                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'Cellular'],
-                  },
-                },
-              ],
-            },
-          },
-        },
-      });
-      if (connection.connected) {
-        const { data: [{ id: newCellularLinkId }] } = await deep.insert({
-          type_id: cellularTypeLinkId,
-          from_id: networkLinkId,
-          to_id: trueLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      } else {
-        const { data: [{ id: newCellularLinkId }] } = await deep.insert({
-          type_id: cellularTypeLinkId,
-          from_id: networkLinkId,
-          to_id: falseLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      };
-      break;
-    case "unknown":
-      await deep.delete({
-        up: {
-          tree_id: {
-            _id: ['@deep-foundation/core', 'containTree'],
-          },
-          parent: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Contain'],
-            },
-            from_id: deviceLinkId,
-            to: {
-              _or: [
-                {
-                  type_id: {
-                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'unknown'],
-                  },
-                },
-              ],
-            },
-          },
-        },
-      });
-      if (connection.connected) {
-        const { data: [{ id: newUnknownLinkId }] } = await deep.insert({
-          type_id: unknownTypeLinkId,
-          from_id: networkLinkId,
-          to_id: trueLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      } else {
-        const { data: [{ id: newUnknownLinkId }] } = await deep.insert({
-          type_id: unknownTypeLinkId,
-          from_id: networkLinkId,
-          to_id: falseLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      };
-      break;
-    case "none":
-      await deep.delete({
-        up: {
-          tree_id: {
-            _id: ['@deep-foundation/core', 'containTree'],
-          },
-          parent: {
-            type_id: {
-              _id: ['@deep-foundation/core', 'Contain'],
-            },
-            from_id: deviceLinkId,
-            to: {
-              _or: [
-                {
-                  type_id: {
-                    _id: [CAPACITOR_NETWORK_PACKAGE_NAME, 'none'],
-                  },
-                },
-              ],
-            },
-          },
-        },
-      });
-      if (connection.connected) {
-        const { data: [{ id: newNoneLinkId }] } = await deep.insert({
-          type_id: noneTypeLinkId,
-          from_id: networkLinkId,
-          to_id: trueLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      } else {
-        const { data: [{ id: newNoneLinkId }] } = await deep.insert({
-          type_id: noneTypeLinkId,
-          from_id: networkLinkId,
-          to_id: falseLinkId,
-          in: {
-            data: [{
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId
-            }]
-          }
-        });
-      };
-      break;
-  }
+        }))
+      }
+    ]
+  })
 }

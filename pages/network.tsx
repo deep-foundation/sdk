@@ -4,7 +4,7 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import saveNetworkStatus from '../imports/network/save-network-status';
+import saveNetworkStatuses from '../imports/network/save-network-status';
 
 function Page() {
   const deep = useDeep();
@@ -13,7 +13,7 @@ function Page() {
 
   useEffect(() => {
     if (connections.length > 0) {
-      saveNetworkStatus(deep, deviceLinkId, connections);
+      saveNetworkStatuses(deep, deviceLinkId, connections);
       setConnections([]);
     }
   }, [connections])
@@ -29,7 +29,7 @@ function Page() {
     <Button onClick={async () => { await subscribeToNetworkStatus() }}>
       <Text>LISTEN TO NETWORK CHANGES</Text>
     </Button>
-    <Button onClick={async () => await saveNetworkStatus(deep, deviceLinkId)}>
+    <Button onClick={async () => await saveNetworkStatuses(deep, deviceLinkId)}>
       <Text>SAVE CURRENT STATUS</Text>
     </Button>
   </Stack>
