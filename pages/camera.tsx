@@ -12,12 +12,13 @@ import uploadGallery from '../imports/camera/upload-gallery';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import ImageCard from './image-card';
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from '../imports/camera/package-name';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 function Page() {
   const deep = useDeep();
-  const [photos, setPhotos] = useLocalStore("PhotoAlbum", []);
-  const [galleryImages, setGalleryImages] = useLocalStore("Gallery", []);
-  const [images, setImages] = useLocalStore("Images", []);
+  const [photos, setPhotos] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.PhotoAlbum], []);
+  const [galleryImages, setGalleryImages] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Gallery], []);
+  const [images, setImages] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Images], []);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined

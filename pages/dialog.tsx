@@ -13,10 +13,11 @@ import { insertPromptToDeep } from '../imports/dialog/insert-prompt-to-deep';
 import { insertConfirmToDeep } from '../imports/dialog/insert-confirm-to-deep';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 function Content() {
   const deep = useDeep();
-  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
+  const [deviceLinkId] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId], undefined);
 
   useEffect(() => {
     self["Dialog"] = Dialog;

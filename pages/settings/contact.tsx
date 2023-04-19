@@ -15,25 +15,25 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 
 function Content() {
   const [
-    isActionSheetSubscriptionEnabled,
-    setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled], false);
+    isContactsSubscriptionEnabled,
+    setIsContactsSubscriptionEnabled,
+  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], false);
 
   return (
     <Card>
       <CardHeader>
-        <Heading>Action Sheet</Heading>
+        <Heading>Contacts</Heading>
       </CardHeader>
       <CardBody>
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Action Sheet Subscription
+            Contacts Subscription
           </FormLabel>
           <Switch
             id="action-sheet-subscription-switch"
-            isChecked={isActionSheetSubscriptionEnabled}
+            isChecked={isContactsSubscriptionEnabled}
             onChange={(event) => {
-              setIsActionSheetSubscriptionEnabled(event.target.checked);
+              setIsContactsSubscriptionEnabled(event.target.checked);
             }}
           />
         </FormControl>
@@ -42,7 +42,7 @@ function Content() {
   );
 }
 
-export default function ActionSheetSettingsPage() {
+export default function ContactsSettingsPage() {
   return (
     <ChakraProvider>
       <Provider>

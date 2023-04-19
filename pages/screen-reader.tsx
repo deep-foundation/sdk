@@ -23,7 +23,7 @@ function Content() {
   const deep = useDeep();
   const [platform, setPlatform] = useState<string | undefined>(undefined);
 
-  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
+  const [deviceLinkId] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId], undefined);
 
   const [isEnabled, setIsEnabled] = useState<boolean | undefined>(undefined);
 

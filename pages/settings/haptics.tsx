@@ -15,25 +15,25 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 
 function Content() {
   const [
-    isActionSheetSubscriptionEnabled,
-    setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled], false);
+    isHapticsSubscriptionEnabled,
+    setIsHapticsSubscriptionEnabled,
+  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled], false);
 
   return (
     <Card>
       <CardHeader>
-        <Heading>Action Sheet</Heading>
+        <Heading>Haptics</Heading>
       </CardHeader>
       <CardBody>
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Action Sheet Subscription
+            Haptics Subscription
           </FormLabel>
           <Switch
             id="action-sheet-subscription-switch"
-            isChecked={isActionSheetSubscriptionEnabled}
+            isChecked={isHapticsSubscriptionEnabled}
             onChange={(event) => {
-              setIsActionSheetSubscriptionEnabled(event.target.checked);
+              setIsHapticsSubscriptionEnabled(event.target.checked);
             }}
           />
         </FormControl>
@@ -42,7 +42,7 @@ function Content() {
   );
 }
 
-export default function ActionSheetSettingsPage() {
+export default function HapticsSettingsPage() {
   return (
     <ChakraProvider>
       <Provider>

@@ -65,6 +65,7 @@ import { getPushNotification } from '../imports/firebase-push-notification/get-p
 import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { Device } from '../imports/device/device';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 function Page() {
   const deep = useDeep();
@@ -75,7 +76,7 @@ function Page() {
 
 
   const [deviceRegistrationTokenLinkId, setDeviceRegistrationTokenLinkId] =
-    useLocalStore('deviceRegistrationToken', undefined);
+    useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeviceRegistrationToken], undefined);
 
   const [isPermissionsGranted, setIsPermissionsGranted] = useState(undefined);
 

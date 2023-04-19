@@ -9,13 +9,14 @@ import uploadRecords from '../imports/audiorecord/upload-records';
 import { VoiceRecorder } from 'capacitor-voice-recorder';
 import { useRecordingStatus } from '../imports/audiorecord/use-recording-status';
 import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from '../imports/audiorecord/package-name';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
 function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
-  const [sounds, setSounds] = useLocalStore("Sounds", []);
+  const [sounds, setSounds] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Sounds], []);
   const [records, setRecords] = useState([]);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
