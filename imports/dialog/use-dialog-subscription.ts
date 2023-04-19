@@ -8,6 +8,9 @@ export function useDialogSubscription({deep, deviceLinkId, isEnabled = true}: {d
   if(!isEnabled) {
     return;
   }
+  if(!deviceLinkId) {
+    throw new Error("deviceLinkId is required")
+  }
 
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
 

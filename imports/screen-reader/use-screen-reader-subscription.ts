@@ -9,6 +9,9 @@ export async function useScreenReaderSubscription({deep, deviceLinkId, isEnabled
   if(!isEnabled) {
     return;
   }
+  if(!deviceLinkId) {
+    throw new Error("deviceLinkId is required")
+  }
 
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
   const {

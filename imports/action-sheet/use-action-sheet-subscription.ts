@@ -8,6 +8,9 @@ export function useActionSheetSubscription({deep, deviceLinkId, isEnabled = true
   if(!isEnabled) {
     return;
   }
+  if(!deviceLinkId) {
+    throw new Error("deviceLinkId is required")
+  }
 
   const notifyLinksBeingProcessed = useRef<Link<number>[]>([]);
 

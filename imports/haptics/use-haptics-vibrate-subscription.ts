@@ -12,6 +12,9 @@ export function useHapticVibrateSubscription({ deep, deviceLinkId, isEnabled = t
   if (!isEnabled) {
     return;
   }
+  if(!deviceLinkId) {
+    throw new Error("deviceLinkId is required")
+  }
 
   const linksBeingProcessed = useRef<Array<Link<number>>>();
 
