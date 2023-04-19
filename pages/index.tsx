@@ -205,14 +205,19 @@ function Page() {
     <Stack alignItems={'center'}>
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {deep.linkId &&
-        (!isMemoPackageInstalled
-          ? memoPackageIsNotInstalledAlert
-          : Boolean(deviceLinkId) && (
-              <>
-                <WithSubscriptions deep={deep} />
-              </>
-            ))}
+      {deep.linkId ? (
+        isMemoPackageInstalled ? (
+          Boolean(deviceLinkId) ? (
+            <WithSubscriptions deep={deep} />
+          ) : (
+            <Text>Initializing the device...</Text>
+          )
+        ) : (
+          memoPackageIsNotInstalledAlert
+        )
+      ) : (
+        <Text>Logging in...</Text>
+      )}
     </Stack>
   );
 }
