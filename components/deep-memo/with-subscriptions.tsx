@@ -74,33 +74,8 @@ export function WithSubscriptions({ deep }: { deep: DeepClient }) {
     undefined
   );
 
-  const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<boolean | undefined>(undefined);
-  {
-    const { data, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: ['@deep-foundation/core', 'Package'],
-      },
-      string: {
-        value: DEEP_MEMO_PACKAGE_NAME,
-      },
-    });
-    useEffect(() => {
-      if (error) {
-        console.error(error.message);
-      }
-      if (loading) {
-        return;
-      }
-      console.log({ data });
-      setIsMemoPackageInstalled(data.length !== 0);
-    }, [data, loading, error]);
-  }
-
   useEffect(() => {
     new Promise(async () => {
-      if(!isMemoPackageInstalled) {
-        return
-      }
       if (!deviceLinkId) {
         const { deviceLink } = await insertDevice({ deep });
         setDeviceLinkId(deviceLink.id);
@@ -133,7 +108,7 @@ export function WithSubscriptions({ deep }: { deep: DeepClient }) {
         }
       }
     });
-  }, [deviceLinkId, isMemoPackageInstalled]);
+  }, [deviceLinkId]);
 
   return <>
   {isActionSheetSubscriptionEnabled && (
