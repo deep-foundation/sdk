@@ -74,7 +74,9 @@ function Page() {
     undefined
   );
 
-  const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<boolean | undefined>(undefined);
+  const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
+    boolean | undefined
+  >(undefined);
   {
     const { data, loading, error } = useDeepSubscription({
       type_id: {
@@ -104,19 +106,26 @@ function Page() {
 
   useEffect(() => {
     new Promise(async () => {
-      if (deep.linkId != 0) {
+      if (deep.linkId === 0) {
+        return;
+      }
+      if (adminLinkId !== undefined) {
+        return;
+      }
+      {
         const adminLinkId = await deep.id('deep', 'admin');
         setAdminLinkId(adminLinkId);
-        if (deep.linkId != adminLinkId) {
-          await deep.login({
-            linkId: adminLinkId,
-          });
-        }
+        await deep.login({
+          linkId: adminLinkId,
+        });
       }
     });
   }, [deep]);
 
-  const isDeepReady = deep.linkId !== 0 && adminLinkId !== undefined && deep.linkId === adminLinkId;
+  const isDeepReady =
+    deep.linkId !== 0 &&
+    adminLinkId !== undefined &&
+    deep.linkId === adminLinkId;
 
   const memoPackageIsNotInstalledAlert = (
     <Alert status="error">
