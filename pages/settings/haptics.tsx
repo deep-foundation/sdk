@@ -21,23 +21,23 @@ function Content() {
 
   return (
     <Card>
-      <CardHeader>
-        <Heading>Haptics</Heading>
-      </CardHeader>
-      <CardBody>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Haptics Subscription
-          </FormLabel>
-          <Switch
-            id="action-sheet-subscription-switch"
-            isChecked={isHapticsSubscriptionEnabled}
-            onChange={(event) => {
-              setIsHapticsSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-      </CardBody>
+    <CardHeader>
+      <Heading>Haptics</Heading>
+    </CardHeader>
+    <CardBody>
+      <FormControl display="flex" alignItems="center">
+        <FormLabel htmlFor="haptics-vibrate-subscription-switch" mb="0">
+          Haptics Vibrate Subscription
+        </FormLabel>
+        <Switch
+          id="haptics-vibrate-subscription-switch"
+          isChecked={isHapticsSubscriptionEnabled}
+          onChange={(event) => {
+            setIsHapticsSubscriptionEnabled(event.target.checked);
+          }}
+        />
+      </FormControl>
+    </CardBody>
     </Card>
   );
 }

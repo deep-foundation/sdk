@@ -14,27 +14,27 @@ import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 
 function Content() {
-  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
+  const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] =
     useLocalStore(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
+      CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
       false
     );
 
   return (
     <Card>
       <CardHeader>
-        <Heading>Dialog</Heading>
+        <Heading>Screen Reader</Heading>
       </CardHeader>
       <CardBody>
         <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="dialog-subscription-switch" mb="0">
-            Dialog Subscription
+          <FormLabel htmlFor="screen-reader-subscription-switch" mb="0">
+            Screen Reader Subscription
           </FormLabel>
           <Switch
-            id="dialog-subscription-switch"
-            isChecked={isDialogSubscriptionEnabled}
+            id="screenreader-subscription-switch"
+            isChecked={isScreenReaderSubscriptionEnabled}
             onChange={(event) => {
-              setIsDialogSubscriptionEnabled(event.target.checked);
+              setIsScreenReaderSubscriptionEnabled(event.target.checked);
             }}
           />
         </FormControl>
@@ -43,7 +43,7 @@ function Content() {
   );
 }
 
-export default function DialogSettingsPage() {
+export default function ScreenReaderSettingsPage() {
   return (
     <ChakraProvider>
       <Provider>

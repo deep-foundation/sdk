@@ -14,31 +14,31 @@ import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 
 function Content() {
-  const [
-    isContactsSubscriptionEnabled,
-    setIsContactsSubscriptionEnabled,
-  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], false);
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
+    'isContactsSyncEnabled',
+    false
+  );
 
   return (
     <Card>
-      <CardHeader>
-        <Heading>Contacts</Heading>
-      </CardHeader>
-      <CardBody>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Contacts Subscription
-          </FormLabel>
-          <Switch
-            id="action-sheet-subscription-switch"
-            isChecked={isContactsSubscriptionEnabled}
-            onChange={(event) => {
-              setIsContactsSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-      </CardBody>
-    </Card>
+          <CardHeader>
+            <Heading>Contacts</Heading>
+          </CardHeader>
+          <CardBody>
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="sync-contacts-switch" mb="0">
+                Sync Contacts
+              </FormLabel>
+              <Switch
+                id="sync-contacts-switch"
+                isChecked={isContactsSyncEnabled}
+                onChange={(event) => {
+                  setIsContactsSyncEnabled(event.target.checked);
+                }}
+              />
+            </FormControl>
+          </CardBody>
+        </Card>
   );
 }
 
