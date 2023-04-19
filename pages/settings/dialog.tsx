@@ -17,7 +17,7 @@ function Content() {
   const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
     useLocalStore(
       CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
-      false
+      undefined
     );
 
   return (

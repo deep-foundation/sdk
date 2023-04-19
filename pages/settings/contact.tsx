@@ -16,7 +16,7 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 function Content() {
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
     'isContactsSyncEnabled',
-    false
+    undefined
   );
 
   return (

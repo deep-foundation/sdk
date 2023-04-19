@@ -17,7 +17,7 @@ function Content() {
   const [
     isHapticsSubscriptionEnabled,
     setIsHapticsSubscriptionEnabled,
-  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled], false);
+  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled], undefined);
 
   return (
     <Card>

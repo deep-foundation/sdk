@@ -17,7 +17,7 @@ function Content() {
   const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] =
     useLocalStore(
       CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
-      false
+      undefined
     );
 
   return (

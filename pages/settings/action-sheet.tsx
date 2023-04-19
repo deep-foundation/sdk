@@ -17,7 +17,7 @@ function Content() {
   const [
     isActionSheetSubscriptionEnabled,
     setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled], false);
+  ] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled], undefined);
 
   return (
     <Card>
