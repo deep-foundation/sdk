@@ -58,7 +58,7 @@ import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
-import { initDeviceIfNotInited } from '../imports/device/init-device-if-not-inited';
+import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 
 function Page() {
@@ -76,7 +76,7 @@ function Page() {
     undefined
   );
     useEffect(() => {
-      initDeviceIfNotInited({
+      initDeviceIfNotInitedAndSaveData({
         deep,
         deviceLinkId,
         setDeviceLinkId: (deviceLinkId) => {
