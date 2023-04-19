@@ -53,6 +53,8 @@ import { WithDialogSubscription } from '../components/dialog/with-dialog-subscri
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
 import { insertDevice } from '../imports/device/insert-device';
+import { saveAllContacts } from '../imports/contact/contact';
+import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 
 function Page() {
   const deep = useDeep();
@@ -108,6 +110,25 @@ function Page() {
     });
   }, [deep]);
 
+  const [
+    isActionSheetSubscriptionEnabled,
+    setIsActionSheetSubscriptionEnabled,
+  ] = useLocalStore('isActionSheetSubscriptionEnabled', false);
+  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
+    useLocalStore('isDialogSubscriptionEnabled', false);
+  const [
+    isScreenReaderSubscriptionEnabled,
+    setIsScreenReaderSubscriptionEnabled,
+  ] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
+  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
+    useLocalStore('isHapticsSubscriptionEnabled', false);
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore('isContactsSyncEnabled',false);
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore('lastContactsSyncTime',undefined);
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore('isCallHistorySyncEnabled',false);
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore('lastCallHistorySyncTime',undefined);
+  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] = useLocalStore('isNetworkSubscriptionEnabled',false);
+  const [isVoiceReorderEnabled, setIsVoiceReorderEnabled] = useLocalStore('isVoiceReorderEnabled',false);
+
   useEffect(() => {
     if (!adminLinkId) {
       return;
@@ -123,15 +144,24 @@ function Page() {
         } else {
           await saveDeviceData({
             deep,
-            deviceLink: deviceLinkId,
-            data: {
-              ...(await Device.getInfo()),
-              ...(await Device.getBatteryInfo()),
-              ...(await Device.getId()),
-              ...(await Device.getLanguageCode()),
-              ...(await Device.getLanguageTag()),
-            },
+            deviceLink: deviceLinkId
           });
+          const currentTime = new Date().getTime();
+          if(isContactsSyncEnabled) {
+            if(currentTime - parseInt(lastContactsSyncTime)) {
+              await saveAllContacts({deep,deviceLinkId})
+              setLastContactsSyncTime(currentTime.toString())
+            } 
+          }
+          if(isCallHistorySyncEnabled) {
+            if(currentTime - parseInt(lastCallHistorySyncTime)) {
+              await saveAllCallHistory({deep,deviceLinkId})
+              setLastCallHistorySyncTime(currentTime.toString())
+            } 
+          }
+          if(isNetworkSubscriptionEnabled) {
+            // TODO
+          }
         }
       }
     });
@@ -142,19 +172,6 @@ function Page() {
     deep.linkId === adminLinkId &&
     isMemoPackageInstalled &&
     deviceLinkId !== undefined;
-
-  const [
-    isActionSheetSubscriptionEnabled,
-    setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore('isActionSheetSubscriptionEnabled', false);
-  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
-    useLocalStore('isDialogSubscriptionEnabled', false);
-  const [
-    isScreenReaderSubscriptionEnabled,
-    setIsScreenReaderSubscriptionEnabled,
-  ] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
-  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
-    useLocalStore('isHapticsSubscriptionEnabled', false);
 
   const tumblersCard = (
     <Card>
@@ -204,6 +221,18 @@ function Page() {
             isChecked={isHapticsSubscriptionEnabled}
             onChange={(event) => {
               setIsHapticsSubscriptionEnabled(event.target.checked);
+            }}
+          />
+        </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="sync-contacts-switch" mb="0">
+            Sync Contacts
+          </FormLabel>
+          <Switch
+            id="sync-contacts-switch"
+            isChecked={isContactsSyncEnabled}
+            onChange={(event) => {
+              setIsContactsSyncEnabled(event.target.checked);
             }}
           />
         </FormControl>
