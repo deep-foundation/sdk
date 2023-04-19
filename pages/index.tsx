@@ -56,44 +56,26 @@ import { insertDevice } from '../imports/device/insert-device';
 import { saveAllContacts } from '../imports/contact/contact';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { WithAllSubscriptions } from '../components/deep-memo/with-all-subscriptions';
 
 function Page() {
+  useEffect(() => {
+    defineCustomElements(window);
+  }, []);
+
   const deep = useDeep();
   const router = useRouter();
 
-  useEffect(() => {
-    defineCustomElements(window);
-  }, [])
+  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined);
 
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
+    undefined
+  );
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
   >(undefined);
-  {
-    const { data, loading, error } = useDeepSubscription({
-      type_id: {
-        _id: ['@deep-foundation/core', 'Package'],
-      },
-      string: {
-        value: DEEP_MEMO_PACKAGE_NAME,
-      },
-    });
-    useEffect(() => {
-      if (error) {
-        console.error(error.message);
-      }
-      if (loading) {
-        return;
-      }
-      console.log({ data });
-      setIsMemoPackageInstalled(data.length !== 0);
-    }, [data, loading, error]);
-  }
-
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
-  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (deep.linkId === 0) {
@@ -118,59 +100,50 @@ function Page() {
   const [
     isActionSheetSubscriptionEnabled,
     setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore('isActionSheetSubscriptionEnabled', false);
+  ] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled],
+    false
+  );
   const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
-    useLocalStore('isDialogSubscriptionEnabled', false);
+    useLocalStore(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
+      false
+    );
   const [
     isScreenReaderSubscriptionEnabled,
     setIsScreenReaderSubscriptionEnabled,
-  ] = useLocalStore('isScreenReaderSubscriptionEnabled', false);
+  ] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
+    false
+  );
   const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
-    useLocalStore('isHapticsSubscriptionEnabled', false);
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore('isContactsSyncEnabled',false);
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<number|undefined>('lastContactsSyncTime',undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore('isCallHistorySyncEnabled',false);
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<number|undefined>('lastCallHistorySyncTime',undefined);
-  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] = useLocalStore('isNetworkSubscriptionEnabled',false);
-  const [isVoiceReorderEnabled, setIsVoiceReorderEnabled] = useLocalStore('isVoiceReorderEnabled',false);
-
-  useEffect(() => {
-    if (!adminLinkId) {
-      return;
-    }
-    new Promise(async () => {
-      if (!deviceLinkId) {
-        const { deviceLink } = await insertDevice({ deep });
-        setDeviceLinkId(deviceLink.id);
-      } else {
-        const { data: deviceLinks } = await deep.select(deviceLinkId);
-        if (deviceLinks.length === 0) {
-          setDeviceLinkId(undefined);
-        } else {
-          await saveDeviceData({
-            deep,
-            deviceLink: deviceLinkId
-          });
-          const currentTime = new Date().getTime();
-          if(isContactsSyncEnabled) {
-            if(currentTime - lastContactsSyncTime) {
-              await saveAllContacts({deep,deviceLinkId})
-              setLastContactsSyncTime(currentTime)
-            } 
-          }
-          if(isCallHistorySyncEnabled) {
-            if(currentTime - lastCallHistorySyncTime) {
-              await saveAllCallHistory({deep,deviceLinkId})
-              setLastCallHistorySyncTime(currentTime)
-            } 
-          }
-          if(isNetworkSubscriptionEnabled) {
-            // TODO
-          }
-        }
-      }
-    });
-  }, [deep, deviceLinkId, isMemoPackageInstalled]);
+    useLocalStore(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled],
+      false
+    );
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+    false
+  );
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<
+    number | undefined
+  >('lastContactsSyncTime', undefined);
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore(
+    'isCallHistorySyncEnabled',
+    false
+  );
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<
+    number | undefined
+  >('lastCallHistorySyncTime', undefined);
+  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] =
+    useLocalStore(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
+      false
+    );
+  const [isVoiceReorderEnabled, setIsVoiceReorderEnabled] = useLocalStore(
+    'isVoiceReorderEnabled',
+    false
+  );
 
   const isDeepReady =
     adminLinkId !== undefined &&
@@ -178,69 +151,106 @@ function Page() {
     isMemoPackageInstalled &&
     deviceLinkId !== undefined;
 
-  const tumblersCard = (
+  const memoPackageIsNotInstalledAlert = (
+    <Alert status="error">
+      <AlertIcon />
+      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
+      <AlertDescription>
+        {DEEP_MEMO_PACKAGE_NAME} package contains all the packages required to
+        use this application. You can install it by using npm-packager-ui
+        located in deepcase or any other posibble way.
+      </AlertDescription>
+    </Alert>
+  );
+
+  const linksOfPages = (
+    <>
+      <div>
+        <Link as={NextLink} href="/settings">
+          Settings
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/device">
+          Device
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/call-history">
+          Call History
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/contacts">
+          Contacts
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/telegram">
+          Telegarm
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/action-sheet">
+          Action Sheet
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/dialog">
+          Dialog
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/screen-reader">
+          Screen Reader
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/openai-completion">
+          OpenAI Completion
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} replace href="/browser-extension">
+          Browser Extension
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/network">
+          Network
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/camera">
+          Camera
+        </Link>
+      </div>
+
+      <div>
+        <Link as={NextLink} href="/audiorecord">
+          Audiorecord
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/haptics">
+          Haptics
+        </Link>
+      </div>
+    </>
+  );
+
+  const generalInfoCard = (
     <Card>
+      <CardHeader>
+        <Heading as={'h2'}>General Info</Heading>
+      </CardHeader>
       <CardBody>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="action-sheet-subscription-switch" mb="0">
-            Action Sheet Subscription
-          </FormLabel>
-          <Switch
-            id="action-sheet-subscription-switch"
-            isChecked={isActionSheetSubscriptionEnabled}
-            onChange={(event) => {
-              setIsActionSheetSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="dialog-subscription-switch" mb="0">
-            Dialog Subscription
-          </FormLabel>
-          <Switch
-            id="dialog-subscription-switch"
-            isChecked={isDialogSubscriptionEnabled}
-            onChange={(event) => {
-              setIsDialogSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="screen-reader-subscription-switch" mb="0">
-            Screen Reader Subscription
-          </FormLabel>
-          <Switch
-            id="screen-reader-subscription-switch"
-            isChecked={isScreenReaderSubscriptionEnabled}
-            onChange={(event) => {
-              setIsScreenReaderSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="haptic-vibrate-subscription-switch" mb="0">
-            Haptic Vibrate Subscription
-          </FormLabel>
-          <Switch
-            id="haptic-vibrate-subscription-switch"
-            isChecked={isHapticsSubscriptionEnabled}
-            onChange={(event) => {
-              setIsHapticsSubscriptionEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="sync-contacts-switch" mb="0">
-            Sync Contacts
-          </FormLabel>
-          <Switch
-            id="sync-contacts-switch"
-            isChecked={isContactsSyncEnabled}
-            onChange={(event) => {
-              setIsContactsSyncEnabled(event.target.checked);
-            }}
-          />
-        </FormControl>
+        <Text suppressHydrationWarning>
+          Authentication Link Id: {deep.linkId ?? ' '}
+        </Text>
+        <Text suppressHydrationWarning>
+          Device Link Id: {deviceLinkId ?? ' '}
+        </Text>
       </CardBody>
     </Card>
   );
@@ -248,246 +258,39 @@ function Page() {
   return (
     <Stack alignItems={'center'}>
       <Heading as={'h1'}>DeepMemo</Heading>
-      <Card>
-        <CardHeader>
-          <Heading as={'h2'}>General Info</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text suppressHydrationWarning>
-            Authentication Link Id: {deep.linkId ?? ' '}
-          </Text>
-          <Text suppressHydrationWarning>
-            Device Link Id: {deviceLinkId ?? ' '}
-          </Text>
-        </CardBody>
-      </Card>
-
-      {!isMemoPackageInstalled ? (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
-          <AlertDescription>
-            {DEEP_MEMO_PACKAGE_NAME} package contains all the packages required
-            to use this application. You can install it by using npm-packager-ui
-            located in deepcase or any other posibble way.
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <>
-          {tumblersCard}
-          {Boolean(deviceLinkId) && (
-            <>
-              {isActionSheetSubscriptionEnabled && (
-                <WithActionSheetSubscription
-                  deep={deep}
-                  deviceLinkId={deviceLinkId}
-                />
-              )}
-              {isDialogSubscriptionEnabled && (
-                <WithDialogSubscription
-                  deep={deep}
-                  deviceLinkId={deviceLinkId}
-                />
-              )}
-              {isScreenReaderSubscriptionEnabled && (
-                <WithScreenReaderSubscription
-                  deep={deep}
-                  deviceLinkId={deviceLinkId}
-                />
-              )}
-              {isHapticsSubscriptionEnabled && (
-                <WithHapticsSubscription
-                  deep={deep}
-                  deviceLinkId={deviceLinkId}
-                />
-              )}
-            </>
-          )}
-          {/* <Card>
-      <CardHeader>
-        <Heading>Device</Heading>
-      </CardHeader>
-      <CardBody>
-        <DevicePage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Call History</Heading>
-      </CardHeader>
-      <CardBody>
-        <CallHistoryPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Contacts</Heading>
-      </CardHeader>
-      <CardBody>
-        <ContactsPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Telegram</Heading>
-      </CardHeader>
-      <CardBody>
-        <TelegramPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Action Sheet</Heading>
-      </CardHeader>
-      <CardBody>
-        <ActionSheetPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Dialog</Heading>
-      </CardHeader>
-      <CardBody>
-        <DialogPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Screen Reader</Heading>
-      </CardHeader>
-      <CardBody>
-        <ScreenReaderPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>OpenAI Completion</Heading>
-      </CardHeader>
-      <CardBody>
-        <OpenaiCompletionPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Browser Extension</Heading>
-      </CardHeader>
-      <CardBody>
-        <BrowserExtensionPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Network</Heading>
-      </CardHeader>
-      <CardBody>
-        <NetworkPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Camera</Heading>
-      </CardHeader>
-      <CardBody>
-        <CameraPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Audio Record</Heading>
-      </CardHeader>
-      <CardBody>
-        <AudioRecordPage />
-      </CardBody>
-    </Card>
-    <Card>
-      <CardHeader>
-        <Heading>Haptics</Heading>
-      </CardHeader>
-      <CardBody>
-        <HapticsPage />
-      </CardBody>
-    </Card> */}
-          {/* <CallHistoryPage/>
-      <ContactsPage/>
-      <TelegramPage/>
-      <ActionSheetPage/>
-      <DialogPage/>
-      <ScreenReaderPage/>
-      <OpenaiCompletionPage/>
-      <BrowserExtensionPage/>
-      <NetworkPage/>
-      <CameraPage/>
-      <AudioRecordPage/>
-      <HapticsPage/> */}
-          <div>
-            <Link as={NextLink} href="/device">
-              Device
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/call-history">
-              Call History
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/contacts">
-              Contacts
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/telegram">
-              Telegarm
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/action-sheet">
-              Action Sheet
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/dialog">
-              Dialog
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/screen-reader">
-              Screen Reader
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/openai-completion">
-              OpenAI Completion
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} replace href="/browser-extension">
-              Browser Extension
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/network">
-              Network
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/camera">
-              Camera
-            </Link>
-          </div>
-
-          <div>
-            <Link as={NextLink} href="/audiorecord">
-              Audiorecord
-            </Link>
-          </div>
-          <div>
-            <Link as={NextLink} href="/haptics">
-              Haptics
-            </Link>
-          </div>
-          <div></div>
-        </>
-      )}
+      {generalInfoCard}
+      {deep.linkId &&
+        (!isMemoPackageInstalled
+          ? memoPackageIsNotInstalledAlert
+          : Boolean(deviceLinkId) && (
+              <>
+                <WithAllSubscriptions deep={deep} />
+                {isActionSheetSubscriptionEnabled && (
+                  <WithActionSheetSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isDialogSubscriptionEnabled && (
+                  <WithDialogSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isScreenReaderSubscriptionEnabled && (
+                  <WithScreenReaderSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isHapticsSubscriptionEnabled && (
+                  <WithHapticsSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+              </>
+            ))}
     </Stack>
   );
 }
