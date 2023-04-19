@@ -10,8 +10,12 @@ import { useState, useEffect } from 'react';
 import { DEEP_MEMO_PACKAGE_NAME } from '../../imports/deep-memo/package-name';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
+import { WithActionSheetSubscription } from '../action-sheet/with-action-sheet-subscription';
+import { WithDialogSubscription } from '../dialog/with-dialog-subscription';
+import { WithHapticsSubscription } from '../haptics/with-haptics-vibrate-subscription';
+import { WithScreenReaderSubscription } from '../screen-reader/with-screen-reader-subscription';
 
-export function WithAllSubscriptions({ deep }: { deep: DeepClient }) {
+export function WithSubscriptions({ deep }: { deep: DeepClient }) {
   const [adminLinkId, setAdminLinkId] = useLocalStore<number|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.AdminLinkId],
     undefined
@@ -131,5 +135,30 @@ export function WithAllSubscriptions({ deep }: { deep: DeepClient }) {
     });
   }, [deviceLinkId, isMemoPackageInstalled]);
 
-  return null
+  return <>
+  {isActionSheetSubscriptionEnabled && (
+                  <WithActionSheetSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isDialogSubscriptionEnabled && (
+                  <WithDialogSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isScreenReaderSubscriptionEnabled && (
+                  <WithScreenReaderSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                {isHapticsSubscriptionEnabled && (
+                  <WithHapticsSubscription
+                    deep={deep}
+                    deviceLinkId={deviceLinkId}
+                  />
+                )}
+                </>
 }

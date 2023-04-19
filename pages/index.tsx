@@ -57,7 +57,7 @@ import { saveAllContacts } from '../imports/contact/contact';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { WithAllSubscriptions } from '../components/deep-memo/with-all-subscriptions';
+import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 
 function Page() {
   useEffect(() => {
@@ -96,60 +96,6 @@ function Page() {
       }
     });
   }, [deep]);
-
-  const [
-    isActionSheetSubscriptionEnabled,
-    setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled],
-    false
-  );
-  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
-    useLocalStore(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
-      false
-    );
-  const [
-    isScreenReaderSubscriptionEnabled,
-    setIsScreenReaderSubscriptionEnabled,
-  ] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
-    false
-  );
-  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
-    useLocalStore(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled],
-      false
-    );
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
-    false
-  );
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<
-    number | undefined
-  >('lastContactsSyncTime', undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore(
-    'isCallHistorySyncEnabled',
-    false
-  );
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<
-    number | undefined
-  >('lastCallHistorySyncTime', undefined);
-  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] =
-    useLocalStore(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
-      false
-    );
-  const [isVoiceReorderEnabled, setIsVoiceReorderEnabled] = useLocalStore(
-    'isVoiceReorderEnabled',
-    false
-  );
-
-  const isDeepReady =
-    adminLinkId !== undefined &&
-    deep.linkId === adminLinkId &&
-    isMemoPackageInstalled &&
-    deviceLinkId !== undefined;
 
   const memoPackageIsNotInstalledAlert = (
     <Alert status="error">
@@ -264,31 +210,7 @@ function Page() {
           ? memoPackageIsNotInstalledAlert
           : Boolean(deviceLinkId) && (
               <>
-                <WithAllSubscriptions deep={deep} />
-                {isActionSheetSubscriptionEnabled && (
-                  <WithActionSheetSubscription
-                    deep={deep}
-                    deviceLinkId={deviceLinkId}
-                  />
-                )}
-                {isDialogSubscriptionEnabled && (
-                  <WithDialogSubscription
-                    deep={deep}
-                    deviceLinkId={deviceLinkId}
-                  />
-                )}
-                {isScreenReaderSubscriptionEnabled && (
-                  <WithScreenReaderSubscription
-                    deep={deep}
-                    deviceLinkId={deviceLinkId}
-                  />
-                )}
-                {isHapticsSubscriptionEnabled && (
-                  <WithHapticsSubscription
-                    deep={deep}
-                    deviceLinkId={deviceLinkId}
-                  />
-                )}
+                <WithSubscriptions deep={deep} />
               </>
             ))}
     </Stack>
