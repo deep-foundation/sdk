@@ -14,7 +14,7 @@ NEXT_PUBLIC_GQL_SSL=1
 ```
 And do not forget to change NEXT_PUBLIC_GQL_PATH to your graphql address
 
-## Install `@deep-foundation/deep-memo`
+- Install `@deep-foundation/deep-memo`
 Install https://www.npmjs.com/package/@deep-foundation/deep-memo by using npm-packager
 
 ## Web
