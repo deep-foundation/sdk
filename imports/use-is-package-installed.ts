@@ -13,6 +13,7 @@ export function useIsPackageInstalled({packageName} : {packageName: string}) {
     },
   });
   useEffect(() => {
+    console.log({data, loading, error})
     setIsPackageInstalled(data.length > 0);
   }, [data, loading, error]);
 
