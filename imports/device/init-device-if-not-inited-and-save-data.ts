@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { insertDevice } from "./insert-device";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export async function initDeviceIfNotInitedAndSaveData({deep, deviceLinkId, setDeviceLinkId} : {deep: DeepClient, deviceLinkId: number | undefined, setDeviceLinkId: (deviceLinkId: number | undefined) => void}) {
+export async function initDeviceIfNotInitedAndSaveData({deep, deviceLinkId, setDeviceLinkId} : {deep: DeepClient, deviceLinkId: number, setDeviceLinkId: (deviceLinkId: number) => void}) {
    if(deviceLinkId) {
       const { data: deviceLinks } = await deep.select(deviceLinkId);
       if (deviceLinks.length === 0) {
