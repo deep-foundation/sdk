@@ -58,8 +58,9 @@ import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
-import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited';
+import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited-and-save-data';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
+import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
 
 function Page() {
   useEffect(() => {
@@ -75,15 +76,6 @@ function Page() {
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
-    useEffect(() => {
-      initDeviceIfNotInitedAndSaveData({
-        deep,
-        deviceLinkId,
-        setDeviceLinkId: (deviceLinkId) => {
-          setDeviceLinkId(deviceLinkId)
-      }})
-    })
-
 
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
@@ -243,6 +235,7 @@ function Page() {
           Boolean(deviceLinkId) ? (
             <>
             <WithSubscriptions deep={deep} />
+            <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
             {linksOfPages}
             </>
           ) : (
