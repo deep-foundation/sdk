@@ -12,6 +12,7 @@ async function main () {
   const parsedArguments = await parseArguments();
   const settings: TJS.PartialArgs = {
     required: true,
+    titles: true
   };
   
   const compilerOptions: TJS.CompilerOptions = {
@@ -33,7 +34,8 @@ async function main () {
     '$schema',
     'enum'
   ];
-  schema = await deepMapObject(schema, ({key, value}) => ({newKey: keyNamesNotToMap.includes(key) ? key : _.upperFirst(key), newValue: value}));
+  // schema = await deepMapObject(schema, ({key, value}) => ({newKey: keyNamesNotToMap.includes(key) ? key : _.upperFirst(key), newValue: value}));
+  schema = await deepMapObject(schema, ({key, value}) => ({newKey: key, newValue: (key === 'title') ? _.upperFirst(value) : value}));
   fs.writeFileSync(path.resolve(parsedArguments.outputJsonFilePath), JSON.stringify(schema, null, 2));
 }
 
