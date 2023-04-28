@@ -64,8 +64,8 @@ import { PushNotification } from '../imports/firebase-push-notification/push-not
 import { getPushNotification } from '../imports/firebase-push-notification/get-push-notification';
 import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
-import { Device } from '../imports/device/device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } from "@capacitor/device";
 
 function Page() {
   const deep = useDeep();
@@ -172,7 +172,7 @@ function Page() {
       from_id: deep.linkId
     }
   });
-  const [devices, setDevices] = useState<Device[] | undefined>(undefined);
+  const [devices, setDevices] = useState<DeviceInfo[] | undefined>(undefined);
   useEffect(() => {
     if (isDeviceLinksSubscriptionLoading) {
       return
