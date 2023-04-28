@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "Title": {
+      "description": "The title of the Action Sheet.",
+      "type": "string"
+    },
+    "Message": {
+      "description": "A message to show under the title.\n\nThis option is only supported on iOS.",
+      "type": "string"
+    },
+    "Options": {
+      "description": "Options the user can choose from.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ActionSheetButton"
+      }
+    }
+  },
+  "required": [
+    "options"
+  ],
+  "definitions": {
+    "ActionSheetButton": {
+      "type": "object",
+      "properties": {
+        "Title": {
+          "description": "The title of the option",
+          "type": "string"
+        },
+        "Style": {
+          "description": "The style of the option\n\nThis option is only supported on iOS.",
+          "enum": [
+            "CANCEL",
+            "DEFAULT",
+            "DESTRUCTIVE"
+          ],
+          "type": "string"
+        },
+        "Icon": {
+          "description": "Icon for the option (ionicon naming convention)\n\nThis option is only supported on Web.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
