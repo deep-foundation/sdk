@@ -11,7 +11,7 @@ export async function getDevice({deep, deviceLinkId}: {deep: DeepClient, deviceL
       tree_id: {
         _id: [DEVICE_PACKAGE_NAME, "DeviceTree"]
       },
-      parent_id: deviceLinkId
+      parent_id: {_eq: deviceLinkId}
     }
   });
   const nameLink = deviceTreeLinksUpToParentDevice.find(link => link.type_id === nameTypeLinkId);

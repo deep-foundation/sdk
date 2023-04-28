@@ -5,6 +5,7 @@
       "dom",
       "dom.iterable",
       "esnext",
+      "es2017",
       "es6",
       "es7",
       "ES2019"
