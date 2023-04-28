@@ -35,7 +35,7 @@ import {
   ActionSheetButtonStyle,
   ShowActionsOptions,
 } from '@capacitor/action-sheet';
-import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet-to-deep';
+import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
 import { ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
@@ -65,7 +65,7 @@ function InsertActionSheetModal({deep, deviceLinkId} : {deep: DeepClient, device
                   console.log('changed', arg);
                   await insertActionSheet({
                     deep,
-                    containInLinkId: deviceLinkId,
+                    containerLinkId: deviceLinkId,
                     actionSheetData: arg.formData
                   })
                 }}
