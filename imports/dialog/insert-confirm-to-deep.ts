@@ -2,7 +2,7 @@ import { ConfirmOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { DIALOG_PACKAGE_NAME } from "./package-name";
 
-export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: DeepClient, confirmOptions: ConfirmOptions }): Promise<void> {
+export async function insertConfirm({ deep, confirmData: confirmData, containerLinkId }: { deep: DeepClient, confirmData: ConfirmOptions, containerLinkId: number }): Promise<void> {
   const confirmTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Confirm");
   const confirmTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmTitle");
   const confirmMessageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "ConfirmMessage");
@@ -16,18 +16,18 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
     in: {
       data: {
         type_id: containTypeLinkId,
-        from_id: deep.linkId
+        from_id: containerLinkId
       }
     },
     out: {
       data: [
-        confirmOptions.title &&
+        confirmData.title &&
         {
           type_id: confirmTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -35,13 +35,13 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: confirmOptions.title
+                  value: confirmData.title
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
@@ -53,7 +53,7 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -61,25 +61,25 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: confirmOptions.message
+                  value: confirmData.message
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        confirmOptions.okButtonTitle &&
+        confirmData.okButtonTitle &&
         {
           type_id: confirmOkButtonTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -87,25 +87,25 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: confirmOptions.okButtonTitle
+                  value: confirmData.okButtonTitle
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        confirmOptions.cancelButtonTitle &&
+        confirmData.cancelButtonTitle &&
         {
           type_id: confirmCancelButtonTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -113,13 +113,13 @@ export async function insertConfirmToDeep({ deep, confirmOptions }: { deep: Deep
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: confirmOptions.cancelButtonTitle
+                  value: confirmData.cancelButtonTitle
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },

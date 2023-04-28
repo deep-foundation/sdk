@@ -2,7 +2,7 @@ import { AlertOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { DIALOG_PACKAGE_NAME } from "./package-name";
 
-export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }: { deep: DeepClient, containInLinkId: number, alertOptions: AlertOptions }): Promise<void> {
+export async function insertAlert({ deep, alertData: alertData, containerLinkId: containerLinkId }: { deep: DeepClient, containerLinkId: number, alertData: AlertOptions }): Promise<void> {
   const alertTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Alert");
   const alertTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertTitle");
   const alertMessageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "AlertMessage");
@@ -15,18 +15,18 @@ export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }:
     in: {
       data: {
         type_id: containTypeLinkId,
-        from_id: containInLinkId
+        from_id: containerLinkId
       }
     },
     out: {
       data: [
-        alertOptions.title &&
+        alertData.title &&
         {
           type_id: alertTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: containInLinkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -34,13 +34,13 @@ export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }:
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: alertOptions.title
+                  value: alertData.title
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: containInLinkId
+                  from_id: containerLinkId
                 }
               },
             },
@@ -52,7 +52,7 @@ export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }:
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: containInLinkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -60,26 +60,26 @@ export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }:
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: alertOptions.message
+                  value: alertData.message
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: containInLinkId
+                  from_id: containerLinkId
                 }
               },
             },
             
           }
         },
-        alertOptions.buttonTitle && 
+        alertData.buttonTitle && 
         {
           type_id: alertButtonTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: containInLinkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -87,13 +87,13 @@ export async function insertAlertToDeep({ deep, alertOptions, containInLinkId }:
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: alertOptions.buttonTitle
+                  value: alertData.buttonTitle
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: containInLinkId
+                  from_id: containerLinkId
                 }
               },
             },
