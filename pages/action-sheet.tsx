@@ -7,8 +7,19 @@ import {
 
 import {
   Button,
+  Card,
+  CardBody,
+  CardHeader,
   ChakraProvider,
   Code,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
   Textarea,
@@ -25,27 +36,11 @@ import { insertActionSheetToDeep } from '../imports/action-sheet/insert-action-s
 import { ACTION_SHEET_PACKAGE_NAME } from '../imports/action-sheet/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
-
-const defaultOption: ActionSheetButton = {
-  title: 'Action Sheet Option Title',
-  style: ActionSheetButtonStyle.Default,
-};
-const defaultActionSheet: ShowActionsOptions = {
-  title: 'Title',
-  message: 'Message',
-  options: [
-    {
-      title: 'OptionTitle1',
-    },
-    {
-      title: 'OptionTitle2',
-    },
-    {
-      title: 'OptionTitle3',
-      style: ActionSheetButtonStyle.Destructive,
-    },
-  ],
-};
+import GenerateSchema from 'generate-schema';
+import validator from '@rjsf/validator-ajv8';
+import { RJSFSchema } from '@rjsf/utils';
+import Form from '@rjsf/chakra-ui';
+const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
 
 function Content() {
   const deep = useDeep();
@@ -73,10 +68,10 @@ function Content() {
   //     ])
   //   })
   // }, []);
- 
-  const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(
-    JSON.stringify(defaultActionSheet, null, 2)
-  );
+
+  // const [actionSheetToInsert, setActionSheetToInsert] = useState<string>(
+  //   JSON.stringify(defaultActionSheet, null, 2)
+  // );
 
   // const [actionSheetTitle, setActionSheetTitle] = useState<string | undefined>("Title");
   // const [actionSheetMessage, setActionSheetMessage] = useState<string | undefined>("Message");
@@ -89,95 +84,77 @@ function Content() {
   //   }
   // }, 0);
 
+  const [isInsertActionSheetModalEnabled, setIsInsertActionSheetModalOpen] =
+    useState(false);
+
+  const insertActionSheetModal = (
+    <Modal
+      isOpen={isInsertActionSheetModalEnabled}
+      onClose={() => setIsInsertActionSheetModalOpen(false)}
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Insert Action Sheet</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Card>
+            <CardBody>
+              <Form
+                schema={schema}
+                validator={validator}
+                onSubmit={(data) => {
+                  console.log('changed', data);
+                }}
+                onError={(data) => {
+                  console.log('changed', data);
+                }}
+              />
+            </CardBody>
+          </Card>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={() => setIsInsertActionSheetModalOpen(false)}
+          >
+            Close
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+
   return (
     <Stack>
-      {
-        Boolean(deviceLinkId) &&
+      {Boolean(deviceLinkId) && (
         <WithActionSheetSubscription deep={deep} deviceLinkId={deviceLinkId} />
-      }
-      {/* <Input value={actionSheetTitle} onChange={async (event) => {
-        setActionSheetTitle(event.target.value)
-      }}></Input>
-      <Input value={actionSheetMessage} onChange={async (event) => {
-        setActionSheetMessage(event.target.value)
-      }}></Input>
-      <Button onClick={async () => {
-        setActionSheetOptions((oldActionSheets) => {
-          const newOptions = oldActionSheets ? [...oldActionSheets, defaultOption] : [defaultOption];
-          return newOptions
-        })
-      }}>++ Action Sheet Option</Button>
-      <Button isDisabled={!actionSheetOptions} onClick={async () => {
-        setActionSheetOptions((oldActionSheets) => {
-          const newActionSheets = [...oldActionSheets]
-          newActionSheets.pop();
-          return newActionSheets
-        })
-      }}>-- Action Sheet Option</Button>
-      {
-        actionSheetOptions && actionSheetOptions.map((actionSheetOption, i) => (
-          <Box key={i}>
-            <Input value={actionSheetOption.title} onChange={async (event) => {
-              setActionSheetOptions((oldActionSheets) => {
-                const newActionSheets = [...oldActionSheets];
-                const newActionSheet = actionSheetOption;
-                newActionSheet.title = event.target.value;
-                newActionSheets[i] = newActionSheet;
-                return newActionSheets;
-              })
-            }}></Input>
-            <RadioGroup value={actionSheetOption.style} onChange={async (value) => {
-              setActionSheetOptions((oldActionSheets) => {
-                const newActionSheets = [...oldActionSheets];
-                const newActionSheet = actionSheetOption;
-                newActionSheet.style = ActionSheetButtonStyle[value];
-                newActionSheets[i] = newActionSheet;
-                return newActionSheets;
-              })
-            }}>
-              <Radio value={ActionSheetButtonStyle.Cancel} title={ActionSheetButtonStyle.Cancel}>{ActionSheetButtonStyle.Cancel}</Radio>
-              <Radio value={ActionSheetButtonStyle.Default} title={ActionSheetButtonStyle.Default}>{ActionSheetButtonStyle.Default}</Radio>
-              <Radio value={ActionSheetButtonStyle.Destructive} title={ActionSheetButtonStyle.Destructive}>{ActionSheetButtonStyle.Destructive}</Radio>
-            </RadioGroup>
-
-
-          </Box>
-        ))
-      }
-      <Button onClick={async () => {
-        await insertActionSheetToDeep({
-          deep, containInLinkId: deep.linkId, actionSheetData: {
-            title: actionSheetTitle,
-            message: actionSheetMessage,
-            options: actionSheetOptions
-          }
-        })
-      }}>Insert Action Sheet</Button> */}
-      <Textarea value={actionSheetToInsert} rows={30} />
+      )}
       <Button
         onClick={async () => {
-          insertActionSheetToDeep({
-            deep,
-            containInLinkId: deep.linkId,
-            actionSheetData: JSON.parse(actionSheetToInsert),
-          });
+          setIsInsertActionSheetModalOpen(true);
         }}
       >
         Insert Action Sheet
       </Button>
+      {insertActionSheetModal}
+
+      <Text>
+        Insert ActionSheet to Device. You should see action-sheet on your page
+        after that and result will be saved to deep.
+      </Text>
+
       <Text>
         Insert Notify link from ActionSheet to Device. You should see
         action-sheet on your page after that and result will be saved to deep.
       </Text>
       <Code display={'block'} whiteSpace={'pre'}>
-        {`
-await deep.insert({
+        {`await deep.insert({
     type_id: await deep.id("${ACTION_SHEET_PACKAGE_NAME}", "Notify"),
     from_id: actionSheetLinkId, 
     to_id: deviceLinkId, 
     in: {data: {type_id: await deep.id("@deep-foundation/core", "Contain"), from_id: deep.linkId}}
-})
-  `}
+})`}
       </Code>
     </Stack>
   );
