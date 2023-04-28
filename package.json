@@ -4,10 +4,11 @@
   "description": "",
   "license": "Unlicense",
   "scripts": {
-    "prebuild": "npm run generate-schema",
-    "generate-schema": "npm run generate-action-sheet-schema",
-    "generate-action-sheet-schema": "ts-node ./imports/action-sheet/generate-schema.ts",
+    "prebuild": "npm run generate-schemas",
+    "generate-schema": "ts-node ./generate-schema.ts",
+    "generate-action-sheet-schema": "npm run generate-schema -- --interface-file-path=\"@capacitor/action-sheet/dist/esm/definitions.d.ts\" --interface-name=\"ShowActionsOptions\" --output-json-file-path=\"./imports/action-sheet/schema.json\"",
     "build-pack": "cd electron && npm run electron:pack",
+    "generate-schemas": "npm run generate-action-sheet-schema",
     "build-core": "(cross-env npm_config_yes=true NEXT_PUBLIC_ENGINES=1 NEXT_PUBLIC_HIDEPATH=1 MIGRATIONS_ID_TYPE_SQL=bigint MIGRATIONS_ID_TYPE_GQL=bigint MIGRATIONS_HASURA_PATH=localhost:8080 MIGRATIONS_HASURA_SSL=0 MIGRATIONS_HASURA_SECRET=myadminsecretkey NEXT_PUBLIC_DEEPLINKS_SERVER=http://localhost:3007 NEXT_PUBLIC_GQL_PATH=localhost:3006/gql NEXT_PUBLIC_GQL_SSL=0 DEEPLINKS_HASURA_PATH=localhost:8080 DEEPLINKS_HASURA_SSL=0 MIGRATIONS_DEEPLINKS_APP_URL=http://host.docker.internal:3007 MIGRATIONS_DEEPLINKS_URL=http://host.docker.internal:3006 npm run build-electron)",
     "build-windows": "(cross-env MIGRATIONS_DIR=.migrate && npm run build-core) && npm run build-pack",
     "build-unix": "(cross-env MIGRATIONS_DIR=/tmp/.migrate && npm run build-core) && npm run build-pack",
@@ -77,11 +78,13 @@
     "next-env": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/chrome": "0.0.213",
     "@types/react": "^18.0.1",
+    "@types/yargs": "^17.0.24",
     "buffer": "^6.0.3",
     "jest": "^29.5.0",
     "next-transpile-modules": "^10.0.0",
