@@ -8,7 +8,7 @@ import { getOptionStyleName } from './get-option-style-name';
 import { getOptionStyleTypeLinkIds } from './get-option-style-type-link-ids';
 import { ACTION_SHEET_PACKAGE_NAME } from './package-name';
 
-export async function insertActionSheetToDeep({
+export async function insertActionSheet({
   deep,
   actionSheetData,
   containInLinkId
