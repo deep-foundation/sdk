@@ -24,6 +24,9 @@ async function main () {
   const program = TJS.getProgramFromFiles([definitionFilePath], compilerOptions);
   
   let schema = TJS.generateSchema(program, parsedArguments.interfaceName, settings); 
+  if(!schema) {
+    throw new Error("Failed to generate schema")
+  }
   const keyNamesNotToMap = [
     'type',
     'properties',
