@@ -5,6 +5,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
@@ -39,6 +40,7 @@ import {
   ModalBody,
   ModalFooter,
   HStack,
+  useDisclosure
 } from '@chakra-ui/react';
 import { DEVICE_PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -66,6 +68,23 @@ import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } from "@capacitor/device";
+const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
+import Form from '@rjsf/chakra-ui';
+import validator from '@rjsf/validator-ajv8';
+import { RJSFSchema } from '@rjsf/utils';
+import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
+
+export default function PushNotificationsPage() {
+  return (
+    <ChakraProvider>
+      <Provider>
+        <DeepProvider>
+          <Page />
+        </DeepProvider>
+      </Provider>
+    </ChakraProvider>
+  );
+}
 
 function Page() {
   const deep = useDeep();
@@ -377,45 +396,6 @@ function Page() {
   const [body, setBody] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
 
-  const pushNotificationInsertionCard = <Card>
-    <CardHeader>
-      <Heading size='md'>Insert Push Notification</Heading>
-    </CardHeader>
-    <CardBody>
-      <HStack>
-        <label htmlFor="pushNotificationTitle">Title</label>
-        <Input id={"pushNotificationTitle"} value={title} onChange={(event) => {
-          setTitle(event.target.value);
-        }} />
-      </HStack>
-      <HStack>
-        <label htmlFor="pushNotificationBody">Body</label>
-        <Input id={"pushNotificationBody"} value={body} onChange={(event) => {
-          setBody(event.target.value);
-        }} />
-      </HStack>
-      <HStack>
-        <label htmlFor="pushNotificationImageUrl">Image Url</label>
-        <Input id={"pushNotificationImageUrl"} value={imageUrl} onChange={(event) => {
-          setImageUrl(event.target.value);
-        }} />
-      </HStack>
-      <Button
-        onClick={async () => {
-          await insertPushNotification({
-            deep,
-            pushNotification: {
-              body: title,
-              title: body,
-            }
-          })
-        }}
-      >
-        Insert Notification
-      </Button>
-    </CardBody>
-  </Card>
-
   const deviceRegistrationCard = <Card>
     <CardHeader>
       <Heading size='md'>Register Device</Heading>
@@ -543,9 +523,7 @@ function Page() {
       {
         webPushCertificateAccountCard
       }
-      {
-        pushNotificationInsertionCard
-      }
+      <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
       {
         deviceRegistrationCard
       }
@@ -556,14 +534,39 @@ function Page() {
   );
 }
 
-export default function PushNotificationsPage() {
-  return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Page />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
-  );
+function InsertPushNotificationModal({deep, deviceLinkId} : {deep: DeepClient, deviceLinkId: number}){
+  const { isOpen, onOpen, onClose } = useDisclosure()
+    return (
+      <>
+        <Button onClick={onOpen}>Insert Push Notification</Button>
+  
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent maxWidth={'fit-content'}>
+            <ModalHeader>Insert Push Notification</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody >
+            <Form
+                schema={schema}
+                validator={validator}
+                onSubmit={async (arg) => {
+                  console.log('changed', arg);
+                  await insertPushNotification({
+                    deep,
+                    containerLinkId: deviceLinkId,
+                    pushNotification: arg.formData
+                  })
+                }}
+              />
+            </ModalBody>
+  
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+    )
 }

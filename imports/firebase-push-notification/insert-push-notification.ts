@@ -3,7 +3,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 import { PushNotification } from './push-notification';
 
-export async function insertPushNotification({deep, pushNotification}:{deep: DeepClient, pushNotification: PushNotification}) {
+export async function insertPushNotification({deep, pushNotification, containerLinkId}:{deep: DeepClient, pushNotification: PushNotification, containerLinkId: number}) {
   const pushNotificationTypeLinkId = await deep.id(
     PACKAGE_NAME,
     'PushNotification'
@@ -25,7 +25,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
       data: [
         {
           type_id: containTypeLinkId,
-          from_id: deep.linkId,
+          from_id: containerLinkId,
         },
       ],
     },
@@ -40,7 +40,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
                 data: [
                   {
                     type_id: containTypeLinkId,
-                    from_id: deep.linkId,
+                    from_id: containerLinkId,
                   },
                 ],
               },
@@ -55,7 +55,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
             data: [
               {
                 type_id: containTypeLinkId,
-                from_id: deep.linkId,
+                from_id: containerLinkId,
               },
             ],
           },
@@ -69,7 +69,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
                 data: [
                   {
                     type_id: containTypeLinkId,
-                    from_id: deep.linkId,
+                    from_id: containerLinkId,
                   },
                 ],
               },
@@ -84,7 +84,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
             data: [
               {
                 type_id: containTypeLinkId,
-                from_id: deep.linkId,
+                from_id: containerLinkId,
               },
             ],
           },
@@ -98,7 +98,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
                 data: [
                   {
                     type_id: containTypeLinkId,
-                    from_id: deep.linkId,
+                    from_id: containerLinkId,
                   },
                 ],
               },
@@ -113,7 +113,7 @@ export async function insertPushNotification({deep, pushNotification}:{deep: Dee
             data: [
               {
                 type_id: containTypeLinkId,
-                from_id: deep.linkId,
+                from_id: containerLinkId,
               },
             ],
           },
