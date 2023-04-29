@@ -40,7 +40,7 @@ import {
   ModalBody,
   ModalFooter,
   HStack,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
 import { DEVICE_PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { Provider } from '../imports/provider';
@@ -62,17 +62,24 @@ import { insertPushNotification } from '../imports/firebase-push-notification/in
 import { registerDevice } from '../imports/firebase-push-notification/register-device';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
-import { PushNotification } from '../imports/firebase-push-notification/push-notification';
 import { getPushNotification } from '../imports/firebase-push-notification/get-push-notification';
 import { getDevice } from '../imports/device/get-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } from "@capacitor/device";
-const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
+import {
+  BatteryInfo,
+  Device,
+  DeviceInfo,
+  GetLanguageCodeResult,
+  LanguageTag,
+} from '@capacitor/device';
+const schema: RJSFSchema = require('../imports/firebase-push-notification/schema.json');
 import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
+import { PushNotification } from '../imports/firebase-push-notification/push-notification';
+import { CapacitorPlatform } from '@capacitor/core/types/platforms';
 
 export default function PushNotificationsPage() {
   return (
@@ -88,23 +95,22 @@ export default function PushNotificationsPage() {
 
 function Page() {
   const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
-
+  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
   const [deviceRegistrationTokenLinkId, setDeviceRegistrationTokenLinkId] =
-    useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeviceRegistrationToken], undefined);
-
-  const [isPermissionsGranted, setIsPermissionsGranted] = useState(undefined);
+    useLocalStore(
+      CapacitorStoreKeys[CapacitorStoreKeys.DeviceRegistrationToken],
+      undefined
+    );
 
   const [platform, setPlatform] = useState(undefined);
 
-  const [firebaseApplication, setFirebaseApplication] =
-    useState<FirebaseApp | undefined>(undefined);
-  const [firebaseMessaging, setFirebaseMessaging] =
-    useState<Messaging | undefined>(undefined);
+  const [firebaseApplication, setFirebaseApplication] = useState<
+    FirebaseApp | undefined
+  >(undefined);
+  const [firebaseMessaging, setFirebaseMessaging] = useState<
+    Messaging | undefined
+  >(undefined);
 
   useEffect(() => {
     if (platform === 'web') {
@@ -133,337 +139,145 @@ function Page() {
     });
   }, []);
 
-  useEffect(() => {
-    new Promise(async () => {
-      let isPermissionsGranted: boolean;
-      if (!platform) {
-        return;
-      } else if (platform === 'web') {
-        isPermissionsGranted = Notification.permission === 'granted';
-      } else {
-        let permissionsStatus = await PushNotifications.checkPermissions();
-        isPermissionsGranted = permissionsStatus.receive === 'granted';
-      }
-
-      setIsPermissionsGranted(isPermissionsGranted);
-    });
-  }, [deviceLinkId, deviceRegistrationTokenLinkId, platform]);
 
 
-  const { data: pushNotificationLinks, loading: isPushNotificationLinksSubscriptionLoading, error: pushNotificationLinksSubscriptionError } = useDeepSubscription({
+  const {
+    data: pushNotificationLinks,
+    loading: isPushNotificationLinksSubscriptionLoading,
+    error: pushNotificationLinksSubscriptionError,
+  } = useDeepSubscription({
     type_id: {
-      _id: [PACKAGE_NAME, "PushNotification"]
+      _id: [PACKAGE_NAME, 'PushNotification'],
     },
     in: {
       type_id: {
-        _id: ["@deep-foundation/core", "Contain"]
+        _id: ['@deep-foundation/core', 'Contain'],
       },
-      from_id: deep.linkId
-    }
+      from_id: deep.linkId,
+    },
   });
 
-  const [pushNotifications, setPushNotifications] = useState<PushNotification[] | undefined>(undefined);
+  const [pushNotifications, setPushNotifications] = useState<
+    PushNotification[] | undefined
+  >(undefined);
   useEffect(() => {
     if (isPushNotificationLinksSubscriptionLoading) {
-      return
-    };
+      return;
+    }
     new Promise(async () => {
       const pushNotifications = [];
       for (const pushNotificationLink of pushNotificationLinks) {
         const pushNotification = await getPushNotification({
           deep,
-          pushNotificationLinkId: pushNotificationLink.id
-        })
+          pushNotificationLinkId: pushNotificationLink.id,
+        });
         pushNotifications.push(pushNotification);
       }
-      setPushNotifications(pushNotifications)
-    })
-  }, [pushNotificationLinks, isPushNotificationLinksSubscriptionLoading, pushNotificationLinksSubscriptionError])
+      setPushNotifications(pushNotifications);
+    });
+  }, [
+    pushNotificationLinks,
+    isPushNotificationLinksSubscriptionLoading,
+    pushNotificationLinksSubscriptionError,
+  ]);
 
-  const { data: deviceLinks, loading: isDeviceLinksSubscriptionLoading, error: deviceLinksSubscriptionError } = useDeepSubscription({
+  const {
+    data: deviceLinks,
+    loading: isDeviceLinksSubscriptionLoading,
+    error: deviceLinksSubscriptionError,
+  } = useDeepSubscription({
     type_id: {
-      _id: [DEVICE_PACKAGE_NAME, "Device"]
+      _id: [DEVICE_PACKAGE_NAME, 'Device'],
     },
     in: {
       type_id: {
-        _id: ["@deep-foundation/core", "Contain"]
+        _id: ['@deep-foundation/core', 'Contain'],
       },
-      from_id: deep.linkId
-    }
+      from_id: deep.linkId,
+    },
   });
   const [devices, setDevices] = useState<DeviceInfo[] | undefined>(undefined);
   useEffect(() => {
     if (isDeviceLinksSubscriptionLoading) {
-      return
-    };
+      return;
+    }
     new Promise(async () => {
       const devices = [];
       for (const deviceLink of deviceLinks) {
         const device = await getDevice({
           deep,
-          deviceLinkId: deviceLink.id
-        })
+          deviceLinkId: deviceLink.id,
+        });
         devices.push(device);
       }
-      setDevices(devices)
-    })
-  }, [deviceLinks, isDeviceLinksSubscriptionLoading, deviceLinksSubscriptionError])
+      setDevices(devices);
+    });
+  }, [
+    deviceLinks,
+    isDeviceLinksSubscriptionLoading,
+    deviceLinksSubscriptionError,
+  ]);
 
-  const generalInfoCard = <Card>
-    <CardHeader>
-      <Heading size='md'>General Info</Heading>
-    </CardHeader>
-    <CardBody>
-      <Stack>
-        <Text suppressHydrationWarning>Deep link id: {deep.linkId ?? ' '}</Text>
-        <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? ' '}</Text>
-        <Text suppressHydrationWarning>
-          Device registration token link id: {deviceRegistrationTokenLinkId ?? ' '}
-        </Text>
-        <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
-      </Stack>
-    </CardBody>
-  </Card>;
+  const [title, setTitle] = useState<string>('');
+  const [body, setBody] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
 
-  const permissionsCard = <Card>
-    <CardHeader>
-      <Heading size='md'>Permissions</Heading>
-    </CardHeader>
-    <CardBody>
-      <Stack>
-        <Text suppressHydrationWarning>
-          Permissions are {!isPermissionsGranted && 'not'} granted
-        </Text>
-        <Button
-          isDisabled={!platform}
-          onClick={() => {
-            new Promise(async () => {
-              if (!platform) {
-                return;
-              }
-              const isPermissionsGranted = await requestPermissions({ platform });
-              setIsPermissionsGranted(isPermissionsGranted);
-            });
-          }}
-        >
-          Request permissions
-        </Button>
-
-      </Stack>
-    </CardBody>
-  </Card>
-
-  enum ServiceAccountObtainingWay {
-    File,
-    Text
-  }
-
-  const [serviceAccountObtainingWay, setServiceAccountObtainingWay] = useState<ServiceAccountObtainingWay>(ServiceAccountObtainingWay.File);
-  const [serviceAccount, setServiceAccount] = useState<string>("");
-  const [shouldMakeServiceAccountActive, setShouldMakeServiceAccountActive] = useState<boolean>(false);
-
-  const layoutsByObtainintWays: Record<ServiceAccountObtainingWay, JSX.Element> = {
-    [ServiceAccountObtainingWay.File]: <Button onClick={async () => {
-      const pickFilesResult = await FilePicker.pickFiles({
-        types: ['application/json']
-      });
-      console.log({ pickFilesResult });
-      await insertServiceAccount({
-        deep,
-        serviceAccount: JSON.parse(await pickFilesResult.files[0].blob.text()),
-        makeActive: shouldMakeServiceAccountActive
-      })
-    }}>
-      Insert Service Account
-    </Button>,
-    [ServiceAccountObtainingWay.Text]: <>
-      <Textarea placeholder='Service Account' value={serviceAccount} onChange={(event) => {
-        setServiceAccount(event.target.value);
-      }}>
-      </Textarea>
-      <Button
-        onClick={async () => {
-          await insertServiceAccount({
-            deep,
-            serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
-            makeActive: shouldMakeServiceAccountActive
-          })
-        }}
-      >
-        Insert Default Service Account
-      </Button>
-    </>
-  }
-
-
-  const serviceAccountCard = (
-    <Card>
-      <CardHeader>
-        <Heading size='md'>Insert Service Account</Heading>
-      </CardHeader>
-      <CardBody>
-        <Stack>
-          <RadioGroup onChange={(value) => {
-            setServiceAccountObtainingWay(ServiceAccountObtainingWay[value])
-          }} value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}>
-            <Stack direction='row'>
-              <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.File]}>File</Radio>
-              <Radio value={ServiceAccountObtainingWay[ServiceAccountObtainingWay.Text]}>Text</Radio>
-            </Stack>
-          </RadioGroup>
-          <Checkbox
-            isChecked={shouldMakeServiceAccountActive}
-            onChange={(event) => setShouldMakeServiceAccountActive(event.target.checked)}
-          >
-            Make Active
-          </Checkbox>
-          {
-            layoutsByObtainintWays[serviceAccountObtainingWay]
-          }
-        </Stack>
-      </CardBody>
-      <CardFooter>
-        <Text>
-          Service Account can be found on{' '}
-          <Link
-            href={
-              'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
-            }
-          >
-            https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
-          </Link>
-          . Do not forget to change PROJECT_ID in URL to your project id
-        </Text>
-      </CardFooter>
-    </Card>
-  );
-
-  const [webPushCertificate, setWebPushCertificate] = useState<string>("");
-  const [shouldMakeWebPushCertificateActive, setShouldMakeWebPushCertificateActive] = useState<boolean>(false);
-  const webPushCertificateAccountCard = (
-    <Card>
-      <CardHeader>
-        <Heading size='md'>Insert Web Push Certificate</Heading>
-      </CardHeader>
-      <CardBody>
-        <Stack>
-        <Input placeholder='Web Push Certificate' value={webPushCertificate} onChange={(event) => {
-          setWebPushCertificate(event.target.value);
-        }}>
-        </Input>
-        <Checkbox
-            isChecked={shouldMakeWebPushCertificateActive}
-            onChange={(event) => setShouldMakeWebPushCertificateActive(event.target.checked)}
-          >
-            Make Active
-          </Checkbox>
-        <Button
-          onClick={async () => {
-            await insertWebPushCertificate({
-              deep,
-              webPushCertificate,
-              shouldMakeActive: shouldMakeWebPushCertificateActive
-            })
-          }}
-        >
-          Insert Default Service Account
-        </Button>
-        </Stack>
-      </CardBody>
-      <CardFooter>
-        <Stack>
-        <Text>
-          WebPushCertificate can be found on{' '}
-          <Link
-            href={
-              'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
-            }
-          >
-            https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
-          </Link>
-          . Do not forget to change PROJECT_ID in URL to your project id
-        </Text>
-        <Text>
-          Required to notificate web clients
-        </Text>
-        </Stack>
-      </CardFooter>
-    </Card>
-  );
-
-
-  const [title, setTitle] = useState<string>("");
-  const [body, setBody] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
-
-  const deviceRegistrationCard = <Card>
-    <CardHeader>
-      <Heading size='md'>Register Device</Heading>
-    </CardHeader>
-    <CardBody>
-      <Button
-        onClick={async () => {
-          await registerDevice({
-            deep,
-            deviceLinkId,
-            firebaseMessaging,
-            platform,
-            callback: ({ deviceRegistrationTokenLinkId }) => {
-              setDeviceRegistrationTokenLinkId(deviceRegistrationTokenLinkId);
-            },
-          })
-        }}
-      >
-        Register
-      </Button>
-    </CardBody>
-  </Card>;
-
-  const [isNotifyInsertionModalOpened, setIsNotifyInsertionModalOpened] = useState<boolean>(false)
+  const [isNotifyInsertionModalOpened, setIsNotifyInsertionModalOpened] =
+    useState<boolean>(false);
   const notifyInsertionModalOnClose = () => {
-    setIsNotifyInsertionModalOpened(false)
+    setIsNotifyInsertionModalOpened(false);
   };
-  const notifyInsertionCard = <Card>
-    <Button onClick={async () => {
-      setIsNotifyInsertionModalOpened((oldState) => !oldState)
-    }}>
-      Insert Notify Links
-    </Button>
-    {
-      isNotifyInsertionModalOpened && <Modal isOpen={isNotifyInsertionModalOpened} onClose={notifyInsertionModalOnClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Insert</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-          <HStack>
-          <Stack>
-              {
-                pushNotifications.map((pushNotification, i) => (
-                  <PushNotificationComponent key={i} pushNotification={pushNotification} />
-                ))
-              }
-            </Stack>
-            <Stack>
-              {
-                devices.map((device, i) => (
-                  <DeviceComponent key={i} device={device} />
-                ))
-              }
-            </Stack>
-          </HStack>
-          </ModalBody>
+  const notifyInsertionCard = (
+    <Card>
+      <Button
+        onClick={async () => {
+          setIsNotifyInsertionModalOpened((oldState) => !oldState);
+        }}
+      >
+        Insert Notify Links
+      </Button>
+      {isNotifyInsertionModalOpened && (
+        <Modal
+          isOpen={isNotifyInsertionModalOpened}
+          onClose={notifyInsertionModalOnClose}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Insert</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <HStack>
+                <Stack>
+                  {pushNotifications.map((pushNotification, i) => (
+                    <PushNotificationComponent
+                      key={i}
+                      pushNotification={pushNotification}
+                    />
+                  ))}
+                </Stack>
+                <Stack>
+                  {devices.map((device, i) => (
+                    <DeviceComponent key={i} device={device} />
+                  ))}
+                </Stack>
+              </HStack>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={notifyInsertionModalOnClose}>
-              Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    }
-  </Card>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={notifyInsertionModalOnClose}
+              >
+                Close
+              </Button>
+              <Button variant="ghost">Secondary Action</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
+    </Card>
+  );
 
   // const [pushNotificationToNotifyLinkId, setPushNotificationToNotifyLinkId] = useState<number|undefined>(undefined)
   // const [deviceToNotifyLinkId, setDeviceToNotifyLinkId] = useState(0)
@@ -508,65 +322,402 @@ function Page() {
   //   </CardBody>
   // </Card>;
 
-
   return (
-    <Stack justifyContent={"center"} maxWidth={"768px"} margin={[0, "auto"]} spacing={4}>
-      {
-        generalInfoCard
-      }
-      {
-        permissionsCard
-      }
-      {
-        serviceAccountCard
-      }
-      {
-        webPushCertificateAccountCard
-      }
+    <Stack
+      justifyContent={'center'}
+      maxWidth={'768px'}
+      margin={[0, 'auto']}
+      spacing={4}
+    >
+      <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+      <PermissionsCard platform={platform} />
+      <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
+      <ServiceAccountInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
+      <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
       <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-      {
-        deviceRegistrationCard
-      }
-      {
-        notifyInsertionCard
-      }
+      
+      {notifyInsertionCard}
     </Stack>
   );
 }
 
-function InsertPushNotificationModal({deep, deviceLinkId} : {deep: DeepClient, deviceLinkId: number}){
-  const { isOpen, onOpen, onClose } = useDisclosure()
-    return (
-      <>
-        <Button onClick={onOpen}>Insert Push Notification</Button>
-  
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent maxWidth={'fit-content'}>
-            <ModalHeader>Insert Push Notification</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody >
+function InsertPushNotificationModal({
+  deep,
+  deviceLinkId,
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <Button onClick={onOpen}>Insert Push Notification</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent maxWidth={'fit-content'}>
+          <ModalHeader>Insert Push Notification</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
             <Form
-                schema={schema}
-                validator={validator}
-                onSubmit={async (arg) => {
-                  console.log('changed', arg);
-                  await insertPushNotification({
-                    deep,
-                    containerLinkId: deviceLinkId,
-                    pushNotification: arg.formData
-                  })
-                }}
-              />
-            </ModalBody>
-  
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+              schema={schema}
+              validator={validator}
+              onSubmit={async (arg) => {
+                console.log('changed', arg);
+                await insertPushNotification({
+                  deep,
+                  containerLinkId: deviceLinkId,
+                  pushNotification: arg.formData,
+                });
+              }}
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+function ServiceAccountInsertionModal({
+  deep,
+  deviceLinkId,
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+}) {
+  enum ServiceAccountObtainingWay {
+    File,
+    Text,
+  }
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [serviceAccountObtainingWay, setServiceAccountObtainingWay] =
+    useState<ServiceAccountObtainingWay>(ServiceAccountObtainingWay.File);
+  const [serviceAccount, setServiceAccount] = useState<string>('');
+  const [shouldMakeServiceAccountActive, setShouldMakeServiceAccountActive] =
+    useState<boolean>(true);
+  const layoutsByObtainintWays: Record<
+    ServiceAccountObtainingWay,
+    JSX.Element
+  > = {
+    [ServiceAccountObtainingWay.File]: (
+      <Button
+        onClick={async () => {
+          const pickFilesResult = await FilePicker.pickFiles({
+            types: ['application/json'],
+          });
+          console.log({ pickFilesResult });
+          await insertServiceAccount({
+            deep,
+            serviceAccount: JSON.parse(
+              await pickFilesResult.files[0].blob.text()
+            ),
+            makeActive: shouldMakeServiceAccountActive,
+          });
+        }}
+      >
+        Insert Service Account
+      </Button>
+    ),
+    [ServiceAccountObtainingWay.Text]: (
+      <>
+        <Textarea
+          placeholder="Service Account"
+          value={serviceAccount}
+          onChange={(event) => {
+            setServiceAccount(event.target.value);
+          }}
+        ></Textarea>
+        <Button
+          onClick={async () => {
+            await insertServiceAccount({
+              deep,
+              serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
+              makeActive: shouldMakeServiceAccountActive,
+            });
+          }}
+        >
+          Insert Service Account
+        </Button>
       </>
-    )
+    ),
+  };
+  return (
+    <>
+      <Button onClick={onOpen}>Insert Service Account</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent maxWidth={'fit-content'}>
+          <ModalHeader>Insert Service Account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack>
+              <RadioGroup
+                onChange={(value) => {
+                  setServiceAccountObtainingWay(
+                    ServiceAccountObtainingWay[value]
+                  );
+                }}
+                value={ServiceAccountObtainingWay[serviceAccountObtainingWay]}
+              >
+                <Stack direction="row">
+                  <Radio
+                    value={
+                      ServiceAccountObtainingWay[
+                        ServiceAccountObtainingWay.File
+                      ]
+                    }
+                  >
+                    File
+                  </Radio>
+                  <Radio
+                    value={
+                      ServiceAccountObtainingWay[
+                        ServiceAccountObtainingWay.Text
+                      ]
+                    }
+                  >
+                    Text
+                  </Radio>
+                </Stack>
+              </RadioGroup>
+              <Checkbox
+                isChecked={shouldMakeServiceAccountActive}
+                onChange={(event) =>
+                  setShouldMakeServiceAccountActive(event.target.checked)
+                }
+              >
+                Make Active
+              </Checkbox>
+              {layoutsByObtainintWays[serviceAccountObtainingWay]}
+              <Text>
+                Service Account can be found on{' '}
+                <Link
+                  href={
+                    'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
+                  }
+                >
+                  https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
+                </Link>
+                . Do not forget to change PROJECT_ID in URL to your project id
+              </Text>
+            </Stack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+function WebPushCertificateInsertionModal({
+  deep,
+  deviceLinkId,
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [webPushCertificate, setWebPushCertificate] = useState<string>('');
+  const [
+    shouldMakeWebPushCertificateActive,
+    setShouldMakeWebPushCertificateActive,
+  ] = useState<boolean>(true);
+  return (
+    <>
+      <Button onClick={onOpen}>Insert Web Push Certificate</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent maxWidth={'fit-content'}>
+          <ModalHeader>Insert Web Push Certificate</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          <Stack>
+          <Input
+            placeholder="Web Push Certificate"
+            value={webPushCertificate}
+            onChange={(event) => {
+              setWebPushCertificate(event.target.value);
+            }}
+          ></Input>
+          <Checkbox
+            isChecked={shouldMakeWebPushCertificateActive}
+            onChange={(event) =>
+              setShouldMakeWebPushCertificateActive(event.target.checked)
+            }
+          >
+            Make Active
+          </Checkbox>
+          <Button
+            onClick={async () => {
+              await insertWebPushCertificate({
+                deep,
+                webPushCertificate,
+                shouldMakeActive: shouldMakeWebPushCertificateActive,
+              });
+            }}
+          >
+            Insert Web Push Certificate
+          </Button>
+          <Text>
+            WebPushCertificate can be found on{' '}
+            <Link
+              href={
+                'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
+              }
+            >
+              https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
+            </Link>
+            . Do not forget to change PROJECT_ID in URL to your project id
+          </Text>
+          <Text>Required to notificate web clients</Text>
+        </Stack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+function DeviceRegistrationCard({
+  deep,
+  deviceLinkId,
+  firebaseMessaging,
+  platform,
+  onDeviceRegistrationTokenLinkIdChange
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+  firebaseMessaging: Messaging;
+  platform: DeviceInfo['platform'];
+  onDeviceRegistrationTokenLinkIdChange: (deviceRegistrationTokenLinkId: number) => void;
+}) {
+  return <Card>
+  <CardHeader>
+    <Heading size="md">Register Device</Heading>
+  </CardHeader>
+  <CardBody>
+    <Button
+      onClick={async () => {
+        await registerDevice({
+          deep,
+          deviceLinkId,
+          firebaseMessaging,
+          platform,
+          callback: ({ deviceRegistrationTokenLinkId }) => {
+            onDeviceRegistrationTokenLinkIdChange(deviceRegistrationTokenLinkId);
+          },
+        });
+      }}
+    >
+      Register
+    </Button>
+  </CardBody>
+</Card>
+}
+
+function PermissionsCard({
+  platform
+}: {
+  platform: DeviceInfo['platform'];
+}) {
+  const [isPermissionsGranted, setIsPermissionsGranted] = useState(undefined);
+
+  useEffect(() => {
+    new Promise(async () => {
+      let isPermissionsGranted: boolean;
+      if (!platform) {
+        return;
+      } else if (platform === 'web') {
+        isPermissionsGranted = Notification.permission === 'granted';
+      } else {
+        let permissionsStatus = await PushNotifications.checkPermissions();
+        isPermissionsGranted = permissionsStatus.receive === 'granted';
+      }
+
+      setIsPermissionsGranted(isPermissionsGranted);
+    });
+  }, [platform]);
+  return <Card>
+  <CardHeader>
+    <Heading size="md">Permissions</Heading>
+  </CardHeader>
+  <CardBody>
+    <Stack>
+      <Text suppressHydrationWarning>
+        Permissions are {!isPermissionsGranted && 'not'} granted
+      </Text>
+      <Button
+        isDisabled={!platform}
+        onClick={() => {
+          new Promise(async () => {
+            if (!platform) {
+              return;
+            }
+            const isPermissionsGranted = await requestPermissions({
+              platform,
+            });
+            setIsPermissionsGranted(isPermissionsGranted);
+          });
+        }}
+      >
+        Request permissions
+      </Button>
+    </Stack>
+  </CardBody>
+</Card>
+}
+
+function GeneralInfoCard(
+  {
+    deep,
+    deviceLinkId,
+    deviceRegistrationTokenLinkId,
+    platform
+  } :
+  {
+    deep: DeepClient;
+    deviceLinkId: number;
+    deviceRegistrationTokenLinkId: number;
+    platform: DeviceInfo['platform'];
+  }
+) {
+  return <Card>
+  <CardHeader>
+    <Heading size="md">General Info</Heading>
+  </CardHeader>
+  <CardBody>
+    <Stack>
+      <Text suppressHydrationWarning>
+        Deep link id: {deep.linkId ?? ' '}
+      </Text>
+      <Text suppressHydrationWarning>
+        Device link id: {deviceLinkId ?? ' '}
+      </Text>
+      <Text suppressHydrationWarning>
+        Device registration token link id:{' '}
+        {deviceRegistrationTokenLinkId ?? ' '}
+      </Text>
+      <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
+    </Stack>
+  </CardBody>
+</Card>
 }
