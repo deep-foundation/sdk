@@ -214,6 +214,11 @@ function Page() {
           Haptics
         </Link>
       </div>
+      <div>
+        <Link as={NextLink} href="/firebase-push-notification">
+          Firebase Push Notification
+        </Link>
+      </div>
     </>
   );
 

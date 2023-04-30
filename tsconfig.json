@@ -5,6 +5,7 @@
       "dom",
       "dom.iterable",
       "esnext",
+      "es2017",
       "es6",
       "es7",
       "ES2019"
@@ -21,11 +22,13 @@
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
   "types": ["chrome"],
   "include": [

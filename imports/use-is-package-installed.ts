@@ -3,7 +3,14 @@ import { useState, useEffect } from 'react';
 
 export function useIsPackageInstalled({packageName} : {packageName: string}) {
   const [isPackageInstalled, setIsPackageInstalled] = useState<boolean | undefined>(undefined);
-
+console.log(`subscripiton`,{
+  type_id: {
+    _id: ['@deep-foundation/core', 'Package'],
+  },
+  string: {
+    value: packageName,
+  },
+})
   const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],

@@ -2,7 +2,7 @@ import { PromptOptions } from "@capacitor/dialog";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { DIALOG_PACKAGE_NAME } from "./package-name";
 
-export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepClient, promptOptions: PromptOptions }): Promise<void> {
+export async function insertPrompt({ deep, promptData: promptData, containerLinkId }: { deep: DeepClient, promptData: PromptOptions, containerLinkId: number}): Promise<void> {
   const promptTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "Prompt");
   const promptTitleTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptTitle");
   const promptMessageTypeLinkId = await deep.id(DIALOG_PACKAGE_NAME, "PromptMessage");
@@ -18,18 +18,18 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
     in: {
       data: {
         type_id: containTypeLinkId,
-        from_id: deep.linkId
+        from_id: containerLinkId
       }
     },
     out: {
       data: [
-        promptOptions.title &&
+        promptData.title &&
         {
           type_id: promptTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -37,13 +37,13 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.title
+                  value: promptData.title
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
@@ -55,7 +55,7 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -63,25 +63,25 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.message
+                  value: promptData.message
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        promptOptions.okButtonTitle && 
+        promptData.okButtonTitle && 
         {
           type_id: promptOkButtonTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -89,25 +89,25 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.okButtonTitle
+                  value: promptData.okButtonTitle
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        promptOptions.cancelButtonTitle && 
+        promptData.cancelButtonTitle && 
         {
           type_id: promptCancelButtonTitleTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -115,25 +115,25 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.cancelButtonTitle
+                  value: promptData.cancelButtonTitle
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        promptOptions.inputPlaceholder && 
+        promptData.inputPlaceholder && 
         {
           type_id: promptInputPlaceholderTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -141,25 +141,25 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.inputPlaceholder
+                  value: promptData.inputPlaceholder
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
           }
         },
-        promptOptions.inputText && 
+        promptData.inputText && 
         {
           type_id: promptInputTextTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: deep.linkId
+              from_id: containerLinkId
             }
           },
           to: {
@@ -167,13 +167,13 @@ export async function insertPromptToDeep({ deep, promptOptions }: { deep: DeepCl
               type_id: syncTextFileTypeLinkId,
               string: {
                 data: {
-                  value: promptOptions.inputText
+                  value: promptData.inputText
                 }
               },
               in: {
                 data: {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId
+                  from_id: containerLinkId
                 }
               },
             },
