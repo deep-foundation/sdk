@@ -77,30 +77,31 @@ function Page() {
     undefined
   );
 
-  const useDeepSubscriptionResult = useDeepSubscription({
+  const {data, loading ,error} = deep.useDeepSubscription({
     type_id: 1
   })
   useEffect(() => {
-    console.log(useDeepSubscriptionResult)
-  }, [useDeepSubscriptionResult])
+    console.log({data, loading ,error})
+  }, [data, loading ,error])
 
-  const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
-    boolean | undefined
-  >(undefined);
-  {
-    const { isPackageInstalled, loading, error } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME});
-    useEffect(() => {
-      if (loading) {
-        return;
-      }
-      if (error) {
-        console.error(error.message);
-      }
-      setIsMemoPackageInstalled(isPackageInstalled);
-    }, [isPackageInstalled, loading, error]);
-  }
+  // const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
+  //   boolean | undefined
+  // >(undefined);
+  // {
+  //   const { isPackageInstalled, loading, error } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME});
+  //   useEffect(() => {
+  //     if (loading) {
+  //       return;
+  //     }
+  //     if (error) {
+  //       console.error(error.message);
+  //     }
+  //     setIsMemoPackageInstalled(isPackageInstalled);
+  //   }, [isPackageInstalled, loading, error]);
+  // }
 
   useEffect(() => {
+    self["deep"] = deep;
     if (deep.linkId === 0) {
       deep.guest();
     }
@@ -243,7 +244,8 @@ function Page() {
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
       {isDeepReady ? (
-        isMemoPackageInstalled ? (
+        // isMemoPackageInstalled ? (
+          false ? (
           Boolean(deviceLinkId) ? (
             <>
             <WithSubscriptions deep={deep} />
@@ -268,9 +270,7 @@ export default function Index() {
     <>
       <ChakraProvider>
         <Provider>
-          <DeepProvider>
             <Page />
-          </DeepProvider>
         </Provider>
       </ChakraProvider>
     </>
