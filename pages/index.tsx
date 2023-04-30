@@ -77,6 +77,13 @@ function Page() {
     undefined
   );
 
+  const useDeepSubscriptionResult = useDeepSubscription({
+    type_id: 1
+  })
+  useEffect(() => {
+    console.log(useDeepSubscriptionResult)
+  }, [useDeepSubscriptionResult])
+
   const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
     boolean | undefined
   >(undefined);
