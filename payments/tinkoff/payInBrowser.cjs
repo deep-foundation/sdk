@@ -1,4 +1,4 @@
-const {sleep} = require('../sleep.cjs/index.js');
+const { sleep } = require("./sleep");
 
 exports.payInBrowser = async ({ page, browser, url }) => {
     await page.goto(url, { waitUntil: 'networkidle2' });

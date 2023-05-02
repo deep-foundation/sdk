@@ -8,11 +8,11 @@ import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import puppeteer from 'puppeteer';
 var myEnv = dotenv.config();
 import { payInBrowser } from "./payInBrowser.cjs";
-import { sleep } from "../sleep.cjs/index.js";
 import fs from 'fs';
 import { default as assert } from 'assert';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql/serial.js';
 import path from 'path'
+import { sleep } from './sleep';
 
 main();
 
@@ -1098,3 +1098,4 @@ console.log(`dirname: ${__dirname}`)
   });
 
 };
+
