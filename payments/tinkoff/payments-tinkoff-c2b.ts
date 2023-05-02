@@ -844,7 +844,7 @@ async function installPackage({deep}) {
       data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'paymentTree' } },
+        string: { data: { value: 'PaymentTree' } },
       },
     },
     out: {
@@ -857,6 +857,8 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeNodePayment'}}
+
               },
             ],
           },
@@ -869,6 +871,8 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpSum'}}
+
               },
             ],
           },
@@ -881,6 +885,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeDownObject'}}
               },
             ],
           },
@@ -894,6 +899,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpPay'}}
               },
             ],
           },
@@ -906,6 +912,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpUrl'}}
               },
             ],
           },
@@ -1011,49 +1018,6 @@ console.log(`dirname: ${__dirname}`)
   
   const syncTextFileLinkId = reservedIds.pop();
   const handlerLinkId = reservedIds.pop();
-  console.log('serialArg')
-  console.dir({
-    operations: [
-      createSerialOperation({
-        table: 'links',
-        type: 'insert',
-        objects: {
-          id: syncTextFileLinkId,
-          type_id: syncTextFileTypeLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId
-            }
-          }
-        }
-      }),
-      createSerialOperation({
-        table: 'strings',
-        type: 'insert',
-        objects: {
-          link_id: syncTextFileLinkId,
-          value: fs.readFileSync(path.join(__dirname, './tinkoffNotificationHandler.ts'), { encoding: 'utf-8' })
-        }
-      }),
-      createSerialOperation({
-        table: 'links',
-        type: 'insert',
-        objects: {
-          id: handlerLinkId,
-          type_id: handlerTypeLinkId,
-          from_id: dockerSupportsJsLinkId,
-          to_id: syncTextFileLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId
-            }
-          }
-        }
-      }),
-    ]
-  }, {depth: 15})
   await deep.serial({
     operations: [
       createSerialOperation({
@@ -1065,7 +1029,12 @@ console.log(`dirname: ${__dirname}`)
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: packageLinkId
+              from_id: packageLinkId,
+              string: {
+                data: {
+                  value: `NotificationHandlerCode`
+                }
+              }
             }
           }
         }
@@ -1089,7 +1058,12 @@ console.log(`dirname: ${__dirname}`)
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: packageLinkId
+              from_id: packageLinkId,
+              string: {
+                data: {
+                  value: 'NotificationHandler'
+                }
+              }
             }
           }
         }
