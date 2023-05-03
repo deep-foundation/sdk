@@ -62,8 +62,8 @@ function Page() {
 
   const fetchRecords = async () => {
     const recordTypelinkId = await deep.id(PACKAGE_NAME, "Record");
-    const soundTypelinkId = await deep.id(PACKAGE_NAME, "Sound");
-    const mimetypeTypelinkId = await deep.id(PACKAGE_NAME, "MIME/type");
+    const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
+    const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
     const { data: recordLinks } = await deep.select({
       type_id: recordTypelinkId
     });
