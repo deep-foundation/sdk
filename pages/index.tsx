@@ -77,58 +77,59 @@ function Page() {
     undefined
   );
 
-  const {data, loading ,error} = deep.useDeepSubscription({
-    type_id: 1
-  })
+  const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({ packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({ error }) => { console.error(error.message) } });
   useEffect(() => {
-    console.log({data, loading ,error})
-  }, [data, loading ,error])
-
-  // const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
-  //   boolean | undefined
-  // >(undefined);
-  // {
-  //   const { isPackageInstalled, loading, error } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME});
-  //   useEffect(() => {
-  //     if (loading) {
-  //       return;
-  //     }
-  //     if (error) {
-  //       console.error(error.message);
-  //     }
-  //     setIsMemoPackageInstalled(isPackageInstalled);
-  //   }, [isPackageInstalled, loading, error]);
-  // }
+    console.log({ isMemoPackageInstalled })
+  }, [isMemoPackageInstalled])
 
   useEffect(() => {
-    self["deep"] = deep;
-    if (deep.linkId === 0) {
-      deep.guest();
-    }
-  }, []);
+    new Promise(async () => {
+      if (deep.linkId !== 0) {
+        return;
+      }
+      await deep.guest();
+    })
+  }, [deep])
 
   useEffect(() => {
     new Promise(async () => {
       if (deep.linkId === 0) {
         return;
       }
-      if (adminLinkId !== undefined) {
+      const adminLinkId = await deep.id('deep', 'admin');
+      if (deep.linkId === adminLinkId) {
         return;
       }
-      {
-        const adminLinkId = await deep.id('deep', 'admin');
-        setAdminLinkId(adminLinkId);
-        await deep.login({
-          linkId: adminLinkId,
-        });
-      }
-    });
-  }, [deep]);
+      await deep.login({ linkId: adminLinkId })
+    })
+  }, [deep])
+  // useEffect(() => {
+  //   self["deep"] = deep;
+  //   if (deep.linkId === 0) {
+  //     deep.guest();
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   new Promise(async () => {
+  //     if (deep.linkId === 0) {
+  //       return;
+  //     }
+  //     if (adminLinkId !== undefined) {
+  //       return;
+  //     }
+  //     {
+  //       const adminLinkId = await deep.id('deep', 'admin');
+  //       setAdminLinkId(adminLinkId);
+  //       await deep.login({
+  //         linkId: adminLinkId,
+  //       });
+  //     }
+  //   });
+  // }, [deep]);
 
   const isDeepReady =
-    deep.linkId !== 0 &&
-    adminLinkId !== undefined &&
-    deep.linkId === adminLinkId;
+    deep.linkId !== 0;
 
   const memoPackageIsNotInstalledAlert = (
     <Alert status="error">
@@ -244,17 +245,20 @@ function Page() {
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
       {isDeepReady ? (
-        // isMemoPackageInstalled ? (
-          false ? (
-          Boolean(deviceLinkId) ? (
-            <>
-            <WithSubscriptions deep={deep} />
+        isMemoPackageInstalled ? (
+          <>
             <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-            {linksOfPages}
-            </>
-          ) : (
-            <Text>Initializing the device...</Text>
-          )
+            {
+              Boolean(deviceLinkId) ? (
+                <>
+                  <WithSubscriptions deep={deep} />
+                  {linksOfPages}
+                </>
+              ) : (
+                <Text>Initializing the device...</Text>
+              )
+            }
+          </>
         ) : (
           memoPackageIsNotInstalledAlert
         )
@@ -270,7 +274,7 @@ export default function Index() {
     <>
       <ChakraProvider>
         <Provider>
-            <Page />
+          <Page />
         </Provider>
       </ChakraProvider>
     </>
