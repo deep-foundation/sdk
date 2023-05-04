@@ -16,6 +16,8 @@ import {
   Switch,
   FormControl,
   FormLabel,
+  Input,
+  Button,
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
@@ -128,102 +130,6 @@ function Page() {
   //   });
   // }, [deep]);
 
-  const isDeepReady =
-    deep.linkId !== 0;
-
-  const memoPackageIsNotInstalledAlert = (
-    <Alert status="error">
-      <AlertIcon />
-      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
-      <AlertDescription>
-        {DEEP_MEMO_PACKAGE_NAME} package contains all the packages required to
-        use this application. You can install it by using npm-packager-ui
-        located in deepcase or any other posibble way.
-      </AlertDescription>
-    </Alert>
-  );
-
-  const linksOfPages = (
-    <>
-      <div>
-        <Link as={NextLink} href="/settings">
-          Settings
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/device">
-          Device
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/call-history">
-          Call History
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/contacts">
-          Contacts
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/telegram">
-          Telegarm
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/action-sheet">
-          Action Sheet
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/dialog">
-          Dialog
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/screen-reader">
-          Screen Reader
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/openai-completion">
-          OpenAI Completion
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} replace href="/browser-extension">
-          Browser Extension
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/network">
-          Network
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/camera">
-          Camera
-        </Link>
-      </div>
-
-      <div>
-        <Link as={NextLink} href="/audiorecord">
-          Audiorecord
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/haptics">
-          Haptics
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/firebase-push-notification">
-          Firebase Push Notification
-        </Link>
-      </div>
-    </>
-  );
-
   const generalInfoCard = (
     <Card>
       <CardHeader>
@@ -240,43 +146,178 @@ function Page() {
     </Card>
   );
 
+  const [gqlPath, setGqlPath] = useState(undefined);
+  const [token, setToken] = useState(undefined);
+
   return (
     <Stack alignItems={'center'}>
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {isDeepReady ? (
+      {deep.linkId === 0 ? <LoginCard onSubmit={(arg) => {
+        setGqlPath(arg.gqlPath)
+        setToken(arg.token)
+      }} /> :
+      (
         isMemoPackageInstalled ? (
-          <>
+          <div>
             <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
             {
               Boolean(deviceLinkId) ? (
-                <>
+                <div>
                   <WithSubscriptions deep={deep} />
-                  {linksOfPages}
-                </>
+                  <Pages />
+                </div>
               ) : (
                 <Text>Initializing the device...</Text>
               )
             }
-          </>
+          </div>
         ) : (
-          memoPackageIsNotInstalledAlert
+          <MemoPackageIsNotInstalledAlert />
         )
-      ) : (
-        <Text>Logging in...</Text>
       )}
     </Stack>
   );
 }
 
+
+
 export default function Index() {
   return (
     <>
       <ChakraProvider>
-        <Provider>
+        <Provider gqlPath={gqlPath} isSsl={true} token={token}>
           <Page />
         </Provider>
       </ChakraProvider>
     </>
   );
+}
+
+function MemoPackageIsNotInstalledAlert() {
+  return <Text>Package is not installed</Text>
+  // return <Alert status="error">
+  //     <AlertIcon />
+  //     <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
+  //     <AlertDescription>
+  //       {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
+  //       use this application. You can install it by using npm-packager-ui
+  //       located in deepcase or any other posibble way.
+  //     </AlertDescription>
+  //   </Alert>
+}
+
+function Pages() {
+  return <Stack>
+
+    <Link as={NextLink} href="/settings">
+      Settings
+    </Link>
+
+
+    <Link as={NextLink} href="/device">
+      Device
+    </Link>
+
+
+    <Link as={NextLink} href="/call-history">
+      Call History
+    </Link>
+
+
+    <Link as={NextLink} href="/contacts">
+      Contacts
+    </Link>
+
+
+    <Link as={NextLink} href="/telegram">
+      Telegarm
+    </Link>
+
+
+    <Link as={NextLink} href="/action-sheet">
+      Action Sheet
+    </Link>
+
+
+    <Link as={NextLink} href="/dialog">
+      Dialog
+    </Link>
+
+
+    <Link as={NextLink} href="/screen-reader">
+      Screen Reader
+    </Link>
+
+
+    <Link as={NextLink} href="/openai-completion">
+      OpenAI Completion
+    </Link>
+
+
+    <Link as={NextLink} replace href="/browser-extension">
+      Browser Extension
+    </Link>
+
+
+    <Link as={NextLink} href="/network">
+      Network
+    </Link>
+
+
+    <Link as={NextLink} href="/camera">
+      Camera
+    </Link>
+
+
+
+    <Link as={NextLink} href="/audiorecord">
+      Audiorecord
+    </Link>
+
+
+    <Link as={NextLink} href="/haptics">
+      Haptics
+    </Link>
+
+
+    <Link as={NextLink} href="/firebase-push-notification">
+      Firebase Push Notification
+    </Link>
+
+  </Stack>
+}
+
+function LoginCard(arg: {onSubmit: (arg: {gqlPath: string, token: string}) => void}) {
+  const [gqlPath, setGqlPath] = useState(undefined);
+  const [token, setToken] = useState(undefined); 
+  return <Card>
+    <CardHeader>
+      <Heading>
+        Login
+      </Heading>
+    </CardHeader>
+    <CardBody>
+      <FormControl id="gql-path" onChange={(newGqlPath) => {
+        setGqlPath(newGqlPath)
+      }}>
+        <FormLabel>GraphQL Path</FormLabel>
+        <Input type="text" />
+      </FormControl>
+      <FormControl id="token" onChange={(newToken) => {
+        setToken(newToken)
+      }}>
+        <FormLabel>Token</FormLabel>
+        <Input type="text" />
+      </FormControl>
+      <Button onClick={() => {
+        arg.onSubmit({
+          gqlPath,
+          token
+        })
+      }}>
+        Submit
+      </Button>
+    </CardBody>
+  </Card>
 }
