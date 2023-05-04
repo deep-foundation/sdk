@@ -34,6 +34,7 @@ async function main() {
   });
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
+  // await installPackage({deep})
   await callTests({deep})
 }
 
@@ -43,7 +44,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const port = 5237;
     const ownerLinkId = deep.linkId;
     
-    const reservedIds = await deep.reserve(16);
+    const reservedIds = await deep.reserve(26);
     
     const routeLinkId = reservedIds.pop();
     const routerStringUseLinkId = reservedIds.pop();
@@ -64,6 +65,9 @@ async function callTests({deep}: {deep: DeepClient}){
     const usesTerminalPasswordTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesTerminalPassword");
     const terminalKeyTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "TerminalKey");
     const usesTerminalKeyTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesTerminalKey");
+    const notificationUrlTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "NotificationUrl");
+    const usesNotificationUrlTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesNotificationUrl");
+    
     const paymentTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Payment");
     const sumTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Sum");
     const paymentObjectTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Object");
@@ -185,6 +189,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const storageBusinessLinkId = reservedIds.pop();
     const terminalKeyLinkId = reservedIds.pop();
     const terminalPasswordLinkId = reservedIds.pop();
+    const notificationUrlLinkId = reservedIds.pop();
     const productLinkId = reservedIds.pop();
 
     await deep.serial({
@@ -263,6 +268,34 @@ async function callTests({deep}: {deep: DeepClient}){
           type: 'insert',
           table: 'links',
           objects: {
+            id: notificationUrlLinkId,
+            type_id: notificationUrlTypeLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: deep.linkId,
+                },
+                {
+                  type_id: usesNotificationUrlTypeLinkId,
+                  from_id: storageBusinessLinkId
+                },
+              ],
+            },
+          },
+        },
+        {
+          type: 'insert',
+          table: 'strings',
+          objects: {
+            link_id: notificationUrlLinkId,
+            value: process.env.PAYMENTS_C2B_NOTIFICATION_URL
+          }
+        },
+        {
+          type: 'insert',
+          table: 'links',
+          objects: {
             id: productLinkId,
             type_id: syncTextFileTypeLinkId,
             in: {
@@ -277,6 +310,9 @@ async function callTests({deep}: {deep: DeepClient}){
         }
       ]
     })
+    console.log(`password: ${process.env.PAYMENTS_C2B_TERMINAL_PASSWORD}`) 
+    console.log('terminalpassword')
+    console.dir((await deep.select(terminalPasswordLinkId)))
 
     const paymentLinkId = reservedIds.pop();
     const sumLinkId = reservedIds.pop();
