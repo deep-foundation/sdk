@@ -33,22 +33,29 @@ function Content() {
     console.log(`deep.linkId: ${deep.linkId}`)
   }, [deep])
 
-  const [isPackageInstalled, setIsPackageInstalled] = useState<boolean | undefined>(undefined);
-  const { data, loading, error } = useDeepSubscription({
-    type_id: {
-      _id: ['@deep-foundation/core', 'Package'],
-    },
-    string: {
-      value: DEEP_MEMO_PACKAGE_NAME,
-    },
-  });
-  useEffect(() => {
-    console.log({data, loading, error})
-    if(loading || error) {
-      return;
-    }
-    setIsPackageInstalled(data.length > 0);
-  }, [data, loading, error]);
+  // const [isPackageInstalled, setIsPackageInstalled] = useState<boolean | undefined>(undefined);
+  // const { data, loading, error } = useDeepSubscription({
+  //   type_id: {
+  //     _id: ['@deep-foundation/core', 'Package'],
+  //   },
+  //   string: {
+  //     value: DEEP_MEMO_PACKAGE_NAME,
+  //   },
+  // });
+  // useEffect(() => {
+  //   console.log({data, loading, error})
+  //   if(loading || error) {
+  //     return;
+  //   }
+  //   setIsPackageInstalled(data.length > 0);
+  // }, [data, loading, error]);
+
+  
+  const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({error}) => {console.error(error.message)}});
+
+useEffect(() => {
+  console.log({isMemoPackageInstalled})
+}, [isMemoPackageInstalled])
 
   return null;
 }
@@ -58,9 +65,7 @@ export default function TestPage() {
     <>
       <ChakraProvider>
         <Provider>
-          <DeepProvider>
             <Content />
-          </DeepProvider>
         </Provider>
       </ChakraProvider>
     </>
