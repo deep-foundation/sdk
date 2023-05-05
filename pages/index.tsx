@@ -195,6 +195,7 @@ function LoginOrPage({ setGqlPath, setToken }) {
   ) : (
     <LoginCard
       onSubmit={(arg) => {
+        console.log({arg})
         setGqlPath(arg.gqlPath);
         setToken(arg.token);
       }}
@@ -205,6 +206,10 @@ function LoginOrPage({ setGqlPath, setToken }) {
 export default function Index() {
   const [gqlPath, setGqlPath] = useState<string | undefined>(undefined)
   const [token, setToken] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    console.log({gqlPath, token})
+  }, [gqlPath, token])
 
   return (
     <>
@@ -319,17 +324,17 @@ function LoginCard(arg: { onSubmit: (arg: { gqlPath: string, token: string }) =>
       </Heading>
     </CardHeader>
     <CardBody>
-      <FormControl id="gql-path" onChange={(newGqlPath) => {
-        setGqlPath(newGqlPath)
-      }}>
+      <FormControl id="gql-path">
         <FormLabel>GraphQL Path</FormLabel>
-        <Input type="text" />
+        <Input type="text" onChange={(newGqlPath) => {
+        setGqlPath(newGqlPath.target.value)
+      }} />
       </FormControl>
-      <FormControl id="token" onChange={(newToken) => {
-        setToken(newToken)
-      }}>
+      <FormControl id="token" >
         <FormLabel>Token</FormLabel>
-        <Input type="text" />
+        <Input type="text" onChange={(newToken) => {
+        setToken(newToken.target.value)
+      }} />
       </FormControl>
       <Button onClick={() => {
         arg.onSubmit({
