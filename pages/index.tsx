@@ -72,9 +72,6 @@ function Page() {
   }, []);
 
   const deep = useDeep();
-  const router = useRouter();
-
-  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined);
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
@@ -95,43 +92,6 @@ function Page() {
     })
   }, [deep])
 
-  useEffect(() => {
-    new Promise(async () => {
-      if (deep.linkId === 0) {
-        return;
-      }
-      const adminLinkId = await deep.id('deep', 'admin');
-      if (deep.linkId === adminLinkId) {
-        return;
-      }
-      await deep.login({ linkId: adminLinkId })
-    })
-  }, [deep])
-  // useEffect(() => {
-  //   self["deep"] = deep;
-  //   if (deep.linkId === 0) {
-  //     deep.guest();
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   new Promise(async () => {
-  //     if (deep.linkId === 0) {
-  //       return;
-  //     }
-  //     if (adminLinkId !== undefined) {
-  //       return;
-  //     }
-  //     {
-  //       const adminLinkId = await deep.id('deep', 'admin');
-  //       setAdminLinkId(adminLinkId);
-  //       await deep.login({
-  //         linkId: adminLinkId,
-  //       });
-  //     }
-  //   });
-  // }, [deep]);
-
   const generalInfoCard = (
     <Card>
       <CardHeader>
@@ -147,9 +107,6 @@ function Page() {
       </CardBody>
     </Card>
   );
-
-  const [gqlPath, setGqlPath] = useState(undefined);
-  const [token, setToken] = useState(undefined);
 
   return (
     <Stack alignItems={'center'}>
@@ -208,16 +165,15 @@ function LoginOrPage({ setGqlPath }) {
 
 export default function Index() {
   const [gqlPath, setGqlPath] = useState<string | undefined>(undefined)
-  const [token, setToken] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    console.log({gqlPath, token})
-  }, [gqlPath, token])
+    console.log({gqlPath})
+  }, [gqlPath])
 
   return (
     <>
-      <Provider gqlPath={gqlPath} isSsl={true} token={token}>
-        <LoginOrPage setGqlPath={setGqlPath} setToken={setToken} />
+      <Provider gqlPath={gqlPath} isSsl={true}>
+        <LoginOrPage setGqlPath={setGqlPath} />
       </Provider>
     </>
   );
