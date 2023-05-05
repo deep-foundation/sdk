@@ -64,6 +64,7 @@ import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
 import { NavBar } from '../components/navbar';
+import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 
 function Page() {
   useEffect(() => {
@@ -178,17 +179,19 @@ function Page() {
   );
 }
 
-function LoginOrPage({ setGqlPath, setToken }) {
+function LoginOrPage({ setGqlPath }) {
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(false);
-
+  const [token, setToken] = useTokenController();
+  
   useEffect(() => {
+    self["deep"] = deep
     if (deep.linkId !== 0) {
       setIsAuthorized(true);
     } else {
       setIsAuthorized(false);
     }
-  }, [deep.linkId]);
+  }, [deep]);
 
   return isAuthorized ? (
     <Page />
