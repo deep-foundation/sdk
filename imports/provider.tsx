@@ -5,26 +5,16 @@ import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apo
 import { LocalStoreProvider } from '@deep-foundation/store/local';
 import { QueryStoreProvider } from '@deep-foundation/store/query';
 
-export function ProviderConnected({
-	children,
-}: {
-	children: JSX.Element;
-}) {
-	const [token, setToken] = useTokenController();
-	return <>{children}</>;
-}
-
 export function Provider({
 	children,
 	gqlPath,
 	isSsl,
-	token
 }: {
 	children: JSX.Element;
 	gqlPath: string;
 	isSsl: boolean;
-	token: string;
 }) {
+	console.log({gqlPath, isSsl})
 	return (
 		// <Analitics
 		//   yandexMetrikaAccounts={[84726091]}
@@ -40,12 +30,9 @@ export function Provider({
 								path: gqlPath,
 								ssl: isSsl,
 								ws: !!process?.browser,
-								token
 							}}
 						>
-							<ProviderConnected>
 								<DeepProvider>{children}</DeepProvider>
-							</ProviderConnected>
 						</ApolloClientTokenizedProvider>
 					</TokenProvider>
 				</LocalStoreProvider>
