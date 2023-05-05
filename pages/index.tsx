@@ -113,34 +113,33 @@ function Page() {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      (
-      isMemoPackageInstalled ? (
-      <div>
-        <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-        {
-          Boolean(deviceLinkId) ? (
-            <div>
-              <WithSubscriptions deep={deep} />
-              <Pages />
-            </div>
+      {
+        isMemoPackageInstalled ? (
+          <div>
+            <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
+            {
+              Boolean(deviceLinkId) ? (
+                <div>
+                  <WithSubscriptions deep={deep} />
+                  <Pages />
+                </div>
+              ) : (
+                <Text>Initializing the device...</Text>
+              )
+            }
+          </div>
           ) : (
-            <Text>Initializing the device...</Text>
+          <MemoPackageIsNotInstalledAlert />
           )
-        }
-      </div>
-      ) : (
-      <MemoPackageIsNotInstalledAlert />
-      )
-      )
+      }
     </Stack>
   );
 }
 
-function LoginOrPage({ setGqlPath }) {
+function LoginOrPage({gqlPath, setGqlPath }) {
   const deep = useDeep();
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [token, setToken] = useTokenController();
-  
+  const [isAuthorized, setIsAuthorized] = useState(undefined);
+
   useEffect(() => {
     self["deep"] = deep
     if (deep.linkId !== 0) {
@@ -150,46 +149,53 @@ function LoginOrPage({ setGqlPath }) {
     }
   }, [deep]);
 
-  return isAuthorized ? (
+  console.log({isAuthorized, gqlPath})
+
+  return isAuthorized && gqlPath ? (
     <Page />
   ) : (
     <LoginCard
       onSubmit={(arg) => {
         console.log({arg})
         setGqlPath(arg.gqlPath);
-        setToken(arg.token);
+        deep.login({
+          token: arg.token
+        })
       }}
     />
   );
 }
 
 export default function Index() {
-  const [gqlPath, setGqlPath] = useState<string | undefined>(undefined)
-
-  useEffect(() => {
-    console.log({gqlPath})
-  }, [gqlPath])
-
+  const [gqlPath, setGqlPath] = useLocalStore('gqlPath',undefined)
+useEffect(() => {
+  console.log({gqlPath})
+}, [gqlPath])
   return (
     <>
-      <Provider gqlPath={gqlPath} isSsl={true}>
-        <LoginOrPage setGqlPath={setGqlPath} />
+      <Provider 
+      gqlPath={gqlPath} 
+      isSsl={true}>
+        <LoginOrPage gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
+          console.log({newGqlPath})
+          setGqlPath(newGqlPath)
+        }} />
       </Provider>
     </>
   );
 }
 
 function MemoPackageIsNotInstalledAlert() {
-  return <Text>Package is not installed</Text>
-  // return <Alert status="error">
-  //     <AlertIcon />
-  //     <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
-  //     <AlertDescription>
-  //       {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
-  //       use this application. You can install it by using npm-packager-ui
-  //       located in deepcase or any other posibble way.
-  //     </AlertDescription>
-  //   </Alert>
+  // return <Text>Package is not installed</Text>
+  return <Alert status="error">
+      <AlertIcon />
+      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
+      <AlertDescription>
+        {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
+        use this application. You can install it by using npm-packager-ui
+        located in deepcase or any other posibble way.
+      </AlertDescription>
+    </Alert>
 }
 
 function Pages() {

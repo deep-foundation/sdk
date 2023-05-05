@@ -14,7 +14,6 @@ export function Provider({
 	gqlPath: string;
 	isSsl: boolean;
 }) {
-	console.log({gqlPath, isSsl})
 	return (
 		// <Analitics
 		//   yandexMetrikaAccounts={[84726091]}
