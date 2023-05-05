@@ -63,6 +63,7 @@ import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited-and-save-data';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
+import { NavBar } from '../components/navbar';
 
 function Page() {
   useEffect(() => {
@@ -151,45 +152,65 @@ function Page() {
 
   return (
     <Stack alignItems={'center'}>
+      <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {deep.linkId === 0 ? <LoginCard onSubmit={(arg) => {
-        setGqlPath(arg.gqlPath)
-        setToken(arg.token)
-      }} /> :
       (
-        isMemoPackageInstalled ? (
-          <div>
-            <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-            {
-              Boolean(deviceLinkId) ? (
-                <div>
-                  <WithSubscriptions deep={deep} />
-                  <Pages />
-                </div>
-              ) : (
-                <Text>Initializing the device...</Text>
-              )
-            }
-          </div>
-        ) : (
-          <MemoPackageIsNotInstalledAlert />
-        )
-      )}
+      isMemoPackageInstalled ? (
+      <div>
+        <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
+        {
+          Boolean(deviceLinkId) ? (
+            <div>
+              <WithSubscriptions deep={deep} />
+              <Pages />
+            </div>
+          ) : (
+            <Text>Initializing the device...</Text>
+          )
+        }
+      </div>
+      ) : (
+      <MemoPackageIsNotInstalledAlert />
+      )
+      )
     </Stack>
   );
 }
 
+function LoginOrPage({ setGqlPath, setToken }) {
+  const deep = useDeep();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
+  useEffect(() => {
+    if (deep.linkId !== 0) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [deep.linkId]);
+
+  return isAuthorized ? (
+    <Page />
+  ) : (
+    <LoginCard
+      onSubmit={(arg) => {
+        setGqlPath(arg.gqlPath);
+        setToken(arg.token);
+      }}
+    />
+  );
+}
 
 export default function Index() {
+  const [gqlPath, setGqlPath] = useState<string | undefined>(undefined)
+  const [token, setToken] = useState<string | undefined>(undefined)
+
   return (
     <>
-      <ChakraProvider>
-        <Provider gqlPath={gqlPath} isSsl={true} token={token}>
-          <Page />
-        </Provider>
-      </ChakraProvider>
+      <Provider gqlPath={gqlPath} isSsl={true} token={token}>
+        <LoginOrPage setGqlPath={setGqlPath} setToken={setToken} />
+      </Provider>
     </>
   );
 }
@@ -288,9 +309,9 @@ function Pages() {
   </Stack>
 }
 
-function LoginCard(arg: {onSubmit: (arg: {gqlPath: string, token: string}) => void}) {
+function LoginCard(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
   const [gqlPath, setGqlPath] = useState(undefined);
-  const [token, setToken] = useState(undefined); 
+  const [token, setToken] = useState(undefined);
   return <Card>
     <CardHeader>
       <Heading>
