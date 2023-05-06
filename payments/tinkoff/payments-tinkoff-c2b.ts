@@ -8,11 +8,11 @@ import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import puppeteer from 'puppeteer';
 var myEnv = dotenv.config();
 import { payInBrowser } from "./payInBrowser.cjs";
-import { sleep } from "../sleep.cjs/index.js";
 import fs from 'fs';
 import { default as assert } from 'assert';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql/serial.js';
 import path from 'path'
+import { sleep } from './sleep';
 
 main();
 
@@ -34,6 +34,7 @@ async function main() {
   });
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
+  // await installPackage({deep})
   await callTests({deep})
 }
 
@@ -43,7 +44,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const port = 5237;
     const ownerLinkId = deep.linkId;
     
-    const reservedIds = await deep.reserve(16);
+    const reservedIds = await deep.reserve(26);
     
     const routeLinkId = reservedIds.pop();
     const routerStringUseLinkId = reservedIds.pop();
@@ -64,6 +65,9 @@ async function callTests({deep}: {deep: DeepClient}){
     const usesTerminalPasswordTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesTerminalPassword");
     const terminalKeyTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "TerminalKey");
     const usesTerminalKeyTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesTerminalKey");
+    const notificationUrlTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "NotificationUrl");
+    const usesNotificationUrlTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "UsesNotificationUrl");
+    
     const paymentTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Payment");
     const sumTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Sum");
     const paymentObjectTypeLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "Object");
@@ -185,6 +189,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const storageBusinessLinkId = reservedIds.pop();
     const terminalKeyLinkId = reservedIds.pop();
     const terminalPasswordLinkId = reservedIds.pop();
+    const notificationUrlLinkId = reservedIds.pop();
     const productLinkId = reservedIds.pop();
 
     await deep.serial({
@@ -263,6 +268,34 @@ async function callTests({deep}: {deep: DeepClient}){
           type: 'insert',
           table: 'links',
           objects: {
+            id: notificationUrlLinkId,
+            type_id: notificationUrlTypeLinkId,
+            in: {
+              data: [
+                {
+                  type_id: containTypeLinkId,
+                  from_id: deep.linkId,
+                },
+                {
+                  type_id: usesNotificationUrlTypeLinkId,
+                  from_id: storageBusinessLinkId
+                },
+              ],
+            },
+          },
+        },
+        {
+          type: 'insert',
+          table: 'strings',
+          objects: {
+            link_id: notificationUrlLinkId,
+            value: process.env.PAYMENTS_C2B_NOTIFICATION_URL
+          }
+        },
+        {
+          type: 'insert',
+          table: 'links',
+          objects: {
             id: productLinkId,
             type_id: syncTextFileTypeLinkId,
             in: {
@@ -277,6 +310,9 @@ async function callTests({deep}: {deep: DeepClient}){
         }
       ]
     })
+    console.log(`password: ${process.env.PAYMENTS_C2B_TERMINAL_PASSWORD}`) 
+    console.log('terminalpassword')
+    console.dir((await deep.select(terminalPasswordLinkId)))
 
     const paymentLinkId = reservedIds.pop();
     const sumLinkId = reservedIds.pop();
@@ -844,7 +880,7 @@ async function installPackage({deep}) {
       data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'paymentTree' } },
+        string: { data: { value: 'PaymentTree' } },
       },
     },
     out: {
@@ -857,6 +893,8 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeNodePayment'}}
+
               },
             ],
           },
@@ -869,6 +907,8 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpSum'}}
+
               },
             ],
           },
@@ -881,6 +921,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeDownObject'}}
               },
             ],
           },
@@ -894,6 +935,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpPay'}}
               },
             ],
           },
@@ -906,6 +948,7 @@ async function installPackage({deep}) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: {data: {value: 'TreeIncludeUpUrl'}}
               },
             ],
           },
@@ -1011,49 +1054,6 @@ console.log(`dirname: ${__dirname}`)
   
   const syncTextFileLinkId = reservedIds.pop();
   const handlerLinkId = reservedIds.pop();
-  console.log('serialArg')
-  console.dir({
-    operations: [
-      createSerialOperation({
-        table: 'links',
-        type: 'insert',
-        objects: {
-          id: syncTextFileLinkId,
-          type_id: syncTextFileTypeLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId
-            }
-          }
-        }
-      }),
-      createSerialOperation({
-        table: 'strings',
-        type: 'insert',
-        objects: {
-          link_id: syncTextFileLinkId,
-          value: fs.readFileSync(path.join(__dirname, './tinkoffNotificationHandler.ts'), { encoding: 'utf-8' })
-        }
-      }),
-      createSerialOperation({
-        table: 'links',
-        type: 'insert',
-        objects: {
-          id: handlerLinkId,
-          type_id: handlerTypeLinkId,
-          from_id: dockerSupportsJsLinkId,
-          to_id: syncTextFileLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: packageLinkId
-            }
-          }
-        }
-      }),
-    ]
-  }, {depth: 15})
   await deep.serial({
     operations: [
       createSerialOperation({
@@ -1065,7 +1065,12 @@ console.log(`dirname: ${__dirname}`)
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: packageLinkId
+              from_id: packageLinkId,
+              string: {
+                data: {
+                  value: `NotificationHandlerCode`
+                }
+              }
             }
           }
         }
@@ -1089,7 +1094,12 @@ console.log(`dirname: ${__dirname}`)
           in: {
             data: {
               type_id: containTypeLinkId,
-              from_id: packageLinkId
+              from_id: packageLinkId,
+              string: {
+                data: {
+                  value: 'NotificationHandler'
+                }
+              }
             }
           }
         }
@@ -1098,3 +1108,4 @@ console.log(`dirname: ${__dirname}`)
   });
 
 };
+

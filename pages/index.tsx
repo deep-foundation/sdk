@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import {
   ChakraProvider,
   Text,
@@ -16,6 +16,8 @@ import {
   Switch,
   FormControl,
   FormLabel,
+  Input,
+  Button,
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
@@ -61,167 +63,35 @@ import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited-and-save-data';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
+import { NavBar } from '../components/navbar';
+import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
+import { QueryStoreProvider } from '@deep-foundation/store/query';
 
-function Page() {
+function Content() {
   useEffect(() => {
     defineCustomElements(window);
   }, []);
 
   const deep = useDeep();
-  const router = useRouter();
-
-  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined);
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
 
-  const {data, loading ,error} = deep.useDeepSubscription({
-    type_id: 1
-  })
+  const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({ packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({ error }) => { console.error(error.message) } });
   useEffect(() => {
-    console.log({data, loading ,error})
-  }, [data, loading ,error])
-
-  // const [isMemoPackageInstalled, setIsMemoPackageInstalled] = useState<
-  //   boolean | undefined
-  // >(undefined);
-  // {
-  //   const { isPackageInstalled, loading, error } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME});
-  //   useEffect(() => {
-  //     if (loading) {
-  //       return;
-  //     }
-  //     if (error) {
-  //       console.error(error.message);
-  //     }
-  //     setIsMemoPackageInstalled(isPackageInstalled);
-  //   }, [isPackageInstalled, loading, error]);
-  // }
-
-  useEffect(() => {
-    self["deep"] = deep;
-    if (deep.linkId === 0) {
-      deep.guest();
-    }
-  }, []);
+    console.log({ isMemoPackageInstalled })
+  }, [isMemoPackageInstalled])
 
   useEffect(() => {
     new Promise(async () => {
-      if (deep.linkId === 0) {
+      if (deep.linkId !== 0) {
         return;
       }
-      if (adminLinkId !== undefined) {
-        return;
-      }
-      {
-        const adminLinkId = await deep.id('deep', 'admin');
-        setAdminLinkId(adminLinkId);
-        await deep.login({
-          linkId: adminLinkId,
-        });
-      }
-    });
-  }, [deep]);
-
-  const isDeepReady =
-    deep.linkId !== 0 &&
-    adminLinkId !== undefined &&
-    deep.linkId === adminLinkId;
-
-  const memoPackageIsNotInstalledAlert = (
-    <Alert status="error">
-      <AlertIcon />
-      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME} to proceed!</AlertTitle>
-      <AlertDescription>
-        {DEEP_MEMO_PACKAGE_NAME} package contains all the packages required to
-        use this application. You can install it by using npm-packager-ui
-        located in deepcase or any other posibble way.
-      </AlertDescription>
-    </Alert>
-  );
-
-  const linksOfPages = (
-    <>
-      <div>
-        <Link as={NextLink} href="/settings">
-          Settings
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/device">
-          Device
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/call-history">
-          Call History
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/contacts">
-          Contacts
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/telegram">
-          Telegarm
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/action-sheet">
-          Action Sheet
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/dialog">
-          Dialog
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/screen-reader">
-          Screen Reader
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/openai-completion">
-          OpenAI Completion
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} replace href="/browser-extension">
-          Browser Extension
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/network">
-          Network
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/camera">
-          Camera
-        </Link>
-      </div>
-
-      <div>
-        <Link as={NextLink} href="/audiorecord">
-          Audiorecord
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/haptics">
-          Haptics
-        </Link>
-      </div>
-      <div>
-        <Link as={NextLink} href="/firebase-push-notification">
-          Firebase Push Notification
-        </Link>
-      </div>
-    </>
-  );
+      await deep.guest();
+    })
+  }, [deep])
 
   const generalInfoCard = (
     <Card>
@@ -241,38 +111,213 @@ function Page() {
 
   return (
     <Stack alignItems={'center'}>
+      <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {isDeepReady ? (
-        // isMemoPackageInstalled ? (
-          false ? (
-          Boolean(deviceLinkId) ? (
-            <>
-            <WithSubscriptions deep={deep} />
+      {
+        isMemoPackageInstalled ? (
+          <div>
             <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-            {linksOfPages}
-            </>
+            {
+              Boolean(deviceLinkId) ? (
+                <div>
+                  <WithSubscriptions deep={deep} />
+                  <Pages />
+                </div>
+              ) : (
+                <Text>Initializing the device...</Text>
+              )
+            }
+          </div>
           ) : (
-            <Text>Initializing the device...</Text>
+          <MemoPackageIsNotInstalledAlert />
           )
-        ) : (
-          memoPackageIsNotInstalledAlert
-        )
-      ) : (
-        <Text>Logging in...</Text>
-      )}
+      }
     </Stack>
   );
 }
 
-export default function Index() {
+function LoginOrPage({gqlPath, setGqlPath }) {
+  const deep = useDeep();
+  const [isAuthorized, setIsAuthorized] = useState(undefined);
+
+  useEffect(() => {
+    self["deep"] = deep
+    if (deep.linkId !== 0) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [deep]);
+
+  console.log({isAuthorized, gqlPath})
+
+  return isAuthorized && gqlPath ? (
+    <Content />
+  ) : (
+    <LoginCard
+      onSubmit={(arg) => {
+        console.log({arg})
+        setGqlPath(arg.gqlPath);
+        deep.login({
+          token: arg.token
+        })
+      }}
+    />
+  );
+}
+
+export function Page() {
+  const [gqlPath, setGqlPath] = useLocalStore('gqlPath',undefined)
+useEffect(() => {
+  console.log({gqlPath})
+}, [gqlPath])
   return (
     <>
-      <ChakraProvider>
-        <Provider>
-            <Page />
-        </Provider>
-      </ChakraProvider>
+      <Provider 
+      gqlPath={gqlPath} 
+      isSsl={true}>
+        <LoginOrPage gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
+          console.log({newGqlPath})
+          setGqlPath(newGqlPath)
+        }} />
+      </Provider>
     </>
   );
+}
+
+export default function App() {
+  return 			<QueryStoreProvider>
+  <LocalStoreProvider>
+    <Page />
+  </LocalStoreProvider>
+  </QueryStoreProvider>
+}
+
+function MemoPackageIsNotInstalledAlert() {
+  // return <Text>Package is not installed</Text>
+  return <Alert status="error">
+      <AlertIcon />
+      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
+      <AlertDescription>
+        {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
+        use this application. You can install it by using npm-packager-ui
+        located in deepcase or any other posibble way.
+      </AlertDescription>
+    </Alert>
+}
+
+function Pages() {
+  return <Stack>
+
+    <Link as={NextLink} href="/settings">
+      Settings
+    </Link>
+
+
+    <Link as={NextLink} href="/device">
+      Device
+    </Link>
+
+
+    <Link as={NextLink} href="/call-history">
+      Call History
+    </Link>
+
+
+    <Link as={NextLink} href="/contacts">
+      Contacts
+    </Link>
+
+
+    <Link as={NextLink} href="/telegram">
+      Telegarm
+    </Link>
+
+
+    <Link as={NextLink} href="/action-sheet">
+      Action Sheet
+    </Link>
+
+
+    <Link as={NextLink} href="/dialog">
+      Dialog
+    </Link>
+
+
+    <Link as={NextLink} href="/screen-reader">
+      Screen Reader
+    </Link>
+
+
+    <Link as={NextLink} href="/openai-completion">
+      OpenAI Completion
+    </Link>
+
+
+    <Link as={NextLink} replace href="/browser-extension">
+      Browser Extension
+    </Link>
+
+
+    <Link as={NextLink} href="/network">
+      Network
+    </Link>
+
+
+    <Link as={NextLink} href="/camera">
+      Camera
+    </Link>
+
+
+
+    <Link as={NextLink} href="/audiorecord">
+      Audiorecord
+    </Link>
+
+
+    <Link as={NextLink} href="/haptics">
+      Haptics
+    </Link>
+
+
+    <Link as={NextLink} href="/firebase-push-notification">
+      Firebase Push Notification
+    </Link>
+
+  </Stack>
+}
+
+function LoginCard(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
+  const [gqlPath, setGqlPath] = useState(undefined);
+  const [token, setToken] = useState(undefined);
+  return <Card>
+    <CardHeader>
+      <Heading>
+        Login
+      </Heading>
+    </CardHeader>
+    <CardBody>
+      <FormControl id="gql-path">
+        <FormLabel>GraphQL Path</FormLabel>
+        <Input type="text" onChange={(newGqlPath) => {
+        setGqlPath(newGqlPath.target.value)
+      }} />
+      </FormControl>
+      <FormControl id="token" >
+        <FormLabel>Token</FormLabel>
+        <Input type="text" onChange={(newToken) => {
+        setToken(newToken.target.value)
+      }} />
+      </FormControl>
+      <Button onClick={() => {
+        arg.onSubmit({
+          gqlPath,
+          token
+        })
+      }}>
+        Submit
+      </Button>
+    </CardBody>
+  </Card>
 }
