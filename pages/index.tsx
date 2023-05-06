@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import {
   ChakraProvider,
   Text,
@@ -65,8 +65,9 @@ import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
 import { NavBar } from '../components/navbar';
 import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
+import { QueryStoreProvider } from '@deep-foundation/store/query';
 
-function Page() {
+function Content() {
   useEffect(() => {
     defineCustomElements(window);
   }, []);
@@ -152,7 +153,7 @@ function LoginOrPage({gqlPath, setGqlPath }) {
   console.log({isAuthorized, gqlPath})
 
   return isAuthorized && gqlPath ? (
-    <Page />
+    <Content />
   ) : (
     <LoginCard
       onSubmit={(arg) => {
@@ -166,7 +167,7 @@ function LoginOrPage({gqlPath, setGqlPath }) {
   );
 }
 
-export default function Index() {
+export function Page() {
   const [gqlPath, setGqlPath] = useLocalStore('gqlPath',undefined)
 useEffect(() => {
   console.log({gqlPath})
@@ -183,6 +184,14 @@ useEffect(() => {
       </Provider>
     </>
   );
+}
+
+export default function App() {
+  return 			<QueryStoreProvider>
+  <LocalStoreProvider>
+    <Page />
+  </LocalStoreProvider>
+  </QueryStoreProvider>
 }
 
 function MemoPackageIsNotInstalledAlert() {
