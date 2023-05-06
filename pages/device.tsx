@@ -11,10 +11,11 @@ import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { NavBar } from '../components/navbar';
+import { Page } from '../components/page';
 
 function Content() {
   const deep = useDeep();
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+  const [deviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
   );
@@ -59,13 +60,7 @@ function Content() {
 }
 
 export default function DevicePage() {
-  return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
-  );
+  <Page>
+    <Content />
+  </Page>
 }
