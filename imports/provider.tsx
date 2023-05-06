@@ -14,29 +14,5 @@ export function Provider({
 	gqlPath: string;
 	isSsl: boolean;
 }) {
-	return (
-		// <Analitics
-		//   yandexMetrikaAccounts={[84726091]}
-		//   googleAnalyticsAccounts={['G-DC5RRWLRNV']}
-		// >
-		<ChakraProvider>
-			<QueryStoreProvider>
-				<LocalStoreProvider>
-					<TokenProvider>
-						<ApolloClientTokenizedProvider
-							options={{
-								client: 'deeplinks-app',
-								path: gqlPath,
-								ssl: isSsl,
-								ws: !!process?.browser,
-							}}
-						>
-								<DeepProvider>{children}</DeepProvider>
-						</ApolloClientTokenizedProvider>
-					</TokenProvider>
-				</LocalStoreProvider>
-			</QueryStoreProvider>
-		</ChakraProvider>
-		// </Analitics>
-	);
+	return null
 };

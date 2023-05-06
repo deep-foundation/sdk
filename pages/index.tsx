@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import {
-  ChakraProvider,
+
   Text,
   Link,
   Stack,
@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
-  DeepProvider,
+
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
@@ -66,6 +66,11 @@ import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withI
 import { NavBar } from '../components/navbar';
 import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { QueryStoreProvider } from '@deep-foundation/store/query';
+import { ChakraProvider } from '@chakra-ui/react';
+import { DeepProvider } from '@deep-foundation/deeplinks/imports/client';
+import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
+import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
+import { Page } from '../components/page';
 
 function Content() {
   useEffect(() => {
@@ -116,95 +121,44 @@ function Content() {
       {generalInfoCard}
       {
         isMemoPackageInstalled ? (
-          <div>
+          <>
             <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
             {
               Boolean(deviceLinkId) ? (
-                <div>
+                <>
                   <WithSubscriptions deep={deep} />
                   <Pages />
-                </div>
+                </>
               ) : (
                 <Text>Initializing the device...</Text>
               )
             }
-          </div>
-          ) : (
+          </>
+        ) : (
           <MemoPackageIsNotInstalledAlert />
-          )
+        )
       }
     </Stack>
   );
 }
 
-function LoginOrPage({gqlPath, setGqlPath }) {
-  const deep = useDeep();
-  const [isAuthorized, setIsAuthorized] = useState(undefined);
-
-  useEffect(() => {
-    self["deep"] = deep
-    if (deep.linkId !== 0) {
-      setIsAuthorized(true);
-    } else {
-      setIsAuthorized(false);
-    }
-  }, [deep]);
-
-  console.log({isAuthorized, gqlPath})
-
-  return isAuthorized && gqlPath ? (
+export default function IndexPage() {
+  return <Page>
     <Content />
-  ) : (
-    <LoginCard
-      onSubmit={(arg) => {
-        console.log({arg})
-        setGqlPath(arg.gqlPath);
-        deep.login({
-          token: arg.token
-        })
-      }}
-    />
-  );
-}
-
-export function Page() {
-  const [gqlPath, setGqlPath] = useLocalStore('gqlPath',undefined)
-useEffect(() => {
-  console.log({gqlPath})
-}, [gqlPath])
-  return (
-    <>
-      <Provider 
-      gqlPath={gqlPath} 
-      isSsl={true}>
-        <LoginOrPage gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
-          console.log({newGqlPath})
-          setGqlPath(newGqlPath)
-        }} />
-      </Provider>
-    </>
-  );
-}
-
-export default function App() {
-  return 			<QueryStoreProvider>
-  <LocalStoreProvider>
-    <Page />
-  </LocalStoreProvider>
-  </QueryStoreProvider>
+  </Page>
 }
 
 function MemoPackageIsNotInstalledAlert() {
   // return <Text>Package is not installed</Text>
   return <Alert status="error">
-      <AlertIcon />
-      <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
-      <AlertDescription>
-        {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
-        use this application. You can install it by using npm-packager-ui
-        located in deepcase or any other posibble way.
-      </AlertDescription>
-    </Alert>
+    <AlertIcon />
+    <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
+    <AlertDescription>
+      {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
+      use this application. You can install it by using npm-packager-ui
+      located in deepcase or any other posibble way.
+    </AlertDescription>
+  </Alert>
 }
 
 function Pages() {
@@ -288,36 +242,3 @@ function Pages() {
   </Stack>
 }
 
-function LoginCard(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
-  const [gqlPath, setGqlPath] = useState(undefined);
-  const [token, setToken] = useState(undefined);
-  return <Card>
-    <CardHeader>
-      <Heading>
-        Login
-      </Heading>
-    </CardHeader>
-    <CardBody>
-      <FormControl id="gql-path">
-        <FormLabel>GraphQL Path</FormLabel>
-        <Input type="text" onChange={(newGqlPath) => {
-        setGqlPath(newGqlPath.target.value)
-      }} />
-      </FormControl>
-      <FormControl id="token" >
-        <FormLabel>Token</FormLabel>
-        <Input type="text" onChange={(newToken) => {
-        setToken(newToken.target.value)
-      }} />
-      </FormControl>
-      <Button onClick={() => {
-        arg.onSubmit({
-          gqlPath,
-          token
-        })
-      }}>
-        Submit
-      </Button>
-    </CardBody>
-  </Card>
-}
