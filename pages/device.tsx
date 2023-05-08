@@ -60,7 +60,7 @@ function Content() {
 }
 
 export default function DevicePage() {
-  <Page>
+  return <Page>
     <Content />
   </Page>
 }
