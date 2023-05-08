@@ -1,4 +1,4 @@
-import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { DeepClient, SerialOperation } from "@deep-foundation/deeplinks/imports/client";
 import { DEVICE_PACKAGE_NAME } from "./package-name";
 import { BatteryInfo, Device, DeviceInfo, GetLanguageCodeResult, LanguageTag } from "@capacitor/device";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
@@ -27,8 +27,14 @@ export async function saveDeviceData(params: { deep: DeepClient, data?: (DeviceI
   } else {
     throw new Error(`Either deviceLink or deviceLinkId must be passed`)
   }
-  await deep.serial({
-    operations: [
+  const {data: [valueLinkOfDevice]} = await deep.select({
+    link_id: {
+      _eq: deviceLink.id
+    }
+  }, {table: 'objects'});
+  let serialOperations: Array<SerialOperation> = [];
+  if(valueLinkOfDevice) {
+    serialOperations.push(
       createSerialOperation({
         table: 'objects',
         type: 'update',
@@ -39,6 +45,21 @@ export async function saveDeviceData(params: { deep: DeepClient, data?: (DeviceI
           value: {...(deviceLink.value?.value ?? {}), ...params.data ?? await getAllDeviceData()}
         }
       })
-    ]
-  })
+    )
+  } else {
+    serialOperations.push(
+      createSerialOperation({
+        table: 'objects',
+        type: 'insert',
+        objects: {
+          link_id: deviceLink.id,
+          value: {...(deviceLink.value?.value ?? {}), ...params.data ?? await getAllDeviceData()}
+        }
+      })
+    )
+  }
+  await deep.serial({
+      operations: serialOperations
+    })
+  
 }
