@@ -85,9 +85,6 @@ function Content() {
   );
 
   const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({ packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({ error }) => { console.error(error.message) } });
-  useEffect(() => {
-    console.log({ isMemoPackageInstalled })
-  }, [isMemoPackageInstalled])
 
   useEffect(() => {
     new Promise(async () => {

@@ -53,7 +53,6 @@ export async function useScreenReaderSubscription({deep, deviceLinkId}: {deep: D
           deep,
           linkId: notifyLink.from_id,
         });
-        console.log(`await ScreenReader.speak(${JSON.stringify(options)});`);
         await ScreenReader.speak(options);
         await deep.insert({
           type_id: await deep.id(CAPACITOR_SCREEN_READER_PACKAGE_NAME, "Notified"),

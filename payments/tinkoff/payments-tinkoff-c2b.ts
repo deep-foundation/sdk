@@ -310,8 +310,6 @@ async function callTests({deep}: {deep: DeepClient}){
         }
       ]
     })
-    console.log(`password: ${process.env.PAYMENTS_C2B_TERMINAL_PASSWORD}`) 
-    console.log('terminalpassword')
     console.dir((await deep.select(terminalPasswordLinkId)))
 
     const paymentLinkId = reservedIds.pop();
@@ -547,8 +545,7 @@ async function installPackage({deep}) {
     },
   });
 
-  console.log({ packageLinkId });
-
+  
   const {
     data: [{ id: storageBusinessTypeLinkId }],
   } = await deep.insert({
@@ -561,8 +558,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ storageBusinessTypeLinkId });
-
+  
   const {
     data: [{ id: terminalPasswordTypeLinkId }],
   } = await deep.insert({
@@ -613,8 +609,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ storageClientTypeLinkId });
-
+  
   await deep.insert({
     type_id: typeTypeLinkId,
     in: {
@@ -653,8 +648,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ paymentTypeLinkId });
-
+  
   const {
     data: [{ id: incomeTypeLinkId }],
   } = await deep.insert({
@@ -669,8 +663,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ incomeTypeLinkId });
-
+  
   const {
     data: [{ id: terminalKeyTypeLinkId }],
   } = await deep.insert({
@@ -698,8 +691,7 @@ async function installPackage({deep}) {
       },
     }
   });
-  console.log({ terminalKeyTypeLinkId });
-
+  
   const {
     data: [{ id: usesTerminalKeyTypeLinkId }],
   } = await deep.insert({
@@ -714,8 +706,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ usesTerminalKeyTypeLinkId });
-
+  
   const {
     data: [{ id: paymentObjectTypeLinkId }],
   } = await deep.insert({
@@ -731,8 +722,7 @@ async function installPackage({deep}) {
     },
   });
 
-  console.log({ objectTypeLinkId: paymentObjectTypeLinkId });
-
+  
   const {
     data: [{ id: sumTypeLinkId }],
   } = await deep.insert({
@@ -763,8 +753,7 @@ async function installPackage({deep}) {
     }
   });
 
-  console.log({ sumTypeLinkId });
-
+  
   const {
     data: [{ id: payTypeLinkId }],
   } = await deep.insert({
@@ -780,8 +769,7 @@ async function installPackage({deep}) {
     },
   });
 
-  console.log({ payTypeLinkId });
-
+  
   const {
     data: [{ id: urlTypeLinkId }],
   } = await deep.insert({
@@ -870,8 +858,7 @@ async function installPackage({deep}) {
     }
   });
 
-  console.log({ urlTypeLinkId });
-
+  
   const {
     data: [{ id: paymentTreeId }],
   } = await deep.insert({
@@ -974,8 +961,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ tinkoffApiUrlTypeLinkId });
-
+  
   const {
     data: [{ id: emailTypeLinkId }],
   } = await deep.insert({
@@ -988,8 +974,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ emailTypeLinkId });
-
+  
   const {
     data: [{ id: phoneNumberTypeLinkId }],
   } = await deep.insert({
@@ -1002,9 +987,7 @@ async function installPackage({deep}) {
       },
     },
   });
-  console.log({ phoneNumberTypeLinkId });
-
-console.log(`dirname: ${__dirname}`)
+  
   await deep.insert({
     type_id: await deep.id("@deep-foundation/core", "SyncTextFile"),
     string: {

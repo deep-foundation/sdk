@@ -77,7 +77,6 @@ export async function saveAllContacts({ deep, deviceLinkId }: { deep: DeepClient
   const typeImageBase64StringLinkId = await deep.id("@l4legenda/capacitor-contact-image-payload", "base64String");
 
   const contactsArray = contacts.map(contact => {
-    console.log(JSON.stringify(contact));
 
     const out_data = [];
 
@@ -504,7 +503,6 @@ export async function saveAllContacts({ deep, deviceLinkId }: { deep: DeepClient
 
     return contactObject
   })
-  console.log(JSON.stringify(contactsArray[0]));
 
   await deep.insert(contactsArray[0])
 }

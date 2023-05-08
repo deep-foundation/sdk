@@ -21,7 +21,6 @@ export async function insertActionSheet({
   if (!containerLinkId) {
     throw new Error(`containerLinkId is required`);
   }
-  console.log({ actionSheetData });
 
   const syncTextFileTypeLinkId = await deep.id(
     '@deep-foundation/core',

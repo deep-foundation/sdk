@@ -54,8 +54,6 @@ export async function registerDevice({ deep, deviceLinkId, platform, firebaseMes
       throw new Error(`##${webPushCertificateLink.id} must have a value`);
     }
     const webPushCertificate = webPushCertificateLink.value.value;
-    console.log({ webPushCertificateLink })
-    console.log({ webPushCertificate })
     const deviceRegistrationToken = await getToken(firebaseMessaging, {
       serviceWorkerRegistration,
       vapidKey: webPushCertificate,

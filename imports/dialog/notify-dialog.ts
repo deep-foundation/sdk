@@ -25,9 +25,7 @@ export async function notifyDialog({ deep, deviceLinkId, notifyLink }: { deep: D
     const alertOptions = await getAlertOptionsFromDeep({ deep, alertLinkId: notifyLink.from_id });
     await Dialog.alert(alertOptions);
   } else if (dialogLink.type_id === promptTypeLinkId) {
-    console.log("Before prompt options") 
     const promptOptions = await getPromptOptionsFromDeep({ deep, promptLinkId: notifyLink.from_id });
-    console.log({promptOptions})
     const promptResult = await Dialog.prompt(promptOptions);
     await insertPromptResultToDeep({
       deep,

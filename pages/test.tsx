@@ -9,7 +9,6 @@ import { useLocalStore } from "@deep-foundation/store/local";
 function Content() {
   const [state, setState] = useLocalStore('state', undefined)
   useEffect(() => {
-    console.log({state})
     self['state'] = state;
     self['setState'] = setState
   }, [state])
@@ -37,7 +36,6 @@ function Content() {
 //   }, [deep])
 
 //   useEffect(() => {
-//     console.log(`deep.linkId: ${deep.linkId}`)
 //   }, [deep])
 
 //   // const [isPackageInstalled, setIsPackageInstalled] = useState<boolean | undefined>(undefined);
@@ -50,7 +48,6 @@ function Content() {
 //   //   },
 //   // });
 //   // useEffect(() => {
-//   //   console.log({data, loading, error})
 //   //   if(loading || error) {
 //   //     return;
 //   //   }
@@ -61,7 +58,6 @@ function Content() {
 //   const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({error}) => {console.error(error.message)}});
 
 // useEffect(() => {
-//   console.log({isMemoPackageInstalled})
 // }, [isMemoPackageInstalled])
 
   return null;

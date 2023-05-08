@@ -62,7 +62,6 @@ function InsertActionSheetModal({deep, deviceLinkId} : {deep: DeepClient, device
                 schema={schema}
                 validator={validator}
                 onSubmit={async (arg) => {
-                  console.log('changed', arg);
                   await insertActionSheet({
                     deep,
                     containerLinkId: deviceLinkId,

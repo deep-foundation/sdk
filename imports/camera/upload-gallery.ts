@@ -32,8 +32,6 @@ export default async function uploadGallery(deep, deviceLinkId, galleryImages) {
     base64: await readAsBase64(image.photos[0].webPath),
   })));
 
-  console.log({ photos });
-
   const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
     type_id: photoTypeLinkId,
     in: {

@@ -289,7 +289,6 @@ function Page() {
 
   //       <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Push Notification Link Id To Notify</label>
   //     <NumberInput value={pushNotificationToNotifyLinkId} onChange={(value) => {
-  //       console.log({value})
   //       setPushNotificationToNotifyLinkId(value !== '' ? parseInt(value) : undefined)
   //     }}>
   //       <NumberInputField id={"pushNotificationToNotifyLinkIdNumberInput"} placeholder='Device Link Id To Notify'/>
@@ -363,7 +362,6 @@ function InsertPushNotificationModal({
               schema={schema}
               validator={validator}
               onSubmit={async (arg) => {
-                console.log('changed', arg);
                 await insertPushNotification({
                   deep,
                   containerLinkId: deviceLinkId,
@@ -411,7 +409,6 @@ function ServiceAccountInsertionModal({
           const pickFilesResult = await FilePicker.pickFiles({
             types: ['application/json'],
           });
-          console.log({ pickFilesResult });
           await insertServiceAccount({
             deep,
             serviceAccount: JSON.parse(

@@ -111,7 +111,6 @@ function InsertAlertModal({
               schema={alertSchema}
               validator={validator}
               onSubmit={async (arg) => {
-                console.log('changed', arg);
                 await insertAlert({
                   deep,
                   containerLinkId: deviceLinkId,
@@ -152,7 +151,6 @@ function InsertPromptModal({
               schema={alertSchema}
               validator={validator}
               onSubmit={async (arg) => {
-                console.log('changed', arg);
                 await insertPrompt({
                   deep,
                   containerLinkId: deviceLinkId,
@@ -193,7 +191,6 @@ function InsertConfirmModal({
               schema={alertSchema}
               validator={validator}
               onSubmit={async (arg) => {
-                console.log('changed', arg);
                 await insertConfirm({
                   deep,
                   containerLinkId: deviceLinkId,

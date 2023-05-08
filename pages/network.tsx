@@ -20,7 +20,6 @@ function Page() {
 
   async function subscribeToNetworkStatus() {
     CapacitorNetwork.addListener('networkStatusChange', async (connection) => {
-      console.log({ connection });
       setConnections([...connections, connection]);
     })
   }

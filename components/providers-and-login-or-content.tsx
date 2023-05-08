@@ -22,7 +22,6 @@ export function ProvidersAndLoginOrContent({ children }: { children: JSX.Element
           >
             <DeepProvider>
               <LoginOrContent gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
-                console.log({ newGqlPath })
                 setGqlPath(newGqlPath)
               }} >
                 {children}

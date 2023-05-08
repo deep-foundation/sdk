@@ -40,7 +40,6 @@ function Page() {
         await delay(duration);
         const record = await stopAudioRec(deep);
         const endTime = new Date().toLocaleDateString();
-        console.log({ record });
         setSounds([...sounds, { record, startTime, endTime }]);
       }
     }
@@ -54,7 +53,6 @@ function Page() {
     await delay(duration);
     const record = await stopAudioRec(deep);
     const endTime = new Date().toLocaleString();
-    console.log({ record });
     setSounds([...sounds, { record, startTime, endTime }]);
   }
 
@@ -162,7 +160,7 @@ function Page() {
     </Button>
    
     <Button onClick={() => {
-      setRecording(true); console.log(recording)
+      setRecording(true); 
     }}>
       START RECORDING CYCLE
     </Button>

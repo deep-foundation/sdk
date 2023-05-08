@@ -15,6 +15,5 @@ export async function getOptionStyleTypeLinkIds({
       )
     )
   );
-  console.log(optionStyleTypeLinkIds)
   return optionStyleTypeLinkIds;
 }

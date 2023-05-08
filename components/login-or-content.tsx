@@ -15,12 +15,9 @@ export function LoginOrContent({ gqlPath, setGqlPath, children }: { gqlPath: str
     }
   }, [deep]);
 
-  console.log({ isAuthorized, gqlPath })
-
   return isAuthorized && gqlPath ? children : (
     <Login
       onSubmit={(arg) => {
-        console.log({ arg })
         setGqlPath(arg.gqlPath);
         deep.login({
           token: arg.token

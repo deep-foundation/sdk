@@ -191,8 +191,7 @@ async (
       }
     };
     const { data: [terminalPasswordLink] } = await deep.select(terminalPasswordSelectData);
-    console.log({ terminalPasswordLink })
-    if (!terminalPasswordLink) {
+        if (!terminalPasswordLink) {
       throw new Error(`Select with data ${JSON.stringify(terminalPasswordSelectData)} returned no results`);
     }
     if (!terminalPasswordLink.value?.value) {
@@ -270,16 +269,13 @@ async (
       Password: terminalPassword,
       ...restData,
     };
-    console.log({ dataWithPassword });
-
+    
     const dataString = Object.keys(dataWithPassword)
       .sort((a, b) => a.localeCompare(b))
       .map((key) => dataWithPassword[key])
       .reduce((acc, item) => `${acc}${item}`, '');
-    console.log({ dataString });
-    const hash = crypto.createHash('sha256').update(dataString).digest('hex');
-    console.log({ hash });
-    return hash;
+        const hash = crypto.createHash('sha256').update(dataString).digest('hex');
+        return hash;
   };
 
   async function confirm(options) {
