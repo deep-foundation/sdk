@@ -429,7 +429,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const { link: urlLink } = await tryGetLink({
       delayMs: 1000, attemptsCount: 10, selectData: {
         type_id: urlTypeLinkId,
-        from_id: payLinkId,
+        to_id: payLinkId,
       }
     });
 
