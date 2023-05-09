@@ -310,7 +310,6 @@ async function callTests({deep}: {deep: DeepClient}){
         }
       ]
     })
-    console.dir((await deep.select(terminalPasswordLinkId)))
 
     const paymentLinkId = reservedIds.pop();
     const sumLinkId = reservedIds.pop();
