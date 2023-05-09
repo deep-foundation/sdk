@@ -40,8 +40,8 @@ async function main() {
 
 async function callTests({deep}: {deep: DeepClient}){
 
-    const route = 'payments/tinkoff/c2b';
-    const port = 5237;
+    const route = process.env.PAYMENTS_C2B_NOTIFICATION_ROUTE;
+    const port = parseInt(process.env.PAYMENTS_C2B_NOTIFICATION_PORT);
     const ownerLinkId = deep.linkId;
     
     const reservedIds = await deep.reserve(26);
