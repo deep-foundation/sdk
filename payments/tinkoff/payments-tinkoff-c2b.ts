@@ -97,7 +97,7 @@ async function callTests({deep}: {deep: DeepClient}){
           objects: {
             type_id: await deep.id("@deep-foundation/core", "HandleRoute"),
             from_id: routeLinkId,
-            to_id: handlerLinkId,
+            to_id: notificationHandlerLinkId,
             in: {
               data: {
                 type_id: containTypeLinkId,
