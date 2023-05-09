@@ -268,6 +268,21 @@ async function callTests({deep}: {deep: DeepClient}){
           type: 'insert',
           table: 'links',
           objects: {
+            type_id: usesTerminalKeyTypeLinkId,
+            from_id: storageBusinessLinkId,
+            to_id: terminalKeyLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: storageBusinessLinkId,
+              }
+            }
+          },
+        },
+        {
+          type: 'insert',
+          table: 'links',
+          objects: {
             id: notificationUrlLinkId,
             type_id: notificationUrlTypeLinkId,
             in: {
