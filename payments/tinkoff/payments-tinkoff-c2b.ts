@@ -51,7 +51,7 @@ async function callTests({deep}: {deep: DeepClient}){
     const routerLinkId = reservedIds.pop();
     const portLinkId = reservedIds.pop();
 
-    const notificationHandlerLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "TinkoffNotificationHandler")
+    const notificationHandlerLinkId = await deep.id("@deep-foundation/payments-tinkoff-c2b", "NotificationHandler")
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
     const routeTypeLinkId = await deep.id("@deep-foundation/core", "Route");
     const routerTypeLinkId = await deep.id("@deep-foundation/core", "Router");
