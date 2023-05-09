@@ -296,6 +296,21 @@ async function callTests({deep}: {deep: DeepClient}){
           type: 'insert',
           table: 'links',
           objects: {
+            type_id: usesNotificationUrlTypeLinkId,
+            from_id: storageBusinessLinkId,
+            to_id: notificationUrlLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: storageBusinessLinkId,
+              }
+            }
+          },
+        },
+        {
+          type: 'insert',
+          table: 'links',
+          objects: {
             id: productLinkId,
             type_id: syncTextFileTypeLinkId,
             in: {
