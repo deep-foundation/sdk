@@ -218,11 +218,7 @@ async function callTests({deep}: {deep: DeepClient}){
               data: [
                 {
                   type_id: containTypeLinkId,
-                  from_id: deep.linkId,
-                },
-                {
-                  type_id: usesTerminalPasswordTypeLinkId,
-                  from_id: storageBusinessLinkId
+                  from_id: storageBusinessLinkId,
                 },
               ],
             },
