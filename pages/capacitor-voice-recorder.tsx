@@ -125,7 +125,7 @@ function Page() {
         </Heading>
       </CardHeader>
       <CardBody>
-        <Text>{`Device is ${!canDeviceRecord && 'not'} able to record.`}</Text>
+        <Text>{`Device is ${!canDeviceRecord ? 'not' : ""} able to record.`}</Text>
       </CardBody>
     </Card>
     <Card>
@@ -135,7 +135,7 @@ function Page() {
         </Heading>
       </CardHeader>
       <CardBody>
-        <Text>{`Permissions are ${!arePermissionsGranted && 'not'} granted.`}</Text>
+        <Text>{`Permissions are ${!arePermissionsGranted ? 'not' : ""} granted.`}</Text>
         <Button onClick={async () => {
       const { value: arePermissionsGranted } = await VoiceRecorder.requestAudioRecordingPermission();
       setArePermissionsGranted(arePermissionsGranted);
