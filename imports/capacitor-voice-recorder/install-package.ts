@@ -167,13 +167,13 @@ export default async function installPackage(deviceLinkId?) {
     });
 
     const { data: [{ id: soundDependencyTypeLinkId }] } = await deep.insert({
-      type_id: typeTypeLinkId,
-      from_id: await deep.id("@deep-foundation/sound", "Sound"),
-      to_id: await deep.id("@deep-foundation/sound", "Sound"),
+      type_id: 1,
+      from_id: 2062,
+      to_id: 2062,
       in: {
         data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
+          type_id: 3,
+          from_id: 2020,
           string: { data: { value: 'SoundDependency' } },
         },
       }

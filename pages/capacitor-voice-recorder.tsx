@@ -2,23 +2,21 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/capacitor-voice-recorder/install-package';
-import checkDeviceSupport from '../imports/capacitor-voice-recorder/check-device-support';
-import checkAudioRecPermission from '../imports/capacitor-voice-recorder/check-permission';
-import getAudioRecPermission from '../imports/capacitor-voice-recorder/get-permission';
-import getRecordingStatus from '../imports/capacitor-voice-recorder/get-recording-status';
+import { Button, Card, CardBody, CardHeader, ChakraProvider, Heading, Stack, Text } from '@chakra-ui/react';
 import startAudioRec from '../imports/capacitor-voice-recorder/strart-recording';
 import stopAudioRec from '../imports/capacitor-voice-recorder/stop-recording';
 import uploadRecords from '../imports/capacitor-voice-recorder/upload-records';
-import installPackage from '../imports/capacitor-voice-recorder/install-package';
+import { VoiceRecorder } from 'capacitor-voice-recorder';
+import { useRecordingStatus } from '../imports/capacitor-voice-recorder/use-recording-status';
+import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from '../imports/capacitor-voice-recorder/package-name';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
 function Page() {
   const deep = useDeep();
   const [recording, setRecording] = useState(false);
-  const [sounds, setSounds] = useLocalStore("Sounds", []);
+  const [sounds, setSounds] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Sounds], []);
   const [records, setRecords] = useState([]);
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -42,7 +40,6 @@ function Page() {
         await delay(duration);
         const record = await stopAudioRec(deep);
         const endTime = new Date().toLocaleDateString();
-        console.log({ record });
         setSounds([...sounds, { record, startTime, endTime }]);
       }
     }
@@ -56,14 +53,13 @@ function Page() {
     await delay(duration);
     const record = await stopAudioRec(deep);
     const endTime = new Date().toLocaleString();
-    console.log({ record });
     setSounds([...sounds, { record, startTime, endTime }]);
   }
 
   const fetchRecords = async () => {
-    const recordTypelinkId = await deep.id(PACKAGE_NAME, "Record");
-    const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
-    const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
+    const recordTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
+    const soundTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Sound");
+    const mimetypeTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "MIME/type");
     const { data: recordLinks } = await deep.select({
       type_id: recordTypelinkId
     });
@@ -96,7 +92,7 @@ function Page() {
 
   const createContainer = async (deep) => {
     const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const audioRecordsTypeLinkId = await deep.id(PACKAGE_NAME, "AudioRecords");
+    const audioRecordsTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "AudioRecords");
     await deep.insert({
       type_id: audioRecordsTypeLinkId,
       in: {
@@ -108,29 +104,63 @@ function Page() {
       }
     })
   }
+  const [arePermissionsGranted, setArePermissionsGranted] = useState<boolean|undefined>(undefined)
+  const [canDeviceRecord, setCanDeviceRecord] = useState<boolean|undefined>(undefined)
+
+
+  useEffect(() => {
+    new Promise(async () => {
+      const { value: canDeviceRecord } = await VoiceRecorder.canDeviceVoiceRecord();
+      setCanDeviceRecord(canDeviceRecord);
+    })
+  }, [])
+
+  const audioRecordingStatus = useRecordingStatus({})
 
   return <Stack>
-    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
-    <Button onClick={async () => await installPackage(deviceLinkId)}>
-      INSTALL PACKAGE
+    <Card>
+      <CardHeader>
+        <Heading>
+          Ability to record
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{`Device is ${!canDeviceRecord && 'not'} able to record.`}</Text>
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>
+          Permissions
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{`Permissions are ${!arePermissionsGranted && 'not'} granted.`}</Text>
+        <Button onClick={async () => {
+      const { value: arePermissionsGranted } = await VoiceRecorder.requestAudioRecordingPermission();
+      setArePermissionsGranted(arePermissionsGranted);
+    }}>
+      Request permissions
     </Button>
+      </CardBody>
+    </Card>
+    <Card>
+      <CardHeader>
+        <Heading>
+          Audio Recording Status
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{audioRecordingStatus}</Text>
+      </CardBody>
+    </Card>
+    
     <Button onClick={async () => await createContainer(deep)}>
       CREATE NEW CONTAINER
     </Button>
-    <Button onClick={async () => await checkDeviceSupport(deep, deviceLinkId)}>
-      CHECK DEVICE SUPPORT
-    </Button>
-    <Button onClick={async () => await checkAudioRecPermission(deep, deviceLinkId)}>
-      CHECK RECORDING PERMISSION
-    </Button>
-    <Button onClick={async () => await getAudioRecPermission(deep, deviceLinkId)}>
-      GET RECORDING PERMISSION
-    </Button>
-    <Button onClick={async () => await getRecordingStatus(deep)}>
-      GET RECORDING STATUS
-    </Button>
+   
     <Button onClick={() => {
-      setRecording(true); console.log(recording)
+      setRecording(true); 
     }}>
       START RECORDING CYCLE
     </Button>
@@ -149,7 +179,7 @@ function Page() {
   </Stack>
 }
 
-export default function Index() {
+export default function AudioRecordPage() {
   return (
     <ChakraProvider>
       <Provider>
