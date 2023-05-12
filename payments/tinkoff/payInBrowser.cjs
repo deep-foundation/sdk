@@ -17,12 +17,6 @@ exports.payInBrowser = async ({ page, browser, url }) => {
         );
       });
 
-      // const saveCardTextDiv = [...document.querySelectorAll("div.t-content")].find(element => element.innerText == "Сохранить карту ");
-      // if(saveCardTextDiv) {
-      //   const saveCardInput = saveCardTextDiv.parentElement.querySelector("input");
-      //   if(saveCardInput.checked) {saveCardInput.click()}
-      // }
-
       if (cvc1) {
         await page.waitForSelector(
           'input[automation-id="tui-input-card-grouped__card"]'
@@ -73,12 +67,6 @@ exports.payInBrowser = async ({ page, browser, url }) => {
         ); // CVC code
         await sleep(300);
         await page.click('button[automation-id="card-form__submit"]'); // submit button
-        // await sleep(300);
-        // await page.waitForSelector('input[name="password"]');
-        // const code = prompt('enter code ');
-        // console.log('code', code);
-        // await page.type('input[name="password"]', code);
-        // await sleep(1000);
       }
       // TODO: пока старая форма вызывалась только на тестовой карте, где ввод смс кода не нужен
       await sleep(1000);
