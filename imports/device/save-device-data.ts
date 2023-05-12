@@ -18,11 +18,17 @@ export async function saveDeviceData(params: { deep: DeepClient, data?: (DeviceI
   const {deep} = params;
   let deviceLink: Link<number>;
   if('deviceLinkId' in params) {
+    if(!params.deviceLinkId) {
+      throw new Error(`deviceLinkId is undefined`)
+    }
     const {data} = await deep.select({
       id: params.deviceLinkId
     })
     deviceLink = data[0];
   } else if('deviceLink' in params) {
+    if(!params.deviceLink) {
+      throw new Error(`deviceLink is undefined`)
+    }
     deviceLink = params.deviceLink
   } else {
     throw new Error(`Either deviceLink or deviceLinkId must be passed`)
