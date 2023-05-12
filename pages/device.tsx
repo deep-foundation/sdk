@@ -12,11 +12,12 @@ import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 function Content() {
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore(
-    'deviceLinkId',
+    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
 
