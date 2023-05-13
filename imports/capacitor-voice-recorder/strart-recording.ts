@@ -1,7 +1,7 @@
-import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { VoiceRecorder } from "capacitor-voice-recorder"
+import { VoiceRecorder } from "capacitor-voice-recorder";
 
-export default async function startAudioRec(deep: DeepClient) {
+export default async function startRecording() {
     const { value: isrecording } = await VoiceRecorder.startRecording();
-    return isrecording;
+    const startTime = new Date().toLocaleDateString();
+    return startTime;
 }

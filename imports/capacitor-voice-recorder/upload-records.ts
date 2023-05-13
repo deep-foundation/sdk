@@ -1,13 +1,12 @@
-import { PACKAGE_NAME } from "./install-package";
+import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from './package-name';
 
-export default async function uploadRecords(deep, deviceLinkId, sounds) {
+export default async function uploadRecords(deep, containerLinkId, sounds) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
   const soundTypeLinkId = await deep.id("@deep-foundation/sound", "Sound");
-  const recordTypeLinkId = await deep.id(PACKAGE_NAME, "Record");
-  const durationTypeLinkId = await deep.id(PACKAGE_NAME, "Duration");
-  const startTimeTypeLinkId = await deep.id(PACKAGE_NAME, "StartTime");
-  const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, "EndTime");
+  const recordTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
+  const durationTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Duration");
+  const startTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "StartTime");
+  const endTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "EndTime");
   const mimetypeTypeLinkId = await deep.id("@deep-foundation/sound", "MIME/type");
   const formatTypeLinkId = await deep.id("@deep-foundation/sound", "Format");
 
@@ -16,7 +15,7 @@ export default async function uploadRecords(deep, deviceLinkId, sounds) {
     in: {
       data: [{
         type_id: containTypeLinkId,
-        from_id: audioRecordsLinkId,
+        from_id: containerLinkId,
       }]
     },
     out: {
