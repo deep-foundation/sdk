@@ -2,8 +2,8 @@ import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from './package-name';
 
 export default async function loadRecords(deep) {
   const recordTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
-  const soundTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Sound");
-  const mimetypeTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "MIME/type");
+  const mimetypeTypeLinkId = await deep.id("@deep-foundation/sound", "MIME/type");
+  const soundTypeLinkId = await deep.id("@deep-foundation/sound", "Sound");
   const { data: recordLinks } = await deep.select({
     type_id: recordTypelinkId
   });
@@ -20,15 +20,15 @@ export default async function loadRecords(deep) {
           type_id: {
             _in:
               [
-                soundTypelinkId,
-                mimetypeTypelinkId
+                soundTypeLinkId,
+                mimetypeTypeLinkId
               ]
           }
         }
       },
     })
-    const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
-    const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
+    const soundLink = data.filter((link) => link.type_id === soundTypeLinkId)
+    const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypeLinkId)
     records = [...records, { sound: soundLink[0].value.value, mimetype: mimetypeLink[0].value.value }]
   }
   return records;
