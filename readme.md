@@ -34,18 +34,36 @@ npm run ios-run
 ```
 
 
-# deep sdk
+## Documentation
 
-- [x] deep example
-- [x] message/reply model https://runkit.com/ivansglazunov/deep-create-messaging-package
-- [ ] linux deb app solution
-- [ ] window exe app solution
-- [ ] mac app build solution
-- [ ] ios app build solution
-- [ ] android app build solution
-- [ ] google chrome extension solution
-- [ ] firefox extension solution
-- [ ] docker solution
-- [ ] heroku solution
-- [ ] gh-pages client solution
-- [ ] standalone os build solution
+### startRecording()
+
+This function is responsible for starting the voice recording process. When called, it initiates the VoiceRecorder.startRecording() function and stores the start time of the recording. It returns the startTime variable which is of format toLocaleDateString().
+
+### stopRecording(deep, containerLinkId, startTime)
+
+This function stops the ongoing voice recording and uploads the recorded data.
+
+Parameters:
+
+- deep: A DeepClient instance that is responsible for making API calls.
+- containerLinkId: An identifier representing the AudioRecords type link used as container for records.
+- startTime: The start time of the recording, returned by the startRecording() function.
+
+### useRecordingCycle({deep, recording, duration})
+
+This function is a custom React Hook that manages the recording cycle.
+
+Parameters:
+
+- deep: A DeepClient instance that is responsible for making API calls.
+- recording: A boolean value indicating the state of recording. Cycle fires while true.
+- duration: The duration for the recording cycle.
+
+### createContainer(deep)
+
+This function creates AudioRecords type link used as container for records.
+
+### loadRecords(deep)
+
+This function returns array of records [{ sound: base64string, mimetype: string}].
