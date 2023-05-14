@@ -43,9 +43,6 @@ import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
 import { DEEP_MEMO_PACKAGE_NAME as DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
-import { saveDeviceData } from '../imports/device/save-device-data';
-import { Device } from '@capacitor/device';
-import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
@@ -54,15 +51,14 @@ import { WithActionSheetSubscription } from '../components/action-sheet/with-act
 import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
-import { insertDevice } from '../imports/device/insert-device';
 import { saveAllContacts } from '../imports/contact/contact';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
-import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited-and-save-data';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
-import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
+import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
+import { WithDeviceInsertionAndSavingInfo } from '@deep-foundation/capacitor-device-react-integration';
 import { NavBar } from '../components/navbar';
 import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { QueryStoreProvider } from '@deep-foundation/store/query';
@@ -116,25 +112,33 @@ function Content() {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {
-        isMemoPackageInstalled ? (
-          <>
-            <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-            {
-              Boolean(deviceLinkId) ? (
-                <>
-                  <WithSubscriptions deep={deep} />
-                  <Pages />
-                </>
-              ) : (
-                <Text>Initializing the device...</Text>
-              )
-            }
-          </>
-        ) : (
-          <MemoPackageIsNotInstalledAlert />
-        )
-      }
+      <WithPackagesInstalled
+      packageNames={[DEEP_MEMO_PACKAGE_NAME]}
+      renderIfError={(error) => {
+        return <ErrorAlert error={error} />
+      }}
+      renderIfNotInstalled={(packageNames) => {
+        return <PackageIsNotInstalledAlert packageName={packageNames} />
+      }}
+      renderIfLoading={() => {
+        return <Loading />
+      }}
+      shouldIgnoreResultWhenLoading={true}
+      > 
+        <>
+        <WithDeviceInsertionAndSavingInfo deep={deep} containerLinkId={deep.linkId} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
+              {
+                Boolean(deviceLinkId) ? (
+                  <>
+                    <WithSubscriptions deep={deep} />
+                    <Pages />
+                  </>
+                ) : (
+                  <Text>Initializing the device...</Text>
+                )
+              }
+        </>
+      </WithPackagesInstalled>
     </Stack>
   );
 }
@@ -145,16 +149,10 @@ export default function IndexPage() {
   </Page>
 }
 
-function MemoPackageIsNotInstalledAlert() {
-  // return <Text>Package is not installed</Text>
+function PackageIsNotInstalledAlert({packageName}) {
   return <Alert status="error">
     <AlertIcon />
-    <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
-    <AlertDescription>
-      {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
-      use this application. You can install it by using npm-packager-ui
-      located in deepcase or any other posibble way.
-    </AlertDescription>
+    <AlertTitle>Install {packageName.toString()} to proceed!</AlertTitle>
   </Alert>
 }
 
@@ -239,3 +237,14 @@ function Pages() {
   </Stack>
 }
 
+function ErrorAlert({error}: {error: Error}) {
+  return <Alert status="error">
+  <AlertIcon />
+  <AlertTitle>Something went wrong!</AlertTitle>
+  <AlertDescription>{error.message}</AlertDescription>
+</Alert>
+}
+
+function Loading() {
+  return <Text>Loading...</Text>;
+}
