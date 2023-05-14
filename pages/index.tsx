@@ -112,19 +112,7 @@ function Content() {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      <WithPackagesInstalled
-      packageNames={[DEEP_MEMO_PACKAGE_NAME]}
-      renderIfError={(error) => {
-        return <ErrorAlert error={error} />
-      }}
-      renderIfNotInstalled={(packageNames) => {
-        return <PackageIsNotInstalledAlert packageName={packageNames} />
-      }}
-      renderIfLoading={() => {
-        return <Loading />
-      }}
-      shouldIgnoreResultWhenLoading={true}
-      > 
+
         <>
         <WithDeviceInsertionAndSavingInfo deep={deep} containerLinkId={deep.linkId} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
               {
@@ -138,14 +126,28 @@ function Content() {
                 )
               }
         </>
-      </WithPackagesInstalled>
+      
     </Stack>
   );
 }
 
 export default function IndexPage() {
   return <Page>
-    <Content />
+      <WithPackagesInstalled
+        packageNames={[DEEP_MEMO_PACKAGE_NAME]}
+        renderIfError={(error) => {
+          return <ErrorAlert error={error} />
+        }}
+        renderIfNotInstalled={(packageNames) => {
+          return <PackageIsNotInstalledAlert packageName={packageNames} />
+        }}
+        renderIfLoading={() => {
+          return <Loading />
+        }}
+        shouldIgnoreResultWhenLoading={true}
+      > 
+        <Content />
+      </WithPackagesInstalled>
   </Page>
 }
 
