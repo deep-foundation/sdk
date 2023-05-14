@@ -1,25 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { VoiceRecorder } from "capacitor-voice-recorder";
 import uploadRecords from './upload-records';
 import { CapacitorStoreKeys } from '../capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
+import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { IRecord } from "./upload-records";
 
-export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
+export const delay = (time: number) => new Promise<void>(res => setTimeout(() => res(null), time));
 
-export default function useRecordingCycle({deep, recording, duration}) {
+interface IUseRecordingCycle {
+  deep: DeepClient;
+  recording: boolean;
+  duration: number;
+}
+
+export default function useRecordingCycle({deep, recording, duration}:IUseRecordingCycle):IRecord[] {
   const [containerLinkId, setContainerLinkId] = useLocalStore(
     'containerLinkId',
     undefined
   );
-  const [sounds, setSounds] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Sounds], []);
+  const [records, setRecords] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Sounds], []);
 
   useEffect(() => {
     const useRecords = async () => {
-      await uploadRecords(deep, containerLinkId, sounds);
-      setSounds([]);
+      await uploadRecords({deep, containerLinkId, records});
+      setRecords([]);
     }
-    if (sounds.length > 0) useRecords();
-  }, [sounds]);
+    if (records.length > 0) useRecords();
+  }, [records]);
 
   useEffect(() => {
     let loop = true;
@@ -28,14 +36,14 @@ export default function useRecordingCycle({deep, recording, duration}) {
         VoiceRecorder.startRecording();
         const startTime = new Date().toLocaleDateString();
         await delay(duration);
-        const { value: record } = await VoiceRecorder.stopRecording();
+        const { value: sound } = await VoiceRecorder.stopRecording();
         const endTime = new Date().toLocaleDateString();
-        setSounds([...sounds, { record, startTime, endTime }]);
+        setRecords([...records, { sound, startTime, endTime }]);
       }
     }
     if (recording) startRecordingCycle(duration);
     return function stopCycle() { loop = false };
   }, [recording]);
 
-  return sounds;
+  return records;
 }

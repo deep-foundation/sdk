@@ -1,6 +1,7 @@
+import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from './package-name';
 
-export default async function loadRecords(deep) {
+export default async function loadRecords(deep:DeepClient) {
   const recordTypelinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
   const mimetypeTypeLinkId = await deep.id("@deep-foundation/sound", "MIME/type");
   const soundTypeLinkId = await deep.id("@deep-foundation/sound", "Sound");

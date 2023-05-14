@@ -94,7 +94,7 @@ function Page() {
     <Button onClick={async () => startTime.current = await startRecording() }>
       START RECORDING
     </Button>
-    <Button onClick={async () => await stopRecording(deep, containerLinkId, startTime.current)}>
+    <Button onClick={async () => await stopRecording({deep, containerLinkId, startTime: startTime.current})}>
       STOP RECORDING
     </Button>
     <Button onClick={() => setRecording(true)}>
@@ -104,7 +104,7 @@ function Page() {
       STOP RECORDING CYCLE
     </Button>
     <Button onClick={async () => setRecords(await loadRecords(deep))}>
-      LOAD RECORDS
+      DOWNLOAD RECORDS
     </Button>
     {records?.map((r) => <audio key={Math.random().toString()} controls src={`data:${r.mimetype};base64,${r.sound}`} />)}
   </Stack>

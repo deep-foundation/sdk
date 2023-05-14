@@ -4,12 +4,10 @@ import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 import { getIsLinkExist } from "../get-is-link-exist";
 import { v4 as uuidv4 } from 'uuid';
+import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from "./package-name";
 dotenv.config();
 
-
-export const PACKAGE_NAME = "@deep-foundation/capacitor-voice-recorder"
-
-export default async function installPackage(deviceLinkId?) {
+export default async function installPackage(deviceLinkId?:number) {
 
   const apolloClient = generateApolloClient({
     path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
@@ -28,7 +26,7 @@ export default async function installPackage(deviceLinkId?) {
   });
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
-  if (!await getIsPackageInstalled({ deep, packageName: PACKAGE_NAME })) {
+  if (!await getIsPackageInstalled({ deep, packageName: CAPACITOR_VOICE_RECORDER_PACKAGE_NAME })) {
     const typeTypeLinkId = await deep.id('@deep-foundation/core', 'Type');
     const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
     const packageTypeLinkId = await deep.id('@deep-foundation/core', 'Package');
@@ -48,7 +46,7 @@ export default async function installPackage(deviceLinkId?) {
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
       type_id: packageTypeLinkId,
-      string: { data: { value: PACKAGE_NAME } },
+      string: { data: { value: CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } },
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -180,9 +178,9 @@ export default async function installPackage(deviceLinkId?) {
     });
     
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "AudioRecords" })) {
+      if (!await getIsLinkExist({ deep, packageName: CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, linkName: "AudioRecords" })) {
         const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
-          type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
+          type_id: await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "AudioRecords"),
           in: {
             data: {
               type_id: containTypeLinkId,
