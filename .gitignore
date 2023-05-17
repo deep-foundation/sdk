@@ -131,6 +131,7 @@ projects/app/electron/app
 # browser extention
 
 /extension/next
-/extension/*.html
+extension/*.html
 /*.crx
 /*.pem
+

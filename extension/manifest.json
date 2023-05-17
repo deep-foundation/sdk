@@ -1,12 +1,23 @@
 {
-  "name": "Deep",
-  "description": "deep-foundation/sdk",
+  "name": "DEEP",
+  "description": "deep-foundation extension package",
   "version": "0.0.1",
   "manifest_version": 3,
-  "permissions": ["tabs", "history", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "tabs",
+    "history",
+    "scripting",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "action": {
     "default_title": "deep.browser-extension",
     "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   }
 }

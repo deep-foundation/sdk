@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "jsx": "preserve",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es5",
     "lib": [
       "dom",
+      "dom.iterable",
+      "esnext",
+      "es2017",
       "es6",
-      "es7"
+      "es7",
+      "ES2019"
     ],
+    "downlevelIteration": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "isolatedModules": true,
@@ -23,18 +20,23 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
+  "types": ["chrome"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "electron"
-  ],
-  "typeRoots": [
-    "./node_modules/@types"
+    "node_modules"
   ]
 }

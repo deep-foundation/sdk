@@ -9,7 +9,6 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-    implementation project(':capacitor-community-contacts')
     implementation project(':capacitor-action-sheet')
     implementation project(':capacitor-camera')
     implementation project(':capacitor-clipboard')
@@ -21,6 +20,8 @@ dependencies {
     implementation project(':capacitor-network')
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-screen-reader')
+    implementation project(':capawesome-capacitor-file-picker')
+    implementation project(':capacitor-voice-recorder')
 
 }
 

@@ -1,0 +1,1 @@
+export const DEEP_MEMO_PACKAGE_NAME = `@deep-foundation/deep-memo`;
