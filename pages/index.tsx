@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import {
-
+  LocalStoreProvider,
+  useLocalStore,
+} from '@deep-foundation/store/local';
+import {
   Text,
   Link,
   Stack,
@@ -21,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
-
+  DeepClient,
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
@@ -58,7 +60,6 @@ import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { WithDeviceInsertionAndSavingInfo } from '@deep-foundation/capacitor-device-react-integration';
 import { NavBar } from '../components/navbar';
 import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { QueryStoreProvider } from '@deep-foundation/store/query';
@@ -66,21 +67,18 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
-import { Page } from '../components/page';
+import { Page, PageParam } from '../components/page';
+import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device-react-integration';
 
-function Content() {
+interface ContentParam {
+  deep: DeepClient;
+  deviceLinkId: number;
+}
+
+function Content({ deep, deviceLinkId }: ContentParam) {
   useEffect(() => {
     defineCustomElements(window);
   }, []);
-
-  const deep = useDeep();
-
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
-
-  const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({ packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({ error }) => { console.error(error.message) } });
 
   useEffect(() => {
     new Promise(async () => {
@@ -88,8 +86,8 @@ function Content() {
         return;
       }
       await deep.guest();
-    })
-  }, [deep])
+    });
+  }, [deep]);
 
   const generalInfoCard = (
     <Card>
@@ -112,141 +110,86 @@ function Content() {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-
-        <>
-        <WithDeviceInsertionAndSavingInfo deep={deep} containerLinkId={deep.linkId} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-              {
-                Boolean(deviceLinkId) ? (
-                  <>
-                    <WithSubscriptions deep={deep} />
-                    <Pages />
-                  </>
-                ) : (
-                  <Text>Initializing the device...</Text>
-                )
-              }
-        </>
-      
+      <>
+        <WithSubscriptions deep={deep} />
+        <Pages />
+      </>
     </Stack>
   );
 }
 
 export default function IndexPage() {
-  return <Page>
-      <WithPackagesInstalled
-        packageNames={[DEEP_MEMO_PACKAGE_NAME]}
-        renderIfError={(error) => {
-          return <ErrorAlert error={error} />
-        }}
-        renderIfNotInstalled={(packageNames) => {
-          return <PackageIsNotInstalledAlert packageName={packageNames} />
-        }}
-        renderIfLoading={() => {
-          return <Loading />
-        }}
-        shouldIgnoreResultWhenLoading={true}
-      > 
-        <Content />
-      </WithPackagesInstalled>
-  </Page>
-}
-
-function PackageIsNotInstalledAlert({packageName}) {
-  return <Alert status="error">
-    <AlertIcon />
-    <AlertTitle>Install {packageName.toString()} to proceed!</AlertTitle>
-  </Alert>
+  return (
+    <Page
+      renderChildren={({ deep, deviceLinkId }) => (
+        <Content deep={deep} deviceLinkId={deviceLinkId} />
+      )}
+    />
+  );
 }
 
 function Pages() {
-  return <Stack>
+  return (
+    <Stack>
+      <Link as={NextLink} href="/settings">
+        Settings
+      </Link>
 
-    <Link as={NextLink} href="/settings">
-      Settings
-    </Link>
+      <Link as={NextLink} href="/device">
+        Device
+      </Link>
 
+      <Link as={NextLink} href="/call-history">
+        Call History
+      </Link>
 
-    <Link as={NextLink} href="/device">
-      Device
-    </Link>
+      <Link as={NextLink} href="/contacts">
+        Contacts
+      </Link>
 
+      <Link as={NextLink} href="/telegram">
+        Telegarm
+      </Link>
 
-    <Link as={NextLink} href="/call-history">
-      Call History
-    </Link>
+      <Link as={NextLink} href="/action-sheet">
+        Action Sheet
+      </Link>
 
+      <Link as={NextLink} href="/dialog">
+        Dialog
+      </Link>
 
-    <Link as={NextLink} href="/contacts">
-      Contacts
-    </Link>
+      <Link as={NextLink} href="/screen-reader">
+        Screen Reader
+      </Link>
 
+      <Link as={NextLink} href="/openai-completion">
+        OpenAI Completion
+      </Link>
 
-    <Link as={NextLink} href="/telegram">
-      Telegarm
-    </Link>
+      <Link as={NextLink} replace href="/browser-extension">
+        Browser Extension
+      </Link>
 
+      <Link as={NextLink} href="/network">
+        Network
+      </Link>
 
-    <Link as={NextLink} href="/action-sheet">
-      Action Sheet
-    </Link>
+      <Link as={NextLink} href="/camera">
+        Camera
+      </Link>
 
+      <Link as={NextLink} href="/audiorecord">
+        Audiorecord
+      </Link>
 
-    <Link as={NextLink} href="/dialog">
-      Dialog
-    </Link>
+      <Link as={NextLink} href="/haptics">
+        Haptics
+      </Link>
 
-
-    <Link as={NextLink} href="/screen-reader">
-      Screen Reader
-    </Link>
-
-
-    <Link as={NextLink} href="/openai-completion">
-      OpenAI Completion
-    </Link>
-
-
-    <Link as={NextLink} replace href="/browser-extension">
-      Browser Extension
-    </Link>
-
-
-    <Link as={NextLink} href="/network">
-      Network
-    </Link>
-
-
-    <Link as={NextLink} href="/camera">
-      Camera
-    </Link>
-
-
-
-    <Link as={NextLink} href="/audiorecord">
-      Audiorecord
-    </Link>
-
-
-    <Link as={NextLink} href="/haptics">
-      Haptics
-    </Link>
-
-
-    <Link as={NextLink} href="/firebase-push-notification">
-      Firebase Push Notification
-    </Link>
-
-  </Stack>
-}
-
-function ErrorAlert({error}: {error: Error}) {
-  return <Alert status="error">
-  <AlertIcon />
-  <AlertTitle>Something went wrong!</AlertTitle>
-  <AlertDescription>{error.message}</AlertDescription>
-</Alert>
-}
-
-function Loading() {
-  return <Text>Loading...</Text>;
+      <Link as={NextLink} href="/firebase-push-notification">
+        Firebase Push Notification
+      </Link>
+    </Stack>
+  );
 }

@@ -3,6 +3,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
@@ -14,12 +15,7 @@ import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
+function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   return (
     <Stack alignItems={"center"}>
@@ -61,7 +57,5 @@ function Content() {
 }
 
 export default function DevicePage() {
-  return <Page>
-    <Content />
-  </Page>
+  return <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
 }

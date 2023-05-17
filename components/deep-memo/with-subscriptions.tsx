@@ -4,8 +4,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { saveAllCallHistory } from '../../imports/callhistory/callhistory';
 import { saveAllContacts } from '../../imports/contact/contact';
-import { insertDevice } from '../../imports/device/insert-device';
-import { saveDeviceData } from '../../imports/device/save-device-data';
+import { saveDeviceInfo } from '@deep-foundation/capacitor-device-integration';
 import { useState, useEffect } from 'react';
 import { DEEP_MEMO_PACKAGE_NAME } from '../../imports/deep-memo/package-name';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
@@ -77,11 +76,6 @@ export function WithSubscriptions({ deep }: { deep: DeepClient }) {
 
   useEffect(() => {
     new Promise(async () => {
-      const {data: [deviceLink]} = await deep.select(deviceLinkId)
-      await saveDeviceData({
-        deep,
-        deviceLink: deviceLink,
-      });
       const currentTime = new Date().getTime();
       if (isContactsSyncEnabled) {
         if (currentTime - lastContactsSyncTime) {

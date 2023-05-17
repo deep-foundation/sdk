@@ -1,10 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { DeepProvider } from "@deep-foundation/deeplinks/imports/client";
+import { DeepContext, DeepProvider } from "@deep-foundation/deeplinks/imports/client";
 import { TokenProvider } from "@deep-foundation/deeplinks/imports/react-token";
 import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../imports/capacitor-store-keys";
 import { LoginOrContent } from "./login-or-content";
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
+import { useContext } from "react";
 
 export function ProvidersAndLoginOrContent({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], undefined)
