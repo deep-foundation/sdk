@@ -17,7 +17,7 @@ import { Motion } from '@capacitor/motion';
 import { updateOrInsertAccelerationDataToDeep } from '../imports/motion/update-or-insert-acceleration-data-to-deep';
 import { updateOrInsertOrientationDataToDeep } from '../imports/motion/update-or-insert-orientation-data-to-deep';
 import { insertPackageToDeep } from '../imports/motion/insert-package-to-deep';
-import { PACKAGE_NAME } from '../imports/motion/package-name';
+import { MOTION_PACKAGE_NAME } from '../imports/motion/package-name';
 import Link from 'next/link';
 import {inspect} from 'util';
 

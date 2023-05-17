@@ -1,5 +1,5 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./package-name";
+import { MOTION_PACKAGE_NAME } from "./package-name";
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from "./../device/package-name";
 
 export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
@@ -13,7 +13,7 @@ export async function insertPackageToDeep({ deep }: { deep: DeepClient }) {
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
-    string: { data: { value: PACKAGE_NAME } },
+    string: { data: { value: MOTION_PACKAGE_NAME } },
     in: {
       data: [
         {
