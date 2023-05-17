@@ -1,1 +1,0 @@
-export const DEVICE_PACKAGE_NAME=`@deep-foundation/device`

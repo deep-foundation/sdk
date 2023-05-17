@@ -3,23 +3,19 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
-import { saveDeviceData } from '../imports/device/save-device-data';
+import { saveDeviceInfo } from '@deep-foundation/capacitor-device-integration';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
+function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   return (
     <Stack alignItems={"center"}>
@@ -27,7 +23,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
-          await saveDeviceData({deep, deviceLinkId, data: deviceGeneralInfo});
+          await saveDeviceInfo({deep, deviceLinkId, info: deviceGeneralInfo});
         }}
       >
         Save general info
@@ -35,7 +31,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceBatteryInfo = await Device.getBatteryInfo();
-          await saveDeviceData({deep, deviceLinkId, data: deviceBatteryInfo});
+          await saveDeviceInfo({deep, deviceLinkId, info: deviceBatteryInfo});
         }}
       >
         Save battery info
@@ -43,7 +39,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageCode = await Device.getLanguageCode();
-          await saveDeviceData({deep, deviceLinkId, data: {languageCode: deviceLanguageCode.value}});
+          await saveDeviceInfo({deep, deviceLinkId, info: {languageCode: deviceLanguageCode.value}});
         }}
       >
         Save language id
@@ -51,7 +47,7 @@ function Content() {
       <Button
         onClick={async () => {
           const deviceLanguageTag = await Device.getLanguageTag();
-          await saveDeviceData({deep, deviceLinkId, data: {languageTag: deviceLanguageTag.value}});
+          await saveDeviceInfo({deep, deviceLinkId, info: {languageTag: deviceLanguageTag.value}});
         }}
       >
         Save language tag
@@ -61,7 +57,5 @@ function Content() {
 }
 
 export default function DevicePage() {
-  return <Page>
-    <Content />
-  </Page>
+  return <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
 }

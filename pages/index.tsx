@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import {
-
+  LocalStoreProvider,
+  useLocalStore,
+} from '@deep-foundation/store/local';
+import {
   Text,
   Link,
   Stack,
@@ -21,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
-
+  DeepClient,
   useDeep,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
@@ -43,9 +45,6 @@ import CameraPage from './camera';
 import HapticsPage from './haptics';
 import AudioRecordPage from './audiorecord';
 import { DEEP_MEMO_PACKAGE_NAME as DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
-import { saveDeviceData } from '../imports/device/save-device-data';
-import { Device } from '@capacitor/device';
-import { DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
 import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
@@ -54,15 +53,13 @@ import { WithActionSheetSubscription } from '../components/action-sheet/with-act
 import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
-import { insertDevice } from '../imports/device/insert-device';
 import { saveAllContacts } from '../imports/contact/contact';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
-import { initDeviceIfNotInitedAndSaveData } from '../imports/device/init-device-if-not-inited-and-save-data';
 import { useIsPackageInstalled } from '../imports/use-is-package-installed';
-import { WithInitDeviceIfNotInitedAndSaveData } from '../components/device/withInitDeviceIfNotInitedAndSaveData';
+import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { NavBar } from '../components/navbar';
 import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { QueryStoreProvider } from '@deep-foundation/store/query';
@@ -70,21 +67,18 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
-import { Page } from '../components/page';
+import { Page, PageParam } from '../components/page';
+import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device-react-integration';
 
-function Content() {
+interface ContentParam {
+  deep: DeepClient;
+  deviceLinkId: number;
+}
+
+function Content({ deep, deviceLinkId }: ContentParam) {
   useEffect(() => {
     defineCustomElements(window);
   }, []);
-
-  const deep = useDeep();
-
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
-
-  const { isPackageInstalled: isMemoPackageInstalled } = useIsPackageInstalled({ packageName: DEEP_MEMO_PACKAGE_NAME, shouldIgnoreResultWhenLoading: true, onError: ({ error }) => { console.error(error.message) } });
 
   useEffect(() => {
     new Promise(async () => {
@@ -92,8 +86,8 @@ function Content() {
         return;
       }
       await deep.guest();
-    })
-  }, [deep])
+    });
+  }, [deep]);
 
   const generalInfoCard = (
     <Card>
@@ -116,126 +110,86 @@ function Content() {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
-      {
-        isMemoPackageInstalled ? (
-          <>
-            <WithInitDeviceIfNotInitedAndSaveData deep={deep} deviceLinkId={deviceLinkId} setDeviceLinkId={setDeviceLinkId} />
-            {
-              Boolean(deviceLinkId) ? (
-                <>
-                  <WithSubscriptions deep={deep} />
-                  <Pages />
-                </>
-              ) : (
-                <Text>Initializing the device...</Text>
-              )
-            }
-          </>
-        ) : (
-          <MemoPackageIsNotInstalledAlert />
-        )
-      }
+      <>
+        <WithSubscriptions deep={deep} />
+        <Pages />
+      </>
     </Stack>
   );
 }
 
 export default function IndexPage() {
-  return <Page>
-    <Content />
-  </Page>
-}
-
-function MemoPackageIsNotInstalledAlert() {
-  // return <Text>Package is not installed</Text>
-  return <Alert status="error">
-    <AlertIcon />
-    <AlertTitle>Install {DEEP_MEMO_PACKAGE_NAME.toString()} to proceed!</AlertTitle>
-    <AlertDescription>
-      {DEEP_MEMO_PACKAGE_NAME.toString()} package contains all the packages required to
-      use this application. You can install it by using npm-packager-ui
-      located in deepcase or any other posibble way.
-    </AlertDescription>
-  </Alert>
+  return (
+    <Page
+      renderChildren={({ deep, deviceLinkId }) => (
+        <Content deep={deep} deviceLinkId={deviceLinkId} />
+      )}
+    />
+  );
 }
 
 function Pages() {
-  return <Stack>
+  return (
+    <Stack>
+      <Link as={NextLink} href="/settings">
+        Settings
+      </Link>
 
-    <Link as={NextLink} href="/settings">
-      Settings
-    </Link>
+      <Link as={NextLink} href="/device">
+        Device
+      </Link>
 
+      <Link as={NextLink} href="/call-history">
+        Call History
+      </Link>
 
-    <Link as={NextLink} href="/device">
-      Device
-    </Link>
+      <Link as={NextLink} href="/contacts">
+        Contacts
+      </Link>
 
+      <Link as={NextLink} href="/telegram">
+        Telegarm
+      </Link>
 
-    <Link as={NextLink} href="/call-history">
-      Call History
-    </Link>
+      <Link as={NextLink} href="/action-sheet">
+        Action Sheet
+      </Link>
 
+      <Link as={NextLink} href="/dialog">
+        Dialog
+      </Link>
 
-    <Link as={NextLink} href="/contacts">
-      Contacts
-    </Link>
+      <Link as={NextLink} href="/screen-reader">
+        Screen Reader
+      </Link>
 
+      <Link as={NextLink} href="/openai-completion">
+        OpenAI Completion
+      </Link>
 
-    <Link as={NextLink} href="/telegram">
-      Telegarm
-    </Link>
+      <Link as={NextLink} replace href="/browser-extension">
+        Browser Extension
+      </Link>
 
+      <Link as={NextLink} href="/network">
+        Network
+      </Link>
 
-    <Link as={NextLink} href="/action-sheet">
-      Action Sheet
-    </Link>
+      <Link as={NextLink} href="/camera">
+        Camera
+      </Link>
 
+      <Link as={NextLink} href="/audiorecord">
+        Audiorecord
+      </Link>
 
-    <Link as={NextLink} href="/dialog">
-      Dialog
-    </Link>
+      <Link as={NextLink} href="/haptics">
+        Haptics
+      </Link>
 
-
-    <Link as={NextLink} href="/screen-reader">
-      Screen Reader
-    </Link>
-
-
-    <Link as={NextLink} href="/openai-completion">
-      OpenAI Completion
-    </Link>
-
-
-    <Link as={NextLink} replace href="/browser-extension">
-      Browser Extension
-    </Link>
-
-
-    <Link as={NextLink} href="/network">
-      Network
-    </Link>
-
-
-    <Link as={NextLink} href="/camera">
-      Camera
-    </Link>
-
-
-
-    <Link as={NextLink} href="/audiorecord">
-      Audiorecord
-    </Link>
-
-
-    <Link as={NextLink} href="/haptics">
-      Haptics
-    </Link>
-
-
-    <Link as={NextLink} href="/firebase-push-notification">
-      Firebase Push Notification
-    </Link>
-
-  </Stack>
+      <Link as={NextLink} href="/firebase-push-notification">
+        Firebase Push Notification
+      </Link>
+    </Stack>
+  );
 }
-
