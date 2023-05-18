@@ -61,7 +61,7 @@ function Content({
           setOrientationHandler(newOrientationChangesHandler);
         }}
       >
-        Subscribe to orientation changes
+        Subscribe to Orientation changes
       </Button>
     </Stack>
   );
