@@ -20,11 +20,14 @@ export type MotionInfo =
   | Pick<AccelListenerEvent, 'rotationRate'>;
 
 export async function saveMotionInfo(
-  params: { deep: DeepClient; data: MotionInfo } & (
+  params: { deep: DeepClient; info: MotionInfo } & (
     | { deviceLinkId: number }
     | { deviceLink: Link<number> }
   )
 ) {
+  const info = await fixMotionInfo({ info: params.info });
+
+  console.log({ params });
   const { deep } = params;
   const serialOperations: Array<SerialOperation> = [];
   let deviceLink = await getDeviceLink();
@@ -55,6 +58,11 @@ export async function saveMotionInfo(
       await getMotionLinkValueInsertSerialOperation({ motionLinkId })
     );
   }
+
+  console.log({serialOperations})
+  await deep.serial({
+    operations: serialOperations,
+  });
 
   async function getDeviceLink() {
     let deviceLink: Link<number>;
@@ -107,6 +115,17 @@ export async function saveMotionInfo(
         type_id: await deep.id(MOTION_PACKAGE_NAME, 'Motion'),
         from_id: deviceLinkId,
         to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: await deep.id('@deep-foundation/core', 'Contain'),
+            from_id: deviceLinkId,
+            string: {
+              data: {
+                value: 'Motion',
+              }
+            }
+          }
+        }
       },
     });
   }
@@ -121,7 +140,7 @@ export async function saveMotionInfo(
       type: 'insert',
       objects: {
         link_id: motionLinkId,
-        value: params.data,
+        value: info,
       },
     });
   }
@@ -138,8 +157,23 @@ export async function saveMotionInfo(
         link_id: motionLinkId,
       },
       value: {
-        value: { ...deviceLink.value.value, ...params.data },
+        value: { ...info },
       },
     });
+  }
+
+  async function fixMotionInfo({ info }: { info: MotionInfo }) {
+    // capacitor-motion actually actually pass to us object with extra fields that are not specified in their typescript interface
+    // @ts-ignore
+    return {
+      ...('acceleration' in info ? { acceleration: info.acceleration } : {}),
+      ...('accelerationIncludingGravity' in info
+        ? {
+            accelerationIncludingGravity: info.accelerationIncludingGravity,
+          }
+        : {}),
+      ...('rotationRate' in info ? { rotationRate: info.rotationRate } : {}),
+      ...('interval' in info ? { interval: info.interval } : {}),
+    };
   }
 }

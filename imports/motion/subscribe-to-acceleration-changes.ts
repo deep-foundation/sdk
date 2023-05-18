@@ -6,11 +6,13 @@ export async function subscribeToAccelerationChanges({
   deep,
   deviceLinkId,
 }: SubscribeToAccelerationChangesParam) {
+  console.log('subscribeToAccelerationChanges');
   return Motion.addListener('accel', async (accelData) => {
+    console.log('accelEvent', accelData);
     await saveMotionInfo({
       deep,
       deviceLinkId,
-      data: accelData,
+      info: accelData,
     });
   });
 }

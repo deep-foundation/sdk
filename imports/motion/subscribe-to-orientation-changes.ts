@@ -10,7 +10,7 @@ export async function subscribeToOrientationChanges({
     await saveMotionInfo({
       deep,
       deviceLinkId,
-      data: {
+      info: {
         rotationRate,
       },
     });
