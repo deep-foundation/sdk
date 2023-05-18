@@ -59,7 +59,7 @@ export async function saveMotionInfo(
     );
   }
 
-  console.log({serialOperations})
+  console.log({ serialOperations });
   await deep.serial({
     operations: serialOperations,
   });
@@ -122,10 +122,10 @@ export async function saveMotionInfo(
             string: {
               data: {
                 value: 'Motion',
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -166,13 +166,33 @@ export async function saveMotionInfo(
     // capacitor-motion actually actually pass to us object with extra fields that are not specified in their typescript interface
     // @ts-ignore
     return {
-      ...('acceleration' in info ? { acceleration: info.acceleration } : {}),
-      ...('accelerationIncludingGravity' in info
+      ...('acceleration' in info
         ? {
-            accelerationIncludingGravity: info.accelerationIncludingGravity,
+            acceleration: {
+              x: info.acceleration.x,
+              y: info.acceleration.y,
+              z: info.acceleration.z,
+            },
           }
         : {}),
-      ...('rotationRate' in info ? { rotationRate: info.rotationRate } : {}),
+      ...('accelerationIncludingGravity' in info
+        ? {
+            accelerationIncludingGravity: {
+              x: info.accelerationIncludingGravity.x,
+              y: info.accelerationIncludingGravity.y,
+              z: info.accelerationIncludingGravity.z,
+            },
+          }
+        : {}),
+      ...('rotationRate' in info
+        ? {
+            rotationRate: {
+              alpha: info.rotationRate.alpha,
+              beta: info.rotationRate.beta,
+              gamma: info.rotationRate.gamma,
+            },
+          }
+        : {}),
       ...('interval' in info ? { interval: info.interval } : {}),
     };
   }
