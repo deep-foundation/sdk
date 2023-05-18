@@ -75,7 +75,9 @@ function Content({
             });
           setOrientationHandler(newOrientationChangesHandler);
         }}
-      ></Button>
+      >
+        Subscribe to orientation changes
+      </Button>
     </Stack>
   );
 }
