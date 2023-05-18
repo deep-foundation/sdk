@@ -1,25 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
-import {
-  LocalStoreProvider,
-  useLocalStore,
-} from '@deep-foundation/store/local';
+import React, { useState } from 'react';
 import {
   DeepClient,
-  DeepProvider,
-  useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { Provider } from '../imports/provider';
+import { Button, Stack } from '@chakra-ui/react';
 import { PluginListenerHandle } from '@capacitor/core';
-import { Motion } from '@capacitor/motion';
-import { MOTION_PACKAGE_NAME } from '../imports/motion/package-name';
 import Link from 'next/link';
-import { inspect } from 'util';
 import { Page } from '../components/page';
-import { saveMotionInfo } from '../imports/motion/save-motion-info';
 import { requestMotionPermissions, subscribeToAccelerationChanges, subscribeToOrientationChanges } from '@deep-foundation/capacitor-motion-integration';
 
 function Content({
