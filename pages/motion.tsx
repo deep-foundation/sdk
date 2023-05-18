@@ -5,6 +5,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
@@ -14,62 +15,77 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
-import { updateOrInsertAccelerationDataToDeep } from '../imports/motion/update-or-insert-acceleration-data-to-deep';
-import { updateOrInsertOrientationDataToDeep } from '../imports/motion/update-or-insert-orientation-data-to-deep';
-import { insertPackageToDeep } from '../imports/motion/insert-package-to-deep';
 import { MOTION_PACKAGE_NAME } from '../imports/motion/package-name';
 import Link from 'next/link';
-import {inspect} from 'util';
+import { inspect } from 'util';
+import { Page } from '../components/page';
+import { saveMotionInfo } from '../imports/motion/save-motion-info';
+import { requestMotionPermissions } from '../imports/motion/request-motion-permissions';
+import { subscribeToAccelerationChanges } from '../imports/motion/subscribe-to-acceleration-changes';
+import { subscribeToOrientationChanges } from '../imports/motion/subscribe-to-orientation-changes';
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
-
-  const [accelerationHandler, setAccelerationHandler] = useState();
+function Content({
+  deep,
+  deviceLinkId,
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+}) {
+  const [accelerationChangesHandler, setAccelerationHandler] = useState<
+    PluginListenerHandle | undefined
+  >();
+  const [orientationChangesHandler, setOrientationHandler] = useState<
+    PluginListenerHandle | undefined
+  >();
 
   return (
     <Stack>
       <Link href="/">Home</Link>
-      <Button onClick={async () => {
-        if('requestPermission' in DeviceMotionEvent) {
-          // @ts-ignore
-          await DeviceMotionEvent.requestPermission();
-        }
-      }}>Request permissions</Button>
-      <Button onClick={async () => {
-        Motion.addListener('accel', (accelData) => {
-          // updateOrInsertAccelerationDataToDeep({
-          //   deep,
-          //   deviceLinkId,
-          //   data: accelData
-          // })
-          console.log(`accelData: ${JSON.stringify(accelData)}`)
-        })       
-      }}>
+      <Button
+        onClick={() => {
+          requestMotionPermissions();
+        }}
+      >
+        Request permissions
+      </Button>
+      <Button
+        onClick={async () => {
+          if (accelerationChangesHandler) {
+            return;
+          }
+          const newAccelerationChangesHandler =
+            await subscribeToAccelerationChanges({
+              deep,
+              deviceLinkId,
+            });
+          setAccelerationHandler(newAccelerationChangesHandler);
+        }}
+      >
         Subscritbe to Acceleration Changes
       </Button>
-      <Button onClick={async () => {
-        Motion.addListener('orientation', (orientationData) => {
-          // updateOrInsertOrientationDataToDeep({
-          //   deep,
-          //   deviceLinkId,
-          //   data: orientationData
-          // })
-          console.log(`orientationData: ${JSON.stringify(orientationData)}`)
-        })       
-      }}></Button>
+      <Button
+        onClick={async () => {
+          if (orientationChangesHandler) {
+            return;
+          }
+          const newOrientationChangesHandler =
+            await subscribeToOrientationChanges({
+              deep,
+              deviceLinkId,
+            });
+          setOrientationHandler(newOrientationChangesHandler);
+        }}
+      ></Button>
     </Stack>
   );
 }
 
 export default function DevicePage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page
+      renderChildren={({ deep, deviceLinkId }) => {
+        return <Content deep={deep} deviceLinkId={deviceLinkId} />;
+      }}
+    />
   );
 }
