@@ -1,1 +1,1 @@
-export const MOTION_PACKAGE_NAME = "@deep-foundation/motion";
+export const MOTION_PACKAGE_NAME = "@deep-foundation/capacitor-motion";
