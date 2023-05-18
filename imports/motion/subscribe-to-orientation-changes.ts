@@ -6,7 +6,7 @@ export async function subscribeToOrientationChanges({
   deep,
   deviceLinkId,
 }: SubscribeToOrientationChangesParam) {
-  Motion.addListener('orientation', async (rotationRate) => {
+  return Motion.addListener('orientation', async (rotationRate) => {
     await saveMotionInfo({
       deep,
       deviceLinkId,
