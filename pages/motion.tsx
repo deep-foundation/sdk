@@ -20,9 +20,7 @@ import Link from 'next/link';
 import { inspect } from 'util';
 import { Page } from '../components/page';
 import { saveMotionInfo } from '../imports/motion/save-motion-info';
-import { requestMotionPermissions } from '../imports/motion/request-motion-permissions';
-import { subscribeToAccelerationChanges } from '../imports/motion/subscribe-to-acceleration-changes';
-import { subscribeToOrientationChanges } from '../imports/motion/subscribe-to-orientation-changes';
+import { requestMotionPermissions, subscribeToAccelerationChanges, subscribeToOrientationChanges } from '@deep-foundation/capacitor-motion-integration';
 
 function Content({
   deep,

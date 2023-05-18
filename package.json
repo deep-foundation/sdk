@@ -58,6 +58,7 @@
     "@chakra-ui/react": "^2.5.5",
     "@deep-foundation/capacitor-device-integration": "^1.0.0",
     "@deep-foundation/capacitor-device-react-integration": "^3.0.0",
+    "@deep-foundation/capacitor-motion-integration": "^1.0.2",
     "@deep-foundation/deeplinks": "^0.0.146",
     "@deep-foundation/react-with-packages-installed": "^0.3.2",
     "@deep-foundation/store": "^0.0.18",
