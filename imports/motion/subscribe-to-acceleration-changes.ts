@@ -2,10 +2,10 @@ import { Motion } from '@capacitor/motion';
 import { saveMotionInfo } from './save-motion-info';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 
-export async function subscribeToAccelerationInfo({
+export async function subscribeToAccelerationChanges({
   deep,
   deviceLinkId,
-}: SubscribeToAccelerationInfoParam) {
+}: SubscribeToAccelerationChangesParam) {
   Motion.addListener('accel', async (accelData) => {
     await saveMotionInfo({
       deep,
@@ -15,7 +15,7 @@ export async function subscribeToAccelerationInfo({
   });
 }
 
-export interface SubscribeToAccelerationInfoParam {
+export interface SubscribeToAccelerationChangesParam {
   deep: DeepClient;
   deviceLinkId: number;
 }
