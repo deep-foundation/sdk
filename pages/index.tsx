@@ -190,6 +190,10 @@ function Pages() {
       <Link as={NextLink} href="/firebase-push-notification">
         Firebase Push Notification
       </Link>
+
+      <Link as={NextLink} href="/motion">
+        Motion
+      </Link>
     </Stack>
   );
 }
