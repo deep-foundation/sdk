@@ -2,7 +2,8 @@ import { ConnectionStatus, Network } from "@capacitor/network"
 import { DeepClient, SerialOperation } from "@deep-foundation/deeplinks/imports/client";
 import { CAPACITOR_NETWORK_PACKAGE_NAME } from "./package-name";
 
-export default async function saveNetworkStatuses(deep: DeepClient, deviceLinkId: number, connectionStatuses?: Array<ConnectionStatus>) {
+export default async function saveNetworkStatuses(params: {deep: DeepClient, deviceLinkId: number, connectionStatuses?: Array<ConnectionStatus>}) {
+  const {deep, deviceLinkId, connectionStatuses} = params;
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const networkTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Network");
   const wifiTypeLinkId = await deep.id(CAPACITOR_NETWORK_PACKAGE_NAME, "Wifi");
