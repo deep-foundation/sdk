@@ -1,47 +1,84 @@
-import React, { useEffect } from 'react';
-import { Network as CapacitorNetwork, ConnectionStatus } from "@capacitor/network"
+import React, { useEffect, useState } from 'react';
+import { ConnectionStatus, Network } from '@capacitor/network';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
+import {
+  DeepClient,
+  DeepProvider,
+  useDeep,
+} from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import saveNetworkStatuses from '../imports/network/save-network-status';
+import { Page } from '../components/page';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { PluginListenerHandle } from '@capacitor/core';
 
-function Page() {
-  const deep = useDeep();
-  const [connections, setConnections] = useLocalStore<Array<ConnectionStatus>>("Connections", []);
-  const [deviceLinkId] = useLocalStore<number>('deviceLinkId', undefined);
+function Content({
+  deep,
+  deviceLinkId,
+}: {
+  deep: DeepClient;
+  deviceLinkId: number;
+}) {
+  const [connectionStatuses, setConnectionStatuses] = useLocalStore<
+    Array<ConnectionStatus>
+  >(CapacitorStoreKeys[CapacitorStoreKeys.NetworkConnectionStatuses], []);
+  const [connectionStatusChangeHandler, setConnectionStatusChangeHandler] =
+    useState<PluginListenerHandle | undefined>();
 
   useEffect(() => {
-    if (connections.length > 0) {
-      saveNetworkStatuses(deep, deviceLinkId, connections);
-      setConnections([]);
-    }
-  }, [connections])
+    new Promise(async () => {
+      const currentNetworkStatus = await Network.getStatus();
+      if (currentNetworkStatus.connectionType === 'none') {
+        return;
+      }
+      if (connectionStatuses.length > 0) {
+        saveNetworkStatuses({ deep, deviceLinkId, connectionStatuses });
+        setConnectionStatuses([]);
+      }
+    });
+  }, [connectionStatuses]);
 
-  async function subscribeToNetworkStatus() {
-    CapacitorNetwork.addListener('networkStatusChange', async (connection) => {
-      setConnections([...connections, connection]);
-    })
+  async function subscribeToNetworkStatusChanges() {
+    if (connectionStatusChangeHandler) {
+      connectionStatusChangeHandler.remove();
+    }
+    const newConnectionStatusesChangesHandler = await Network.addListener(
+      'networkStatusChange',
+      async (connectionStatus) => {
+        setConnectionStatuses((connectionStatuses) => [
+          ...connectionStatuses,
+          connectionStatus,
+        ]);
+      }
+    );
+    setConnectionStatusChangeHandler(newConnectionStatusesChangesHandler);
   }
 
-  return <Stack>
-    <Button onClick={async () => { await subscribeToNetworkStatus() }}>
-      <Text>LISTEN TO NETWORK CHANGES</Text>
-    </Button>
-    <Button onClick={async () => await saveNetworkStatuses(deep, deviceLinkId)}>
-      <Text>SAVE CURRENT STATUS</Text>
-    </Button>
-  </Stack>
+  return (
+    <Stack>
+      <Button
+        onClick={async () => {
+          await subscribeToNetworkStatusChanges();
+        }}
+      >
+        <Text>Subscribe to network changes</Text>
+      </Button>
+      <Button
+        onClick={async () => await saveNetworkStatuses({ deep, deviceLinkId })}
+      >
+        <Text>Save current network state</Text>
+      </Button>
+    </Stack>
+  );
 }
 
 export default function NetworkPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Page />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page
+      renderChildren={({ deep, deviceLinkId }) => {
+        return <Content deep={deep} deviceLinkId={deviceLinkId} />;
+      }}
+    />
   );
 }
