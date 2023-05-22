@@ -6,7 +6,7 @@ import { ErrorAlert } from './error-alert';
 import { Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device-react-integration';
+import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device';
 import {
   DeepClient,
   DeepProvider,

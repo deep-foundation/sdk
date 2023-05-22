@@ -10,7 +10,7 @@ import {
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
-import { saveDeviceInfo } from '@deep-foundation/capacitor-device-integration';
+import { saveDeviceInfo } from '@deep-foundation/capacitor-device';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
