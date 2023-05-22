@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import {
-  LocalStoreProvider,
-  useLocalStore,
-} from '@deep-foundation/store/local';
+import React, { useEffect } from 'react';
 import {
   Text,
   Link,
@@ -11,64 +7,17 @@ import {
   CardBody,
   Heading,
   CardHeader,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Switch,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
 } from '@chakra-ui/react';
-import { Provider } from '../imports/provider';
 import {
   DeepClient,
-  useDeep,
-  useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
 
-import { useRouter } from 'next/router';
 
-import DevicePage from './device';
-import CallHistoryPage from './call-history';
-import ContactsPage from './contacts';
-import TelegramPage from './telegram';
-import ActionSheetPage from './action-sheet';
-import DialogPage from './dialog';
-import ScreenReaderPage from './screen-reader';
-import OpenaiCompletionPage from './openai-completion';
-import BrowserExtensionPage from './browser-extension';
-import NetworkPage from './network';
-import CameraPage from './camera';
-import HapticsPage from './haptics';
-import AudioRecordPage from './audiorecord';
-import { DEEP_MEMO_PACKAGE_NAME as DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
-import { useActionSheetSubscription } from '../imports/action-sheet/use-action-sheet-subscription';
-import { useDialogSubscription } from '../imports/dialog/use-dialog-subscription';
-import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
-import { useHapticsSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
-import { WithActionSheetSubscription } from '../components/action-sheet/with-action-sheet-subscription';
-import { WithDialogSubscription } from '../components/dialog/with-dialog-subscription';
-import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
-import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
-import { saveAllContacts } from '../imports/contact/contact';
-import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
-import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
-import { useIsPackageInstalled } from '../imports/use-is-package-installed';
-import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { NavBar } from '../components/navbar';
-import { useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
-import { QueryStoreProvider } from '@deep-foundation/store/query';
-import { ChakraProvider } from '@chakra-ui/react';
-import { DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
-import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
-import { Page, PageParam } from '../components/page';
-import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device-react-integration';
+import { Page } from '../components/page';
 
 interface ContentParam {
   deep: DeepClient;
