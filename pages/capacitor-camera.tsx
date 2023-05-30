@@ -32,13 +32,7 @@ function Page() {
   }, []);
 
   useEffect(() => {
-    if (typeof (window) !== undefined) { defineCustomElements(window) } else {
-      const getCameraPermissions = async () => {
-        const newCameraPermissions: PermissionStatus | undefined = await Camera.requestPermissions();
-        setCameraPermissions(newCameraPermissions);
-      };
-      getCameraPermissions();
-    }
+    if (typeof (window) !== undefined) { defineCustomElements(window); } else getCameraPermissions();
   });
 
   const getCameraPermissions = async () => {
