@@ -1,128 +1,87 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
-import { Button, ChakraProvider, Image, Stack, Text, Box } from '@chakra-ui/react';
-
-import installPackage, { PACKAGE_NAME } from '../imports/camera/install-package';
-import checkCameraPermission from '../imports/camera/check-permission';
-import getCameraPermission from '../imports/camera/get-permission';
-import takePhoto from '../imports/camera/take-photo';
-import pickImages from '../imports/camera/pick-images';
-import uploadPhotos from '../imports/camera/upload-photos';
-import uploadGallery from '../imports/camera/upload-gallery';
+import { Button, Card, CardBody, CardHeader, ChakraProvider, Heading, Stack, Text } from '@chakra-ui/react';
+import { Camera, PermissionStatus } from "@capacitor/camera";
+import installPackage, { PACKAGE_NAME } from '../imports/capacitor-camera/install-package';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import ImageCard from './image-card';
+import createContainer from '../imports/capacitor-camera/create-container';
+import { useCamera } from '../imports/capacitor-camera/use-camera';
+import { useGallery } from '../imports/capacitor-camera/use-gallery';
+import { downloadPhotos } from '../imports/capacitor-camera/download-photos';
+import takePhoto from '../imports/capacitor-camera/take-photo';
+import { isIOS, isAndroid } from "react-device-detect";
 
 function Page() {
   const deep = useDeep();
-  const [photos, setPhotos] = useLocalStore("PhotoAlbum", []);
-  const [galleryImages, setGalleryImages] = useLocalStore("Gallery", []);
-  const [images, setImages] = useLocalStore("Images", []);
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
+  const [images, setImages] = useState([]);
+  const [cameraPermissions, setCameraPermissions] = useState<PermissionStatus | undefined>(undefined);
+  const [containerLinkId, setContainerLinkId] = useLocalStore(
+    'containerLinkId',
     undefined
   );
+
   useEffect(() => {
-    if (typeof (window) === "object") defineCustomElements(window);
+    if (!containerLinkId) {
+      const initializeContainerLink = async () => {
+        setContainerLinkId(await createContainer(deep));
+      };
+      initializeContainerLink();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof (window) !== undefined) { defineCustomElements(window) } else {
+      const getCameraPermissions = async () => {
+        const newCameraPermissions: PermissionStatus | undefined = await Camera.requestPermissions();
+        setCameraPermissions(newCameraPermissions);
+      };
+      getCameraPermissions();
+    }
   });
 
-  useEffect(() => {
-    const useCamera = async () => {
-      await uploadPhotos(deep, deviceLinkId, photos);
-      setPhotos([]);
-    }
-    if (photos.length > 0) useCamera();
-  }, [photos])
+  const getCameraPermissions = async () => {
+    const newCameraPermissions: PermissionStatus | undefined = await Camera.requestPermissions();
+    setCameraPermissions(newCameraPermissions);
+  };
 
-  useEffect(() => {
-    const useGallery = async () => {
-      await uploadGallery(deep, deviceLinkId, galleryImages)
-      setGalleryImages([]);
-    }
-    if (galleryImages.length > 0) useGallery();
-  }, [galleryImages])
-
-  const handleCamera = async () => {
-    const image = await takePhoto();
-    setPhotos([...photos, image])
-  }
-
-  const handleGallery = async () => {
-    const images = await pickImages();
-    setGalleryImages([...galleryImages, images])
-  }
-
-  const fetchPhotos = async (deep) => {
-    const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const photoTypeLinkId = await deep.id(PACKAGE_NAME, "Photo");
-    const cameraTypeLinkId = await deep.id(PACKAGE_NAME, "Camera");
-    const { data } = await deep.select({
-      type_id: photoTypeLinkId,
-      in: {
-        type_id: containTypeLinkId,
-        from: {
-          type_id: cameraTypeLinkId
-        }
-      }
-    }, {
-      "returning": `id
-    properties: out {
-      property: to {
-        type {
-          in(where: {value: {_is_null: false}}) {
-            value
-          }
-        }
-        value
-      }
-    }
-  `})
-
-    const images = data.map(photo => {
-      photo.properties.forEach(property => photo[property.property.type.in[0].value.value] = property.property.value.value)
-      return photo;
-    })
-    setImages(images);
-  }
-
-  const createCameraLink = async (deep) => {
-    const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-    const { data: [{ id: cameraLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "Camera"),
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: deviceLinkId,
-          string: { data: { value: "Camera" } }
-        }]
-      }
-    })
-  }
+  useGallery(deep, containerLinkId);
+  useCamera(deep, containerLinkId);
 
   return <>
     <Stack>
-      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? "NONE"}</Text>
-      <Button onClick={async () => await installPackage(deviceLinkId)}>
-        <Text>INITIALIZE PACKAGE</Text>
+      <Card>
+        <CardHeader>
+          <Heading>
+            Permissions
+          </Heading>
+        </CardHeader>
+        {!(isAndroid && isIOS)
+          ? null
+          : (<CardBody>
+            <Text>{`Camera Permissions are ${!cameraPermissions?.camera && 'not'} granted.`}</Text>
+            <Text>{`Gallery Permissions are ${!cameraPermissions?.photos && 'not'} granted.`}</Text>
+            <Button onClick={async () => await getCameraPermissions()}>
+              Request permissions
+            </Button>
+          </CardBody>)}
+      </Card>
+      <Button onClick={async () => await installPackage(containerLinkId)}>
+        INITIALIZE PACKAGE
       </Button>
-      <Button onClick={async () => await createCameraLink(deep)}>
-        <Text>CREATE NEW CAMERA LINK</Text>
+      <Button onClick={async () => setContainerLinkId(await createContainer(deep))}>
+        CREATE NEW CONTAINER
       </Button>
-      <Button onClick={async () => await checkCameraPermission(deep, deviceLinkId)}>
-        <Text>CHECK PERMISSIONS</Text>
-      </Button>
-      <Button onClick={async () => await getCameraPermission(deep, deviceLinkId)}>
-        <Text>GET PERMISSIONS</Text>
-      </Button>
-      <Button onClick={async () => await handleCamera()}>
+      <Button onClick={async () => { }}>
         <Text>USE CAMERA</Text>
       </Button>
-      <Button onClick={async () => await handleGallery()}>
+      <Button onClick={async () => { }}>
         <Text>USE GALLERY</Text>
       </Button>
-      <Button onClick={async () => await fetchPhotos(deep)}>
-        <Text>VIEW IMAGES</Text>
+      <Button onClick={async () => { const images = await downloadPhotos(deep); setImages(images) }}>
+        <Text>LOAD IMAGES</Text>
       </Button>
     </Stack>
     <Stack align="center" direction="column">
@@ -131,7 +90,7 @@ function Page() {
   </>
 }
 
-export default function Camera() {
+export default function CapacitorCamera() {
   return (
     <ChakraProvider>
       <Provider>

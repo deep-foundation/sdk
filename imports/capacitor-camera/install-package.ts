@@ -84,28 +84,6 @@ export default async function installPackage(deviceLinkId?) {
                 data: [{
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
-                  string: { data: { value: 'CameraPermissions' } },
-                }]
-              }
-            },
-            {
-              type_id: typeTypeLinkId,
-              to_id: anyTypeLinkId,
-              in: {
-                data: [{
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId,
-                  string: { data: { value: 'PhotoPermissions' } },
-                }]
-              }
-            },
-            {
-              type_id: typeTypeLinkId,
-              to_id: anyTypeLinkId,
-              in: {
-                data: [{
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId,
                   string: { data: { value: 'Photo' } },
                 }]
               },
