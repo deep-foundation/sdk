@@ -4,8 +4,8 @@ import takePhoto from './take-photo';
 import uploadPhotos from './upload-photos';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 
-export const useCamera = async (deep: DeepClient, containerLinkId: number) => {
-  const [photos, setPhotos] = useState([]);
+export const useCamera = (deep: DeepClient, containerLinkId: number) => {
+  const [photos, setPhotos] = useLocalStore('CameraPhotos', []);
   
   useEffect(() => {
     const upload = async () => {
@@ -13,9 +13,12 @@ export const useCamera = async (deep: DeepClient, containerLinkId: number) => {
       setPhotos([]);
     }
     if (photos.length > 0) upload();
-  }, [photos])
+  }, [photos, deep])
 
-  setPhotos([...photos, await takePhoto()])
-  
-  return photos;
+  const newPhoto = async () => {
+    const photo = await takePhoto();
+    setPhotos([...photos, photo]);
+    return photo;
+  }
+  return newPhoto;
 };

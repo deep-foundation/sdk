@@ -10,8 +10,7 @@ import ImageCard from './image-card';
 import createContainer from '../imports/capacitor-camera/create-container';
 import { useCamera } from '../imports/capacitor-camera/use-camera';
 import { useGallery } from '../imports/capacitor-camera/use-gallery';
-import { downloadPhotos } from '../imports/capacitor-camera/download-photos';
-import takePhoto from '../imports/capacitor-camera/take-photo';
+import { downloadImages } from '../imports/capacitor-camera/download-images';
 import { isIOS, isAndroid } from "react-device-detect";
 
 function Page() {
@@ -47,8 +46,8 @@ function Page() {
     setCameraPermissions(newCameraPermissions);
   };
 
-  useGallery(deep, containerLinkId);
-  useCamera(deep, containerLinkId);
+  const addImages = useGallery(deep, containerLinkId);
+  const newPhoto = useCamera(deep, containerLinkId);
 
   return <>
     <Stack>
@@ -74,13 +73,13 @@ function Page() {
       <Button onClick={async () => setContainerLinkId(await createContainer(deep))}>
         CREATE NEW CONTAINER
       </Button>
-      <Button onClick={async () => { }}>
+      <Button onClick={newPhoto}>
         <Text>USE CAMERA</Text>
       </Button>
-      <Button onClick={async () => { }}>
+      <Button onClick={addImages}>
         <Text>USE GALLERY</Text>
       </Button>
-      <Button onClick={async () => { const images = await downloadPhotos(deep); setImages(images) }}>
+      <Button onClick={async () => { const images = await downloadImages(deep); setImages(images) }}>
         <Text>LOAD IMAGES</Text>
       </Button>
     </Stack>
