@@ -29,6 +29,7 @@ export function Page({ renderChildren }: PageParam) {
             console.log({ deep });
             return (
               <WithPackagesInstalled
+              deep={deep}
                 packageNames={[DEEP_MEMO_PACKAGE_NAME]}
                 renderIfError={(error) => <ErrorAlert error={error} />}
                 renderIfNotInstalled={(packageNames) => (
@@ -75,7 +76,6 @@ export function Page({ renderChildren }: PageParam) {
                 renderIfLoading={() => (
                   <Text>Checking if deep packages are installed...</Text>
                 )}
-                shouldIgnoreResultWhenLoading={true}
               >
                 <WithDeviceLinkId
                   deep={deep}
@@ -107,13 +107,13 @@ interface WithDeviceLinkIdProps {
 }
 
 function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
 
   return (
-    <WithDeviceInsertionIfDoesNotExistAndSavingdata
+    deep.linkId ? <WithDeviceInsertionIfDoesNotExistAndSavingdata
       containerLinkId={deep.linkId}
       deep={deep}
       deviceLinkId={deviceLinkId}
@@ -122,6 +122,6 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
       renderIfNotInserted={() => <Text>Initializing device...</Text>}
     >
       {renderChildren({ deviceLinkId })}
-    </WithDeviceInsertionIfDoesNotExistAndSavingdata>
+    </WithDeviceInsertionIfDoesNotExistAndSavingdata> : null
   );
 }
