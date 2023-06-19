@@ -4,7 +4,6 @@
   "description": "",
   "license": "Unlicense",
   "scripts": {
-    "prebuild": "npm run generate-schemas",
     "generate-schema": "ts-node ./generate-schema.ts",
     "generate-schemas": "npm run generate-action-sheet-schema && npm run generate-dialog-schemas && npm run generate-firebase-push-notification-schemas",
     "generate-action-sheet-schema": "npm run generate-schema -- --interface-file-path=\"@capacitor/action-sheet/dist/esm/definitions.d.ts\" --interface-name=\"ShowActionsOptions\" --output-json-file-path=\"./imports/action-sheet/schema.json\"",
@@ -55,8 +54,8 @@
     "@capacitor/screen-reader": "^5.0.0",
     "@capawesome/capacitor-file-picker": "^5.0.0",
     "@chakra-ui/react": "^2.5.5",
-    "@deep-foundation/capacitor-device": "^4.0.2",
-    "@deep-foundation/capacitor-motion": "^0.0.10",
+    "@deep-foundation/capacitor-device": "^4.0.12",
+    "@deep-foundation/capacitor-motion": "^0.0.11",
     "@deep-foundation/deeplinks": "^0.0.196",
     "@deep-foundation/react-with-packages-installed": "^0.5.0",
     "@deep-foundation/store": "^0.0.19",
@@ -96,7 +95,7 @@
     "jest": "^29.5.0",
     "next-transpile-modules": "^10.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4",
+    "typescript": "5.0.4",
     "typescript-json-schema": "^0.56.0"
   }
 }

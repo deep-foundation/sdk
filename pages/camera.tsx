@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { DeepClient, DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Image, Stack, Text, Box } from '@chakra-ui/react';
 import checkCameraPermission from '../imports/camera/check-permission';
@@ -13,16 +13,12 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import ImageCard from './image-card';
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from '../imports/camera/package-name';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { Page } from '../components/page';
 
-function Page() {
-  const deep = useDeep();
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   const [photos, setPhotos] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.PhotoAlbum], []);
   const [galleryImages, setGalleryImages] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Gallery], []);
   const [images, setImages] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Images], []);
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
   useEffect(() => {
     if (typeof (window) === "object") defineCustomElements(window);
   });
@@ -103,9 +99,6 @@ function Page() {
   return <>
     <Stack>
       <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? "NONE"}</Text>
-      <Button onClick={async () => await installPackage(deviceLinkId)}>
-        <Text>INITIALIZE PACKAGE</Text>
-      </Button>
       <Button onClick={async () => await createCameraLink(deep)}>
         <Text>CREATE NEW CAMERA LINK</Text>
       </Button>
@@ -133,12 +126,6 @@ function Page() {
 
 export default function CameraPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Page />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

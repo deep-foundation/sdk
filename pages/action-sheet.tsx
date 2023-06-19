@@ -44,6 +44,7 @@ import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
 import _ from 'lodash';
+import { Page } from '../components/page';
 const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
 
 function InsertActionSheetModal({deep, deviceLinkId} : {deep: DeepClient, deviceLinkId: number}){
@@ -82,12 +83,7 @@ function InsertActionSheetModal({deep, deviceLinkId} : {deep: DeepClient, device
     )
 }
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   useEffect(() => {
     defineCustomElements(window);
     self['deep'] = deep;
@@ -128,12 +124,6 @@ function Content() {
 
 export default function ActionSheetPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

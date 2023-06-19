@@ -3,6 +3,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
@@ -10,9 +11,9 @@ import {
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { OPENAI_COMPLETION_PACKAGE_NAME } from '../imports/openai-completion/package-name';
+import { Page } from '../components/page';
 
-function Content() {
-  const deep = useDeep();
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
 
   return (
     <Stack>
@@ -67,12 +68,6 @@ function Content() {
 
 export default function OpenaiCompletionPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

@@ -46,7 +46,7 @@ function Content({
     const newConnectionStatusesChangesHandler = await Network.addListener(
       'networkStatusChange',
       async (connectionStatus) => {
-        setConnectionStatuses((connectionStatuses) => [
+        setConnectionStatuses([
           ...connectionStatuses,
           connectionStatus,
         ]);

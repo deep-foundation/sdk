@@ -1,10 +1,11 @@
 import { ChakraProvider, Link } from "@chakra-ui/react";
-import { DeepProvider } from "@deep-foundation/deeplinks/imports/client";
+import { DeepClient, DeepProvider } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
 import NextLink from 'next/link';
+import { Page } from "../components/page";
 
 
-function Content () {
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
    return <>
              <div>
             <Link as={NextLink} href="/settings/action-sheet">
@@ -16,12 +17,6 @@ function Content () {
 
 export default function SettingsPage() {
    return (
-     <ChakraProvider>
-       <Provider>
-         <DeepProvider>
-           <Content />
-         </DeepProvider>
-       </Provider>
-     </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
    );
  }

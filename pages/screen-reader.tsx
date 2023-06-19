@@ -3,6 +3,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
   useDeepSubscription,
@@ -18,12 +19,11 @@ import { insertSpeakOptions } from '../imports/screen-reader/insert-speak-option
 import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
 import { useScreenReaderSubscription } from '../imports/screen-reader/use-screen-reader-subscription';
 import { WithScreenReaderSubscription } from '../components/screen-reader/with-screen-reader-subscription';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { Page } from '../components/page';
 
-function Content() {
-  const deep = useDeep();
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   const [platform, setPlatform] = useState<string | undefined>(undefined);
-
-  const [deviceLinkId] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId], undefined);
 
   const [isEnabled, setIsEnabled] = useState<boolean | undefined>(undefined);
 
@@ -65,12 +65,6 @@ function Content() {
 
 export default function ScreenReaderPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

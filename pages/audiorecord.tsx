@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { DeepClient, DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, Card, CardBody, CardHeader, ChakraProvider, Heading, Stack, Text } from '@chakra-ui/react';
 import startAudioRec from '../imports/audiorecord/strart-recording';
@@ -10,18 +10,14 @@ import { VoiceRecorder } from 'capacitor-voice-recorder';
 import { useRecordingStatus } from '../imports/audiorecord/use-recording-status';
 import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from '../imports/audiorecord/package-name';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { Page } from '../components/page';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
-function Page() {
-  const deep = useDeep();
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {  
   const [recording, setRecording] = useState(false);
   const [sounds, setSounds] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.Sounds], []);
   const [records, setRecords] = useState([]);
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
 
   useEffect(() => {
     const useRecords = async () => {
@@ -181,12 +177,6 @@ function Page() {
 
 export default function AudioRecordPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Page />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

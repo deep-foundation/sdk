@@ -34,28 +34,18 @@ import Form from '@rjsf/chakra-ui';
 import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { Page } from '../components/page';
 const alertSchema: RJSFSchema = require('../imports/dialog/alert-schema.json');
 const promptSchema: RJSFSchema = require('../imports/dialog/prompt-schema.json');
 const confirmSchema: RJSFSchema = require('../imports/dialog/confirm-schema.json');
 
 export default function DialogPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
 
   useEffect(() => {
     self['Dialog'] = Dialog;

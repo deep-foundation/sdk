@@ -3,24 +3,19 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
-import { saveDeviceData } from '../imports/device/save-device-data';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { saveAllContacts } from '../imports/contact/contact';
 import { NavBar } from '../components/navbar';
+import { Page } from '../components/page';
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
-
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   return (
     <Stack>
       <NavBar/>
@@ -31,12 +26,6 @@ function Content() {
 
 export default function ContactsPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

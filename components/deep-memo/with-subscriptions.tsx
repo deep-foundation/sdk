@@ -4,7 +4,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { saveAllCallHistory } from '../../imports/callhistory/callhistory';
 import { saveAllContacts } from '../../imports/contact/contact';
-import { saveDeviceInfo } from '@deep-foundation/capacitor-device-integration';
+import { saveDeviceInfo } from '@deep-foundation/capacitor-device';
 import { useState, useEffect } from 'react';
 import { DEEP_MEMO_PACKAGE_NAME } from '../../imports/deep-memo/package-name';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';

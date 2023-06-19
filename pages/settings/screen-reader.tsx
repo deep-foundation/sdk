@@ -8,12 +8,13 @@ import {
   Heading,
   Switch,
 } from '@chakra-ui/react';
-import { DeepProvider } from '@deep-foundation/deeplinks/imports/client';
+import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
+import { Page } from '../../components/page';
 
-function Content() {
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   const [isScreenReaderSubscriptionEnabled, setIsScreenReaderSubscriptionEnabled] =
     useLocalStore(
       CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
@@ -45,12 +46,6 @@ function Content() {
 
 export default function ScreenReaderSettingsPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }

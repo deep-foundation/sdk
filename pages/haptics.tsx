@@ -3,6 +3,7 @@ import {
   useLocalStore,
 } from '@deep-foundation/store/local';
 import {
+  DeepClient,
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
@@ -11,14 +12,9 @@ import { Provider } from '../imports/provider';
 import { NavBar } from '../components/navbar';
 import { useHapticsSubscription } from '../imports/haptics/use-haptics-vibrate-subscription';
 import { WithHapticsSubscription } from '../components/haptics/with-haptics-vibrate-subscription';
+import { Page } from '../components/page';
 
-function Content() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore(
-    'deviceLinkId',
-    undefined
-  );
-
+function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   return (
     <Stack>
       <NavBar/>
@@ -32,12 +28,6 @@ function Content() {
 
 export default function HapticsPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Content />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }
