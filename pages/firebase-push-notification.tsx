@@ -42,7 +42,7 @@ import {
   HStack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { DEVICE_PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { DEVICE_PACKAGE_NAME } from '@deep-foundation/capacitor-device';
 import { Provider } from '../imports/provider';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -63,7 +63,7 @@ import { registerDevice } from '../imports/firebase-push-notification/register-d
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
 import { getPushNotification } from '../imports/firebase-push-notification/get-push-notification';
-import { getDevice } from '../imports/device/get-device';
+// import {  } from '@deep-foundation/capacitor-device';
 import { Device as DeviceComponent } from '../components/device/device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import {
@@ -80,22 +80,15 @@ import { RJSFSchema } from '@rjsf/utils';
 import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
 import { PushNotification } from '../imports/firebase-push-notification/push-notification';
 import { CapacitorPlatform } from '@capacitor/core/types/platforms';
+import { Page } from '../components/page';
 
 export default function PushNotificationsPage() {
   return (
-    <ChakraProvider>
-      <Provider>
-        <DeepProvider>
-          <Page />
-        </DeepProvider>
-      </Provider>
-    </ChakraProvider>
+    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} deviceLinkId={deviceLinkId} />} />
   );
 }
 
-function Page() {
-  const deep = useDeep();
-  const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
+function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   const [deviceRegistrationTokenLinkId, setDeviceRegistrationTokenLinkId] =
     useLocalStore(
@@ -181,103 +174,103 @@ function Page() {
     pushNotificationLinksSubscriptionError,
   ]);
 
-  const {
-    data: deviceLinks,
-    loading: isDeviceLinksSubscriptionLoading,
-    error: deviceLinksSubscriptionError,
-  } = useDeepSubscription({
-    type_id: {
-      _id: [DEVICE_PACKAGE_NAME, 'Device'],
-    },
-    in: {
-      type_id: {
-        _id: ['@deep-foundation/core', 'Contain'],
-      },
-      from_id: deep.linkId,
-    },
-  });
-  const [devices, setDevices] = useState<DeviceInfo[] | undefined>(undefined);
-  useEffect(() => {
-    if (isDeviceLinksSubscriptionLoading) {
-      return;
-    }
-    new Promise(async () => {
-      const devices = [];
-      for (const deviceLink of deviceLinks) {
-        const device = await getDevice({
-          deep,
-          deviceLinkId: deviceLink.id,
-        });
-        devices.push(device);
-      }
-      setDevices(devices);
-    });
-  }, [
-    deviceLinks,
-    isDeviceLinksSubscriptionLoading,
-    deviceLinksSubscriptionError,
-  ]);
+  // const {
+  //   data: deviceLinks,
+  //   loading: isDeviceLinksSubscriptionLoading,
+  //   error: deviceLinksSubscriptionError,
+  // } = useDeepSubscription({
+  //   type_id: {
+  //     _id: [DEVICE_PACKAGE_NAME, 'Device'],
+  //   },
+  //   in: {
+  //     type_id: {
+  //       _id: ['@deep-foundation/core', 'Contain'],
+  //     },
+  //     from_id: deep.linkId,
+  //   },
+  // });
+  // const [devices, setDevices] = useState<DeviceInfo[] | undefined>(undefined);
+  // useEffect(() => {
+  //   if (isDeviceLinksSubscriptionLoading) {
+  //     return;
+  //   }
+  //   new Promise(async () => {
+  //     const devices = [];
+  //     for (const deviceLink of deviceLinks) {
+  //       const device = await getDevice({
+  //         deep,
+  //         deviceLinkId: deviceLink.id,
+  //       });
+  //       devices.push(device);
+  //     }
+  //     setDevices(devices);
+  //   });
+  // }, [
+  //   deviceLinks,
+  //   isDeviceLinksSubscriptionLoading,
+  //   deviceLinksSubscriptionError,
+  // ]);
 
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
 
-  const [isNotifyInsertionModalOpened, setIsNotifyInsertionModalOpened] =
-    useState<boolean>(false);
-  const notifyInsertionModalOnClose = () => {
-    setIsNotifyInsertionModalOpened(false);
-  };
-  const notifyInsertionCard = (
-    <Card>
-      <Button
-        onClick={async () => {
-          setIsNotifyInsertionModalOpened((oldState) => !oldState);
-        }}
-      >
-        Insert Notify Links
-      </Button>
-      {isNotifyInsertionModalOpened && (
-        <Modal
-          isOpen={isNotifyInsertionModalOpened}
-          onClose={notifyInsertionModalOnClose}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Insert</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <HStack>
-                <Stack>
-                  {pushNotifications.map((pushNotification, i) => (
-                    <PushNotificationComponent
-                      key={i}
-                      pushNotification={pushNotification}
-                    />
-                  ))}
-                </Stack>
-                <Stack>
-                  {devices.map((device, i) => (
-                    <DeviceComponent key={i} device={device} />
-                  ))}
-                </Stack>
-              </HStack>
-            </ModalBody>
+  // const [isNotifyInsertionModalOpened, setIsNotifyInsertionModalOpened] =
+  //   useState<boolean>(false);
+  // const notifyInsertionModalOnClose = () => {
+  //   setIsNotifyInsertionModalOpened(false);
+  // };
+  // const notifyInsertionCard = (
+  //   <Card>
+  //     <Button
+  //       onClick={async () => {
+  //         setIsNotifyInsertionModalOpened((oldState) => !oldState);
+  //       }}
+  //     >
+  //       Insert Notify Links
+  //     </Button>
+  //     {isNotifyInsertionModalOpened && (
+  //       <Modal
+  //         isOpen={isNotifyInsertionModalOpened}
+  //         onClose={notifyInsertionModalOnClose}
+  //       >
+  //         <ModalOverlay />
+  //         <ModalContent>
+  //           <ModalHeader>Insert</ModalHeader>
+  //           <ModalCloseButton />
+  //           <ModalBody>
+  //             <HStack>
+  //               <Stack>
+  //                 {pushNotifications.map((pushNotification, i) => (
+  //                   <PushNotificationComponent
+  //                     key={i}
+  //                     pushNotification={pushNotification}
+  //                   />
+  //                 ))}
+  //               </Stack>
+  //               <Stack>
+  //                 {devices.map((device, i) => (
+  //                   <DeviceComponent key={i} device={device} />
+  //                 ))}
+  //               </Stack>
+  //             </HStack>
+  //           </ModalBody>
 
-            <ModalFooter>
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={notifyInsertionModalOnClose}
-              >
-                Close
-              </Button>
-              <Button variant="ghost">Secondary Action</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
-    </Card>
-  );
+  //           <ModalFooter>
+  //             <Button
+  //               colorScheme="blue"
+  //               mr={3}
+  //               onClick={notifyInsertionModalOnClose}
+  //             >
+  //               Close
+  //             </Button>
+  //             <Button variant="ghost">Secondary Action</Button>
+  //           </ModalFooter>
+  //         </ModalContent>
+  //       </Modal>
+  //     )}
+  //   </Card>
+  // );
 
   // const [pushNotificationToNotifyLinkId, setPushNotificationToNotifyLinkId] = useState<number|undefined>(undefined)
   // const [deviceToNotifyLinkId, setDeviceToNotifyLinkId] = useState(0)
@@ -335,7 +328,7 @@ function Page() {
       <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
       <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
       
-      {notifyInsertionCard}
+      {/* {notifyInsertionCard} */}
     </Stack>
   );
 }
