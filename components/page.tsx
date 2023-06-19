@@ -6,7 +6,7 @@ import { ErrorAlert } from './error-alert';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { WithDeviceInsertionIfDoesNotExistAndSavingdata } from '@deep-foundation/capacitor-device';
+import { WithDeviceInsertionIfDoesNotExistAndSavingData } from '@deep-foundation/capacitor-device';
 import {
   DeepClient,
   DeepProvider,
@@ -113,7 +113,7 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
   );
 
   return (
-    deep.linkId ? <WithDeviceInsertionIfDoesNotExistAndSavingdata
+    deep.linkId ? <WithDeviceInsertionIfDoesNotExistAndSavingData
       containerLinkId={deep.linkId}
       deep={deep}
       deviceLinkId={deviceLinkId}
@@ -122,6 +122,6 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
       renderIfNotInserted={() => <Text>Initializing device...</Text>}
     >
       {renderChildren({ deviceLinkId })}
-    </WithDeviceInsertionIfDoesNotExistAndSavingdata> : null
+    </WithDeviceInsertionIfDoesNotExistAndSavingData> : null
   );
 }
