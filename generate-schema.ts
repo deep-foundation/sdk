@@ -3,8 +3,11 @@ import * as path from 'path'
 import * as fs from 'fs'
 import _ from 'lodash';
 import {deepMapObject} from '@freephoenix888/deep-map-object';
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+
 
 main()
 
@@ -16,7 +19,8 @@ async function main () {
   };
   
   const compilerOptions: TJS.CompilerOptions = {
-    strictNullChecks: true,
+    strictNullChecks: false,
+    skipLibCheck: true
   };
   
   const definitionFilePath = require.resolve(parsedArguments.interfaceFilePath);
