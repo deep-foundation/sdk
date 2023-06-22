@@ -72,14 +72,15 @@ import {
   GetLanguageCodeResult,
   LanguageTag,
 } from '@capacitor/device';
-const schema: RJSFSchema = require('../imports/firebase-push-notification/schema.json');
-import Form from '@rjsf/chakra-ui';
-import validator from '@rjsf/validator-ajv8';
-import { RJSFSchema } from '@rjsf/utils';
 import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
 import { PushNotification } from '../imports/firebase-push-notification/push-notification';
 import { CapacitorPlatform } from '@capacitor/core/types/platforms';
 import { Page } from '../components/page';
+import validator from '@rjsf/validator-ajv8';
+import { RJSFSchema } from '@rjsf/utils';
+import Form from '@rjsf/chakra-ui';
+const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
+
 
 export default function PushNotificationsPage() {
   return (
