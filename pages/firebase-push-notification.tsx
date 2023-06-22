@@ -79,7 +79,7 @@ import { Page } from '../components/page';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
-const schema: RJSFSchema = require('../imports/action-sheet/schema.json');
+const schema: RJSFSchema = require('../imports/firebase-push-notification/schema.json');
 
 
 export default function PushNotificationsPage() {
