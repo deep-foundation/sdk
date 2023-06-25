@@ -31,17 +31,7 @@ async function main () {
   if(!schema) {
     throw new Error("Failed to generate schema")
   }
-  const keyNamesNotToMap = [
-    'type',
-    'properties',
-    'description',
-    'items',
-    'required',
-    'definitions',
-    '$schema',
-    'enum'
-  ];
-  // schema = await deepMapObject(schema, ({key, value}) => ({newKey: keyNamesNotToMap.includes(key) ? key : _.upperFirst(key), newValue: value}));
+  
   schema = await deepMapObject(schema, ({key, value}) => ({newKey: key, newValue: (key === 'title') ? _.upperFirst(value) : value}));
   fs.writeFileSync(path.resolve(parsedArguments.outputJsonFilePath), JSON.stringify(schema, null, 2));
 }
