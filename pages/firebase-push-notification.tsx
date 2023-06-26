@@ -42,7 +42,7 @@ import {
   HStack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { DEVICE_PACKAGE_NAME } from '@deep-foundation/capacitor-device';
+import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '@deep-foundation/capacitor-device';
 import { Provider } from '../imports/provider';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Device as CapacitorDevice } from '@capacitor/device';
