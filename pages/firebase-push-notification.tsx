@@ -44,7 +44,6 @@ import {
 } from '@chakra-ui/react';
 import { DEVICE_PACKAGE_NAME } from '@deep-foundation/capacitor-device';
 import { Provider } from '../imports/provider';
-import { PushNotifications } from '@capacitor/push-notifications';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Device as CapacitorDevice } from '@capacitor/device';
 import {
@@ -53,16 +52,8 @@ import {
   Messaging,
   onMessage,
 } from 'firebase/messaging';
-import { insertDeviceRegistrationToken } from '../imports/firebase-push-notification/insert-device-registration-token';
-import { PACKAGE_NAME } from '../imports/firebase-push-notification/package-name';
-import { requestPermissions } from '../imports/firebase-push-notification/request-permissions';
-import { insertWebPushCertificate } from '../imports/firebase-push-notification/insert-web-push-certificate';
-import { insertServiceAccount } from '../imports/firebase-push-notification/insert-service-account';
-import { insertPushNotification } from '../imports/firebase-push-notification/insert-push-notification';
-import { registerDevice } from '../imports/firebase-push-notification/register-device';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { PushNotification as PushNotificationComponent } from '../components/push-notification';
-import { getPushNotification } from '../imports/firebase-push-notification/get-push-notification';
 // import {  } from '@deep-foundation/capacitor-device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import {
@@ -73,12 +64,13 @@ import {
   LanguageTag,
 } from '@capacitor/device';
 import { insertActionSheet } from '../imports/action-sheet/insert-action-sheet';
-import { PushNotification } from '../imports/firebase-push-notification/push-notification';
 import { CapacitorPlatform } from '@capacitor/core/types/platforms';
 import { Page } from '../components/page';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
+import { getPushNotification, insertPushNotification,insertDeviceRegistrationToken, insertServiceAccount, insertWebPushCertificate, registerDevice, requestPermissions, PushNotification, PACKAGE_NAME as  FIREBASE_PUSH_NOTIFICATION_PACKAGE_NAME, checkPermissions } from '@deep-foundation/firebase-push-notification';
+import { PushNotifications } from '@capacitor/push-notifications';
 const schema: RJSFSchema = require('../imports/firebase-push-notification/schema.json');
 
 
@@ -140,7 +132,7 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
     error: pushNotificationLinksSubscriptionError,
   } = useDeepSubscription({
     type_id: {
-      _id: [PACKAGE_NAME, 'PushNotification'],
+      _id: [FIREBASE_PUSH_NOTIFICATION_PACKAGE_NAME, 'PushNotification'],
     },
     in: {
       type_id: {
@@ -271,7 +263,7 @@ function ServiceAccountInsertionModal({
             serviceAccount: JSON.parse(
               await pickFilesResult.files[0].blob.text()
             ),
-            makeActive: shouldMakeServiceAccountActive,
+            shouldMakeActive: shouldMakeServiceAccountActive,
           });
         }}
       >
@@ -292,7 +284,7 @@ function ServiceAccountInsertionModal({
             await insertServiceAccount({
               deep,
               serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
-              makeActive: shouldMakeServiceAccountActive,
+              shouldMakeActive: shouldMakeServiceAccountActive,
             });
           }}
         >
@@ -475,8 +467,12 @@ function DeviceRegistrationCard({
           deep,
           deviceLinkId,
           firebaseMessaging,
-          platform,
-          callback: ({ deviceRegistrationTokenLinkId }) => {
+          callback: async ({ deviceRegistrationToken }) => {
+            const {deviceRegistrationTokenLinkId} =  await insertDeviceRegistrationToken({
+              deep,
+              deviceLinkId,
+              deviceRegistrationToken
+            })
             onDeviceRegistrationTokenLinkIdChange(deviceRegistrationTokenLinkId);
           },
         });
@@ -497,6 +493,7 @@ function PermissionsCard({
 
   useEffect(() => {
     new Promise(async () => {
+      checkPermissions();
       let isPermissionsGranted: boolean;
       if (!platform) {
         return;
@@ -526,9 +523,7 @@ function PermissionsCard({
             if (!platform) {
               return;
             }
-            const isPermissionsGranted = await requestPermissions({
-              platform,
-            });
+            const isPermissionsGranted = await requestPermissions();
             setIsPermissionsGranted(isPermissionsGranted);
           });
         }}
