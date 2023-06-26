@@ -8,6 +8,7 @@ const withNextEnv = nextEnv();
 const config =  {
   distDir: 'app',
   strictMode: false,
+  transpilePackages: ['@deep-foundation/capacitor-motion'],
   
   webpack: (config) => {
     const oldEntriesPromise = config.entry();
