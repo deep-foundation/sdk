@@ -3,8 +3,9 @@ import dotenvLoad from 'dotenv-load';
 dotenvLoad();
  
 const withNextEnv = nextEnv();
- 
-export default withNextEnv({
+
+ /** @type {import('next').NextConfig}*/
+const config =  {
   distDir: 'app',
   strictMode: false,
   
@@ -43,4 +44,6 @@ export default withNextEnv({
 
     return config;
   },
-});
+}
+
+export default withNextEnv(config);
