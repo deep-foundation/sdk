@@ -71,7 +71,8 @@ import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
 import { getPushNotification, insertPushNotification,insertDeviceRegistrationToken, insertServiceAccount, insertWebPushCertificate, registerDevice, requestPermissions, PushNotification, PACKAGE_NAME as  FIREBASE_PUSH_NOTIFICATION_PACKAGE_NAME, checkPermissions } from '@deep-foundation/firebase-push-notification';
 import { PushNotifications } from '@capacitor/push-notifications';
-const schema: RJSFSchema = require('../imports/firebase-push-notification/schema.json');
+import schemaJson from '@deep-foundation/firebase-push-notification/dist/schema.json';
+const schema = schemaJson as RJSFSchema;
 
 
 export default function PushNotificationsPage() {
