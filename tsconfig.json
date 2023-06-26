@@ -22,7 +22,7 @@
     "noEmit": true,
     "incremental": true,
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
     "plugins": [
