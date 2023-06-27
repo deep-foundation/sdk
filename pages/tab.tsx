@@ -55,3 +55,7 @@ import { Button, Stack, StackDivider, Box, Text, Image, Card, CardHeader, CardBo
 //     </CardBody>
 //   </Card>
 // }
+
+export default function Page() {
+   return <></>
+}

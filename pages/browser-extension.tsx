@@ -95,3 +95,7 @@ import { BROWSER_EXTENSION_PACKAGE_NAME } from "../imports/browser-extension/pac
 //     </>
 //   );
 // }
+
+export default function Page() {
+   return <></>
+}
