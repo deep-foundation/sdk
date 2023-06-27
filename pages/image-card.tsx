@@ -1,4 +1,5 @@
 import { Button, Stack, StackDivider, Box, Text, Image, Card, CardHeader, CardBody, Heading, Flex } from "@chakra-ui/react";
+import { Image as CameraImage } from "../imports/camera/image";
 
 const readAsBase64 = async (webPath) => {
 	// Fetch the photo, read as a blob, then convert to base64 format
@@ -16,13 +17,13 @@ const convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
 	reader.readAsDataURL(blob);
 });
 
-export default function ImageCard({ image }) {
+export default function ImageCard({ image }: {image: CameraImage}) {
 
 	return <Card>
 		<CardBody>
 			<Stack divider={<StackDivider />} spacing='2'>
 				<Image
-					src={image.Base64}
+					src={image.base64}
 					alt={image.url}
 					borderRadius='lg'
 				/>
@@ -31,7 +32,7 @@ export default function ImageCard({ image }) {
 						Format:
 					</Heading>
 					<Text pt='2' fontSize='sm'>
-						{image.Format}
+						{image.format}
 					</Text>
 				</Box>
 				<Box>
@@ -39,7 +40,7 @@ export default function ImageCard({ image }) {
 						TimeStamp:
 					</Heading>
 					<Text pt='2' fontSize='sm'>
-						{image.TimeStamp}
+						{image.timestamp}
 					</Text>
 				</Box>
 			</Stack>
