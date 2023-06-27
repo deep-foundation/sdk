@@ -56,7 +56,7 @@
     "@capawesome/capacitor-file-picker": "^5.0.0",
     "@chakra-ui/react": "^2.5.5",
     "@deep-foundation/capacitor-device": "^9.0.1",
-    "@deep-foundation/capacitor-motion": "^1.2.5",
+    "@deep-foundation/capacitor-motion": "^1.2.6",
     "@deep-foundation/deeplinks": "^0.0.196",
     "@deep-foundation/firebase-push-notification": "^8.0.0",
     "@deep-foundation/react-with-packages-installed": "^0.5.0",
