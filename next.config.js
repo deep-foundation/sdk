@@ -8,7 +8,7 @@ const withNextEnv = nextEnv();
 const config =  {
   distDir: 'app',
   strictMode: false,
-  transpilePackages: ['@deep-foundation/capacitor-motion'],
+  transpilePackages: ['@deep-foundation/capacitor-motion', '@deep-foundation/firebase-push-notification'],
   
   webpack: (config) => {
     const oldEntriesPromise = config.entry();
