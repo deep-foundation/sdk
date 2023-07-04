@@ -69,7 +69,7 @@ import { Page } from '../components/page';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
-import { getPushNotification, insertPushNotification,insertDeviceRegistrationToken, insertServiceAccount, insertWebPushCertificate, registerDevice, requestPermissions, PushNotification, PACKAGE_NAME as  FIREBASE_PUSH_NOTIFICATION_PACKAGE_NAME, checkPermissions } from '@deep-foundation/firebase-push-notification';
+import { getPushNotification,  registerDevice, requestPermissions, PushNotification, PACKAGE_NAME as  FIREBASE_PUSH_NOTIFICATION_PACKAGE_NAME, checkPermissions, getPushNotificationInsertSerialOperations, getServiceAccountInsertSerialOperations, getWebPushCertificateInsertSerialOperations, getDeviceRegistrationTokenInsertSerialOperations } from '@deep-foundation/firebase-push-notification';
 import { PushNotifications } from '@capacitor/push-notifications';
 import schemaJson from '@deep-foundation/firebase-push-notification/dist/schema.json';
 const schema = schemaJson as RJSFSchema;
@@ -212,11 +212,14 @@ function InsertPushNotificationModal({
               schema={schema}
               validator={validator}
               onSubmit={async (arg) => {
-                await insertPushNotification({
+                const {serialOperations} = await getPushNotificationInsertSerialOperations({
                   deep,
                   containerLinkId: deviceLinkId,
                   pushNotification: arg.formData,
                 });
+                await deep.serial({
+                  operations: serialOperations,
+                })
               }}
             />
           </ModalBody>
@@ -259,7 +262,7 @@ function ServiceAccountInsertionModal({
           const pickFilesResult = await FilePicker.pickFiles({
             types: ['application/json'],
           });
-          await insertServiceAccount({
+          const serialOperations = await getServiceAccountInsertSerialOperations({
             deep,
             serviceAccount: JSON.parse(
               await pickFilesResult.files[0].blob.text()
@@ -282,11 +285,14 @@ function ServiceAccountInsertionModal({
         ></Textarea>
         <Button
           onClick={async () => {
-            await insertServiceAccount({
+            const {serialOperations} = await getServiceAccountInsertSerialOperations({
               deep,
-              serviceAccount: JSON.parse(JSON.stringify(serviceAccount)),
+              serviceAccount: JSON.parse(serviceAccount),
               shouldMakeActive: shouldMakeServiceAccountActive,
             });
+            await deep.serial({
+              operations: serialOperations,
+            })
           }}
         >
           Insert Service Account
@@ -409,11 +415,14 @@ function WebPushCertificateInsertionModal({
           </Checkbox>
           <Button
             onClick={async () => {
-              await insertWebPushCertificate({
+              const {serialOperations} = await getWebPushCertificateInsertSerialOperations({
                 deep,
                 webPushCertificate,
                 shouldMakeActive: shouldMakeWebPushCertificateActive,
               });
+              await deep.serial({
+                operations: serialOperations,
+              })
             }}
           >
             Insert Web Push Certificate
@@ -469,12 +478,15 @@ function DeviceRegistrationCard({
           deviceLinkId,
           firebaseMessaging,
           callback: async ({ deviceRegistrationToken }) => {
-            const {deviceRegistrationTokenLinkId} =  await insertDeviceRegistrationToken({
+            const {serialOperations, linkIds} =  await getDeviceRegistrationTokenInsertSerialOperations({
               deep,
-              deviceLinkId,
+              containerLinkId: deviceLinkId,
               deviceRegistrationToken
             })
-            onDeviceRegistrationTokenLinkIdChange(deviceRegistrationTokenLinkId);
+            await deep.serial({
+              operations: serialOperations,
+            })
+            onDeviceRegistrationTokenLinkIdChange(linkIds.deviceRegistrationTokenLinkId);
           },
         });
       }}
