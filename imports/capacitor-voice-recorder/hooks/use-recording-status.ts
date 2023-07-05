@@ -2,7 +2,7 @@ import { VoiceRecorder } from "capacitor-voice-recorder";
 import { useState, useEffect } from "react";
 
 export const useRecordingStatus = ({intervalInMs = 1000}: {intervalInMs?: number}):string => {
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const fetchStatus = async () => {

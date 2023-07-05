@@ -1,6 +1,6 @@
 import { VoiceRecorder } from "capacitor-voice-recorder"
 
-export default async function pauseAudioRec() {
+export async function pauseRecording() {
     const { value: ispaused } = await VoiceRecorder.pauseRecording();
     return ispaused;
 }

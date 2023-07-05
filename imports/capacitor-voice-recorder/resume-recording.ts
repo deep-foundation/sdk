@@ -1,6 +1,6 @@
 import { VoiceRecorder } from "capacitor-voice-recorder"
 
-export default async function resumeAudioRec() {
+export async function resumeRecording() {
     const { value: isresumed } = await VoiceRecorder.resumeRecording();
     return isresumed;
 }

@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from './package-name';
 
-export default async function createContainer(deep: DeepClient): Promise<number> {
+export async function createContainer(deep: DeepClient): Promise<number> {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const audioRecordsTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "AudioRecords");
 

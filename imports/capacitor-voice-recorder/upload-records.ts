@@ -14,7 +14,7 @@ export interface IUploadRecords {
   records: IRecord[];
 }
 
-export default async function uploadRecords({deep, containerLinkId, records}:IUploadRecords) {
+export async function uploadRecords({deep, containerLinkId, records}:IUploadRecords) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const recordTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
   const durationTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Duration");
