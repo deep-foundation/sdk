@@ -1,14 +1,16 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
+import { getBase64FromWebp } from './get-base64-from-webp';
+import { GalleryPhoto } from '@capacitor/camera';
 
 export interface IUploadGallery {
   deep: DeepClient,
   containerLinkId: number,
-  galleryImages: any
+  galleryPhotos: GalleryPhoto[]
 }
 
 
-export default async function uploadGallery({ deep, containerLinkId, galleryImages }: IUploadGallery) {
+export async function uploadGallery({ deep, containerLinkId, galleryPhotos }: IUploadGallery) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
   const base64TypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Base64");
@@ -17,26 +19,11 @@ export default async function uploadGallery({ deep, containerLinkId, galleryImag
   const formatTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Format");
   const timestampTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "TimeStamp");
 
-  const readAsBase64 = async (webPath) => {
-    // Fetch the photo, read as a blob, then convert to base64 format
-    const response = await fetch(webPath);
-    const blob = await response.blob();
-    return await convertBlobToBase64(blob) as string;
-  };
-
-  const convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-    reader.readAsDataURL(blob);
-  });
-
-  const photos = await Promise.all(galleryImages.map(async (image) => ({
-    format: image.photos[0].format,
-    webPath: image.photos[0].webPath,
-    base64: await readAsBase64(image.photos[0].webPath),
+  const photos = await Promise.all(galleryPhotos.map(async (photo: GalleryPhoto) => ({
+    format: photo.format,
+    webPath: photo.webPath,
+    exif: photo.exif ? photo.exif : "none",
+    base64: await getBase64FromWebp(photo.webPath),
   })));
 
   console.log({ photos });
@@ -83,7 +70,7 @@ export default async function uploadGallery({ deep, containerLinkId, galleryImag
           to: {
             data: {
               type_id: exifTypeLinkId,
-              string: { data: { value: photo.exif ? photo.exif : "none" } },
+              string: { data: { value: photo.exif } },
             }
           }
         },

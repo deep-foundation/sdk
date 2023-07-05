@@ -1,0 +1,15 @@
+export { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
+export { createContainer } from './create-container';
+export { getBase64FromWebp, convertBlobToBase64 } from './get-base64-from-webp';
+export { takePhoto } from './take-photo';
+export { pickGalleryPhotos } from './pick-photos';
+export { uploadPhotos, type IUploadPhotos } from './upload-photos';
+export { uploadGallery, type IUploadGallery } from './upload-gallery';
+export { downloadImages } from './download-images';
+export { Camera } from './components/camera';
+export { ImageCard } from './components/image-card';
+export { useCamera, type IUseCamera } from './hooks/use-camera';
+export { useGallery, type IUseGallery } from './hooks/use-gallery';
+export { useContainer } from './hooks/use-container';
+export { type Photo, type ImageOptions, type GalleryPhoto, type GalleryImageOptions } from '@capacitor/camera';
+export { type DeepClient } from "@deep-foundation/deeplinks/imports/client";

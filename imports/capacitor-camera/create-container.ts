@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
 
-export default async function createContainer(deep: DeepClient): Promise<number> {
+export async function createContainer(deep: DeepClient): Promise<number> {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const cameraTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Camera");
 

@@ -1,13 +1,14 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
+import { Photo } from '@capacitor/camera';
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
 
 export interface IUploadPhotos {
   deep: DeepClient,
   containerLinkId: number,
-  photos: any
+  photos: Photo[]
 }
 
-export default async function uploadPhotos({deep, containerLinkId, photos}:IUploadPhotos) {
+export async function uploadPhotos({ deep, containerLinkId, photos }: IUploadPhotos) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
   const base64TypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Base64");

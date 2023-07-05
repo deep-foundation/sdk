@@ -1,7 +1,7 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
 
-export const downloadImages = async (deep:DeepClient) => {
+export const downloadImages = async (deep: DeepClient): Promise<any[]> => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
   const cameraTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Camera");
@@ -28,7 +28,7 @@ export const downloadImages = async (deep:DeepClient) => {
         }
       `})
   const images = data.map(photo => {
-    photo.properties.forEach(property => photo[property.property.type.in[0].value.value] = property.property.value.value)
+    photo.properties.forEach((property: any) => photo[property.property.type.in[0].value.value] = property.property.value.value)
     return photo;
   })
   return images;
