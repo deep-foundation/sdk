@@ -1,10 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js')
 
-// Initialize the Firebase app in the service worker by passing in
-// your app's Firebase config object.
-// https://firebase.google.com/docs/web/setup#config-object
-
 const firebaseConfig = {
   apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
   authDomain: 'deep-97e93.firebaseapp.com',
@@ -15,9 +11,6 @@ const firebaseConfig = {
   measurementId: 'G-NJ1R8HDWLK',
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-
-// Retrieve an instance of Firebase Messaging so that it can handle background
-// messages.
 const messaging = firebase.messaging(firebaseApp);
 
 messaging.onBackgroundMessage((payload) => {
