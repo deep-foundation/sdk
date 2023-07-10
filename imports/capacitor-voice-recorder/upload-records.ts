@@ -1,28 +1,36 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { CAPACITOR_VOICE_RECORDER_PACKAGE_NAME } from './package-name';
+import { PACKAGE_NAME } from './package-name';
 import { ISound } from "./stop-recording";
+import { LinkName } from "./link-name";
 
-export interface IRecord {
-  sound: ISound;
-  startTime: string;
-  endTime: string;
+export interface IRecord { // Represents a record containing sound and its details.
+  sound: ISound; // The recorded sound.
+  startTime: string; // The start time of the recording.
+  endTime: string; // The end time of the recording.
 }
 
-export interface IUploadRecords {
-  deep: DeepClient;
-  containerLinkId: number;
-  records: IRecord[];
+export interface IUploadRecordsOptions { // Represents the parameters for uploading records.
+  deep: DeepClient; // The DeepClient instance.
+  containerLinkId: number; // The ID of the container link.
+  records: IRecord[]; // An array of records to be uploaded.
 }
 
-export async function uploadRecords({deep, containerLinkId, records}:IUploadRecords) {
+// uploadRecords function uploads the recorded sound with its details.
+
+export async function uploadRecords({deep, containerLinkId, records}:IUploadRecordsOptions) {
+
+  // Get the link IDs for nessesary types.
+
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const recordTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Record");
-  const durationTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "Duration");
-  const startTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "StartTime");
-  const endTimeTypeLinkId = await deep.id(CAPACITOR_VOICE_RECORDER_PACKAGE_NAME, "EndTime");
-  const mimetypeTypeLinkId = await deep.id("@deep-foundation/sound", "MIME/type");
-  const formatTypeLinkId = await deep.id("@deep-foundation/sound", "Format");
-  const soundTypeLinkId = await deep.id("@deep-foundation/sound", "Sound");
+  const recordTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Record]);
+  const durationTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Duration]);
+  const startTimeTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.StartTime]);
+  const endTimeTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.EndTime]);
+  const mimetypeTypeLinkId = await deep.id("@deep-foundation/sound", LinkName[LinkName["MIME/type"]]);
+  const formatTypeLinkId = await deep.id("@deep-foundation/sound", LinkName[LinkName.Format]);
+  const soundTypeLinkId = await deep.id("@deep-foundation/sound", LinkName[LinkName.Sound]);
+
+  // Map the records to the links structure defined in package type links structure and insert into the database.
 
   await deep.insert(records.map((record) => ({
     type_id: recordTypeLinkId,
