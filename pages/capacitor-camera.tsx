@@ -5,9 +5,7 @@ import { ChakraProvider} from '@chakra-ui/react';
 import { Camera } from "../imports/capacitor-camera/main";
 
 function Page() {
-  const deep = useDeep();
-  
-  return <Camera deep={deep} />
+  return <Camera deep={useDeep()} />
 }
 
 export default function CapacitorCamera() {

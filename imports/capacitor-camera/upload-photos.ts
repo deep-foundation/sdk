@@ -1,21 +1,23 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { Photo } from '@capacitor/camera';
-import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
+import { PACKAGE_NAME } from './package-name';
+import { LinkName } from './link-name';
 
-export interface IUploadPhotos {
-  deep: DeepClient,
-  containerLinkId: number,
-  photos: Photo[]
+export interface IUploadPhotosOptions {
+  deep: DeepClient, // The DeepClient instance.
+  containerLinkId: number, // The ID of the container link.
+  photos: Photo[] // Array of photos to upload.
 }
 
-export async function uploadPhotos({ deep, containerLinkId, photos }: IUploadPhotos) {
+export async function uploadPhotos({ deep, containerLinkId, photos }: IUploadPhotosOptions) {
+  // Retrieve the link IDs for the nessesary types.
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
-  const base64TypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Base64");
-  const webPathTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "WebPath");
-  const exifTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Exif");
-  const formatTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Format");
-  const timestampTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "TimeStamp");
+  const photoTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Photo]);
+  const base64TypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Base64]);
+  const webPathTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.WebPath]);
+  const exifTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Exif]);
+  const formatTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Format]);
+  const timestampTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.TimeStamp]);
 
   const { data: [{ id: photoLinkId }] } = await deep.insert(photos.map((photo) => ({
     type_id: photoTypeLinkId,

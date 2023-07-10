@@ -1,10 +1,17 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
-import { CAPACITOR_CAMERA_PACKAGE_NAME } from './package-name';
+import { PACKAGE_NAME } from './package-name';
+import { LinkName } from './link-name';
 
+/**
+ * Downloads images created by this camera package from deep database.
+ * @param {DeepClient} deep - The DeepClient object used for communication.
+ * @returns {Promise<any[]>} A Promise that resolves with an array of downloaded images.
+ */
 export const downloadImages = async (deep: DeepClient): Promise<any[]> => {
-  const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const photoTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Photo");
-  const cameraTypeLinkId = await deep.id(CAPACITOR_CAMERA_PACKAGE_NAME, "Camera");
+  // Retrieve the link IDs for the nessesary types.
+  const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain"); 
+  const photoTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Photo]); 
+  const cameraTypeLinkId = await deep.id(PACKAGE_NAME, LinkName[LinkName.Camera]); 
 
   const { data } = await deep.select({
     type_id: photoTypeLinkId,
@@ -26,10 +33,12 @@ export const downloadImages = async (deep: DeepClient): Promise<any[]> => {
             value
           }
         }
-      `})
+      `}); // Fetch images from the camera package and retrieve their properties.
+
   const images = data.map(photo => {
-    photo.properties.forEach((property: any) => photo[property.property.type.in[0].value.value] = property.property.value.value)
+    photo.properties.forEach((property: any) => photo[property.property.type.in[0].value.value] = property.property.value.value);
     return photo;
-  })
-  return images;
+  });
+
+  return images; // Return the downloaded images.
 }
