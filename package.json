@@ -5,7 +5,7 @@
   "license": "Unlicense",
   "type": "module",
   "scripts": {
-    "generate-schema": "ts-node-esm --project='./tsconfig.json'  ./generate-schema.ts",
+    "generate-schema": "ts-node --esm --project='./tsconfig.json' ./automation/generate-schema.ts",
     "generate-schemas": "npm run generate-action-sheet-schema && npm run generate-dialog-schemas && npm run generate-firebase-push-notification-schemas",
     "generate-action-sheet-schema": "npm run generate-schema -- --interface-file-path=\"@capacitor/action-sheet/dist/esm/definitions.d.ts\" --interface-name=\"ShowActionsOptions\" --output-json-file-path=\"./imports/action-sheet/schema.json\"",
     "generate-dialog-schemas": "npm run generate-alert-schema && npm run generate-prompt-schema && npm run generate-confirm-schema",
