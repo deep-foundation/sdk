@@ -56,7 +56,7 @@ async function parseCliOptions(): Promise<Options> {
     description: 'Output json file path',
     demandOption: false
   })
-  .argv;
+  .parseSync();
  
    return cliOptions;
  }
