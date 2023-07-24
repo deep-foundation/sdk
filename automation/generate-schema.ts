@@ -5,7 +5,6 @@ import _ from 'lodash';
 import {deepMapObject} from '@freephoenix888/deep-map-object';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
-import { program } from 'commander';
 import {capitalCase} from 'case-anything'
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
