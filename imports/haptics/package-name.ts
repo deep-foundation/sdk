@@ -1,0 +1,1 @@
+export const CAPACITOR_HAPTICS_PACKAGE_NAME = "@deep-foundation/capacitor-haptics"

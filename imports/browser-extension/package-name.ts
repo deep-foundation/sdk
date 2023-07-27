@@ -1,0 +1,1 @@
+export const BROWSER_EXTENSION_PACKAGE_NAME = "@deep-foundation/browser-extension"

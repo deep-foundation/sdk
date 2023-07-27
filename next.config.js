@@ -1,10 +1,11 @@
-const nextEnv = require('next-env');
-const dotenvLoad = require('dotenv-load');
+import nextEnv from 'next-env';
+import dotenvLoad from 'dotenv-load';
 dotenvLoad();
  
 const withNextEnv = nextEnv();
- 
-module.exports = withNextEnv({
+
+ /** @type {import('next').NextConfig}*/
+const config =  {
   distDir: 'app',
   strictMode: false,
   
@@ -43,4 +44,6 @@ module.exports = withNextEnv({
 
     return config;
   },
-});
+}
+
+export default withNextEnv(config);
