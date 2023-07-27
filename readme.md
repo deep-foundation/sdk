@@ -8,8 +8,8 @@ nvm install && nvm use
 npm-install
 ```
 
-- Install `@deep-foundation/deep-memo`
-Install https://www.npmjs.com/package/@deep-foundation/deep-memo by using npm-packager
+- Install `@deep-foundation/sdk`
+Install https://www.npmjs.com/package/@deep-foundation/sdk by using npm-packager
 
 - Give permissions
 ```ts
