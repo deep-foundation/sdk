@@ -1,1 +1,0 @@
-export const TELEGRAM_PACKAGE_NAME = "@deep-foundation/telegram";

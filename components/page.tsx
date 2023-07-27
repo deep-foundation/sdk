@@ -1,5 +1,4 @@
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { ProvidersAndLoginOrContent } from './providers-and-login-or-content';
 import { StoreProvider } from './store-provider';
 import { ErrorAlert } from './error-alert';
@@ -16,7 +15,6 @@ import {
 export interface PageParam {
   renderChildren: (param: {
     deep: DeepClient;
-    deviceLinkId: number;
   }) => JSX.Element;
 }
 
@@ -30,7 +28,7 @@ export function Page({ renderChildren }: PageParam) {
             return (
               <WithPackagesInstalled
               deep={deep}
-                packageNames={[DEEP_MEMO_PACKAGE_NAME]}
+                packageNames={[]}
                 renderIfError={(error) => <ErrorAlert error={error} />}
                 renderIfNotInstalled={(packageNames) => (
                   <>
@@ -77,12 +75,7 @@ export function Page({ renderChildren }: PageParam) {
                   <Text>Checking if deep packages are installed...</Text>
                 )}
               >
-                <WithDeviceLinkId
-                  deep={deep}
-                  renderChildren={({ deviceLinkId }) =>
-                    renderChildren({ deep, deviceLinkId })
-                  }
-                />
+                {renderChildren({ deep })}
               </WithPackagesInstalled>
             );
           }}

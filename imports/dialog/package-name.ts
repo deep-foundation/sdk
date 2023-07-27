@@ -1,1 +1,0 @@
-export const DIALOG_PACKAGE_NAME=`@deep-foundation/capacitor-dialog`
