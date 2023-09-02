@@ -41,7 +41,7 @@ jobs:
           ssh://git@github.com/
       - uses: actions/setup-node@v1
         with:
-          node-version: '14.15'
+          node-version: 18
       - name: Configure Node caching
         uses: actions/cache@v2
         env:
@@ -108,7 +108,7 @@ jobs:
           ssh://git@github.com/
       - uses: actions/setup-node@v1
         with:
-          node-version: '14.15'
+          node-version: 18
       - name: Configure Node caching
         uses: actions/cache@v2
         env:
@@ -179,7 +179,7 @@ jobs:
           ssh://git@github.com/
       - uses: actions/setup-node@v1
         with:
-          node-version: '14.15'
+          node-version: 18
       - name: Configure Node caching
         uses: actions/cache@v2
         env:
