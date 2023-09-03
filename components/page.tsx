@@ -60,23 +60,10 @@ interface WithDeepProps {
 
 function WithDeep({ renderChildren }: WithDeepProps) {
   const deep = useDeep();
-  return renderChildren({ deep });
+  return deep.linkId ? renderChildren({ deep }) : null;
 }
 
 interface WithDeviceLinkIdProps {
   deep: DeepClient;
   renderChildren: (param: { deviceLinkId: number }) => JSX.Element;
-}
-
-function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
-
-  return (
-    deep.linkId ? 
-      {renderChildren({ deviceLinkId })}
-    : null
-  );
 }
