@@ -62,8 +62,3 @@ function WithDeep({ renderChildren }: WithDeepProps) {
   const deep = useDeep();
   return deep.linkId ? renderChildren({ deep }) : null;
 }
-
-interface WithDeviceLinkIdProps {
-  deep: DeepClient;
-  renderChildren: (param: { deviceLinkId: number }) => JSX.Element;
-}
