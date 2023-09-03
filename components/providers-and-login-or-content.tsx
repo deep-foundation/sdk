@@ -6,9 +6,10 @@ import { CapacitorStoreKeys } from "../imports/capacitor-store-keys";
 import { LoginOrContent } from "./login-or-content";
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 import { useContext } from "react";
+import { processEnvs } from "../imports/process-envs.js";
 
 export function ProvidersAndLoginOrContent({ children }: { children: JSX.Element }) {
-  const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], undefined)
+  const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], processEnvs.graphQlPath)
   return (
     <>
       <ChakraProvider>
