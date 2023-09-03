@@ -14,7 +14,9 @@ export function WithLogin({ gqlPath, setGqlPath, children }: { gqlPath: string |
   console.log({processEnvs})
 
   useEffect(() => {
-    deep.login({token})
+    if(gqlPath || token) {
+      deep.login({token})
+    }
   }, [token])
 
   useEffect(() => {
