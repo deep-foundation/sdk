@@ -41,34 +41,6 @@ export function Page({ renderChildren }: PageParam) {
                         )
                       }
                     />
-                    <Stack>
-                      {packageNames.map((packageName) => (
-                        <Button
-                          onClick={async () => {
-                            await deep.insert([
-                              {
-                                type_id: await deep.id(
-                                  '@deep-foundation/npm-packager',
-                                  'Install'
-                                ),
-                                from_id: deep.linkId,
-                                to: {
-                                  data: {
-                                    type_id: await deep.id(
-                                      '@deep-foundation/core',
-                                      'PackageQuery'
-                                    ),
-                                    string: { data: { value: packageName } },
-                                  },
-                                },
-                              },
-                            ]);
-                          }}
-                        >
-                          Install {packageName}
-                        </Button>
-                      ))}
-                    </Stack>
                   </>
                 )}
                 renderIfLoading={() => (
