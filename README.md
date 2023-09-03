@@ -13,6 +13,7 @@ git fetch sdk
 git merge sdk/some_old_commit_hash --allow-unrelated-histories --strategy ours
 git merge sdk/main
 ```
+Note: I am sure that it is not the only way to do this. Possibly you can use `cherry-pick` to do this
 
 Now you can pull changes from this repository by using
 ```
