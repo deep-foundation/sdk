@@ -11,10 +11,6 @@ import {
 import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
-import NextLink from 'next/link';
-
-
-import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 
@@ -23,10 +19,6 @@ interface ContentParam {
 }
 
 function Content({ deep }: ContentParam) {
-  useEffect(() => {
-    defineCustomElements(window);
-  }, []);
-
   useEffect(() => {
     new Promise(async () => {
       if (deep.linkId !== 0) {
