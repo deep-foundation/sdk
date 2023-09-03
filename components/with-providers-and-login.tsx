@@ -3,7 +3,7 @@ import { DeepContext, DeepProvider } from "@deep-foundation/deeplinks/imports/cl
 import { TokenProvider } from "@deep-foundation/deeplinks/imports/react-token";
 import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../imports/capacitor-store-keys";
-import { LoginOrContent } from "./login-or-content";
+import { WithLogin } from "./with-login";
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 import { useContext } from "react";
 import { processEnvs } from "../imports/process-envs.js";
@@ -23,11 +23,11 @@ export function WithProvidersAndLogin({ children }: { children: JSX.Element }) {
             }}
           >
             <DeepProvider>
-              <LoginOrContent gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
+              <WithLogin gqlPath={gqlPath} setGqlPath={(newGqlPath) => {
                 setGqlPath(newGqlPath)
               }} >
                 {children}
-              </LoginOrContent>
+              </WithLogin>
             </DeepProvider>
           </ApolloClientTokenizedProvider>
         </TokenProvider>

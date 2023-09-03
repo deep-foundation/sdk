@@ -6,7 +6,7 @@ import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../imports/capacitor-store-keys";
 import { processEnvs } from "../imports/process-envs";
 
-export function LoginOrContent({ gqlPath, setGqlPath, children }: { gqlPath: string | undefined, setGqlPath: (gqlPath: string | undefined) => void, children: JSX.Element }) {
+export function WithLogin({ gqlPath, setGqlPath, children }: { gqlPath: string | undefined, setGqlPath: (gqlPath: string | undefined) => void, children: JSX.Element }) {
   const toast = useToast();
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
