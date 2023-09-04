@@ -53,4 +53,6 @@ npm run ios-build &&
 npm run ios-run
 ```
 
+# Development
+You can use environment variables to set graphql path and token on server instead of setting it on client. See template in [.env.development](https://github.com/deep-foundation/sdk/blob/main/.env.development). Create a file `.env.local` with your values
 
