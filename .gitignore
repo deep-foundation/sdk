@@ -49,9 +49,6 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-
 # next.js build output
 .next
 .export
@@ -135,3 +132,4 @@ extension/*.html
 /*.crx
 /*.pem
 
+.env*.local
