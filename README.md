@@ -1,3 +1,5 @@
+A "template" for creating nextjs applications that use deep. It is recommended to merge with this repository to have its improvements in your nextjs application!
+
 # How to make this repository pullable in your repository
 ```
 git remote add sdk https://github.com/deep-foundation/sdk.git
