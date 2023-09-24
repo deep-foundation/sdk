@@ -3,7 +3,7 @@ import { WithProvidersAndLogin } from './with-providers-and-login';
 import { StoreProvider } from './store-provider';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { CapacitorStoreKeys } from '../../capacitor-store-keys';
 import {
   DeepClient,
   DeepProvider,
