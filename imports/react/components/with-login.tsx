@@ -23,8 +23,6 @@ export function WithLogin({ children }: { children: JSX.Element }) {
 
   useEffect(() => {
     new Promise(async () => {
-      
-    self["deep"] = deep
     if (deep.linkId !== 0) {
       try {
         await deep.select({id: 1})
