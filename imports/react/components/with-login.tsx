@@ -23,7 +23,9 @@ export function WithLogin({ children }: { children: JSX.Element }) {
 
   useEffect(() => {
     new Promise(async () => {
-      if (deep.linkId !== 0) {
+      if (deep.linkId === 0) {
+        setIsAuthorized(false);
+      } else {
         try {
           await deep.select({ id: 1 });
           setIsAuthorized(true);
@@ -39,8 +41,6 @@ export function WithLogin({ children }: { children: JSX.Element }) {
             isClosable: true,
           });
         }
-      } else {
-        setIsAuthorized(false);
       }
     });
   }, [deep]);
