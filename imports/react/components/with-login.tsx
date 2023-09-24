@@ -1,49 +1,22 @@
-import { useDeep } from "@deep-foundation/deeplinks/imports/client";
+import { DeepClient, useDeep } from "@deep-foundation/deeplinks/imports/client";
 import { useState, useEffect } from "react";
 import { Login } from "./login";
 import { useToast } from "@chakra-ui/react";
 import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import { processEnvs } from "../../process-envs";
-import { useToken } from "../hooks/use-token";
-import { useGqlPath } from "../hooks/use-gql-path";
+import { useDeepToken } from "../hooks/use-token";
+import { useGraphQlUrl } from "../hooks/use-gql-path";
+import { generateApolloClient } from "@deep-foundation/hasura/client";
+import { debug } from "../../debug";
 
 export function WithLogin({ children }: { children: JSX.Element }) {
+  const log = debug.extend(WithLogin.name);
   const toast = useToast();
-  const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
-  const [gqlPath, setGqlPath] = useGqlPath();
-  const [token, setToken] = useToken();
-
-  useEffect(() => {
-    if (gqlPath || token) {
-      deep.login({ token });
-    }
-  }, [token]);
-
-  useEffect(() => {
-    new Promise(async () => {
-      if (deep.linkId === 0) {
-        setIsAuthorized(false);
-      } else {
-        try {
-          await deep.select({ id: 1 });
-          setIsAuthorized(true);
-        } catch (error) {
-          setGqlPath(undefined);
-          setToken(undefined);
-          await deep.logout();
-          toast({
-            title: "Login failed",
-            description: error.message,
-            status: "error",
-            duration: null,
-            isClosable: true,
-          });
-        }
-      }
-    });
-  }, [deep]);
+  const [graphQlUrl, setGraphQlUrl] = useGraphQlUrl();
+  const [deepToken, setDeepToken] = useDeepToken();
+  const deep = useDeep();
 
   return isAuthorized ? (
     children
@@ -51,13 +24,13 @@ export function WithLogin({ children }: { children: JSX.Element }) {
     <Login
       onSubmit={async (arg) => {
         const gqlPathUrl = new URL(arg.gqlPath);
-        setGqlPath(
+        setGraphQlUrl(
           gqlPathUrl.host +
             gqlPathUrl.pathname +
             gqlPathUrl.search +
             gqlPathUrl.hash
         );
-        setToken(arg.token);
+        setDeepToken(arg.token);
       }}
     />
   );

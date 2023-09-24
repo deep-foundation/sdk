@@ -1,29 +1,20 @@
 import { useEffect } from "react";
-import { Contacts } from '@capacitor-community/contacts';
-import { Device } from '@capacitor/device';
-import { Motion } from '@capacitor/motion';
-import { Geolocation } from '@capacitor/geolocation';
-import { Camera } from '@capacitor/camera';
-import { Network } from '@capacitor/network';
-import { useToken } from "./use-token";
-import { useGqlPath } from "./use-gql-path";
+import { useDeepToken } from "./use-token";
+import { useGraphQlUrl } from "./use-gql-path";
+import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 
 export function useAddDebugFieldsToWindow() { 
-  const [gqlPath,setGqlPath] = useGqlPath()
-  const [token,setToken] = useToken()
+  const [graphQlUrl,setGraphQlUrl] = useGraphQlUrl()
+  const [deepToken,setDeepToken] = useDeepToken()
+  const deep = useDeep();
 
   useEffect(() => {
-    self['CapacitorDevice'] = Device
-    self['CapacitorMotion'] = Motion
-    self['CapacitorGeolocation'] = Geolocation
-    self['CapacitorCamera'] = Camera
-    self['CapacitorNetwork'] = Network
-    self['CapacitorContact'] = Contacts
+    self['graphQlUrl'] = graphQlUrl
+    self['setGraphQlUrl'] = setGraphQlUrl
 
-    self['gqlPath'] = gqlPath
-    self['setGqlPath'] = setGqlPath
+    self['deepToken'] = deepToken
+    self['setDeepToken'] = setDeepToken
 
-    self['token'] = token
-    self['setToken'] = setToken
+    self['deep'] = deep
   })
 }

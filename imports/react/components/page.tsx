@@ -19,7 +19,6 @@ export interface PageParam {
 
 export function Page({ renderChildren }: PageParam) {
   return (
-    <StoreProvider>
       <WithProviders>
         <WithDeep
           renderChildren={({ deep }) => {
@@ -50,7 +49,6 @@ export function Page({ renderChildren }: PageParam) {
           }}
         />
       </WithProviders>
-    </StoreProvider>
   );
 }
 

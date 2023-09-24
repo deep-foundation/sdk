@@ -19,17 +19,11 @@ interface ContentParam {
 }
 
 function Content({ deep }: ContentParam) {
-  useEffect(() => {
-    new Promise(async () => {
-      if (deep.linkId !== 0) {
-        return;
-      }
-      await deep.guest();
-    });
-  }, [deep]);
-
-  const generalInfoCard = (
-    <Card>
+  return (
+    <Stack alignItems={'center'}>
+      <NavBar />
+      <Heading as={'h1'}>Sdk</Heading>
+      <Card>
       <CardHeader>
         <Heading as={'h2'}>General Info</Heading>
       </CardHeader>
@@ -39,16 +33,6 @@ function Content({ deep }: ContentParam) {
         </Text>
       </CardBody>
     </Card>
-  );
-
-  return (
-    <Stack alignItems={'center'}>
-      <NavBar />
-      <Heading as={'h1'}>Sdk</Heading>
-      {generalInfoCard}
-      <>
-        
-      </>
     </Stack>
   );
 }
