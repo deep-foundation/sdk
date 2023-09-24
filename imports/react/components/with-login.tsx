@@ -11,7 +11,6 @@ export function WithLogin({ gqlPath, setGqlPath, children }: { gqlPath: string |
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
   const [token, setToken] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeepToken], processEnvs.deepToken);
-  console.log({processEnvs})
 
   useEffect(() => {
     if(gqlPath || token) {
