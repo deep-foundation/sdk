@@ -1,6 +1,6 @@
 import { useAddDebugFieldsToWindow } from "../hooks/use-add-debug-fields-to-window"
 
-export function WithAddDebugFieldsToWindows() {
+export function WithAddDebugFieldsToWindow() {
   useAddDebugFieldsToWindow()
   return null
 }
