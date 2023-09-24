@@ -44,7 +44,7 @@ export function WithLogin({ gqlPath, setGqlPath, children }: { gqlPath: string |
     })
   }, [deep]);
 
-  return isAuthorized && gqlPath ? children : (
+  return isAuthorized ? children : (
     <Login
       onSubmit={async (arg) => {
         const gqlPathUrl = new URL(arg.gqlPath);
