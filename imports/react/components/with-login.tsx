@@ -12,45 +12,52 @@ export function WithLogin({ children }: { children: JSX.Element }) {
   const toast = useToast();
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
-  const [gqlPath, setGqlPath] = useGqlPath()
-  const [token, setToken] = useToken()
+  const [gqlPath, setGqlPath] = useGqlPath();
+  const [token, setToken] = useToken();
 
   useEffect(() => {
-    if(gqlPath || token) {
-      deep.login({token})
+    if (gqlPath || token) {
+      deep.login({ token });
     }
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
     new Promise(async () => {
-    if (deep.linkId !== 0) {
-      try {
-        await deep.select({id: 1})
-        setIsAuthorized(true);
-      } catch (error) {
-        setGqlPath(undefined);
-        setToken(undefined)
-        await deep.logout();
-        toast({
-          title: "Login failed",
-          description: error.message,
-          status: "error",
-          duration: null,
-          isClosable: true,
-        })
+      if (deep.linkId !== 0) {
+        try {
+          await deep.select({ id: 1 });
+          setIsAuthorized(true);
+        } catch (error) {
+          setGqlPath(undefined);
+          setToken(undefined);
+          await deep.logout();
+          toast({
+            title: "Login failed",
+            description: error.message,
+            status: "error",
+            duration: null,
+            isClosable: true,
+          });
+        }
+      } else {
+        setIsAuthorized(false);
       }
-    } else {
-      setIsAuthorized(false);
-    }
-    })
+    });
   }, [deep]);
 
-  return isAuthorized ? children : (
+  return isAuthorized ? (
+    children
+  ) : (
     <Login
       onSubmit={async (arg) => {
         const gqlPathUrl = new URL(arg.gqlPath);
-        setGqlPath(gqlPathUrl.host + gqlPathUrl.pathname + gqlPathUrl.search + gqlPathUrl.hash);
-        setToken(arg.token)
+        setGqlPath(
+          gqlPathUrl.host +
+            gqlPathUrl.pathname +
+            gqlPathUrl.search +
+            gqlPathUrl.hash
+        );
+        setToken(arg.token);
       }}
     />
   );
