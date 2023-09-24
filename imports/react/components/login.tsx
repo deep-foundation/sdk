@@ -1,7 +1,7 @@
 import { Card, CardHeader, Heading, CardBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
-export function WithLogin(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
+export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
   const [gqlPath, setGqlPath] = useState(undefined);
   const [token, setToken] = useState(undefined);
   return <Card>
