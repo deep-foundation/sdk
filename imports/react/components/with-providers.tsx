@@ -8,7 +8,7 @@ import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apo
 import { useContext } from "react";
 import { processEnvs } from "../../process-envs";
 
-export function WithProvidersAndLogin({ children }: { children: JSX.Element }) {
+export function WithProviders({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], processEnvs.graphQlPath)
   return (
     <>

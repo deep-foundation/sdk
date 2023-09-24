@@ -1,5 +1,5 @@
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { WithProvidersAndLogin } from './with-providers-and-login';
+import { WithProviders } from './with-providers';
 import { StoreProvider } from './store-provider';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
@@ -20,7 +20,7 @@ export interface PageParam {
 export function Page({ renderChildren }: PageParam) {
   return (
     <StoreProvider>
-      <WithProvidersAndLogin>
+      <WithProviders>
         <WithDeep
           renderChildren={({ deep }) => {
             console.log({ deep });
@@ -49,7 +49,7 @@ export function Page({ renderChildren }: PageParam) {
             );
           }}
         />
-      </WithProvidersAndLogin>
+      </WithProviders>
     </StoreProvider>
   );
 }
