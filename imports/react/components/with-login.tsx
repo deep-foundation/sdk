@@ -4,8 +4,6 @@ import { Login } from "./login";
 import { useDeepToken } from "../hooks/use-token";
 import { useGraphQlUrl } from "../hooks/use-gql-path";
 import { logPackage } from "../../logPackage";
-import debug from "debug";
-debug.enable("@deep-foundation/deep-memo-app:WithLogin");
 
 export function WithLogin({ children }: { children: JSX.Element }) {
   const log = logPackage.extend(WithLogin.name);
