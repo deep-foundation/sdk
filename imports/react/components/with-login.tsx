@@ -1,13 +1,8 @@
-import { DeepClient, useDeep } from "@deep-foundation/deeplinks/imports/client";
+import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 import { useState, useEffect } from "react";
 import { Login } from "./login";
-import { useToast } from "@chakra-ui/react";
-import { useLocalStore } from "@deep-foundation/store/local";
-import { CapacitorStoreKeys } from "../../capacitor-store-keys";
-import { processEnvs } from "../../process-envs";
 import { useDeepToken } from "../hooks/use-token";
 import { useGraphQlUrl } from "../hooks/use-gql-path";
-import { generateApolloClient } from "@deep-foundation/hasura/client";
 import { logPackage } from "../../logPackage";
 import debug from "debug";
 debug.enable("@deep-foundation/deep-memo-app:WithLogin");
