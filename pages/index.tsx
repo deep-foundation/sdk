@@ -11,8 +11,8 @@ import {
 import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
-import { NavBar } from '../imports/react/components/navbar';
-import { Page } from '../imports/react/components/page';
+import { NavBar } from '../src/react/components/navbar';
+import { Page } from '../src/react/components/page';
 
 interface ContentParam {
   deep: DeepClient;
