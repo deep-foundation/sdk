@@ -11,6 +11,7 @@ import {
 } from "@deep-foundation/deeplinks/imports/client";
 import { ErrorAlert } from "./error-alert";
 import { WithLogin } from "./with-login";
+import { WithAddDebugFieldsToWindow } from "./with-add-debug-fields-to-window";
 
 export interface PageParam {
   renderChildren: (param: { deep: DeepClient }) => JSX.Element;
@@ -43,7 +44,12 @@ export function Page({ renderChildren }: PageParam) {
                   </VStack>
                 )}
               >
-                {renderChildren({ deep })}
+                <>
+                  {renderChildren({ deep })}
+                  {
+                    process.env.NODE_ENV === 'development' && <WithAddDebugFieldsToWindow />
+                  }
+                </>
               </WithPackagesInstalled>
             );
           }}
