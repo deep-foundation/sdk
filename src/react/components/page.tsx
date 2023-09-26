@@ -1,7 +1,7 @@
 import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
 import { WithProviders } from "./with-providers";
 import { StoreProvider } from "./store-provider";
-import { Button, Stack, Text } from "@chakra-ui/react";
+import { Button, CircularProgress, Stack, Text, VStack } from "@chakra-ui/react";
 import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import {
@@ -37,7 +37,10 @@ export function Page({ renderChildren }: PageParam) {
                   </>
                 )}
                 renderIfLoading={() => (
-                  <Text>Checking if deep packages are installed...</Text>
+                  <VStack height="100vh" justifyContent={"center"}>
+                    <CircularProgress isIndeterminate />
+                    <Text>Checking if deep packages are installed...</Text>
+                  </VStack>
                 )}
               >
                 {renderChildren({ deep })}
