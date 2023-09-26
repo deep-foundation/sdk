@@ -16,7 +16,6 @@ export function WithLogin({ children }: { children: JSX.Element }) {
   useEffect(() => {
     log({ graphQlUrl, deepToken, deep });
     log({ deepLinkId: deep.linkId });
-    console.log("!deep.linkId && graphQlUrl && deepToken", Boolean(!deep.linkId && graphQlUrl && deepToken))
     if(!deep.linkId && graphQlUrl && deepToken) {
       window.location.reload();
     } 
