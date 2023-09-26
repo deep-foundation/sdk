@@ -1,41 +1,39 @@
-import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { WithProviders } from './with-providers';
-import { StoreProvider } from './store-provider';
-import { Button, Stack, Text } from '@chakra-ui/react';
-import { useLocalStore } from '@deep-foundation/store/local';
-import { CapacitorStoreKeys } from '../../capacitor-store-keys';
+import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
+import { WithProviders } from "./with-providers";
+import { StoreProvider } from "./store-provider";
+import { Button, Stack, Text } from "@chakra-ui/react";
+import { useLocalStore } from "@deep-foundation/store/local";
+import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import {
   DeepClient,
   DeepProvider,
   useDeep,
-} from '@deep-foundation/deeplinks/imports/client';
-import { ErrorAlert } from './error-alert';
+} from "@deep-foundation/deeplinks/imports/client";
+import { ErrorAlert } from "./error-alert";
+import { WithLogin } from "./with-login";
 
 export interface PageParam {
-  renderChildren: (param: {
-    deep: DeepClient;
-  }) => JSX.Element;
+  renderChildren: (param: { deep: DeepClient }) => JSX.Element;
 }
 
 export function Page({ renderChildren }: PageParam) {
   return (
-      <WithProviders>
+    <WithProviders>
+      <WithLogin>
         <WithDeep
           renderChildren={({ deep }) => {
             console.log({ deep });
             return (
               <WithPackagesInstalled
-              deep={deep}
+                deep={deep}
                 packageNames={[]}
                 renderIfError={(error) => <ErrorAlert title={error.message} />}
                 renderIfNotInstalled={(packageNames) => (
                   <>
                     <ErrorAlert
-                      title={
-                        `Install these deep packages to proceed: ${packageNames.join(
-                          ', '
-                        )}`
-                      }
+                      title={`Install these deep packages to proceed: ${packageNames.join(
+                        ", "
+                      )}`}
                     />
                   </>
                 )}
@@ -48,7 +46,8 @@ export function Page({ renderChildren }: PageParam) {
             );
           }}
         />
-      </WithProviders>
+      </WithLogin>
+    </WithProviders>
   );
 }
 
