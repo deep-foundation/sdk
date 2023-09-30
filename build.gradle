@@ -1,0 +1,33 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// Custom task to generate 'client-reference-manifest.json'
+task generateClientReferenceManifest(type: Exec) {
+    workingDir 'app/server'
+    commandLine 'node', 'generate-client-reference-manifest.js'
+}
+
+// Ensure 'client-reference-manifest.json' is generated before the project is built
+preBuild.dependsOn generateClientReferenceManifest
