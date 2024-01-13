@@ -1,0 +1,454 @@
+name: Build And Publish Reusable Workflow
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        type: string
+        required: true
+      install-electron-dependencies-command:
+        type: string
+        required: false
+        default: cd electron && npm ci
+      migrations-hasura-path:
+        type: string
+        required: false
+        default: localhost:8080
+      migrations-hasura-ssl:
+        type: number
+        required: false
+        default: 0
+      migrations-hasura-secret:
+        type: string
+        required: false
+        default: myadminsecretkey
+      next-public-deeplinks-server-url:
+        type: string
+        required: false
+        default: http://localhost:3007
+      next-public-gql-path:
+        type: string
+        required: false
+        default: localhost:3006/gql
+      next-public-gql-ssl:
+        type: number
+        required: false
+        default: 0
+      deeplinks-hasura-path:
+        type: string
+        required: false
+        default: localhost:8080
+      deeplinks-hasura-ssl:
+        type: number
+        required: false
+        default: 0
+      migrations-deeplinks-app-url:
+        type: string
+        required: false
+        default: http://host.docker.internal:3007
+      migrations-deeplinks-url:
+        type: string
+        required: false
+        default: http://host.docker.internal:3006
+    secrets:
+      csc-key-password:
+        required: true
+      csc-link:
+        required: true
+      appleid:
+        required: true
+      appleidpass:
+        required: true
+jobs:
+  get-app-version:
+    name: Get App Version
+    runs-on: ubuntu-latest
+    outputs:
+      app-version: ${{steps.get-app-version.outputs.current-version}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Get NPM Version
+        id: get-app-version
+        uses: martinbeentjes/npm-get-version-action@main
+  sync-electron-app-version:
+    name: Sync Electron App Version
+    needs: get-app-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Sync
+        run: |
+          npx --yes tsx ./automation/sync-electron-app-version.ts
+      - name: Commit and push
+        run: |
+          if [[ $(git status -s) ]]; then
+              # Changes are present
+              # Stage all changes
+              git config --local user.email "freephoenix888@gmail.com"
+              git config --local user.name "FreePhoenix888"
+              git add electron/package.json
+              git commit -m "Sync electron package version"
+              git push origin main
+          else
+              # No changes in the working directory
+              echo "No changes in the working directory."
+          fi
+  linux:
+    name: Linux
+    needs: [get-app-version,sync-electron-app-version]
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: /tmp/.migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: ${{inputs.migrations-hasura-path}}
+      MIGRATIONS_HASURA_SSL: ${{inputs.migrations-hasura-ssl}}
+      MIGRATIONS_HASURA_SECRET: ${{inputs.migrations-hasura-secret}}
+      NEXT_PUBLIC_DEEPLINKS_SERVER: ${{inputs.next-public-deeplinks-server-url}}
+      NEXT_PUBLIC_GQL_PATH: ${{inputs.next-public-gql-path}}
+      NEXT_PUBLIC_GQL_SSL: ${{inputs.next-public-gql-ssl}}
+      DEEPLINKS_HASURA_PATH: ${{inputs.deeplinks-hasura-path}}
+      DEEPLINKS_HASURA_SSL: ${{inputs.deeplinks-hasura-ssl}}
+      MIGRATIONS_DEEPLINKS_APP_URL: ${{inputs.migrations-deeplinks-app-url}}
+      MIGRATIONS_DEEPLINKS_URL: ${{inputs.migrations-deeplinks-url}}
+      DOCKER: 1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-linux
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Install electron dependencies
+        run: ${{inputs.install-electron-dependencies-command}}
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        run: cd electron && npm run electron:make
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create tar.gz file
+        run: |
+          cd electron/dist
+          ls
+          mv ${{inputs.app-name}}-${{needs.get-app-version.outputs.app-version}}.AppImage ${{inputs.app-name}}.AppImage
+          tar -czvf ${{inputs.app-name}}.tar.gz ${{inputs.app-name}}.AppImage
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linux
+          path: |
+            electron/dist/${{inputs.app-name}}.tar.gz
+            electron/dist/README.txt
+  mac:
+    name: Mac
+    needs: [sync-electron-app-version]
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: /tmp/.migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: localhost:8080
+      MIGRATIONS_HASURA_SSL: 0
+      MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      NEXT_PUBLIC_GQL_SSL: 0
+      DEEPLINKS_HASURA_PATH: localhost:8080
+      DEEPLINKS_HASURA_SSL: 0
+      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-mac
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Install electron dependencies
+        run: ${{inputs.install-electron-dependencies-command}}
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.csc-key-password }}
+          CSC_LINK: ${{ secrets.csc-link }}
+          APPLEID: ${{ secrets.appleid }} 
+          APPLEIDPASS: ${{ secrets.appleidpass }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd electron && npm run electron:make
+      - name: Create zip file
+        run: |
+          ls
+          cd electron/dist/mac
+          ditto -c -k --keepParent ${{inputs.app-name}}.app ${{inputs.app-name}}.app.zip
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/mac/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Mac
+          path: |
+            electron/dist/mac/${{inputs.app-name}}.app.zip
+            electron/dist/mac/README.txt
+  windows:
+    name: Windows
+    needs: [get-app-version,sync-electron-app-version]
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: .migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      NEXT_PUBLIC_ENGINES: 1
+      MIGRATIONS_ID_TYPE_SQL: bigint
+      MIGRATIONS_ID_TYPE_GQL: bigint
+      MIGRATIONS_HASURA_PATH: localhost:8080
+      MIGRATIONS_HASURA_SSL: 0
+      MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      NEXT_PUBLIC_GQL_SSL: 0
+      DEEPLINKS_HASURA_PATH: localhost:8080
+      DEEPLINKS_HASURA_SSL: 0
+      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-windows
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: install node-gyp
+        run: npm install --global node-gyp@10.0.1
+      - name: Set Python version for node-gyp
+        run: echo "python=python2.7" >> ~/.npmrc
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Install electron dependencies
+        run: ${{inputs.install-electron-dependencies-command}}
+      - name: build next
+        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+      - name: Build distribution
+        run: cd electron && npm run electron:make
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create zip file
+        run: |
+          ls electron/dist
+          cd electron/dist
+          tar.exe -a -c -f ${{inputs.app-name}}.zip "${{inputs.app-name}} Setup ${{needs.get-app-version.outputs.app-version}}.exe"
+      - name: And a README (to work around GitHub double-zips)
+        run: |
+          echo "More information: https://deep.foundation" > electron/dist/README.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows
+          path: |
+            electron/dist/${{inputs.app-name}}.zip
+            electron/dist/README.txt
+  android:
+    name: Android
+    needs: [sync-electron-app-version]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install dependencies
+      run: npm clean-install
+    - name: Build Android
+      run: npm run build-android
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+    - name: Build APK
+      run: |
+        cd android
+        ./gradlew --version
+        ./gradlew assembleRelease --stacktrace --info
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: Android
+        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+  # ios:
+  #   name: iOS
+  #   needs: [sync-electron-app-version]
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 18
+  #     - name: Install dependencies
+  #       run: npm clean-install
+  #     - name: Build iOS
+  #       run: npm run build-ios
+  #     - uses: maxim-lobanov/setup-xcode@v1
+  #       with:
+  #         xcode-version: "14.2.0"
+  #     - name: Build IPA
+  #       run: |
+  #         cd ios/App
+  #         xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath build/App.xcarchive archive
+  #         xcodebuild -exportArchive -archivePath build/App.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build
+  #     - name: Upload IPA
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{inputs.app-name}}-ios.ipa
+  #         path: ios/build/App.ipa
+  release:
+    needs: 
+      - linux
+      - mac
+      - windows
+      - android
+      - get-app-version
+      # - ios
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{needs.get-app-version.outputs.app-version}}
+          release_name: Release ${{ needs.get-app-version.outputs.app-version}}
+          body: ${{ needs.get-app-version.outputs.app-version}}
+          draft: false
+          prerelease: false
+      - uses: actions/download-artifact@v3
+        with:
+          name: Linux
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: Windows
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: Mac
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: Android
+          path: android/app/build/outputs/apk/release
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/${{inputs.app-name}}.tar.gz
+          asset_name: linux-${{inputs.app-name}}.tar.gz
+          asset_content_type: application/gzip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/${{inputs.app-name}}.zip
+          asset_name: windows-${{inputs.app-name}}.zip
+          asset_content_type: application/zip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/${{inputs.app-name}}.app.zip
+          asset_name: mac-${{inputs.app-name}}.zip
+          asset_content_type: application/zip
+      - name: upload android artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          asset_name: ${{inputs.app-name}}-android.apk
+          asset_content_type: application/zip
