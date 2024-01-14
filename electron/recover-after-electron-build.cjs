@@ -6,7 +6,7 @@ const typesPath = `node_modules${delimetr}@types`
 
 const linuxAppPath = 'dist/linux-unpacked/resources/app';
 const windowsAppPath = 'dist\\win-unpacked\\resources\\app';
-const macAppPath = 'dist/mac/deep-case.app/Contents/Resources/app';
+const macAppPath = 'dist/mac/sdk.app/Contents/Resources/app';
 
 const appPath = process.platform === 'win32' ? windowsAppPath : process.platform === 'darwin' ? macAppPath : linuxAppPath;
 
