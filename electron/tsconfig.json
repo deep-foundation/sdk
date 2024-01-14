@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
-  "include": ["./src/**/*", "./capacitor.config.ts", "./capacitor.config.js"],
+  "include": ["./capacitor.config.ts", "./capacitor.config.js"],
+  "files": ["./src/index.ts", "./src/preload.ts", "./src/setup.ts", "./src/rt/electron-rt.ts", "./src/rt/electron-plugins.js", "./src/engine.ts"],
   "compilerOptions": {
     "outDir": "./build",
     "importHelpers": true,
@@ -8,8 +9,8 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types"],
     "allowJs": true,
+    "typeRoots": ["./node_modules/@types"],
     "rootDir": "."
   }
 }

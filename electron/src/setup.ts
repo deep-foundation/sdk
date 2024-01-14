@@ -1,3 +1,9 @@
+
+
+// import fixPath from 'fix-path';
+
+// fixPath();
+
 import type { CapacitorElectronConfig } from '@capacitor-community/electron';
 import {
   CapElectronEventEmitter,
@@ -6,11 +12,21 @@ import {
 } from '@capacitor-community/electron';
 import chokidar from 'chokidar';
 import type { MenuItemConstructorOptions } from 'electron';
-import { app, BrowserWindow, Menu, MenuItem, nativeImage, Tray, session } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  MenuItem,
+  nativeImage,
+  Tray,
+  session,
+} from 'electron';
 import electronIsDev from 'electron-is-dev';
 import electronServe from 'electron-serve';
 import windowStateKeeper from 'electron-window-state';
 import { join } from 'path';
+
+import fs from 'fs';
 
 // Define components for a watcher to detect when the webapp is changed so we can reload in Dev mode.
 const reloadWatcher = {
@@ -18,7 +34,9 @@ const reloadWatcher = {
   ready: false,
   watcher: null,
 };
-export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): void {
+export function setupReloadWatcher(
+  electronCapacitorApp: ElectronCapacitorApp,
+): void {
   reloadWatcher.watcher = chokidar
     .watch(join(app.getAppPath(), 'app'), {
       ignored: /[/\\]\./,
@@ -49,7 +67,7 @@ export class ElectronCapacitorApp {
   private TrayIcon: Tray | null = null;
   private CapacitorFileConfig: CapacitorElectronConfig;
   private TrayMenuTemplate: (MenuItem | MenuItemConstructorOptions)[] = [
-    new MenuItem({ label: 'Quit App', role: 'quit' }),
+    // new MenuItem({ label: 'Quit App', role: 'quit' }),
   ];
   private AppMenuBarMenuTemplate: (MenuItem | MenuItemConstructorOptions)[] = [
     { role: process.platform === 'darwin' ? 'appMenu' : 'fileMenu' },
@@ -62,11 +80,13 @@ export class ElectronCapacitorApp {
   constructor(
     capacitorFileConfig: CapacitorElectronConfig,
     trayMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[],
-    appMenuBarMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[]
+    appMenuBarMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[],
   ) {
     this.CapacitorFileConfig = capacitorFileConfig;
 
-    this.customScheme = this.CapacitorFileConfig.electron?.customUrlScheme ?? 'capacitor-electron';
+    this.customScheme =
+      this.CapacitorFileConfig.electron?.customUrlScheme ??
+      'capacitor-electron';
 
     if (trayMenuTemplate) {
       this.TrayMenuTemplate = trayMenuTemplate;
@@ -99,8 +119,13 @@ export class ElectronCapacitorApp {
 
   async init(): Promise<void> {
     const icon = nativeImage.createFromPath(
-      join(app.getAppPath(), 'assets', process.platform === 'win32' ? 'appIcon.ico' : 'appIcon.png')
+      join(
+        app.getAppPath(),
+        'assets',
+        process.platform === 'win32' ? 'appIcon.ico' : 'appIcon.png',
+      ),
     );
+    console.log(icon);
     this.mainWindowState = windowStateKeeper({
       defaultWidth: 1000,
       defaultHeight: 800,
@@ -109,14 +134,15 @@ export class ElectronCapacitorApp {
     const preloadPath = join(app.getAppPath(), 'build', 'src', 'preload.js');
     this.MainWindow = new BrowserWindow({
       icon,
-      show: false,
       x: this.mainWindowState.x,
       y: this.mainWindowState.y,
       width: this.mainWindowState.width,
       height: this.mainWindowState.height,
       webPreferences: {
+        webSecurity: false,
         nodeIntegration: true,
         contextIsolation: true,
+        allowRunningInsecureContent: true,
         // Use preload to inject the electron varriant overrides for capacitor plugins.
         // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
         preload: preloadPath,
@@ -124,13 +150,18 @@ export class ElectronCapacitorApp {
     });
     this.mainWindowState.manage(this.MainWindow);
 
-    if (this.CapacitorFileConfig.backgroundColor) {
-      this.MainWindow.setBackgroundColor(this.CapacitorFileConfig.electron.backgroundColor);
+    if (this.CapacitorFileConfig.electron?.backgroundColor) {
+      this.MainWindow.setBackgroundColor(
+        this.CapacitorFileConfig.electron.backgroundColor,
+      );
     }
 
     // If we close the main window with the splashscreen enabled we need to destory the ref.
     this.MainWindow.on('closed', () => {
-      if (this.SplashScreen?.getSplashWindow() && !this.SplashScreen.getSplashWindow().isDestroyed()) {
+      if (
+        this.SplashScreen?.getSplashWindow() &&
+        !this.SplashScreen.getSplashWindow().isDestroyed()
+      ) {
         this.SplashScreen.getSplashWindow().close();
       }
     });
@@ -159,11 +190,19 @@ export class ElectronCapacitorApp {
         }
       });
       this.TrayIcon.setToolTip(app.getName());
-      this.TrayIcon.setContextMenu(Menu.buildFromTemplate(this.TrayMenuTemplate));
+      this.TrayIcon.setContextMenu(
+        Menu.buildFromTemplate(this.TrayMenuTemplate),
+      );
     }
 
     // Setup the main manu bar at the top of our window.
-    Menu.setApplicationMenu(Menu.buildFromTemplate(this.AppMenuBarMenuTemplate));
+    Menu.setApplicationMenu(
+      Menu.buildFromTemplate(this.AppMenuBarMenuTemplate),
+    );
+
+    app.on("window-all-closed", function(){
+      app.quit();
+    });
 
     // If the splashscreen is enabled, show it first while the main window loads then dwitch it out for the main window, or just load the main window from the start.
     if (this.CapacitorFileConfig.electron?.splashScreenEnabled) {
@@ -171,7 +210,8 @@ export class ElectronCapacitorApp {
         imageFilePath: join(
           app.getAppPath(),
           'assets',
-          this.CapacitorFileConfig.electron?.splashScreenImageName ?? 'splash.png'
+          this.CapacitorFileConfig.electron?.splashScreenImageName ??
+            'splash.png',
         ),
         windowWidth: 400,
         windowHeight: 400,
@@ -182,7 +222,7 @@ export class ElectronCapacitorApp {
     }
 
     // Security
-    this.MainWindow.webContents.setWindowOpenHandler((details) => {
+    this.MainWindow.webContents.setWindowOpenHandler(details => {
       if (!details.url.includes(this.customScheme)) {
         return { action: 'deny' };
       } else {
@@ -206,11 +246,36 @@ export class ElectronCapacitorApp {
       if (!this.CapacitorFileConfig.electron?.hideMainWindowOnLaunch) {
         this.MainWindow.show();
       }
+      this.MainWindow.webContents.executeJavaScript(`
+        window.addEventListener('keydown', function (e) {
+          if (e.keyCode === 88 && e.metaKey) {
+            document.execCommand('cut');
+          }
+          else if (e.keyCode === 67 && e.metaKey) {
+            document.execCommand('copy');
+          }
+          else if (e.keyCode === 86 && e.metaKey) {
+            document.execCommand('paste');
+          }
+          else if (e.keyCode === 65 && e.metaKey) {
+            document.execCommand('selectAll');
+          }
+          else if (e.keyCode === 90 && e.metaKey) {
+            document.execCommand('undo');
+          }
+          else if (e.keyCode === 89 && e.metaKey) {
+            document.execCommand('redo');
+          }
+        });
+      `);
       setTimeout(() => {
         if (electronIsDev) {
           this.MainWindow.webContents.openDevTools();
         }
-        CapElectronEventEmitter.emit('CAPELECTRON_DeeplinkListenerInitialized', '');
+        CapElectronEventEmitter.emit(
+          'CAPELECTRON_DeeplinkListenerInitialized',
+          '',
+        );
       }, 400);
     });
   }
@@ -223,11 +288,15 @@ export function setupContentSecurityPolicy(customScheme: string): void {
       responseHeaders: {
         ...details.responseHeaders,
         'Content-Security-Policy': [
-          electronIsDev
-            ? `default-src ${customScheme}://* 'unsafe-inline' devtools://* 'unsafe-eval' data:`
-            : `default-src ${customScheme}://* 'unsafe-inline' data:`,
+          `default-src * data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval' 'unsafe-dynamic'; script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src * data: blob: 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src * data: blob: ; style-src * data: blob: 'unsafe-inline';font-src * data: blob: 'unsafe-inline';frame-ancestors * data: blob: 'unsafe-inline';`
+          // electronIsDev
+          //   ? `default-src ${customScheme}://* 'unsafe-inline' devtools://* 'unsafe-eval' data:`
+          //   : `default-src ${customScheme}://* 'unsafe-inline' data:`,
         ],
       },
     });
   });
 }
+
+
+import './server';

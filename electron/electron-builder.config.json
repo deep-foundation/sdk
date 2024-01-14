@@ -1,5 +1,7 @@
 {
-  "appId": "com.yourdoamnin.yourapp",
+  "appId": "deep.case.app",
+  "afterSign": "notarize.cjs",
+  "afterPack": "./recover-after-electron-build.cjs",
   "directories": {
     "buildResources": "resources"
   },
@@ -9,20 +11,35 @@
     "capacitor.config.*",
     "app/**/*"
   ],
-  "publish": {
-    "provider": "github"
-  },
+  "publish": null,
   "nsis": {
     "allowElevation": true,
     "oneClick": false,
     "allowToChangeInstallationDirectory": true
   },
   "win": {
-    "target": "nsis",
+    "target": [
+      "nsis"
+    ],
     "icon": "assets/appIcon.ico"
   },
   "mac": {
-    "category": "your.app.category.type",
-    "target": "dmg"
-  }
+    "category": "public.app-category.developer-tools",
+    "gatekeeperAssess": false,
+    "hardenedRuntime": true,
+    "icon": "assets/appIcon.icns",
+    "entitlements": "./entitlements.mas.plist",
+    "entitlementsInherit": "./entitlements.mas.plist"
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ],
+    "category": "Utility",
+    "icon": "assets/appIcon.icns"
+  },
+  "forceCodeSigning": false,
+  "removePackageScripts": false,
+  "includeSubNodeModules": false,
+  "asar": false
 }

@@ -1,38 +1,63 @@
 {
-  "name": "Deep",
-  "version": "1.0.0",
-  "description": "An Amazing Capacitor App",
+  "name": "deep-case",
+  "version": "0.1.0-beta.14",
+  "description": "Data-oriented operating space of associative data representation. Wellcome to the deep universe",
+  "homepage": "https://deep.foundation/",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Deep Foundation",
+    "email": "admin@deep.foundation"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/deep-foundation"
   },
   "license": "MIT",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "tsc && electron-rebuild",
+    "build": "tsc",
+    "test": "jest",
     "electron:start-live": "node ./live-runner.js",
     "electron:start": "npm run build && electron --inspect=5858 ./",
-    "electron:pack": "npm run build && electron-builder build --dir -c ./electron-builder.config.json",
-    "electron:make": "npm run build && electron-builder build -c ./electron-builder.config.json -p always"
+    "electron:debug": "APP_DEV=true electron .",
+    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.json",
+    "electron:pack-demo": "npm run build  && node patch-electron-builder.cjs && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.json",
+    "electron:sign": "npm run electron:sign-prod && npm run electron:sign-dev",
+    "electron:sign-prod": "electron-osx-sign dist/mas/deep-case.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=distribution --provisioning-profile=developer-id-deepcase.provisionprofile",
+    "electron:sign-dev": "electron-osx-sign dist/mas-dev/deep-case.app --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=development --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --provisioning-profile=./deepcasedevelopment.provisionprofile",
+    "electron:notarize": "node notarize.cjs",
+    "electron:make": "npm run build && electron-builder build --config ./electron-builder.config.json",
+    "electron:make-and-publish": "npm run build && electron-builder build --config ./electron-builder.config.json --publish always"
   },
   "dependencies": {
-    "@capacitor-community/electron": "^4.1.1",
-    "chokidar": "~3.5.3",
+    "@capacitor-community/electron": "^4.0.1",
+    "@deep-foundation/deepcase": "^0.0.41",
+    "chokidar": "~3.5.2",
     "electron-is-dev": "~2.0.0",
     "electron-serve": "~1.1.0",
-    "electron-unhandled": "~4.0.1",
-    "electron-updater": "~5.0.1",
-    "electron-window-state": "~5.0.3"
+    "electron-unhandled": "~3.0.2",
+    "electron-updater": "~4.3.9",
+    "electron-window-state": "~5.0.3",
+    "express": "^4.17.1",
+    "fix-path": "^3.0.0",
+    "fkill": "^7.2.1",
+    "internal-ip": "^6.2.0",
+    "microtime": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "socket.io": "^4.2.0",
+    "typescript": "^5.0.4"
   },
   "devDependencies": {
-    "electron": "^19.0.0",
-    "electron-builder": "~22.14.13",
-    "electron-rebuild": "^3.2.7",
-    "typescript": "~4.3.5"
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.2.5",
+    "electron": "^15.5.7",
+    "electron-builder": "^23.0.2",
+    "electron-notarize": "^1.2.2",
+    "electron-rebuild": "~2.3.5",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "node-gyp": "^8.4.1",
+    "puppeteer": "^20.9.0",
+    "ts-jest": "^29.1.1"
   },
   "keywords": [
     "capacitor",
