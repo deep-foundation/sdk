@@ -49,6 +49,10 @@ on:
         type: string
         required: false
         default: http://host.docker.internal:3006
+      should-build-mac:
+        type: string
+        required: false
+        default: 'false'
     secrets:
       csc-key-password:
         required: true
@@ -171,6 +175,7 @@ jobs:
   mac:
     name: Mac
     needs: [sync-electron-app-version]
+    if: inputs.should-build-mac == 'true'
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
