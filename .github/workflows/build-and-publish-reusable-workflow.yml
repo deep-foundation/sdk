@@ -415,6 +415,7 @@ jobs:
           name: Windows
           path: electron/dist
       - uses: actions/download-artifact@v3
+        if: ${{needs.mac.result == 'success'}}
         with:
           name: Mac
           path: electron/dist
