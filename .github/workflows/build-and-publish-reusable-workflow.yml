@@ -389,7 +389,7 @@ jobs:
       - android
       - get-app-version
       # - ios
-    if: ${{ success() || failure() }}
+    if: ${{ always() && needs.mac.result == 'skipped' }}
     name: Create Release
     runs-on: ubuntu-latest
     steps:
