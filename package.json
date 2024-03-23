@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "@capacitor-community/electron": "^5.0.1",
-    "@capacitor/android": "^5.0.0",
-    "@capacitor/core": "^5.0.0",
-    "@capacitor/ios": "^5.0.0",
+    "@capacitor/android": "^5.7.4",
+    "@capacitor/core": "^5.7.4",
+    "@capacitor/ios": "^5.7.4",
     "@chakra-ui/react": "^2.5.5",
     "@deep-foundation/deeplinks": "~0.0.312",
     "@deep-foundation/react-with-packages-installed": "^0.5.3",
@@ -51,7 +51,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^5.0.0",
+    "@capacitor/cli": "^5.7.4",
     "@types/debug": "^4.1.9",
     "@types/react": "^18.0.33",
     "@types/serviceworker": "^0.0.62",
