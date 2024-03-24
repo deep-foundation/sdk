@@ -24,6 +24,10 @@ export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string })
         }} />
       </FormControl>
       <Button onClick={() => {
+        if(gqlPath === undefined || token === undefined) {
+          return;
+          // TODO: Show toast
+        }
         arg.onSubmit({
           gqlPath,
           token
