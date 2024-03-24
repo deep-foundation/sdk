@@ -2,8 +2,8 @@ import { Card, CardHeader, Heading, CardBody, FormControl, FormLabel, Input, But
 import { useState } from "react";
 
 export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
-  const [gqlPath, setGqlPath] = useState(undefined);
-  const [token, setToken] = useState(undefined);
+  const [gqlPath, setGqlPath] = useState<string|undefined>(undefined);
+  const [token, setToken] = useState<string|undefined>(undefined);
   return <Card>
     <CardHeader>
       <Heading>
