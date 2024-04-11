@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react';
 import {
-  Text,
-  Link,
-  Stack,
   Card,
   CardBody,
-  Heading,
   CardHeader,
+  Heading,
+  Stack,
+  Text
 } from '@chakra-ui/react';
 import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
+import { i18nGetStaticProps } from '../src/i18n';
 import { NavBar } from '../src/react/components/navbar';
 import { Page } from '../src/react/components/page';
-import { appWithTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface ContentParam {
   deep: DeepClient;
@@ -49,13 +46,6 @@ export default function IndexPage() {
   );
 }
 
-export async function getStaticProps({ locale }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, [
-        'common',
-        'footer',
-      ])),
-    },
-  }
+export async function getStaticProps(arg) {
+  return await i18nGetStaticProps(arg);
 }
