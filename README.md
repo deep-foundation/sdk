@@ -64,3 +64,19 @@ You can edit `/public/locales/*/*.json` files as `/public/locales/en/common.json
 const { t } = useTranslation();
 <div>{t('connection')}</div>
 ```
+You **must** use this on every page:
+```tsx
+import { i18nGetStaticProps } from "../src/i18n";
+export async function getStaticProps(arg) {
+  return await i18nGetStaticProps(arg);
+}
+```
+And this on every dynamc route page (as /path/[variable])
+```tsx
+export async function getStaticPaths() {
+  return {
+    paths: ['/path/123'],
+    fallback: true
+  }
+}
+```
