@@ -1,13 +1,15 @@
 import { Card, CardHeader, Heading, CardBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState } from "react";
+import { useTranslation } from "next-i18next";
 
 export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
   const [gqlPath, setGqlPath] = useState<string|undefined>(undefined);
   const [token, setToken] = useState<string|undefined>(undefined);
+  const { t } = useTranslation();
   return <Card>
     <CardHeader>
       <Heading>
-        Login
+        {t('connection')}
       </Heading>
     </CardHeader>
     <CardBody>

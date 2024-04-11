@@ -1,5 +1,7 @@
-import nextEnv from 'next-env';
-import dotenvLoad from 'dotenv-load';
+const nextEnv = require('next-env');
+const dotenvLoad = require('dotenv-load');
+const { i18n } = require('./next-i18next.config');
+
 dotenvLoad();
  
 const withNextEnv = nextEnv();
@@ -27,6 +29,7 @@ const config =  {
 
     return config;
   },
+  i18n,
 }
 
-export default withNextEnv(config);
+module.exports = withNextEnv(config);

@@ -4,9 +4,9 @@ import NextLink from 'next/link';
 export function NavBar({ }) {
   return <>
     <HStack>
-    <Link as={NextLink} href='/'>
-      Home
-    </Link>
+      <Link as={NextLink} href='/'>
+        Home
+      </Link>
     </HStack>
   </>
 }

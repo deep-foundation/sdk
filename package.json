@@ -3,7 +3,6 @@
   "version": "0.0.0-dev.1",
   "description": "",
   "license": "Unlicense",
-  "type": "module",
   "scripts": {
     "build-pack": "cd electron && npm run electron:pack",
     "build-core": "(cross-env npm_config_yes=true NEXT_PUBLIC_ENGINES=1 NEXT_PUBLIC_HIDEPATH=1 MIGRATIONS_ID_TYPE_SQL=bigint MIGRATIONS_ID_TYPE_GQL=bigint MIGRATIONS_HASURA_PATH=localhost:8080 MIGRATIONS_HASURA_SSL=0 MIGRATIONS_HASURA_SECRET=myadminsecretkey NEXT_PUBLIC_DEEPLINKS_SERVER=http://localhost:3007 NEXT_PUBLIC_GQL_PATH=localhost:3006/gql NEXT_PUBLIC_GQL_SSL=0 DEEPLINKS_HASURA_PATH=localhost:8080 DEEPLINKS_HASURA_SSL=0 MIGRATIONS_DEEPLINKS_APP_URL=http://host.docker.internal:3007 MIGRATIONS_DEEPLINKS_URL=http://host.docker.internal:3006 npm run build-electron)",
@@ -44,11 +43,14 @@
     "events": "^3.3.0",
     "firebase": "^9.19.1",
     "framer-motion": "^6.5.1",
+    "i18next": "^23.11.1",
     "next": "^13.4.7",
     "next-env": "^1.1.1",
+    "next-i18next": "^15.2.0",
     "next-pwa": "^5.6.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-i18next": "^14.1.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^5.7.4",
