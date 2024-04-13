@@ -32,6 +32,7 @@
     "@capacitor/core": "^5.7.4",
     "@capacitor/ios": "^5.7.4",
     "@chakra-ui/react": "^2.5.5",
+    "@deep-foundation/deepcase": "^0.0.109",
     "@deep-foundation/deeplinks": "~0.0.312",
     "@deep-foundation/react-with-packages-installed": "^0.5.3",
     "@deep-foundation/store": "~0.0.28",

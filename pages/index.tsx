@@ -1,49 +1,26 @@
 import {
-  Card,
-  CardBody,
-  CardHeader,
+  Box,
   Heading,
-  Stack,
-  Text
+  VStack
 } from '@chakra-ui/react';
-import {
-  DeepClient,
-} from '@deep-foundation/deeplinks/imports/client';
+import { useDeep } from '@deep-foundation/deeplinks/imports/client';
+import { Connection } from '../src/connection';
 import { i18nGetStaticProps } from '../src/i18n';
-import { NavBar } from '../src/react/components/navbar';
-import { Page } from '../src/react/components/page';
 
-interface ContentParam {
-  deep: DeepClient;
-}
+export default function Page() {
+  const deep = useDeep();
 
-function Content({ deep }: ContentParam) {
-  return (
-    <Stack alignItems={'center'}>
-      <NavBar />
-      <Heading as={'h1'}>Sdk</Heading>
-      <Card>
-        <CardHeader>
-          <Heading as={'h2'}>General Info</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text suppressHydrationWarning>
-            Authentication Link Id: {deep.linkId ?? ' '}
-          </Text>
-        </CardBody>
-      </Card>
-    </Stack>
-  );
-}
+  // @ts-ignore
+  if (typeof(window) === 'object') window.deep = deep;
+  console.log('deep', deep);
 
-export default function IndexPage() {
-  return (
-    <Page
-      renderChildren={({ deep }) => (
-        <Content deep={deep} />
-      )}
-    />
-  );
+  return (<VStack p={3} spacing={3}>
+    <Box pt={3}>
+      <Heading as={'h1'} size='xl'>Deep SDK</Heading>
+      <Heading as={'h4'} size='md'>Minimalistic template/boilerplate for any project.</Heading>
+    </Box>
+    <Connection/>
+  </VStack>);
 }
 
 export async function getStaticProps(arg) {
