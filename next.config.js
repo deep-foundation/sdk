@@ -29,7 +29,7 @@ const config =  {
 
     return config;
   },
-  i18n,
+  ...(+(process?.env?.NEXT_PUBLIC_I18N_DISABLE || 0) ? {} : { i18n }),
 }
 
 module.exports = withNextEnv(config);

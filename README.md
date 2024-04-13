@@ -2,6 +2,15 @@ A template/boilerplate for creating nextjs applications that use deep. It is rec
 
 Just erase `pages/index.tsx` `Page` component body.
 
+# Variables
+
+```sh
+// Optional
+NEXT_PUBLIC_GRAPHQL_URL=DeepPath
+NEXT_PUBLIC_DEEP_TOKEN=DeepToken
+NEXT_PUBLIC_I18N_DISABLE=1
+```
+
 # How to make this repository pullable in your repository
 ```
 git remote add sdk https://github.com/deep-foundation/sdk.git
@@ -83,3 +92,4 @@ export async function getStaticPaths() {
   }
 }
 ```
+For support static `npm run export` of nextjs, you can use env variable NEXT_PUBLIC_I18N_DISABLE. But i18n is not available in export nextjs mode.
