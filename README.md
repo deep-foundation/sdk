@@ -56,14 +56,29 @@ npm run start
 
 ### Android
 ```
-npm run android-build &&
-npm run android-run
+npm run build-android &&
+npm run run-android
 ```
 
 ### IOS
 ```
-npm run ios-build &&
-npm run ios-run
+npm run build-ios &&
+npm run run-ios
+```
+
+### Windows
+```
+npm run build-windows
+```
+
+### Unix
+```
+npm run build-unix
+```
+
+### Mac
+```
+npm run build-mac
 ```
 
 # Development

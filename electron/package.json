@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
-    "@types/node": "^20.2.5",
+    "@types/node": "^20.12.7",
     "electron": "^15.5.7",
     "electron-builder": "^23.0.2",
     "electron-notarize": "^1.2.2",
