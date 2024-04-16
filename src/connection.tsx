@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardBody, CardHeader, Code, FormControl, FormLabel, HStack, Heading, Input } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardHeader, Code, FormControl, FormLabel, HStack, Heading, Input, SimpleGrid } from "@chakra-ui/react";
 import { AutoGuest } from "@deep-foundation/deepcase/imports/auto-guest";
 import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 import { useState } from "react";
@@ -32,7 +32,7 @@ export function Connection() {
   const [autoGuest, setAutoGuest] = useState(false);
 
   return (
-    <Card>
+    <Card maxWidth={'100%'}>
       <CardHeader>
         <Heading>
           {t('connection')}
@@ -53,7 +53,7 @@ export function Connection() {
             onChange={(e) => _setToken(e.target.value)}
           />
         </FormControl>
-        <HStack pt={3} spacing={3}>
+        <SimpleGrid pt={3} spacing={3} minChildWidth='150px'>
           <Button onClick={() => {
             console.log({ _token, _path });
             if(!_path || !_token) return;
@@ -63,9 +63,9 @@ export function Connection() {
             Submit
           </Button>
           <Button onClick={() => {
-            setToken(undefined);
+            setToken(null);
           }}>
-            setDeepToken(undefined)
+            setDeepToken(null)
           </Button>
           <Button colorScheme={autoGuest ? 'blue' : undefined} onClick={() => {
             setAutoGuest(ag => !ag);
@@ -73,7 +73,7 @@ export function Connection() {
             {`<AutoGuest/>`}
           </Button>
           {!!autoGuest && <AutoGuest><></></AutoGuest>}
-        </HStack>
+        </SimpleGrid>
       </CardBody>
       <CardBody>
         <Code wordBreak={'break-all'}>useDeepPath()[0] // {path || ''}</Code>

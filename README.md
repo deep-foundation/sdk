@@ -50,11 +50,7 @@ To easily get token you can use `Copy token` button in the menu of deepcase. In 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-## How to build
-
-```
-npx cap sync
-```
+## How to build manually
 
 ### Web
 Development
@@ -74,6 +70,7 @@ npm run export
 
 ### Android
 ```
+npx cap sync
 npm run build-android &&
 npm run open-android
 ```
@@ -83,6 +80,7 @@ Prepare:
 - Xcode 10 or later installed on your Mac.
 - execute this
 ```
+npx cap sync
 brew install cocoapods
 (cd ios/App/App; pod install)
 ```
@@ -113,6 +111,12 @@ Prepare:
 ```
 npm run build-mac
 ```
+
+### Chrome extension
+```
+npm run build-chrome-extension
+```
+Result path: `sdk/extension.crx` and `sdk/extension.pem`
 
 # Development
 You can use environment variables to set graphql path and token on server instead of setting it on client. See template in [.env.development](https://github.com/deep-foundation/sdk/blob/main/.env.development). Create a file `.env.local` with your values

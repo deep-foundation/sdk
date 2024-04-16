@@ -10,8 +10,9 @@
     "build-unix": "(cross-env MIGRATIONS_DIR=/tmp/.migrate && npm run build-core) && npm run build-pack",
     "build-mac": "APPLEIDPASS=$(security find-generic-password -w -a ivansglazunov@gmail.com) APPLEID=ivansglazunov@gmail.com CSC_NAME='Deep Foundation (XXXXXXXXXX)' npm run build-unix",
     "open-android": "npx cap open android",
-    "build-browser-extension-linux": "npm run build && npm run export && mv ./out/_next ./out/next && cd ./out && grep -rl '/_next' * | xargs sed -i 's|/_next|/next|g' && cd ../ && rsync -va --delete-after out/next/ extension/next/ && cp out/*.html extension && rm -rf out",
-    "build-browser-extension-mac": "npm run build && npm run export && cp -rf out/_next out/next && sed -i '' -e 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rm -rf out && rm -rf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
+    "build-chrome-extension": "run-script-os",
+    "build-chrome-extension:linux": "npm run build && npm run export && mv ./out/_next ./out/next && cd ./out && grep -rl '/_next' * | xargs sed -i 's|/_next|/next|g' && cd ../ && rsync -va --delete-after out/next/ extension/next/ && cp out/*.html extension && rm -rf out",
+    "build-chrome-extension:darwin": "npm run build && npm run export && cp -rf out/_next out/next && sed -i '' -e 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rm -rf out && rm -rf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
     "build-android": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync android",
     "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron",
     "dev-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npx cap open electron",
@@ -23,8 +24,7 @@
     "dev": "next dev",
     "run-ios": "npx cap run ios",
     "open-ios": "npx cap open ios",
-    "build-ios": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios",
-    "bbel": "npm run build-browser-extension-linux"
+    "build-ios": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios"
   },
   "dependencies": {
     "@capacitor-community/electron": "^5.0.1",
@@ -62,6 +62,7 @@
     "buffer": "^6.0.3",
     "jest": "^29.5.0",
     "next-transpile-modules": "^10.0.0",
+    "run-script-os": "^1.1.6",
     "ts-node": "^10.9.1",
     "typescript": "5.0.4",
     "typescript-json-schema": "^0.56.0"
