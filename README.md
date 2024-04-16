@@ -40,24 +40,44 @@ nvm install && nvm use
 ```
 - Install dependencies
 ```
-npm install
+npm ci
 ```
 - Run by using [How to run](#how-to-run)
 - Pass graphql url and token
 To easily get token you can use `Copy token` button in the menu of deepcase. In the same menu you can find `gql` button where you can get graphql path
+- Install Homebrew
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
+## How to build
 
-## How to run?
+```
+npx cap sync
+brew install cocoapods
+(cd ios/App/App; pod install)
+```
+
 ### Web
+Development
+```
+npm run dev
+```
+Build server+client build with ssr
 ```
 npm run build &&
 npm run start
 ```
+Export static client without server
+```
+npm run export
+```
+
 
 ### Android
 ```
 npm run build-android &&
-npm run run-android
+npm run open-android
 ```
 
 ### IOS
