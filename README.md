@@ -54,8 +54,6 @@ To easily get token you can use `Copy token` button in the menu of deepcase. In 
 
 ```
 npx cap sync
-brew install cocoapods
-(cd ios/App/App; pod install)
 ```
 
 ### Web
@@ -81,6 +79,14 @@ npm run open-android
 ```
 
 ### IOS
+Prepare:
+- Xcode 10 or later installed on your Mac.
+- execute this
+```
+brew install cocoapods
+(cd ios/App/App; pod install)
+```
+Build
 ```
 npm run build-ios &&
 npm run run-ios
@@ -97,6 +103,13 @@ npm run build-unix
 ```
 
 ### Mac
+Prepare:
+- Xcode 10 or later installed on your Mac.
+- An [Apple Developer](https://developer.apple.com/) account.
+- [An app-specific password for your ADC account’s Apple ID](https://support.apple.com/HT204397)
+- `security add-generic-password -l "sdk" -a "YOUR-APPLEID-EMAIL" -s "keychain" -T "" -w "APP-PASSWORD-FROM-APPLE"`
+- [Generate teamId](https://github.com/electron/notarize?tab=readme-ov-file#notes-on-your-teamid)
+- update APPLEIDPASS, APPLEID, CSC_NAME, APPLETEAMID in `package.json`.`scripts`.`build-mac`
 ```
 npm run build-mac
 ```

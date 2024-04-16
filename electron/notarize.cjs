@@ -16,6 +16,7 @@ exports.default = async function packageTask (context) {
     appleIdPassword: process.env.APPLEIDPASS,
   });
   await notarize({
+    tool: 'notarytool',
     appBundleId,
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLEID,
