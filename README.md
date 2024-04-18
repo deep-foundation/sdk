@@ -75,8 +75,20 @@ npm run export
 
 
 ### Android
+Prepare:
+- Install Android Studio.
+- Install in (Settings -> Languages & Frameworks -> Android SDK -> SDK Tool):
+  - Android SDK Command-line Tools
+  - Android Emulator
+  - Android SDK Platfrom-Tool
+  - Google Play services
+- Install in (Settings -> Languages & Frameworks -> Android SDK -> SDK Platforms):
+  - Android 14
 ```
 npx cap sync
+```
+Build:
+```
 npm run build-android &&
 npm run open-android
 ```
