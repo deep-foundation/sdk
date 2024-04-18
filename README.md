@@ -118,9 +118,15 @@ npm run build-chrome-extension
 ```
 Result path: `sdk/extension.crx` and `sdk/extension.pem`
 
+### Github Pages
+Only activate GitHub Pages for Your Repository
+
+(Settings -> Pages -> Source -> Deploy from branch main -> Github Actions)
+
+> There is no need to make any changes to the code.
+
 # Development
 You can use environment variables to set graphql path and token on server instead of setting it on client. See template in [.env.development](https://github.com/deep-foundation/sdk/blob/main/.env.development). Create a file `.env.local` with your values
-
 
 # Translation i18n
 You can edit `/public/locales/*/*.json` files as `/public/locales/en/common.json` and use it inside your components as:
