@@ -100,7 +100,6 @@ Prepare:
 - Xcode 10 or later installed on your Mac.
 - execute this
 ```
-npx cap sync
 brew install cocoapods
 (cd ios/App/App; pod install)
 ```
