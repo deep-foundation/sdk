@@ -6,11 +6,11 @@ dotenvLoad();
  
 const withNextEnv = nextEnv();
 
-console.log(JSON.stringify(process.env, null, 2));
-
  /** @type {import('next').NextConfig}*/
 const config =  {
-  // basePath: "/",
+  ...(process.env.GITHUB_REPOSITORY ? {
+    basePath: `/${process.env.GITHUB_REPOSITORY.split('/')[1]}`,
+  } : {}),
   distDir: 'app',
   strictMode: false,
   
