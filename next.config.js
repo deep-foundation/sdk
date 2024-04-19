@@ -6,8 +6,11 @@ dotenvLoad();
  
 const withNextEnv = nextEnv();
 
+console.log(JSON.stringify(process.env, null, 2));
+
  /** @type {import('next').NextConfig}*/
 const config =  {
+  // basePath: "/",
   distDir: 'app',
   strictMode: false,
   
