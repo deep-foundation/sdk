@@ -84,9 +84,6 @@ Prepare:
   - Google Play services
 - Install in (Settings -> Languages & Frameworks -> Android SDK -> SDK Platforms):
   - Android 14
-```
-npx cap sync
-```
 Build:
 ```
 npm run build-android &&
