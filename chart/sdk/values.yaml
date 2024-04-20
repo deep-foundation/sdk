@@ -1,0 +1,56 @@
+replicaCount: 1
+
+image:
+  repository: cr.selcloud.ru/default-registry/deep-sdk
+  tag: "latest"
+  pullPolicy: Always
+
+imagePullSecrets: false
+nameOverride: "deep-sdk"
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "deep-sdk"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  protocol: TCP
+  port: 3000
+  targetPort: 3000
+
+containerPort: 3000
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dev
+    spec.ingressClassName: "nginx"
+  tls:
+  - hosts:
+    - sdk.deep.foundation
+    secretName: ui-tls
+  hosts:
+  - host: sdk.deep.foundation
+    paths:
+      path: /
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
