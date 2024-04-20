@@ -12,7 +12,7 @@
     "open-android": "npx cap open android",
     "build-chrome-extension": "run-script-os",
     "build-chrome-extension:linux": "npm run build && npm run export && mv ./out/_next ./out/next && cd ./out && grep -rl '/_next' * | xargs sed -i 's|/_next|/next|g' && cd ../ && rsync -va --delete-after out/next/ extension/next/ && cp out/*.html extension && rimraf out",
-    "build-chrome-extension:darwin": "npm run build && npm run export && cp -rf out/_next out/next && sed -i '' -e 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rimraf out && rimraf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
+    "build-chrome-extension:darwin": "npm run build && npm run export && cp -r out/* extension && mv -i extension/_next extension/next && find ./extension -type f \\( -name \"*.js\" -o -name \"*.html\" -o -name \"*.json\" \\) -exec sed -i '' 's/_next/next/g' {} + && rimraf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
     "build-android": "rimraf app && rimraf out && npm run build && npm run export && npx cap sync android",
     "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron",
     "dev-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npx cap open electron",

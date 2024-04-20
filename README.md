@@ -40,7 +40,7 @@ nvm install && nvm use
 ```
 - Install dependencies
 ```
-npm ci
+npm ci; (cd electron; npm ci)
 ```
 - Run by using [How to run](#how-to-run)
 - Pass graphql url and token

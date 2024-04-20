@@ -116,7 +116,7 @@ projects/app/electron/app
 # migrations
 .migrate
 
-# deepcase
+# builds
 /app
 /out
 /electron/build
@@ -127,7 +127,8 @@ projects/app/electron/app
 
 # browser extention
 
-/extension/next
+extension/locales
+extension/next
 extension/*.html
 /*.crx
 /*.pem
