@@ -1,3 +1,5 @@
 {
-  "connection": "Connection to Deep"
+  "connection": "Connection to Deep",
+  "sdk": "Deep SDK",
+  "sdk-description": "Minimalistic template/boilerplate for any project."
 }
