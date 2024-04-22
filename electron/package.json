@@ -14,23 +14,22 @@
   "license": "MIT",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf ./dist/src; tsc",
     "test": "jest",
     "electron:start-live": "node ./live-runner.js",
     "electron:start": "npm run build && electron --inspect=5858 ./",
     "electron:debug": "APP_DEV=true electron .",
-    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.json",
-    "electron:pack-demo": "npm run build  && node patch-electron-builder.cjs && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.json",
+    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.js",
+    "electron:pack-demo": "npm run build  && node patch-electron-builder.cjs && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.js",
     "electron:sign": "npm run electron:sign-prod && npm run electron:sign-dev",
     "electron:sign-prod": "electron-osx-sign dist/mas/sdk.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: Deep Foundation (XXXXXXXXXX)' --platform=mas --type=distribution --provisioning-profile=developer-id-sdk.provisionprofile",
     "electron:sign-dev": "electron-osx-sign dist/mas-dev/sdk.app --identity='Developer ID Application: Deep Foundation (XXXXXXXXXX)' --platform=mas --type=development --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --provisioning-profile=./sdkdevelopment.provisionprofile",
     "electron:notarize": "node notarize.cjs",
-    "electron:make": "npm run build && electron-builder build --config ./electron-builder.config.json",
-    "electron:make-and-publish": "npm run build && electron-builder build --config ./electron-builder.config.json --publish always"
+    "electron:make": "npm run build && electron-builder build --config ./electron-builder.config.js",
+    "electron:make-and-publish": "npm run build && electron-builder build --config ./electron-builder.config.js --publish always"
   },
   "dependencies": {
     "@capacitor-community/electron": "^4.0.1",
-    "@deep-foundation/deepcase": "^0.0.41",
     "chokidar": "~3.5.2",
     "electron-is-dev": "~2.0.0",
     "electron-serve": "~1.1.0",

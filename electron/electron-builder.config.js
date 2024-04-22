@@ -1,7 +1,8 @@
-{
+module.exports = {
   "appId": "deep.sdk.app",
   "afterSign": "notarize.cjs",
   "afterPack": "./recover-after-electron-build.cjs",
+  "compression": "maximum",
   "directories": {
     "buildResources": "resources"
   },
@@ -9,7 +10,7 @@
     "assets/**/*",
     "build/**/*",
     "capacitor.config.*",
-    "app/**/*"
+    "app/**/*",
   ],
   "publish": null,
   "nsis": {
@@ -41,5 +42,5 @@
   "forceCodeSigning": false,
   "removePackageScripts": false,
   "includeSubNodeModules": false,
-  "asar": false
+  "asar": false,
 }

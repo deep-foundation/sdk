@@ -36,7 +36,7 @@ git pull sdk main
 ## Prerequisitions
 - Install and use nodejs version from .nvmrc
 ```
-nvm install && nvm use
+nvm install 18 && nvm alias default 18; npm use default;
 ```
 - Install dependencies
 ```
