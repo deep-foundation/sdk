@@ -20,9 +20,13 @@ module.exports = {
   },
   "win": {
     "target": [
-      "nsis"
+      "nsis",
+      "portable"
     ],
     "icon": "assets/appIcon.ico"
+  },
+  "portable": {
+    "artifactName": "sdk_portable.exe"
   },
   "mac": {
     "category": "public.app-category.developer-tools",
