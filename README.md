@@ -190,3 +190,21 @@ export async function getStaticPaths() {
 }
 ```
 For support static `npm run export` of nextjs, you can use env variable NEXT_PUBLIC_I18N_DISABLE. But i18n is not available in export nextjs mode.
+
+## Restart
+
+### GitPod
+
+SDK app is started together with Deep.Links and other services in GitPod. So to restart it from GitPod you should do the following:
+
+1. Find terminal there `npm run gitpod-start` command was executed.
+![IMG_1490](https://github.com/deep-foundation/deepcase-app/assets/1431904/81ecd4d4-f4d2-4812-8948-0a155347218d)
+
+2. Press `CTRL+C` in terminal to stop a Deep instance (Deep.Links and SDK).
+![IMG_1491](https://github.com/deep-foundation/deepcase-app/assets/1431904/39966c49-b8fd-4030-bcac-d8a0e4ff4e17)
+
+3. Press `↑` button on your keyboard to get last executed command.
+![IMG_1492](https://github.com/deep-foundation/deepcase-app/assets/1431904/9ef60c58-ca70-43f3-be91-91966d85dddc)
+
+4. Press `Enter` to execute that command again, that will finish restart sequence.
+![IMG_1493](https://github.com/deep-foundation/deepcase-app/assets/1431904/56f48dad-d751-44c7-8871-164f824f122b)
