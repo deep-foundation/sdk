@@ -303,7 +303,7 @@ jobs:
       - name: build next
         run: npm run build && npm run export
       - name: Build distribution
-        run: cnpm run build-windows
+        run: npm run build-windows
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create zip file
