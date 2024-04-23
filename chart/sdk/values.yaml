@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: cr.selcloud.ru/default-registry/deep-sdk
+  repository: registry.sdk.deep.foundation/deep-sdk
   tag: "latest"
   pullPolicy: Always
 
@@ -31,7 +31,7 @@ containerPort: 3000
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dev
+    cert-manager.io/cluster-issuer: letsencrypt
     spec.ingressClassName: "nginx"
   tls:
   - hosts:
