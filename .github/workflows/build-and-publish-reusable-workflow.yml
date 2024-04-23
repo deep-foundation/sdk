@@ -106,22 +106,22 @@ jobs:
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
-      MIGRATIONS_DIR: /tmp/.migrate
-      ASSET_PREFIX: '.'
-      npm_config_yes: true
-      NEXT_PUBLIC_ENGINES: 1
-      MIGRATIONS_ID_TYPE_SQL: bigint
-      MIGRATIONS_ID_TYPE_GQL: bigint
-      MIGRATIONS_HASURA_PATH: ${{inputs.migrations-hasura-path}}
-      MIGRATIONS_HASURA_SSL: ${{inputs.migrations-hasura-ssl}}
-      MIGRATIONS_HASURA_SECRET: ${{inputs.migrations-hasura-secret}}
-      NEXT_PUBLIC_DEEPLINKS_SERVER: ${{inputs.next-public-deeplinks-server-url}}
-      NEXT_PUBLIC_GQL_PATH: ${{inputs.next-public-gql-path}}
-      NEXT_PUBLIC_GQL_SSL: ${{inputs.next-public-gql-ssl}}
-      DEEPLINKS_HASURA_PATH: ${{inputs.deeplinks-hasura-path}}
-      DEEPLINKS_HASURA_SSL: ${{inputs.deeplinks-hasura-ssl}}
-      MIGRATIONS_DEEPLINKS_APP_URL: ${{inputs.migrations-deeplinks-app-url}}
-      MIGRATIONS_DEEPLINKS_URL: ${{inputs.migrations-deeplinks-url}}
+      # MIGRATIONS_DIR: /tmp/.migrate
+      # ASSET_PREFIX: '.'
+      # npm_config_yes: true
+      # NEXT_PUBLIC_ENGINES: 1
+      # MIGRATIONS_ID_TYPE_SQL: bigint
+      # MIGRATIONS_ID_TYPE_GQL: bigint
+      # MIGRATIONS_HASURA_PATH: ${{inputs.migrations-hasura-path}}
+      # MIGRATIONS_HASURA_SSL: ${{inputs.migrations-hasura-ssl}}
+      # MIGRATIONS_HASURA_SECRET: ${{inputs.migrations-hasura-secret}}
+      # NEXT_PUBLIC_DEEPLINKS_SERVER: ${{inputs.next-public-deeplinks-server-url}}
+      # NEXT_PUBLIC_GQL_PATH: ${{inputs.next-public-gql-path}}
+      # NEXT_PUBLIC_GQL_SSL: ${{inputs.next-public-gql-ssl}}
+      # DEEPLINKS_HASURA_PATH: ${{inputs.deeplinks-hasura-path}}
+      # DEEPLINKS_HASURA_SSL: ${{inputs.deeplinks-hasura-ssl}}
+      # MIGRATIONS_DEEPLINKS_APP_URL: ${{inputs.migrations-deeplinks-app-url}}
+      # MIGRATIONS_DEEPLINKS_URL: ${{inputs.migrations-deeplinks-url}}
       DOCKER: 1
     runs-on: ubuntu-latest
     steps:
@@ -151,9 +151,9 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+        run: npm run build && npm run export
       - name: Build distribution
-        run: cd electron && npm run electron:make
+        run: npm run build-unix
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create tar.gz file
@@ -223,15 +223,15 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+        run: npm run build && npm run export
       - name: Build distribution
         env:
           CSC_KEY_PASSWORD: ${{ secrets.csc-key-password }}
-          CSC_LINK: ${{ secrets.csc-link }}
-          APPLEID: ${{ secrets.appleid }} 
-          APPLEIDPASS: ${{ secrets.appleidpass }}
+          # CSC_LINK: ${{ secrets.csc-link }}
+          # APPLEID: ${{ secrets.appleid }} 
+          # APPLEIDPASS: ${{ secrets.appleidpass }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cd electron && npm run electron:make
+        run: npm run build-mac
       - name: Create zip file
         run: |
           ls
@@ -252,22 +252,22 @@ jobs:
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
-      MIGRATIONS_DIR: .migrate
-      ASSET_PREFIX: '.'
-      npm_config_yes: true
-      NEXT_PUBLIC_ENGINES: 1
-      MIGRATIONS_ID_TYPE_SQL: bigint
-      MIGRATIONS_ID_TYPE_GQL: bigint
-      MIGRATIONS_HASURA_PATH: localhost:8080
-      MIGRATIONS_HASURA_SSL: 0
-      MIGRATIONS_HASURA_SECRET: myadminsecretkey
-      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
-      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
-      NEXT_PUBLIC_GQL_SSL: 0
-      DEEPLINKS_HASURA_PATH: localhost:8080
-      DEEPLINKS_HASURA_SSL: 0
-      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
-      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      # MIGRATIONS_DIR: .migrate
+      # ASSET_PREFIX: '.'
+      # npm_config_yes: true
+      # NEXT_PUBLIC_ENGINES: 1
+      # MIGRATIONS_ID_TYPE_SQL: bigint
+      # MIGRATIONS_ID_TYPE_GQL: bigint
+      # MIGRATIONS_HASURA_PATH: localhost:8080
+      # MIGRATIONS_HASURA_SSL: 0
+      # MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      # NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      # NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      # NEXT_PUBLIC_GQL_SSL: 0
+      # DEEPLINKS_HASURA_PATH: localhost:8080
+      # DEEPLINKS_HASURA_SSL: 0
+      # MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      # MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
       DOCKER: 1
     runs-on: windows-2019
     steps:
@@ -301,9 +301,9 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
+        run: npm run build && npm run export
       - name: Build distribution
-        run: cd electron && npm run electron:make
+        run: cnpm run build-windows
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create zip file
