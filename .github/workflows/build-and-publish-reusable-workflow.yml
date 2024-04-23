@@ -52,7 +52,7 @@ on:
       should-build-mac:
         type: string
         required: false
-        default: 'false'
+        default: 'true'
     secrets:
       csc-key-password:
         required: true
@@ -181,19 +181,19 @@ jobs:
       MIGRATIONS_DIR: /tmp/.migrate
       ASSET_PREFIX: '.'
       npm_config_yes: true
-      NEXT_PUBLIC_ENGINES: 1
-      MIGRATIONS_ID_TYPE_SQL: bigint
-      MIGRATIONS_ID_TYPE_GQL: bigint
-      MIGRATIONS_HASURA_PATH: localhost:8080
-      MIGRATIONS_HASURA_SSL: 0
-      MIGRATIONS_HASURA_SECRET: myadminsecretkey
-      NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
-      NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
-      NEXT_PUBLIC_GQL_SSL: 0
-      DEEPLINKS_HASURA_PATH: localhost:8080
-      DEEPLINKS_HASURA_SSL: 0
-      MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
-      MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      # NEXT_PUBLIC_ENGINES: 1
+      # MIGRATIONS_ID_TYPE_SQL: bigint
+      # MIGRATIONS_ID_TYPE_GQL: bigint
+      # MIGRATIONS_HASURA_PATH: localhost:8080
+      # MIGRATIONS_HASURA_SSL: 0
+      # MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      # NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      # NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      # NEXT_PUBLIC_GQL_SSL: 0
+      # DEEPLINKS_HASURA_PATH: localhost:8080
+      # DEEPLINKS_HASURA_SSL: 0
+      # MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      # MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
       DOCKER: 1
     runs-on: macos-latest
     steps:
