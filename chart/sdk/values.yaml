@@ -23,7 +23,7 @@ securityContext: {}
 service:
   type: ClusterIP
   protocol: TCP
-  port: 3000
+  port: 80
   targetPort: 3000
 
 containerPort: 3000
@@ -32,15 +32,15 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    spec.ingressClassName: "nginx"
-  tls:
-  - hosts:
-    - sdk.deep.foundation
-    secretName: ui-tls
+    kubernetes.io/ingress.class: nginx
   hosts:
-  - host: sdk.deep.foundation
-    paths:
-      path: /
+    - host: sdk.deep.foundation
+      paths:
+        path: /
+  tls:
+    - hosts:
+        - sdk.deep.foundation
+      secretName: sdk-tls
 
 resources: {}
 
