@@ -378,7 +378,6 @@ jobs:
       - android
       - get-app-version
       # - ios
-    if: ${{ always() && needs.mac.result == 'skipped' }}
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -404,7 +403,6 @@ jobs:
           name: Windows
           path: electron/dist
       - uses: actions/download-artifact@v3
-        if: ${{needs.mac.result == 'success'}}
         with:
           name: Mac
           path: electron/dist
@@ -431,7 +429,6 @@ jobs:
           asset_name: windows-${{inputs.app-name}}.zip
           asset_content_type: application/zip
       - name: upload mac artifact
-        if: ${{needs.mac.result == 'success'}}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
