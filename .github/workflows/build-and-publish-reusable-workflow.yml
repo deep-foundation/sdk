@@ -445,6 +445,7 @@ jobs:
     needs: 
       - linux
       - mac-arm64
+      - mac-x64
       - windows
       - android
       - get-app-version
