@@ -162,9 +162,6 @@ jobs:
           ls
           mv ${{inputs.app-name}}-${{needs.get-app-version.outputs.app-version}}.AppImage ${{inputs.app-name}}.AppImage
           tar -czvf ${{inputs.app-name}}.tar.gz ${{inputs.app-name}}.AppImage
-      - name: And a README (to work around GitHub double-zips)
-        run: |
-          echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -236,16 +233,13 @@ jobs:
         run: |
           cd electron/dist/mac-arm64
           ditto -c -k --keepParent ${{inputs.app-name}}.app ${{inputs.app-name}}.app.zip
-      - name: And a README (to work around GitHub double-zips)
-        run: |
-          echo "More information: https://deep.foundation" > electron/dist/mac/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: Mac
           path: |
-            electron/dist/mac/${{inputs.app-name}}.app.zip
-            electron/dist/mac/README.txt
+            electron/dist/mac-arm64/${{inputs.app-name}}.app.zip
+            electron/dist/mac-arm64/README.txt
   windows:
     name: Windows
     needs: [get-app-version,sync-electron-app-version]
@@ -309,9 +303,6 @@ jobs:
         run: |
           cd electron && dir && cd dist && dir
           tar.exe -a -c -f ${{inputs.app-name}}.zip "${{inputs.app-name}} Setup ${{needs.get-app-version.outputs.app-version}}.exe"
-      - name: And a README (to work around GitHub double-zips)
-        run: |
-          echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
