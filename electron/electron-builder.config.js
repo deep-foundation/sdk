@@ -29,6 +29,7 @@ module.exports = {
     "artifactName": "sdk_portable.exe"
   },
   "mac": {
+    "target": "default",
     "category": "public.app-category.developer-tools",
     "gatekeeperAssess": false,
     "hardenedRuntime": true,

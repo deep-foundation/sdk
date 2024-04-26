@@ -234,7 +234,7 @@ jobs:
         run: npm run build-mac
       - name: Create zip file
         run: |
-          ls; (cd electron; ls;); (cd electron/dist; ls;)
+          ls; (echo "electron"; cd electron; ls;); (echo "electron/dist"; cd electron/dist; ls;)
           cd electron/dist/mac
           ditto -c -k --keepParent ${{inputs.app-name}}.app ${{inputs.app-name}}.app.zip
       - name: And a README (to work around GitHub double-zips)
@@ -308,8 +308,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create zip file
         run: |
-          ls electron/dist
-          cd electron/dist
+          cd electron && dir && cd dist && dir
           tar.exe -a -c -f ${{inputs.app-name}}.zip "${{inputs.app-name}} Setup ${{needs.get-app-version.outputs.app-version}}.exe"
       - name: And a README (to work around GitHub double-zips)
         run: |
