@@ -5,12 +5,6 @@ on:
   workflow_call:
     inputs:
       app-name:
-        type: string
-        required: true
-      install-electron-dependencies-command:
-        type: string
-        required: false
-        default: cd electron && npm ci
       migrations-hasura-path:
         type: string
         required: false
@@ -149,9 +143,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dependencies
-        run: npm clean-install
+        run: npm ci --force
       - name: Install electron dependencies
-        run: ${{inputs.install-electron-dependencies-command}}
+        run: (cd electron && npm ci --force)
       - name: build next
         run: npm run export
       - name: Build distribution
@@ -218,9 +212,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dependencies
-        run: npm clean-install
+        run: npm ci --force
       - name: Install electron dependencies
-        run: ${{inputs.install-electron-dependencies-command}}
+        run: (cd electron && npm ci --force)
       - name: build next
         run: npm run export
       - name: Build distribution
@@ -289,9 +283,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dependencies
-        run: npm clean-install
+        run: npm ci --force
       - name: Install electron dependencies
-        run: ${{inputs.install-electron-dependencies-command}}
+        run: (cd electron && npm ci --force)
       - name: build next
         run: npm run export
       - name: Build distribution
@@ -363,9 +357,9 @@ jobs:
       - name: Set Python version for node-gyp
         run: echo "python=python2.7" >> ~/.npmrc
       - name: Install dependencies
-        run: npm clean-install
+        run: npm ci --force
       - name: Install electron dependencies
-        run: ${{inputs.install-electron-dependencies-command}}
+        run: (cd electron && npm ci --force)
       - name: build next
         run: npm run export
       - name: Build distribution
@@ -395,7 +389,7 @@ jobs:
       with:
         node-version: 18
     - name: Install dependencies
-      run: npm clean-install
+      run: npm ci --force
     - name: Build Android
       run: npm run build-android
     - name: Set up Java
@@ -427,7 +421,7 @@ jobs:
   #       with:
   #         node-version: 18
   #     - name: Install dependencies
-  #       run: npm clean-install
+  #       run: npm ci --force
   #     - name: Build iOS
   #       run: npm run build-ios
   #     - uses: maxim-lobanov/setup-xcode@v1
