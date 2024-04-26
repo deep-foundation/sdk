@@ -17,14 +17,14 @@ exports.default = async function(context) {
       console.log(fs.readdirSync(`${context.outDir}`));
       console.log('appOutDir', `${context.appOutDir}`);
       console.log(fs.readdirSync(`${context.appOutDir}`));
-      console.log('resources', `${context.appOutDir}\resources`);
-      console.log(fs.readdirSync(`${context.appOutDir}\resources`));
-      console.log('app', `${context.appOutDir}\resources\app`);
-      console.log(fs.readdirSync(`${context.appOutDir}\resources\app`));
-      console.log('build', `${context.appOutDir}\resources\app\build`);
-      console.log(fs.readdirSync(`${context.appOutDir}\resources\app\build`));
-      console.log('src', `${context.appOutDir}\resources\app\build\src`);
-      console.log(fs.readdirSync(`${context.appOutDir}\resources\app\build\src`));
+      console.log('resources', `${context.appOutDir}\\resources`);
+      console.log(fs.readdirSync(`${context.appOutDir}\\resources`));
+      console.log('app', `${context.appOutDir}\\resources\\app`);
+      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app`));
+      console.log('build', `${context.appOutDir}\\resources\\app\\build`);
+      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build`));
+      console.log('src', `${context.appOutDir}\\resources\\app\\build\\src`);
+      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build\\src`));
     } catch(e) {
       console.log('error', e);
     }
