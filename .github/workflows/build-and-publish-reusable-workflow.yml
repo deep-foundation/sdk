@@ -207,7 +207,7 @@ jobs:
       - name: Configure Node caching
         uses: actions/cache@v2
         env:
-          cache-name: cache-node-modules-mac
+          cache-name: cache-node-modules-mac-arm64
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
@@ -240,6 +240,77 @@ jobs:
           path: |
             electron/dist/mac-arm64/${{inputs.app-name}}.app.zip
             electron/dist/mac-arm64/README.txt
+  mac-x64:
+    name: MacX64
+    needs: [sync-electron-app-version]
+    if: inputs.should-build-mac == 'true'
+    env:
+      USE_HARD_LINKS: false
+      MIGRATIONS_DIR: /tmp/.migrate
+      ASSET_PREFIX: '.'
+      npm_config_yes: true
+      # NEXT_PUBLIC_ENGINES: 1
+      # MIGRATIONS_ID_TYPE_SQL: bigint
+      # MIGRATIONS_ID_TYPE_GQL: bigint
+      # MIGRATIONS_HASURA_PATH: localhost:8080
+      # MIGRATIONS_HASURA_SSL: 0
+      # MIGRATIONS_HASURA_SECRET: myadminsecretkey
+      # NEXT_PUBLIC_DEEPLINKS_SERVER: http://localhost:3007
+      # NEXT_PUBLIC_GQL_PATH: localhost:3006/gql
+      # NEXT_PUBLIC_GQL_SSL: 0
+      # DEEPLINKS_HASURA_PATH: localhost:8080
+      # DEEPLINKS_HASURA_SSL: 0
+      # MIGRATIONS_DEEPLINKS_APP_URL: http://host.docker.internal:3007
+      # MIGRATIONS_DEEPLINKS_URL: http://host.docker.internal:3006
+      DOCKER: 1
+    runs-on: [macos-13, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Configure Node caching
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-mac-x64
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Install electron dependencies
+        run: ${{inputs.install-electron-dependencies-command}}
+      - name: build next
+        run: npm run export
+      - name: Build distribution
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.csc-key-password }}
+          # CSC_LINK: ${{ secrets.csc-link }}
+          # APPLEID: ${{ secrets.appleid }} 
+          # APPLEIDPASS: ${{ secrets.appleidpass }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build-mac
+      - name: Create zip file
+        run: |
+          cd electron/dist/mac
+          ditto -c -k --keepParent ${{inputs.app-name}}.app ${{inputs.app-name}}.app.zip
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacX64
+          path: |
+            electron/dist/mac/${{inputs.app-name}}.app.zip
+            electron/dist/mac/README.txt
   windows:
     name: Windows
     needs: [get-app-version,sync-electron-app-version]
@@ -408,6 +479,10 @@ jobs:
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
+          name: MacX64
+          path: electron/dist
+      - uses: actions/download-artifact@v3
+        with:
           name: Android
           path: android/app/build/outputs/apk/release
       - name: upload linux artifact
@@ -435,7 +510,16 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: electron/dist/${{inputs.app-name}}.app.zip
-          asset_name: mac-${{inputs.app-name}}.zip
+          asset_name: mac-arm64-${{inputs.app-name}}.zip
+          asset_content_type: application/zip
+      - name: upload mac-x64 artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: electron/dist/${{inputs.app-name}}.app.zip
+          asset_name: mac-x64-${{inputs.app-name}}.zip
           asset_content_type: application/zip
       - name: upload android artifact
         uses: actions/upload-release-asset@v1
