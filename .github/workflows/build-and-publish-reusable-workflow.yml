@@ -234,7 +234,7 @@ jobs:
         run: npm run build-mac
       - name: Create zip file
         run: |
-          ls
+          ls; (cd electron; ls;); (cd electron/dist; ls;)
           cd electron/dist/mac
           ditto -c -k --keepParent ${{inputs.app-name}}.app ${{inputs.app-name}}.app.zip
       - name: And a README (to work around GitHub double-zips)
