@@ -13,12 +13,18 @@ const appPath = process.platform === 'win32' ? windowsAppPath : process.platform
 exports.default = async function(context) {
   if (process.platform === 'win32') {
     try {
-      console.log('outDir', `${context.outDir}`, fs.readFileSync(`${context.outDir}`));
-      console.log('appOutDir', `${context.appOutDir}`, fs.readFileSync(`${context.appOutDir}`));
-      console.log('resources', `${context.appOutDir}\resources`, fs.readFileSync(`${context.appOutDir}\resources`));
-      console.log('app', `${context.appOutDir}\resources\app`, fs.readFileSync(`${context.appOutDir}\resources\app`));
-      console.log('build', `${context.appOutDir}\resources\app\build`, fs.readFileSync(`${context.appOutDir}\resources\app\build`));
-      console.log('src', `${context.appOutDir}\resources\app\build\src`, fs.readFileSync(`${context.appOutDir}\resources\app\build\src`));
+      console.log('outDir', `${context.outDir}`);
+      console.log(fs.readdirSync(`${context.outDir}`));
+      console.log('appOutDir', `${context.appOutDir}`);
+      console.log(fs.readdirSync(`${context.appOutDir}`));
+      console.log('resources', `${context.appOutDir}\resources`);
+      console.log(fs.readdirSync(`${context.appOutDir}\resources`));
+      console.log('app', `${context.appOutDir}\resources\app`);
+      console.log(fs.readdirSync(`${context.appOutDir}\resources\app`));
+      console.log('build', `${context.appOutDir}\resources\app\build`);
+      console.log(fs.readdirSync(`${context.appOutDir}\resources\app\build`));
+      console.log('src', `${context.appOutDir}\resources\app\build\src`);
+      console.log(fs.readdirSync(`${context.appOutDir}\resources\app\build\src`));
     } catch(e) {
       console.log('error', e);
     }
