@@ -12,22 +12,24 @@ const appPath = process.platform === 'win32' ? windowsAppPath : process.platform
 
 exports.default = async function(context) {
   if (process.platform === 'win32') {
-    try {
-      console.log('outDir', `${context.outDir}`);
-      console.log(fs.readdirSync(`${context.outDir}`));
-      console.log('appOutDir', `${context.appOutDir}`);
-      console.log(fs.readdirSync(`${context.appOutDir}`));
-      console.log('resources', `${context.appOutDir}\\resources`);
-      console.log(fs.readdirSync(`${context.appOutDir}\\resources`));
-      console.log('app', `${context.appOutDir}\\resources\\app`);
-      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app`));
-      console.log('build', `${context.appOutDir}\\resources\\app\\build`);
-      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build`));
-      console.log('src', `${context.appOutDir}\\resources\\app\\build\\src`);
-      console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build\\src`));
-    } catch(e) {
-      console.log('error', e);
-    }
+    try {console.log('outDir\\..', `${context.outDir}\\..`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.outDir}\\..`));} catch(e) { console.log(e); }
+    try {console.log('outDir\\..\\build', `${context.outDir}\\..\\build`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.outDir}\\..\\build`));} catch(e) { console.log(e); }
+    try {console.log('outDir\\..\\build\\src', `${context.outDir}\\..\\build\\src`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.outDir}\\..\\build\\src`));} catch(e) { console.log(e); }
+    try {console.log('outDir', `${context.outDir}`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.outDir}`));} catch(e) { console.log(e); }
+    try {console.log('appOutDir', `${context.appOutDir}`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.appOutDir}`));} catch(e) { console.log(e); }
+    try {console.log('resources', `${context.appOutDir}\\resources`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.appOutDir}\\resources`));} catch(e) { console.log(e); }
+    try {console.log('app', `${context.appOutDir}\\resources\\app`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app`));} catch(e) { console.log(e); }
+    try {console.log('build', `${context.appOutDir}\\resources\\app\\build`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build`));} catch(e) { console.log(e); }
+    try {console.log('src', `${context.appOutDir}\\resources\\app\\build\\src`);} catch(e) { console.log(e); }
+    try {console.log(fs.readdirSync(`${context.appOutDir}\\resources\\app\\build\\src`));} catch(e) { console.log(e); }
   }
   try {
     if (fs.existsSync(`${appPath}${delimetr}${typesPath}`))fs.rmSync(`${appPath}${delimetr}${typesPath}`, { recursive: true });
