@@ -5,6 +5,8 @@ on:
   workflow_call:
     inputs:
       app-name:
+        type: string
+        required: true
       migrations-hasura-path:
         type: string
         required: false
