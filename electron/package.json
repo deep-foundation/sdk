@@ -14,7 +14,7 @@
   "license": "MIT",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "rimraf ./dist/src; tsc",
+    "build": "rimraf ./build/src; npx mkdirp ./build; tsc",
     "test": "jest",
     "electron:start-live": "node ./live-runner.js",
     "electron:start": "npm run build && electron --inspect=5858 ./",
