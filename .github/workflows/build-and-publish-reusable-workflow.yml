@@ -151,7 +151,7 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export
+        run: npm run export
       - name: Build distribution
         run: npm run build-unix
         env:
@@ -223,7 +223,7 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export
+        run: npm run export
       - name: Build distribution
         env:
           CSC_KEY_PASSWORD: ${{ secrets.csc-key-password }}
@@ -301,7 +301,7 @@ jobs:
       - name: Install electron dependencies
         run: ${{inputs.install-electron-dependencies-command}}
       - name: build next
-        run: npm run build && npm run export
+        run: npm run export
       - name: Build distribution
         run: npm run build-windows
         env:
