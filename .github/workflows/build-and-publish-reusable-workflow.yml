@@ -1,7 +1,5 @@
 name: Build And Publish Reusable Workflow
 on:
-  push:
-    branches: ["main"]
   workflow_call:
     inputs:
       app-name:
