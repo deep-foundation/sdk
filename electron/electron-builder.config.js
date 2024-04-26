@@ -48,4 +48,5 @@ module.exports = {
   "removePackageScripts": false,
   "includeSubNodeModules": false,
   "asar": false,
+  "extends": null,
 }
