@@ -169,8 +169,8 @@ jobs:
           path: |
             electron/dist/${{inputs.app-name}}.tar.gz
             electron/dist/README.txt
-  mac:
-    name: Mac
+  mac-arm64:
+    name: MacArm64
     needs: [sync-electron-app-version]
     if: inputs.should-build-mac == 'true'
     env:
@@ -236,7 +236,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Mac
+          name: MacArm64
           path: |
             electron/dist/mac-arm64/${{inputs.app-name}}.app.zip
             electron/dist/mac-arm64/README.txt
@@ -373,7 +373,7 @@ jobs:
   release:
     needs: 
       - linux
-      - mac
+      - mac-arm64
       - windows
       - android
       - get-app-version
@@ -404,7 +404,7 @@ jobs:
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
-          name: Mac
+          name: MacArm64
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
@@ -428,7 +428,7 @@ jobs:
           asset_path: electron/dist/${{inputs.app-name}}.zip
           asset_name: windows-${{inputs.app-name}}.zip
           asset_content_type: application/zip
-      - name: upload mac artifact
+      - name: upload mac-arm64 artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
