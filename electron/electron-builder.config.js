@@ -48,5 +48,8 @@ module.exports = {
   "removePackageScripts": false,
   "includeSubNodeModules": false,
   "asar": false,
-  "extends": null,
+  beforePack: (context) => {
+    console.log('beforePack outDir', context.outDir);
+    console.log('beforePack appOutDir', context.appOutDir);
+  },
 }
