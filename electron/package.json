@@ -19,7 +19,7 @@
     "electron:start-live": "node ./live-runner.js",
     "electron:start": "npm run build && electron --inspect=5858 ./",
     "electron:debug": "APP_DEV=true electron .",
-    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.js",
+    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.js --x64 --arm64",
     "electron:pack-demo": "npm run build  && node patch-electron-builder.cjs && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.js",
     "electron:sign": "npm run electron:sign-prod && npm run electron:sign-dev",
     "electron:sign-prod": "electron-osx-sign dist/mas/sdk.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: Deep Foundation (XXXXXXXXXX)' --platform=mas --type=distribution --provisioning-profile=developer-id-sdk.provisionprofile",
