@@ -116,6 +116,9 @@ projects/app/electron/app
 # migrations
 .migrate
 
+# next.js
+next-env.d.ts
+
 # builds
 /app
 /out
