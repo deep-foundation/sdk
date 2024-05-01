@@ -193,15 +193,6 @@ projects/app/electron/app
 # migrations
 .migrate
 
-# deepcase
-/app
-/out
-/electron/build
-/electron/out
-/electron/Deep.Case*
-/electron/node_modules
-/electron/*.provisionprofile
-
 # browser extension
 
 /extension/next
@@ -218,8 +209,10 @@ projects/app/electron/app
 .migrate
 
 # deepcase
-/app
-/out
 /electron/build
 /electron/SDK*
 /electron/node_modules
+/electron/out
+/electron/Deep.Case*
+/electron/node_modules
+/electron/*.provisionprofile
