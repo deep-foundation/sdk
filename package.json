@@ -1,6 +1,6 @@
 {
   "name": "@deep-foundation/sdk",
-  "version": "0.0.0-dev.8",
+  "version": "0.0.0-dev.9",
   "description": "",
   "license": "Unlicense",
   "main": "./bin/server.js",
