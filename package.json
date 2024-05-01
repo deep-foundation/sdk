@@ -1,6 +1,6 @@
 {
   "name": "@deep-foundation/sdk",
-  "version": "0.0.0-dev.9",
+  "version": "0.0.0-dev.10",
   "description": "",
   "license": "Unlicense",
   "main": "./bin/server.js",
@@ -31,6 +31,7 @@
     "build-ios": "rimraf app && npm run export && npx cap sync ios"
   },
   "dependencies": {
+    "dotenv-load": "^2.0.1",
     "next": "^14.2.2",
     "next-env": "^1.1.1",
     "next-i18next": "^15.2.0",
@@ -38,6 +39,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.12.1",
+    "typescript": "5.0.4",
     "react-i18next": "^14.1.0"
   },
   "devDependencies": {
@@ -61,7 +63,6 @@
     "buffer": "^6.0.3",
     "case-anything": "^2.1.13",
     "dotenv": "^16.0.3",
-    "dotenv-load": "^2.0.1",
     "events": "^3.3.0",
     "firebase": "^9.19.1",
     "framer-motion": "^6.5.1",
@@ -71,7 +72,6 @@
     "rimraf": "^5.0.5",
     "run-script-os": "^1.1.6",
     "ts-node": "^10.9.1",
-    "typescript": "5.0.4",
     "typescript-json-schema": "^0.56.0"
   }
 }

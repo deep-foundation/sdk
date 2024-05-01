@@ -3,12 +3,11 @@ const { parse } = require('url')
 const next = require('next');
 const nextConfig = require('../next.config');
 
-const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
 const port = process.env.PORT || 3000;
 
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port, quiet: true, conf: nextConfig, dir: `${__dirname}/..` })
+const app = next({ dev: false, hostname, port, quiet: true, conf: nextConfig, dir: `${__dirname}/..` })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
