@@ -3,7 +3,10 @@
   "version": "0.0.0-dev.8",
   "description": "",
   "license": "Unlicense",
-  "bin": "./bin",
+  "main": "./bin/server.js",
+  "bin": {
+    "deep-sdk": "./bin/server.js"
+  },
   "scripts": {
     "build-pack": "(cd electron && npm run electron:pack)",
     "build-core": "(cross-env npm_config_yes=true npm run build-electron)",
@@ -38,21 +41,9 @@
     "react-i18next": "^14.1.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^5.7.4",
-    "@types/debug": "^4.1.9",
-    "@types/node": "^20.12.7",
-    "@types/react": "^18.0.33",
-    "@types/serviceworker": "^0.0.62",
-    "buffer": "^6.0.3",
-    "jest": "^29.5.0",
-    "next-transpile-modules": "^10.0.0",
-    "rimraf": "^5.0.5",
-    "run-script-os": "^1.1.6",
-    "ts-node": "^10.9.1",
-    "typescript": "5.0.4",
-    "typescript-json-schema": "^0.56.0",
     "@capacitor-community/electron": "^5.0.1",
     "@capacitor/android": "^5.7.4",
+    "@capacitor/cli": "^5.7.4",
     "@capacitor/core": "^5.7.4",
     "@capacitor/ios": "^5.7.4",
     "@chakra-ui/react": "^2.5.5",
@@ -62,13 +53,25 @@
     "@deep-foundation/store": "~0.0.28",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@types/debug": "^4.1.9",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.0.33",
+    "@types/serviceworker": "^0.0.62",
     "axios": "^1.6.8",
+    "buffer": "^6.0.3",
     "case-anything": "^2.1.13",
     "dotenv": "^16.0.3",
     "dotenv-load": "^2.0.1",
     "events": "^3.3.0",
     "firebase": "^9.19.1",
     "framer-motion": "^6.5.1",
-    "i18next": "^23.11.1"
+    "i18next": "^23.11.1",
+    "jest": "^29.5.0",
+    "next-transpile-modules": "^10.0.0",
+    "rimraf": "^5.0.5",
+    "run-script-os": "^1.1.6",
+    "ts-node": "^10.9.1",
+    "typescript": "5.0.4",
+    "typescript-json-schema": "^0.56.0"
   }
 }
