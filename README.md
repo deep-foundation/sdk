@@ -208,3 +208,9 @@ SDK app is started together with Deep.Links and other services in GitPod. So to 
 
 4. Press `Enter` to execute that command again, that will finish restart sequence.
 ![IMG_1493](https://github.com/deep-foundation/deepcase-app/assets/1431904/56f48dad-d751-44c7-8871-164f824f122b)
+
+## NPM
+
+If you want launch your repo from npx as `npx @deep-foundation/sdk` you must change name in package.json, manually `npm adduser` and first publish `npm publish --access public` yout fork.
+
+For publish new version, just update package.json version field and then git commit && publish to github.

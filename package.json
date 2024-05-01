@@ -1,8 +1,9 @@
 {
   "name": "@deep-foundation/sdk",
-  "version": "0.0.0-dev.5",
+  "version": "0.0.0-dev.6",
   "description": "",
   "license": "Unlicense",
+  "bin": "./bin.js",
   "scripts": {
     "build-pack": "(cd electron && npm run electron:pack)",
     "build-core": "(cross-env npm_config_yes=true npm run build-electron)",
