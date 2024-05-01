@@ -214,3 +214,5 @@ SDK app is started together with Deep.Links and other services in GitPod. So to 
 If you want launch your repo from npx as `npx @deep-foundation/sdk` you must change name in package.json, manually `npm adduser` and first publish `npm publish --access public` yout fork.
 
 For publish new version, just update package.json version field and then git commit && publish to github.
+
+This app can be launched as builded web server with `npx @deep-foundation/sdk`
