@@ -2,7 +2,7 @@ import { Box, Button, Card, CardBody, CardHeader, Code, FormControl, FormLabel, 
 import { AutoGuest } from "@deep-foundation/deepcase/imports/auto-guest";
 import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { useDeepPath, useDeepToken } from "./provider";
 
 export function Connection() {

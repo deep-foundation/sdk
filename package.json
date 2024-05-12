@@ -1,6 +1,6 @@
 {
   "name": "@deep-foundation/sdk",
-  "version": "0.0.0-dev.11",
+  "version": "0.0.0-dev.12",
   "description": "",
   "license": "Unlicense",
   "main": "./bin/server.js",
@@ -40,9 +40,7 @@
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.12.1",
     "typescript": "5.0.4",
-    "react-i18next": "^14.1.0"
-  },
-  "devDependencies": {
+    "react-i18next": "^14.1.0",
     "@capacitor-community/electron": "^5.0.1",
     "@capacitor/android": "^5.7.4",
     "@capacitor/cli": "^5.7.4",
