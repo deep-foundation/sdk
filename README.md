@@ -1,5 +1,7 @@
 A template/boilerplate for creating nextjs applications that use deep. It is recommended to merge with this repository to have its improvements in your nextjs application!
 
+<img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/640/2ec/360/6402ec360bfb54cf6e6041945efaf514.png"/>
+
 Just erase `pages/index.tsx` `Page` component body.
 
 # Variables
