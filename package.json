@@ -8,6 +8,7 @@
     "deep-sdk": "./bin/server.js"
   },
   "scripts": {
+    "package:refresh": "rm -rf node_modules; rm -f package-lock.json; npm i --workspaces false",
     "build-pack": "(cd electron && npm run electron:pack)",
     "build-core": "(cross-env npm_config_yes=true npm run build-electron)",
     "build-windows": "(cross-env MIGRATIONS_DIR=.migrate npm run build-core) && npm run build-pack",
